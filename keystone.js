@@ -5,9 +5,14 @@ require('dotenv').load();
 // Require keystone
 var keystone = require('keystone');
 
-// Initialise Keystone with your project's configuration.
-// See http://keystonejs.com/guide/config for available options
-// and documentation.
+
+/*
+ * Keystone Configuration
+ * --------------------------
+ * Initialise Keystone with your project's configuration.
+ * See http://keystonejs.com/guide/config for available options
+ * and documentation.
+ */
 
 keystone.init({
 
@@ -21,6 +26,8 @@ keystone.init({
 	'view engine': 'jade',
 	
 	'emails': 'templates/emails',
+
+	'mongo': process.env.MONGO_URI || "mongodb://localhost/sflultimate",
 	
 	'auto update': true,
 	'session': true,

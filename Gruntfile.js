@@ -1,6 +1,6 @@
 'use strict()';
 
-var config= {
+var config = {
 	port: 3000
 };
 

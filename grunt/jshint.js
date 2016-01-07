@@ -1,6 +1,6 @@
 module.exports = {
 	options: {
-		reporter: require('jshint-stylish'),
+		reporter: 'node_modules/jshint-stylish',
 		force: true
 	},
 	all: [ 'routes/**/*.js',
