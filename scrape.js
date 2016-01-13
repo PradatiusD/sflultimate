@@ -2,9 +2,10 @@ var request = require('request');
 var async   = require('async');
 var fs      = require('fs');
 
-var players = fs.readFileSync('tmp/players.json', 'utf8');
+var players = fs.readFileSync('tmp/players-data.json', 'utf8');
 players     = JSON.parse(players);
 
+function getBasicData  () {
 
 async.mapLimit(players, 1, function (player, callback) {
 
@@ -32,6 +33,54 @@ async.mapLimit(players, 1, function (player, callback) {
   fs.writeFileSync('tmp/players-data.json',JSON.stringify(players));
 });
 
+}
+
+function getStats() {
+
+  async.mapLimit(players, 1, function (player, callback) {
+
+    var url = "http://sflultimate.com/bio.asp?ID="+player.pid;
+
+    console.log("Requesting: "+url);
+
+    request(url, function (err, response, body) {
+
+      var tagRegex = /<span .*?>(.*?)<\/span.*?>/g
+
+      var match;
+      var matches = [];
+      var i = -1;
+
+      while ((match = tagRegex.exec(body)) !== null) {
+        matches.push(match[1]);
+      }
+
+      // Remove columns
+      matches = matches.splice(4);
+
+      var scores = [];
+
+      while (matches.length) {
+        
+        var score = matches.splice(0,4);
+        scores.push({
+          date:     score[0],
+          scores:   parseInt(score[1]),
+          assists:  parseInt(score[2]),
+          defenses: parseInt(score[3])
+        });
+      }
+
+      player.scores = scores;
+      callback(null, player);
+    });
+  }, function (err, players) {
+    console.log("Completed");
+    fs.writeFileSync('tmp/players-data-with-scores.json',JSON.stringify(players));
+  });
+}
+
+getStats();
 
 /*
  
