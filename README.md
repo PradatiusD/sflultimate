@@ -2,7 +2,7 @@
 
 You will need:
 - git
-- node
+- node # 0.12.9
 - mongo
 - grunt
 - heroku toolbelt
@@ -11,7 +11,7 @@ To start server:
 ```bash
 grunt serve
 ```
-
+http://keystonejs.com/guide
 
 ### Example Schema:  Team (Serious Trouble)
 
