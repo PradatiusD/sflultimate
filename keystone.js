@@ -16,24 +16,23 @@ var keystone = require('keystone');
 
 keystone.init({
 
-	'name': 'SFLUltimate',
-	'brand': 'SFLUltimate',
+	name: 'SFLUltimate',
+	brand: 'SFLUltimate',
 	
-	'sass': 'public',
+	sass: 'public',
 	'static': 'public',
-	'favicon': 'public/favicon.ico',
-	'views': 'templates/views',
+	favicon: 'public/favicon.ico',
+	views: 'templates/views',
 	'view engine': 'jade',
 	
-	'emails': 'templates/emails',
+	emails: 'templates/emails',
 
-	'mongo': process.env.MONGOLAB_URI || "mongodb://localhost/sflultimate",
+	mongo: process.env.MONGOLAB_URI || "mongodb://localhost/sflultimate",
 	
 	'auto update': true,
-	'session': true,
-	'auth': true,
-	'user model': 'Y'
-
+	session: true,
+	auth: true,
+	'user model': 'Player'
 });
 
 // Load your project's Models
@@ -98,8 +97,11 @@ keystone.set('nav', {
 	'posts': ['posts', 'post-categories'],
 	'galleries': 'galleries',
 	'enquiries': 'enquiries',
-	'ys': 'ys'
+	'players': 'players'
 });
+
+// Configure Web Server
+keystone.set('port', process.env.PORT || 5000);
 
 // Start Keystone to connect to your database and initialise the web server
 

@@ -8,8 +8,15 @@
  */
 
 exports.create = {
-	Y: [
-		{ 'name.first': 'Admin', 'name.last': 'User', email: 'danielprada2012@gmail.com', password: 'pped2016', isAdmin: true }
+	Player: [
+		{
+			'name.first': 'Daniel', 
+			'name.last': 'Prada',
+			email: 'danielprada2012@gmail.com',
+			password: 'pped2016',
+			shirtSize: "M",
+			isAdmin: true
+		}
 	]
 };
 

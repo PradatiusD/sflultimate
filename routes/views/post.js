@@ -1,6 +1,6 @@
 var keystone = require('keystone');
 
-exports = module.exports = function(req, res) {
+module.exports = function(req, res) {
 	
 	var view = new keystone.View(req, res);
 	var locals = res.locals;
@@ -15,7 +15,7 @@ exports = module.exports = function(req, res) {
 	};
 	
 	// Load the current post
-	view.on('init', function(next) {
+	view.on('init', function (next) {
 		
 		var q = keystone.list('Post').model.findOne({
 			state: 'published',

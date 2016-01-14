@@ -1,8 +1,10 @@
 # SFLUltimate
 
+## Installation
+
 You will need:
 - git
-- node # 0.12.9
+- node (v0.12.9 recommended)
 - mongo
 - grunt
 - heroku toolbelt
@@ -11,7 +13,11 @@ To start server:
 ```bash
 grunt serve
 ```
-http://keystonejs.com/guide
+
+## Helpful Links
+
+- http://keystonejs.com/guide
+- http://keystonejs.com/docs/getting-started/
 
 ### Example Schema:  Team (Serious Trouble)
 
