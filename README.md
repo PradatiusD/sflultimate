@@ -1,17 +1,25 @@
-# SFLUltimate
 
-## Installation
+## Dependencies 
 
 You will need:
-- git
-- node (v0.12.9 recommended)
-- mongo
-- grunt
-- heroku toolbelt
+- `git` : For collaborative software development
+- `node` : For running the application ([v0.12.9](https://nodejs.org/en/blog/release/v0.12.9/) recommended)
+- `mongo` : For the database of content
+- `grunt` : For task automation
+- `heroku toolbelt` : For deployment to the Heroku platform
 
-To start server:
+Additionally you will require to install:
+- [JSHint](http://jshint.com/install/) for javascript linting
+- [Nodemon](https://github.com/remy/nodemon) for restarting the application on a server side file change while in development
+- [Sass](http://sass-lang.com/install) to convert scss and sass files into css files.
+
+## Installation process
+
+This assumes you already have the project downloaded from git.
+
 ```bash
-grunt serve
+npm install # to install all Node.js modules required by the project package.json
+grunt serve # to run application on port 5000 (or 3000 if you have an older version).
 ```
 
 ## Helpful Links
