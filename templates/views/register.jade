@@ -53,5 +53,15 @@ block content
         option(value="XL") XL
         option(value="XXL") XXL
       br
+
+      #payment-form
+
       .text-center
         button.btn.btn-default.btn-lg.btn-primary(type='submit') Submit
+
+  script(src='https://js.braintreegateway.com/v2/braintree.js')
+  script.
+    var clientToken = "#{braintree_token}";
+    braintree.setup(clientToken, "dropin", {
+    container: "payment-form"
+    });

@@ -41,3 +41,8 @@ This project utilizes the Keystone.js CMS system to organize the data schemas.
 ## Example Schemas
 
 To view the example schemas view [here](./models/Example-Schemas.md).
+
+## Braintree Testing
+
+- https://developers.braintreepayments.com/reference/general/testing/node
+- 4111111111111111 test credit card number

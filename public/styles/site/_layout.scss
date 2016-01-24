@@ -6,7 +6,19 @@
 }
 
 .gallery-image img{
-    display: block;
-    max-width: 100%;
-    height: auto;
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.navbar.navbar-inverse {
+	border-radius: 0;
+}
+
+.banner.unslider-fade {
+	min-height: 700px;
+	
+	img {
+		width: 100%;
+	}
 }

@@ -1,6 +1,36 @@
 extends ../layouts/default
 
+block css
+  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/css/unslider.css")
+
 block content
-	.container: .jumbotron
-		h1 Welcome
-		p This site is currently in development.
+  .container
+    .jumbotron
+      h1 Welcome
+      p South Florida Ultimate site is currently in development.
+      p.text-center 
+        a.btn.btn-primary.btn-lg Register for Spring League
+
+    .banner
+      ul
+        li
+          img.img-responsive(src="/images/league-champions-2015-fall.jpg")
+        li
+          img.img-responsive(src="/images/league-champions-2015-spring.jpg")
+        li
+          img.img-responsive(src="/images/league-champions-2014-fall.jpg")
+        li
+          img.img-responsive(src="/images/league-champions-2014-spring.jpg")
+        li
+          img.img-responsive(src="/images/league-champions-2013-spring.jpg")
+block js
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js")
+  script.
+    (function ($){
+      $('.banner').unslider({
+        animation: 'fade',
+        autoplay: true,
+        arrows: false,
+        nav: false
+      });
+    })(jQuery);
