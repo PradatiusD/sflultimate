@@ -10,9 +10,9 @@ You will need:
 - `heroku toolbelt` : For deployment to the Heroku platform
 
 Additionally you will require to install:
-- [JSHint](http://jshint.com/install/) for javascript linting
-- [Nodemon](https://github.com/remy/nodemon) for restarting the application on a server side file change while in development
-- [Sass](http://sass-lang.com/install) to convert scss and sass files into css files.
+- [JSHint](http://jshint.com/install/): Javascript lint tool.
+- [Nodemon](https://github.com/remy/nodemon): Tool to restarting the application on a server side file change (while in development mode only)
+- [Sass](http://sass-lang.com/install): Tool to convert scss and sass files into css files.
 
 ## Installation process
 
@@ -24,9 +24,15 @@ mongod      # to start running mongo database (need to run on separate tab or ru
 grunt serve # to run application on port 5000 (or 3000 if you have an older version).
 ```
 
-You will need a separate `.env` file to be placed inside the project root directory for it to run successfully.  Contact the administrator to receive its contents.
+On running `grunt serve` successfully the application will now be able to be used on port 5000, at:
 
-## Helpful Links
+- [http://localhost:5000](http://localhost:5000)
+
+> **Note**: You will need a separate `.env` file to be placed inside the project root directory for it to run successfully.  Contact the administrator to receive its contents.
+
+## Keystone Links
+
+This project utilizes the Keystone.js CMS system to organize the data schemas.
 
 - http://keystonejs.com/guide
 - http://keystonejs.com/docs/getting-started/
