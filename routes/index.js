@@ -43,6 +43,7 @@ module.exports = function (app) {
 	app.get('/signature',       routes.views.signature);
 	app.all('/register',        routes.views.register);
 	app.get('/confirmation',    routes.views.confirmation);
+	app.get('/players',         routes.views.players);
 	
 	// NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
 	// app.get('/protected', middleware.requireUser, routes.views.protected);

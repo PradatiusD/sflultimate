@@ -20,6 +20,7 @@ block content
 
     h3 Registration
     form(action="register" method="post")
+      input#user_id.form-control.hidden(type='user_id' autocomplete='false' name='user_id' placeholder='' value=formData.user_id)
       .row
         .col-xs-6
           .form-group
@@ -30,11 +31,12 @@ block content
             label(for='lastName') Last Name
             input#lastName.form-control(type='text' name='name.last' placeholder='' value=formData['name.last'])
       .form-group
-        label(for='emailAddress') Email address
-        input#emailAddress.form-control(type='email' name='email'   placeholder='' value=formData.email)
+        label(for='email') Email address
+        input#email.form-control(type='email' name='email'   placeholder='' value=formData.email)
       .form-group
         label(for='partner') Partner<br><small>If you would like to pair up with another player for sign-up, write their name here.</small>
-        input#partner.form-control(type='partner' name='partner' placeholder='' value=formData.partner)
+        input#partner.form-control(type='partner' autocomplete='false' name='partner' placeholder='' value=formData.partner)
+        input#partner_id.form-control.hidden(type='partner_id' autocomplete='false' name='partner_id' placeholder='' value=formData.partner_id)
       label Are you a:
       .radio
         label
@@ -52,6 +54,21 @@ block content
         option(value="L") L
         option(value="XL") XL
         option(value="XXL") XXL
+
+      br
+
+      label(for="skillLevel" name="skillLevel") Skill Level
+      select#skillLevel.form-control(name="skillLevel" value=formData.skillLevel)
+        option(value='1') 1 - Absolute Beginner
+        option(value='2') 2 - Hey wait, what's a flick?
+        option(value='3') 3 - Working on throws, basic knowledge of game
+        option(value='4') 4 - Pickup player, okay throws
+        option(value='5') 5 - Decent backhand & forehand. Little to no club experience
+        option(value='6') 6 - Fairly solid backhand & forehand. Some club experience
+        option(value='7') 7 - Tourney experience. Several years of club
+        option(value='8') 8 - Club level, solid all around, not prone to errors
+        option(value='9') 9 - Rock star. spot on throws, awesome D
+
       br
 
       #payment-form
@@ -59,9 +76,9 @@ block content
       .text-center
         button.btn.btn-default.btn-lg.btn-primary(type='submit') Submit
 
+block js
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.0/bootstrap3-typeahead.min.js")
   script(src='https://js.braintreegateway.com/v2/braintree.js')
   script.
     var clientToken = "#{braintree_token}";
-    braintree.setup(clientToken, "dropin", {
-    container: "payment-form"
-    });
+  script(src='js/register-form.js')

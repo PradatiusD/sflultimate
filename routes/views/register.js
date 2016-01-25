@@ -35,11 +35,19 @@ module.exports = function(req, res) {
     for (var p in req.body) {
       locals.formData[p] = req.body[p];
     }
+
+    var leagueFee = (req.body.age === "student") ? "30.00": "50.00";
+
+    var purchase = {
+      amount: leagueFee,
+      paymentMethodNonce: req.body.payment_method_nonce
+    };
     
-    gateway.transaction.sale({
-      amount: '50.00',
-      paymentMethodNonce: req.body.payment_method_nonce,
-    }, function (err, result) {
+    gateway.transaction.sale(purchase, function (err, result) {
+
+      console.log(req.body);
+      console.log(result);
+
       if (result.success) {
         return res.redirect("/confirmation");
       }

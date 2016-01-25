@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 			serve: {
 				script: 'keystone.js',
 				options: {
-					ignore: ['node_modules/**']
+					ignore: ['node_modules/**', 'public/**']
 				}
 			}
 		}
