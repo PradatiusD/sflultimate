@@ -17,6 +17,8 @@ braintree.setup(clientToken, "dropin", {
   			$("#lastName").val(d.full_name.last);
   			$("#email").val(d.email);
   			$("#user_id").val(d.id);
+        $("#shirtSize").val(d.size);
+        $("#skillLevel").val(d.skill);
   		}
   	})
 

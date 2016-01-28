@@ -11,6 +11,7 @@ var Player = new keystone.List('Player');
 var fields = {
   name: { 
     type: Types.Name, 
+    initial: true,
     required: true, 
     index: true 
   },
@@ -31,10 +32,21 @@ var fields = {
     initial: true,
     required: true
   },
+  skillLevel: {
+    type: Types.Select,
+    options: [1,2,3,4,5,6,7,8,9],
+    initial: true,
+    required: true
+  },
   registered: {
     type: Types.Boolean,
     required: true,
     default: false
+  },
+  partner_id: {
+    type: String,
+    hidden: true,
+    default: null 
   }
 };
 
@@ -50,13 +62,6 @@ Player.add(fields, 'Permissions', {
 Player.schema.virtual('canAccessKeystone').get(function() {
   return this.isAdmin;
 });
-
-
-/**
- * Relationships
- */
-
-Player.relationship({ ref: 'Post', path: 'posts', refPath: 'author' });
 
 
 /**

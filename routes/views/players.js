@@ -13,7 +13,9 @@ module.exports = function (req, res) {
         return {
           id:        p._id,
           email:     p.email,
-          full_name: p.name
+          full_name: p.name,
+          skill:     p.skillLevel,
+          size:      p.shirtSize
         };
 
       });

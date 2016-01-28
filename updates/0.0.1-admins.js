@@ -11,6 +11,7 @@ var fs = require('fs');
 
 var playerFile = 'tmp/official-players.json';
 var players;
+var adminSet = false;
 
 if (fs.existsSync(playerFile)) {
 
@@ -35,17 +36,30 @@ if (fs.existsSync(playerFile)) {
   players = [];
 }
 
+for (var i = 0; i < players.length; i++) {
+  if(players[i].email === "danielprada2012@gmail.com") {
+    players[i].password = process.env.KEYSTONE_PASSWORD;
+    players[i].isAdmin  = true;
+    adminSet = true;
+    break;
+  }
+};
+
+if (!adminSet) {
+  players.push({
+    'name.first': 'Daniel', 
+    'name.last': 'Prada',
+    email: 'danielprada2012@gmail.com',
+    password: process.env.KEYSTONE_PASSWORD,
+    shirtSize: "M",
+    skillLevel: 4,
+    isAdmin: true
+  });  
+}
+
+
 exports.create = {
- Player: [
-   {
-     'name.first': 'Daniel', 
-     'name.last': 'Prada',
-     email: 'danielprada2012@gmail.com',
-     password: 'pped2016',
-     shirtSize: "M",
-     isAdmin: true
-   }
- ].concat(players)
+ Player: players
 };
 
 /*
