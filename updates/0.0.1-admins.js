@@ -9,7 +9,7 @@ var fs = require('fs');
  * module.exports = function(done) { ... }
  */
 
-var playerFile = 'tmp/players-data-with-scores.json';
+var playerFile = 'tmp/official-players.json';
 var players;
 
 if (fs.existsSync(playerFile)) {
@@ -19,16 +19,15 @@ if (fs.existsSync(playerFile)) {
 
   players     = players.map(function (p) {
     return {
-      'name.first':  p.firstName,
-      'name.last':   p.lastName,
-      email:         p.email,
-      shirtSize:     p.shirtSize,
-      password:      p.firstName.substring(0,1)+p.lastName,
-      skillLevel:    parseInt(p.skillLevel),
-      participation: parseInt(p.participation),
+      'name.first':  p.FName,
+      'name.last':   p.LName,
+      email:         p.Email,
+      shirtSize:     p.Shirt,
+      password:      p.FName.substring(0,1)+p.LName,
+      skillLevel:    parseInt(p.Skill),
+      participation: parseInt(p.Attendance),
       isAdmin:       false,
       registered:    false,
-      score:         p.scores
     };
   });
 

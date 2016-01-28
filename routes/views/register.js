@@ -49,6 +49,10 @@ module.exports = function(req, res) {
       console.log(result);
 
       if (result.success) {
+        // On success
+        // 1. State that the user has paid
+        // 2. Record their desired partner id
+        // 3. Save their updated form data
         return res.redirect("/confirmation");
       }
 

@@ -14,6 +14,12 @@ Additionally you will require to install:
 - [Nodemon](https://github.com/remy/nodemon): Tool to restarting the application on a server side file change (while in development mode only)
 - [Sass](http://sass-lang.com/install): Tool to convert scss and sass files into css files.
 
+
+#### For Windows Users
+
+- You will need python.
+
+
 ## Installation process
 
 This assumes you already have the project downloaded from git.
@@ -29,6 +35,7 @@ On running `grunt serve` successfully the application will now be able to be use
 - [http://localhost:5000](http://localhost:5000)
 
 > **Note**: You will need a separate `.env` file to be placed inside the project root directory for it to run successfully.  Contact the administrator to receive its contents.
+
 
 ## Keystone Links
 

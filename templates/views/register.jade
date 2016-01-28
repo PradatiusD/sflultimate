@@ -25,14 +25,16 @@ block content
         .col-xs-6
           .form-group
             label(for='firstName') First Name
-            input#firstName.form-control(type='text' name='name.first' placeholder='' value=formData['name.first'])
+            input#firstName.form-control(type='text' name='name.first' placeholder='' value=formData['name.first'] required)
         .col-xs-6
           .form-group
             label(for='lastName') Last Name
-            input#lastName.form-control(type='text' name='name.last' placeholder='' value=formData['name.last'])
+            input#lastName.form-control(type='text' name='name.last' placeholder='' value=formData['name.last'] required)
+
       .form-group
         label(for='email') Email address
-        input#email.form-control(type='email' name='email'   placeholder='' value=formData.email)
+        input#email.form-control(type='email' name='email'   placeholder='' value=formData.email required)
+
       .form-group
         label(for='partner') Partner<br><small>If you would like to pair up with another player for sign-up, write their name here.</small>
         input#partner.form-control(type='partner' autocomplete='false' name='partner' placeholder='' value=formData.partner)
@@ -56,7 +58,6 @@ block content
         option(value="XXL") XXL
 
       br
-
       label(for="skillLevel" name="skillLevel") Skill Level
       select#skillLevel.form-control(name="skillLevel" value=formData.skillLevel)
         option(value='1') 1 - Absolute Beginner
@@ -70,11 +71,37 @@ block content
         option(value='9') 9 - Rock star. spot on throws, awesome D
 
       br
+      h3 Waiver
+      .checkbox
+        label
+          input(type='checkbox', value='' required)
+          | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
 
+      h3 Payment Information
       #payment-form
-
       .text-center
         button.btn.btn-default.btn-lg.btn-primary(type='submit') Submit
+
+  .modal.fade(tabindex='-1', role='dialog' id='waiver')
+    .modal-dialog.modal-lg
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') ×
+          h4.modal-title Waiver
+        .modal-body
+          p
+            | 1. In consideration for receiving permission to participate in the South Florida Ultimate Spring League I hereby RELEASE, WAIVE, DISCHARGE, AND COVENANT NOT TO SUE South Florida Ultimate, their officers, agents, or employees (hereinafter referred to as RELEASEES) from any and all liability, claims, demands, actions, and causes of action whatsoever arising out of or related to any loss, damage, or injury, including death, that may be sustained by me, or to any property belonging to me, while participating in such activity, while in, on or upon the premises where the activities are being conducted, REGARDLESS OF WHETHER SUCH LOSS IS CAUSED BY THE NEGLIGENCE OF THE RELEASEES, or otherwise and regardless of whether such liability arises in tort, contract, strict liability, or otherwise, to the fullest extent allowed by law.
+          p
+            | 2. I am fully aware of the risks and hazards connected with the activities of Ultimate, and I am aware that such activities include the risk of injury and even death, and I hereby elect to voluntarily participate in said activities, knowing that the activities may be hazardous to my property and me. I understand that South Florida Ultimate does not require me to participate in this activity. I voluntarily assume full responsibility for any risks of loss, property damage, or personal injury, including death, that may be sustained by me, or any loss or damage to property owned by me, as a result of being engaged in such an activities, WHETHER CAUSED BY THE NEGLIGENCE OF RELEASEES or otherwise, to the fullest extent allowed by law.
+          p
+            | 3. I further hereby AGREE TO INDEMNIFY AND HOLD HARMLESS the RELEASEES from any loss, liability, damage, or costs, including court costs and attorneys' fees that Releases may incur due to my participation in said activities, WHETHER CAUSED BY NEGLIGENCE OF RELEASEES or otherwise, to the fullest extent allowed by law.
+          p
+            | 4. It is my express intent that this Waiver and Hold Harmless Agreement shall bind the members of my family and spouse, if I am alive, and my heirs, assigns and personal representative, if I am deceased, and shall be deemed as a RELEASE, WAIVER, DISCHARGE, AND COVENANT NOT TO SUE the above-named RELEASEES. I hereby further agree that this Waiver of Liability and Hold Harmless Agreement shall be construed in accordance with the laws of the State of Florida and that any mediation, suit, or other proceeding must be filed or entered into only in Florid and the federal or state courts of Maryland. Any portion of this document deemed unlawful or unenforceable is severable and shall be stricken without any effect on the enforceability of the remaining provisions.
+          p
+            | IN COMPLETING THIS REGISTRATION, I ACKNOWLEDGE AND REPRESENT THAT I have read the foregoing Wavier of Liability and Hold Harmless Agreement, understand it and sign it voluntarily as my own free act and deed; no oral representations, statements, or inducements, apart from the foregoing written agreement, have been made; I am at least eighteen (18) years of age and fully competent; and I execute this Agreement for full, adequate and complete consideration fully intending to be bound by same.
+        .modal-footer
+          button.btn.btn-primary(type='button', data-dismiss='modal') Close
 
 block js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.0/bootstrap3-typeahead.min.js")
