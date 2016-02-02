@@ -53,3 +53,13 @@ To view the example schemas view [here](./models/Example-Schemas.md).
 
 - https://developers.braintreepayments.com/reference/general/testing/node
 - **Test Credit Card Number**: 4111111111111111
+
+## Exporting DB
+
+```bash
+mongodump --host=127.0.0.1 --db sflultimate
+```
+
+## Old Website
+
+97.74.215.62
