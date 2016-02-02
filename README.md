@@ -51,7 +51,7 @@ To view the example schemas view [here](./models/Example-Schemas.md).
 
 ## Braintree Testing
 
-- https://developers.braintreepayments.com/reference/general/testing/node
+- [Reference](https://developers.braintreepayments.com/reference/general/testing/node)
 - **Test Credit Card Number**: 4111111111111111
 
 ## Exporting DB

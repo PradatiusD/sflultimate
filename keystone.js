@@ -27,7 +27,7 @@ keystone.init({
   
   emails: 'templates/emails',
 
-  mongo: process.env.MONGOLAB_URI || "mongodb://localhost/sflultimate",
+  mongo: process.env.MONGOLAB_URI,
   
   'auto update': true,
   session: true,

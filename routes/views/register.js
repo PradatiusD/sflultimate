@@ -48,7 +48,19 @@ module.exports = function(req, res) {
 
       var purchase = {
         amount: leagueFee,
-        paymentMethodNonce: req.body.payment_method_nonce
+        paymentMethodNonce: req.body.payment_method_nonce,
+        customer: {
+          firstName: req.body['name.first'],
+          lastName:  req.body['name.last'],
+          email:     req.body.email,
+        },
+        customFields: {
+          partner:     req.body.partner,
+          partner_id:  req.body.partner_id,
+          age:         req.body.age,
+          shirt_size:   req.body.shirtSize,
+          skill_level:  req.body.skillLevel
+        }
       };
 
       gateway.transaction.sale(purchase, function (err, result) {
@@ -63,8 +75,8 @@ module.exports = function(req, res) {
           return next();
         }
 
-        console.log(req.body);
-        console.log(result);
+        // console.log(req.body);
+        // console.log(result);
 
         if (result.success) {
 
