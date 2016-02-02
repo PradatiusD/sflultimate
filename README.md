@@ -34,7 +34,7 @@ On running `grunt serve` successfully the application will now be able to be use
 
 - [http://localhost:5000](http://localhost:5000)
 
-> **Note**: You will need a separate `.env` file to be placed inside the project root directory for it to run successfully.  Contact the administrator to receive its contents.
+> **Note**: You will need a separate `.env` file to be placed inside the project root directory for it to run successfully.  Contact the administrator to receive its contents. Additionally, to populate your database you will need the player data.
 
 
 ## Keystone Links
@@ -58,8 +58,11 @@ To view the example schemas view [here](./models/Example-Schemas.md).
 
 ```bash
 mongodump --host=127.0.0.1 --db sflultimate
+mongorestore -h ds039165.mongolab.com:39165 -d heroku_8xfcj7cs  -u <user> -p <password> dump/sflultimate
 ```
 
-## Old Website
+## Older Website 
 
-97.74.215.62
+The older website IP is at:
+
+- 97.74.215.62
