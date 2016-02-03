@@ -1,7 +1,7 @@
 include ../mixins/flash-messages
 
 doctype html
-html
+html(lang='en')
 
   //- HTML HEADER
   head
@@ -12,8 +12,10 @@ html
     title= title || 'SFL Ultimate'
     link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
 
-    //- Customise the stylesheet for your site by editing /public/styles/site.sass
+    //- link(rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css")
     link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:400,700,300')
+
+    //- Customise the stylesheet for your site by editing /public/styles/site.sass
     link(rel="stylesheet" href="/styles/site.css")
 
     //- This file provides the default styling for the KeystoneJS Content Editor
@@ -83,6 +85,7 @@ html
 
     //- FOOTER
     .container: #footer
+      
 
       //- You don't _have_ to include a link saying your site is powered by KeystoneJS, but we appreciate it!
       p Powered by <a href="http://keystonejs.com" target="_blank">KeystoneJS</a>.

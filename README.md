@@ -61,6 +61,13 @@ mongodump --host=127.0.0.1 --db sflultimate
 mongorestore -h ds039165.mongolab.com:39165 -d heroku_8xfcj7cs  -u <user> -p <password> dump/sflultimate
 ```
 
+## Importing DB
+```bash
+mongodump -h ds039165.mongolab.com:39165 -d heroku_8xfcj7cs -u <user> -p <password>
+mongorestore --host 127.0.0.1 --port=27017 -d sflultimate dump/heroku_8xfcj7cs
+```
+
+
 ## Older Website 
 
 The older website IP is at:

@@ -38,9 +38,20 @@ var fields = {
     initial: true,
     required: true
   },
+  participation: {
+    type: Types.Select,
+    options: [30,50,80],
+    initial: true,
+    required: true
+  },
+  ageGroup: {
+    type: Types.Select,
+    options: ["Student","Adult"],
+    initial: true,
+    required: true
+  },
   registered: {
     type: Types.Boolean,
-    required: true,
     default: false
   },
   partner_id: {

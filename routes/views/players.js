@@ -11,11 +11,13 @@ module.exports = function (req, res) {
       players = players.map(function (p) {
 
         return {
-          id:        p._id,
-          email:     p.email,
-          full_name: p.name,
-          skill:     p.skillLevel,
-          size:      p.shirtSize
+          id:            p._id,
+          email:         p.email,
+          full_name:     p.name,
+          skill:         p.skillLevel,
+          size:          p.shirtSize,
+          age:           p.ageGroup,
+          participation: p.participation
         };
 
       });

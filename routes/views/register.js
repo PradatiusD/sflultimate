@@ -37,7 +37,7 @@ module.exports = function(req, res) {
       locals.formData[p] = req.body[p];
     }
 
-    var leagueFee = (req.body.age === "student") ? "30.00": "50.00";
+    var leagueFee = (req.body.age === 'Student') ? '30.00': '50.00';
 
     var player = Player.model.findById(req.body.user_id).exec(function (err, player) {
 
@@ -55,11 +55,12 @@ module.exports = function(req, res) {
           email:     req.body.email,
         },
         customFields: {
-          partner:     req.body.partner,
-          partner_id:  req.body.partner_id,
-          age:         req.body.age,
-          shirt_size:   req.body.shirtSize,
-          skill_level:  req.body.skillLevel
+          partner:       req.body.partner,
+          partner_id:    req.body.partner_id,
+          age:           req.body.age,
+          shirt_size:    req.body.shirtSize,
+          skill_level:   req.body.skillLevel,
+          participation: req.body.participation
         }
       };
 
@@ -80,7 +81,11 @@ module.exports = function(req, res) {
 
         if (result.success) {
 
-          player.registered = true;
+          player.registered    = true;
+          player.participation = req.body.participation;
+          player.ageGroup      = req.body.age;
+          player.shirtSize     = req.body.shirtSize;
+          player.skillLevel    = req.body.skillLevel;    
 
           if (req.body.partner_id) {
             player.partner_id = req.body.partner_id;
