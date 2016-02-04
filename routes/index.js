@@ -47,8 +47,21 @@ module.exports = function (app) {
   app.get('/terms',           function (req, res) {
     res.render('terms');
   });
+
   app.get('/privacy',         function (req, res) {
     res.render('privacy');
+  });
+
+  // Redirect to old vestigial content
+  app.get([
+    "/sched.html",
+    "/teams.html",
+    "/about.html",
+    "/statistics.asp",
+    "/pics.html",
+    "/community.html"
+  ], function (req, res) {
+    res.redirect(301, '/');
   });
   
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
