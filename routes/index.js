@@ -62,7 +62,10 @@ module.exports = function (app) {
     "/community.html",
     "/sched.asp",
     "/players.asp",
-    "/register.html"
+    "/register.html",
+    "/bio.asp",
+    "/images/n-logo.png",
+    "/players"
   ], function (req, res) {
     res.redirect(301, '/');
   });
