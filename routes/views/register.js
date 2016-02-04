@@ -1,6 +1,7 @@
 var keystone  = require("keystone");
 var braintree = require("braintree");
 var Player    = keystone.list("Player");
+var _         = require("underscore");
 
 var gateway = braintree.connect({
   environment: braintree.Environment[process.env.BRAINTREE_ENV],
@@ -41,6 +42,10 @@ module.exports = function(req, res) {
 
     var player = Player.model.findById(req.body.user_id).exec(function (err, player) {
 
+      if (_.isUndefined(player)) {
+        player = {};
+      }
+
       if (player.registered) {
         locals.err = "You are already registered.";
         return next();
@@ -76,16 +81,30 @@ module.exports = function(req, res) {
           return next();
         }
 
-        // console.log(req.body);
-        // console.log(result);
-
         if (result.success) {
 
-          player.registered    = true;
-          player.participation = req.body.participation;
-          player.ageGroup      = req.body.age;
-          player.shirtSize     = req.body.shirtSize;
-          player.skillLevel    = req.body.skillLevel;    
+          if (_.isEmpty(player)) {
+            player = new Player.model({
+              name: {
+                first:  req.body['name.first'],
+                last:   req.body['name.last']
+              },
+              email:         req.body.email,
+              password:      req.body['name.first'].substring(0,1)+req.body['name.last'],
+              shirtSize:     req.body.shirtSize,
+              skillLevel:    req.body.skillLevel,
+              participation: req.body.participation,
+              ageGroup:      req.body.age,
+              registered:    true
+            });
+          } else {
+
+            player.registered    = true;
+            player.participation = req.body.participation;
+            player.ageGroup      = req.body.age;
+            player.shirtSize     = req.body.shirtSize;
+            player.skillLevel    = req.body.skillLevel;
+          }
 
           if (req.body.partner_id) {
             player.partner_id = req.body.partner_id;
