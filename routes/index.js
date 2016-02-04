@@ -59,7 +59,10 @@ module.exports = function (app) {
     "/about.html",
     "/statistics.asp",
     "/pics.html",
-    "/community.html"
+    "/community.html",
+    "/sched.asp",
+    "/players.asp",
+    "/register.html"
   ], function (req, res) {
     res.redirect(301, '/');
   });
