@@ -1,4 +1,10 @@
+![SFL Ultimate Logo](public/images/logo-circled.png)
+
 # South Florida Ultimate
+
+[SFLUltimate.com](http://sflultimate.com) is a [Node.js KeystoneJS](http://keystonejs.com/docs/getting-started/) project running on a MongoDB and hosted on Heroku aimed to ease player registration, maintain stats.
+
+From a front-end perspective, this project utilizes Bootstrap 3 and SCSS as a CSS preprocessor, Jade as a templating engine, and a small amount of jQuery, though some components might later be built in Angular.
 
 ## Dependencies 
 
