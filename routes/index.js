@@ -64,8 +64,7 @@ module.exports = function (app) {
     "/players.asp",
     "/register.html",
     "/bio.asp",
-    "/images/n-logo.png",
-    "/players"
+    "/images/n-logo.png"
   ], function (req, res) {
     res.redirect(301, '/');
   });
