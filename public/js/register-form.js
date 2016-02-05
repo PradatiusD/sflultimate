@@ -63,5 +63,26 @@ braintree.setup(clientToken, "dropin", {
         $('#partner_id').val(d.id);
       }
     });
+
+    function validateIfOnDB () {
+      var fullname = $("#firstName").val()+" "+$("#lastName").val();
+      var userId   = $("#user_id").val();
+
+      var found = false;
+
+      for (var i = 0; i < playerData.length; i++) {
+        if(playerData[i].name === fullname) {
+          found = true;
+          break;
+        }
+      };
+
+      if (!found) {
+        $("#user_id").val("");
+      }
+    }
+
+    $("#firstName").change(validateIfOnDB);
+    $("#lastName").change(validateIfOnDB);
   });
 })(jQuery);
