@@ -44,27 +44,29 @@ module.exports = function (app) {
   app.all('/register',        routes.views.register);
   app.get('/confirmation',    routes.views.confirmation);
   app.get('/players',         routes.views.players);
-  app.get('/terms',           function (req, res) {
-    res.render('terms');
-  });
 
-  app.get('/privacy',         function (req, res) {
-    res.render('privacy');
+  ['/terms','/privacy','/draftboard'].forEach(function (url) {
+
+    var jadeTemplate = url.replace("/",'');
+
+    app.get(url,  function (req, res) {
+      res.render(jadeTemplate);
+    });
   });
 
   // Redirect to old vestigial content
   app.get([
-    "/sched.html",
-    "/teams.html",
-    "/about.html",
-    "/statistics.asp",
-    "/pics.html",
-    "/community.html",
-    "/sched.asp",
-    "/players.asp",
-    "/register.html",
-    "/bio.asp",
-    "/images/n-logo.png"
+    '/sched.html',
+    '/teams.html',
+    '/about.html',
+    '/statistics.asp',
+    '/pics.html',
+    '/community.html',
+    '/sched.asp',
+    '/players.asp',
+    '/register.html',
+    '/bio.asp',
+    '/images/n-logo.png'
   ], function (req, res) {
     res.redirect(301, '/');
   });

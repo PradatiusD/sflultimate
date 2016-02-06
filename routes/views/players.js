@@ -17,7 +17,9 @@ module.exports = function (req, res) {
           skill:         p.skillLevel,
           size:          p.shirtSize,
           age:           p.ageGroup,
-          participation: p.participation
+          participation: p.participation,
+          partner_id:    p.partner_id,
+          registered:    p.registered
         };
 
       });

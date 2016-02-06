@@ -1,8 +1,25 @@
 #footer {
-	margin-top: 30px;
-	border-top: 1px solid #eeeeee;
-	padding-top: 30px;
-	color: #777777;
+  margin-top: 30px;
+  border-top: 1px solid #eeeeee;
+  padding-top: 30px;
+  color: #777777;
+
+  .fa {
+    color: #FFF;
+    background: #B9B9B9;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 15px;
+    margin-right: 5px;
+    border-radius: 100%;
+    text-align: center;
+  }
+
+  .fa:hover {
+    background: black;
+  }
 }
 
 .gallery-image img{
@@ -12,17 +29,17 @@
 }
 
 .navbar.navbar-inverse {
-	border-radius: 0;
+  border-radius: 0;
 }
 
 .banner.unslider-fade {
-	min-height: 700px;
-	
-	img {
-		width: 100%;
-	}
+  min-height: 700px;
+  
+  img {
+    width: 100%;
+  }
 }
 
 .modal-body {
-	font-size: 17px;
+  font-size: 17px;
 }

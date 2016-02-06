@@ -1,0 +1,16 @@
+extends ../layouts/default
+
+block content
+	.container
+		h1 Draftboard
+		#draftboard
+			table.table.table-hover.table-striped
+				thead
+					th Name
+					th Skill
+					th Partner
+					th Partner Status
+				tbody
+
+block js
+	script(src='/js/draftboard.js')

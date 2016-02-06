@@ -5826,6 +5826,19 @@ button.close {
   border-top: 1px solid #eeeeee;
   padding-top: 30px;
   color: #777777; }
+  #footer .fa {
+    color: #FFF;
+    background: #B9B9B9;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 15px;
+    margin-right: 5px;
+    border-radius: 100%;
+    text-align: center; }
+  #footer .fa:hover {
+    background: black; }
 
 .gallery-image img {
   display: block;

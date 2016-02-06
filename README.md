@@ -77,6 +77,6 @@ mongorestore --host 127.0.0.1 --port=27017 -d sflultimate dump/heroku_8xfcj7cs
 
 ## Older Website 
 
-The [older website](https://web.archive.org/web/20160110095115/http://sflultimate.com/) can be accessed via the wayback machine at:
+The [older website](https://web.archive.org/web/20160110095115/http://sflultimate.com/) can be viewed via the publicly accessible wayback machine at:
 
 - https://web.archive.org/web/20160110095115/http://sflultimate.com/
