@@ -54,6 +54,9 @@ module.exports = function(req, res) {
       var purchase = {
         amount: leagueFee,
         paymentMethodNonce: req.body.payment_method_nonce,
+        options: {
+          submitForSettlement: true
+        },
         customer: {
           firstName: req.body['name.first'],
           lastName:  req.body['name.last'],
