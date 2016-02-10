@@ -13,7 +13,10 @@
   	var $table = $('#draftboard').find('table');
   	var $tbody = $table.find('tbody');
 
-  	$("#draftboard").prepend('<p class="lead">There are '+registeredPlayers.length+' players registered.</p>')
+  	$("#draftboard").prepend('<p class="lead">There are '+registeredPlayers.length+' players registered<span id="matchCount"></span>.</p>');
+
+    var matchCountVal = 0;
+    var $matchCount   = $("#matchCount");
 
   	registeredPlayers.forEach(function (d) {
   		var name = d.full_name.first+' '+d.full_name.last;
@@ -28,6 +31,7 @@
   				if (d.id === playerData[i].partner_id) {
 
   					match = true;
+            matchCountVal++;
   				}
   				break;
   			}
@@ -46,6 +50,8 @@
 
 	  	$tbody.append('<tr><td>'+name+'</td><td>'+d.skill+'</td><td>'+partnerName+'</td><td>'+matchHTML+'</td></tr>');
   	});
+
+    $matchCount.text(" and "+matchCountVal+" couples");
 
   });
 })();
