@@ -51,7 +51,6 @@
 	  	$tbody.append('<tr><td>'+name+'</td><td>'+d.skill+'</td><td>'+partnerName+'</td><td>'+matchHTML+'</td></tr>');
   	});
 
-    $matchCount.text(" and "+matchCountVal+" couples");
-
+    $matchCount.text(" and "+ (matchCountVal/2) +" couples");
   });
 })();
