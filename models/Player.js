@@ -15,6 +15,11 @@ var fields = {
     required: true, 
     index: true 
   },
+  gender: {
+    type: Types.Select,
+    options: ["Male","Female"],
+    initial: true
+  },
   email: {
     type: Types.Email,
     initial: true,
