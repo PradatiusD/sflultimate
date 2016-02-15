@@ -54,10 +54,9 @@ var fields = {
     type: Types.Boolean,
     default: false
   },
-  partner_id: {
-    type: String,
-    hidden: true,
-    default: null 
+  partner: {
+    type: Types.Relationship,
+    ref: 'Player'
   }
 };
 

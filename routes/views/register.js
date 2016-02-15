@@ -110,7 +110,7 @@ module.exports = function(req, res) {
           }
 
           if (req.body.partner_id) {
-            player.partner_id = req.body.partner_id;
+            player.partner = req.body.partner_id;
           }
 
           player.save(function (err) {
