@@ -5,8 +5,13 @@ var Player = keystone.list('Player');
 
 module.exports = function (req, res) {
  
-  Player.model.find()
-    .exec(function (err, players) {
+  var query = Player.model.find();
+
+  if (req.query.registered) {
+    query.where('registered', true);
+  }
+
+  query.exec(function (err, players) {
 
       players = players.map(function (p) {
 
@@ -18,7 +23,7 @@ module.exports = function (req, res) {
           size:          p.shirtSize,
           age:           p.ageGroup,
           participation: p.participation,
-          partner_id:    p.partner_id,
+          partner:       p.partner,
           registered:    p.registered
         };
 
