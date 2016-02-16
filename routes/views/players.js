@@ -19,10 +19,11 @@ module.exports = function (req, res) {
           id:            p._id,
           email:         p.email,
           full_name:     p.name,
-          skill:         p.skillLevel,
+          skill:         parseInt(p.skillLevel),
           size:          p.shirtSize,
           age:           p.ageGroup,
-          participation: p.participation,
+          participation: parseInt(p.participation),
+          gender:        p.gender,
           partner:       p.partner,
           registered:    p.registered
         };

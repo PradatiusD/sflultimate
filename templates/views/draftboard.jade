@@ -1,16 +1,32 @@
 extends ../layouts/default
 
 block content
-	.container
+	.container(ng-app='draftboardApp')
 		h1 Draftboard
-		#draftboard
+		#draftboard(ng-controller='PlayerTableController')
+			p.lead There are {{players.length}} players registered and {{matches/2}} couples.
 			table.table.table-hover.table-striped
 				thead
+					th Player ID
 					th Name
+					th Gender
 					th Skill
+					th Attendance
 					th Partner
 					th Partner Status
 				tbody
+					tr(ng-repeat='player in players | orderBy:"-skill"')
+						td
+							code {{player.id}}
+						td {{player.full_name.first}} {{player.full_name.last}}
+						td {{player.gender}}
+						td {{player.skill}}
+						td {{player.participation}}
+						td {{player.partnerName}}
+						td
+							span(ng-if='player.partnerMatch' class='label label-info') Full Match
+							span(ng-if='player.partner && !player.partnerName' class='label label-default' style='opacity: 0.4') Half Match
 
 block js
+	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
 	script(src='/js/draftboard.js')
