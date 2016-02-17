@@ -7,9 +7,9 @@ var Types = keystone.Field.Types;
  */
 
 var Team = new keystone.List('Team', {
-	map:{
-		name: 'name'
-	}
+  map:{
+    name: 'name'
+  }
 });
 
 Team.add({
@@ -20,22 +20,23 @@ Team.add({
     index:    true 
   },
   color: {
-  	type: Types.Color
+    type: Types.Color
   },
-	captains: {
-		type: Types.Relationship,
-		ref:  'Player',
-		many: true
-	},
-	players: {
-		type: Types.Relationship,
-		ref: 'Player',
-		many: true
-	},
-	league: {
-		type: Types.Relationship,
-		ref: 'League'
-	}
+  captains: {
+    type: Types.Relationship,
+    initial: true,
+    ref:  'Player',
+    many: true
+  },
+  players: {
+    type: Types.Relationship,
+    ref: 'Player',
+    many: true
+  },
+  league: {
+    type: Types.Relationship,
+    ref: 'League'
+  }
 });
 
 Team.defaultColumns = 'name, captains, league';

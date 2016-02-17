@@ -44,6 +44,7 @@ module.exports = function (app) {
   app.all('/register',        routes.views.register);
   app.get('/confirmation',    routes.views.confirmation);
   app.get('/players',         routes.views.players);
+  app.get('/captains',        routes.views.captains);
 
   ['/terms','/privacy','/draftboard'].forEach(function (url) {
 
