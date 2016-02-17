@@ -2,6 +2,8 @@ extends ../layouts/default
 
 block content
 	.container(ng-app='draftboardApp')
+		if user
+			#loggedin
 		h1 Draftboard
 		#draftboard(ng-controller='PlayerTableController')
 			p.lead There are {{players.length}} players registered and {{matches/2}} couples.
@@ -17,7 +19,7 @@ block content
 				tbody
 					tr(ng-repeat='player in players | orderBy:"-skill"')
 						td
-							code {{player.id}}
+							code(ng-click="viewProfile(player.id)") {{player.id}}
 						td {{player.full_name.first}} {{player.full_name.last}}
 						td {{player.gender}}
 						td {{player.skill}}

@@ -2,7 +2,15 @@
 
   var app = angular.module("draftboardApp",[]);
 
-  app.controller("PlayerTableController",function ($http, $scope) {
+  app.controller("PlayerTableController",function ($http, $scope, $window) {
+
+    var isLoggedIn = document.getElementById("loggedin");
+
+    $scope.viewProfile = function (id) {
+      if (isLoggedIn) {
+        $window.open("/keystone/players/"+id, "_blank");      
+      }
+    };
 
     $scope.matches = 0;
 
@@ -47,41 +55,4 @@
   });
 
 
-//   	$("#draftboard").prepend('<p class="lead">There are '+players.length+' players registered<span id="matchCount"></span>.</p>');
-
-
-//   	players.forEach(function (d) {
-//   		var name        = d.full_name.first+' '+d.full_name.last;
-//   		var partnerName = false;
-//   		var match       = false;
-
-//   		for (var i = 0; i < playerData.length; i++) {
-//   			if (d.partner === playerData[i].id) {
-//   				partnerName = playerData[i].full_name.first + " " + playerData[i].full_name.last;
-
-
-//   				if (d.id === playerData[i].partner) {
-
-//   					match = true;
-//             matchCountVal++;
-//   				}
-//   				break;
-//   			}
-//   		};
-
-//   		partnerName    = partnerName || "";
-
-//   		var matchHTML;
-//   		if (match) {
-//   		} else {
-//   			matchHTML = '';
-//   		}
-
-//       var gender = d.gender ? d.gender: '';
-
-// 	  	$tbody.append('<tr><td>'+name+'</td><td>'+gender+'</td><td>'+d.skill+'</td><td>'+partnerName+'</td><td>'+matchHTML+'</td></tr>');
-//   	});
-
-//     $matchCount.text(" and "+ (matchCountVal/2) +" couples");
-//   });
 })();

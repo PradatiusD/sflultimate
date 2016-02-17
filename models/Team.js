@@ -13,11 +13,14 @@ var Team = new keystone.List('Team', {
 });
 
 Team.add({
-  name: { 
+  name: {
     type: String, 
     initial:  true,
     required: true, 
     index:    true 
+  },
+  color: {
+  	type: Types.Color
   },
 	captains: {
 		type: Types.Relationship,
@@ -35,8 +38,6 @@ Team.add({
 	}
 });
 
-
 Team.defaultColumns = 'name, captains, league';
-
 
 Team.register();
