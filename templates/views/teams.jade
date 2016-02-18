@@ -1,17 +1,22 @@
 extends ../layouts/default
 
+block head
+  meta(property="og:title"        content="League Teams")
+  meta(property="og:url"          content="http://www.sflultimate.com/teams")
+  meta(property="og:description"  content="Find out who is on your team for Spring League.")
+
 block content
-	.container(ng-app='TeamApp')
-		h1 Teams
-		section(ng-controller='TeamListController')
-			article(ng-repeat='team in teams')
-				h3 {{team.color}}
-				p.lead
-					span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{$first ? "&":""}} 
-				table.table.table-striped
-					tr(ng-repeat='player in team.players')
-						td {{player.name.first}} {{player.name.last}}
+  .container(ng-app='TeamApp')
+    h1 Teams
+    section(ng-controller='TeamListController')
+      article(ng-repeat='team in teams')
+        h3 {{team.color}}
+        p.lead
+          span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{$first ? "&":""}} 
+        table.table.table-striped
+          tr(ng-repeat='player in team.players')
+            td {{player.name.first}} {{player.name.last}}
 
 block js
-	script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
-	script(src='/js/team-list.js')
+  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
+  script(src='/js/team-list.js')
