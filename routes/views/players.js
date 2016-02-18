@@ -2,7 +2,6 @@ var keystone = require('keystone');
 var Player = keystone.list('Player');
 
 
-
 module.exports = function (req, res) {
  
   var query = Player.model.find();
