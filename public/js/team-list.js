@@ -2,6 +2,20 @@
 
 var app = angular.module("TeamApp",[]);
 
+
+function createShirtList (teams) {
+  var headers = ['Team Color','First Name','Last Name','Shirt Size'];
+  var csv     = headers.join("\t")+"\n";
+
+  teams.forEach(function (team){
+    team.players.forEach(function (player) {
+      csv += [team.color,player.name.first, player.name.last, player.shirtSize].join("\t")+"\n";
+    });
+  });
+  return csv;
+}
+
+
 app.controller("TeamListController",function ($http, $scope) {
 
   var query = $http.get('/teams?f=json');
@@ -16,7 +30,7 @@ app.controller("TeamListController",function ($http, $scope) {
   			if (players[i]._id === playerId) {
   				return players[i];
   			}
-  		}    	
+  		}
     }
 
     teams = teams.map(function (team) {
@@ -27,11 +41,10 @@ app.controller("TeamListController",function ($http, $scope) {
     	return team;
     });
 
-    console.log(teams);
 
     $scope.teams = teams;
-
   });
+
 
   query.error(function (err) {
     alert("There was an issue connecting to database.");
