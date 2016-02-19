@@ -39,6 +39,6 @@ Team.add({
   }
 });
 
-Team.defaultColumns = 'name, captains, league';
+Team.defaultColumns = 'color, name, captains, league';
 
 Team.register();

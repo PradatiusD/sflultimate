@@ -7,13 +7,15 @@ block head
 
 block content
   .container(ng-app='TeamApp')
-    h1 Teams
-    section(ng-controller='TeamListController')
-      article(ng-repeat='team in teams')
-        h3 {{team.color}}
+    h1 Spring League Teams
+    section.team-list(ng-controller='TeamListController')
+      article.col-md-6.col-lg-4(ng-repeat='team in teams')
+        h3 
+          span(ng-class='team.color.toLowerCase()').team-color 
+          | {{team.color}}
         p.lead
-          span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{$first ? "&":""}} 
-        table.table.table-striped
+          span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}} 
+        table.table.table-striped.table-bordered
           tr(ng-repeat='player in team.players')
             td {{player.name.first}} {{player.name.last}}
 

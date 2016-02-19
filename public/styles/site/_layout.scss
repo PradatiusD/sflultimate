@@ -43,3 +43,37 @@
 .modal-body {
   font-size: 17px;
 }
+
+
+/* Teams List */
+
+.team-list {
+
+  article {
+    min-height: 780px;
+  }
+
+  .team-color {
+    border-radius: 100%;
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    margin-right: 5px;
+    position: relative;
+    top: 2px;
+
+    &.white {
+      border: 1px solid rgba(0, 0, 0, 0.38);
+    }
+  }
+}
+
+.orange { background-color: orange; }
+.blue   { background-color: #2A2AD4;}
+.yellow { background-color: #FFFF19;}
+.white  { background-color: white;  }
+.red    { background-color: #FD3C3C;}
+.grey   { background-color: grey;   }
+.green  { background-color: green;  }
+.black  { background-color: black;  }
+
