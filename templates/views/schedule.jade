@@ -1,0 +1,22 @@
+extends ../layouts/default
+
+block head
+  meta(property="og:title"        content="League Teams")
+  meta(property="og:url"          content="http://www.sflultimate.com/schedule")
+  meta(property="og:description"  content="Discover the Schedule for this year's Spring League.")
+
+block content
+  .container
+    table.table.table-striped.table-bordered
+      h1 Schedule
+      thead
+        th Date
+        th Time
+        th(col-span="2") Matchup 
+      for game in games
+        tr
+          td=game.date
+          td=game.time
+          td #{game.home} vs #{game.away}
+
+block js

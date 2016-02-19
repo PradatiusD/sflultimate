@@ -45,6 +45,7 @@ module.exports = function (app) {
   app.get('/confirmation',    routes.views.confirmation);
   app.get('/players',         routes.views.players);
   app.get('/captains',        routes.views.captains);
+  app.get('/schedule',        routes.views.schedule);
   app.get('/teams',           routes.views.teams);
 
   ['/terms','/privacy','/draftboard'].forEach(function (url) {
