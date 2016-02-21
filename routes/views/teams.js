@@ -20,9 +20,10 @@ module.exports = function (req, res) {
 
       players = players.map(function (player) {
         return {
-          _id:       player._id,
-          name:      player.name,
-          shirtSize: player.shirtSize
+          _id:        player._id,
+          name:       player.name,
+          shirtSize:  player.shirtSize,
+          skillLevel: player.skillLevel
         };
       });
 

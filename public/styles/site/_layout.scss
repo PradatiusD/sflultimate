@@ -50,7 +50,7 @@
 .team-list {
 
   article {
-    min-height: 780px;
+    min-height: 850px;
   }
 
   .team-color {
@@ -62,8 +62,8 @@
     position: relative;
     top: 2px;
 
-    &.white {
-      border: 1px solid rgba(0, 0, 0, 0.38);
+    &.white, &.yellow {
+      border: 1px solid rgba(0, 0, 0, 0.25);
     }
   }
 }
