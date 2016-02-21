@@ -38,7 +38,9 @@ module.exports = function(req, res) {
       locals.formData[p] = req.body[p];
     }
 
-    var leagueFee = (req.body.age === 'Student') ? '30.00': '50.00';
+    var leagueFee = (req.body.age === 'Student') ? '65.00': '65.00';
+
+    // var leagueFee = (req.body.age === 'Student') ? '30.00': '50.00';
 
     var player = Player.model.findById(req.body.user_id).exec(function (err, player) {
 
