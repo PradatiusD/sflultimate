@@ -4,6 +4,7 @@ var app = angular.module("TeamApp",[]);
 
 
 function createShirtList (teams) {
+
   var headers = ['Team Color','First Name','Last Name','Shirt Size'];
   var csv     = headers.join("\t")+"\n";
 
@@ -26,6 +27,7 @@ app.controller("TeamListController",function ($http, $scope) {
     var players = data.players;
 
     function matchToPlayerById (playerId) {
+
   		for (var i = 0; i < players.length; i++) {
   			if (players[i]._id === playerId) {
   				return players[i];

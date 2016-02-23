@@ -6,17 +6,84 @@ block head
   meta(property="og:description"  content="Discover the Schedule for this year's Spring League.")
 
 block content
-  .container
-    table.table.table-striped.table-bordered
-      h1 Schedule
-      thead
-        th Date
-        th Time
-        th(col-span="2") Matchup 
-      for game in games
-        tr
-          td=game.date
-          td=game.time
-          td #{game.home} vs #{game.away}
+  .container(ng-app="scheduleApp")
+    .schedule(ng-controller="ScheduleViewController")
+      section
+        h1 Schedule
+        p.lead
+          | Pick your color to filter schedule by your team.<br>
+          span.team-color(ng-repeat="color in teams" ng-class="color.toLowerCase()" ng-click="filterFor(color)")
+      table.table.table-striped.table-bordered
+        thead
+          th Date
+          th Time
+          th(col-span="2") Matchup 
+        tbody
+          tr(ng-repeat="game in games | filter:colorFilter" ng-class="(game.timestamp - $parent.today > 0 && game.timestamp - $parent.today < diff) ? 'success':'' ")
+            td {{game.date | date: 'MMM d'}}
+            td {{game.time}}
+            td {{game.home}} vs. {{game.away}}
+
 
 block js
+  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
+  script.
+
+    angular.module("scheduleApp", [])
+      .controller("ScheduleViewController",function ($http, $scope) {
+
+        $scope.games = [];
+        $scope.teams = [];
+        $scope.today = new Date().getTime();
+
+        $scope.diff = 7 * 24 * 60 * 60 * 1000;
+
+        $scope.colorFilter = function (item) {
+          return item;
+        };
+
+        $scope.filterFor = function (color) {
+          $scope.colorFilter = function (game) {
+
+            if (game.away === color || game.home === color) {
+
+              if (game.away === color) {
+                var home  = game.home;
+                var away  = game.away;
+                game.home = away;
+                game.away = home;
+              }
+
+              if (game.home === color) {
+                return true;
+              }
+            }
+          }
+        };
+
+        var query = $http.get("/schedule?f=json");
+
+        query.success(function (games) {
+
+          $scope.games = games.map(function (game) {
+            game.date      = new Date(game.date);
+            game.timestamp = game.date.getTime();
+            return game;
+          });
+
+          var teams = [];
+
+          games.forEach(function (game) {
+            if (teams.indexOf(game.home) === -1) {
+              teams.push(game.home);
+            }
+          });
+
+          $scope.teams = teams;
+        });
+
+        query.error(function (err) {
+          console.log(err);
+        });
+
+      });
