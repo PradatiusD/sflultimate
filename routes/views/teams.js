@@ -23,7 +23,8 @@ module.exports = function (req, res) {
           _id:        player._id,
           name:       player.name,
           shirtSize:  player.shirtSize,
-          skillLevel: player.skillLevel
+          skillLevel: player.skillLevel,
+          gender:     player.gender
         };
       });
 

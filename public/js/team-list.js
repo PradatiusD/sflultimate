@@ -5,14 +5,15 @@ var app = angular.module("TeamApp",[]);
 
 function createShirtList (teams) {
 
-  var headers = ['Team Color','First Name','Last Name','Shirt Size'];
+  var headers = ['Player ID','Team Color','First Name','Last Name','Shirt Size', 'Gender'];
   var csv     = headers.join("\t")+"\n";
 
   teams.forEach(function (team){
     team.players.forEach(function (player) {
-      csv += [team.color,player.name.first, player.name.last, player.shirtSize].join("\t")+"\n";
+      csv += [player._id, team.color, player.name.first, player.name.last, player.gender].join("\t")+"\n";
     });
   });
+
   return csv;
 }
 
@@ -45,6 +46,7 @@ app.controller("TeamListController",function ($http, $scope) {
 
 
     $scope.teams = teams;
+    // console.log(createShirtList(teams));
   });
 
 
