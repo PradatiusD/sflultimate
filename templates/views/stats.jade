@@ -9,7 +9,7 @@ block content
   .container(ng-app='StatsApp')
     h1 Spring League Stats
     section.team-list(ng-controller='StatsViewController')
-      table.table.stats.table-bordered
+      table.table.table-striped
         thead
           th Team Color
           th First Name
@@ -19,8 +19,9 @@ block content
           th Defenses
           th Overall
         tbody
-          tr(ng-repeat="player in players | orderBy:'-Overall'" ng-class="player['Team Color'].toLowerCase()")
-            td {{player["Team Color"]}}
+          tr(ng-repeat="player in players | orderBy:'-Overall'")
+            td
+              span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
             td {{player["First Name"]}}
             td {{player["Last Name"]}}
             td {{player["Assists"]}}
