@@ -15,22 +15,22 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56b02d3070b93aac39b4110e,Orange,Megan,Wilke,Female,0,2,1,,1,0,1
 56b02d5f70b93aac39b411bb,Orange,Darius,Khonsary,Male,0,0,1,,1,1,1
 56b02d9d70b93aac39b4127c,Orange,Spencer,Gonsalves,Male,0,0,0,,0,0,0
-56b02d2370b93aac39b410e3,Blue,Disque,"Deane, Jr.",Male,,,,,,,
-56b02d2870b93aac39b410f3,Blue,Andrew,Cox,Male,,,,,,,
-56c00bdbe3d2a90300c77083,Blue,Jay,Kittle,Male,,,,,,,
-56b02d9470b93aac39b41261,Blue,Jeremiah,Gardner,Male,,,,,,,
-56b02d2d70b93aac39b41106,Blue,Jeff,Coon,Male,,,,,,,
-56b639129b8d93030029f269,Blue,Eric,Beckman,Male,,,,,,,
-56ba98ac9f5a730300d19cf8,Blue,Brian ,Feldman ,Male,,,,,,,
-56b02d2670b93aac39b410ec,Blue,Rica,Patel,Female,,,,,,,
-56b02d2670b93aac39b410ed,Blue,Rocco,Sabino,Male,,,,,,,
-56b02d2e70b93aac39b41107,Blue,Brandon,Morrison,Male,,,,,,,
-56bd46be9ae1ec03006943a2,Blue,Nathan,Van Hare,Male,,,,,,,
-56bd47239ae1ec03006943a3,Blue,Cameron,Van Hare,Male,,,,,,,
-56b02d3470b93aac39b4111e,Blue,Shaun,McLaughlin,Male,,,,,,,
-56b02d3470b93aac39b4111f,Blue,Catie,Linton,Female,,,,,,,
-56c00c5de3d2a90300c77084,Blue,Darly,Kittle,Female,,,,,,,
-56b02d9070b93aac39b41258,Blue,Howie,Needleman,Male,,,,,,,
+56b02d2370b93aac39b410e3,Blue,Disque,"Deane, Jr.",Male,0,0,0,,0,0,0
+56b02d2870b93aac39b410f3,Blue,Andrew,Cox,Male,3,0,1,,0,0,0
+56c00bdbe3d2a90300c77083,Blue,Jay,Kittle,Male,0,0,0,,0,0,0
+56b02d9470b93aac39b41261,Blue,Jeremiah,Gardner,Male,0,2,2,,0,0,0
+56b02d2d70b93aac39b41106,Blue,Jeff,Coon,Male,0,0,0,,0,2,0
+56b639129b8d93030029f269,Blue,Eric,Beckman,Male,0,0,1,,0,0,0
+56ba98ac9f5a730300d19cf8,Blue,Brian ,Feldman ,Male,0,1,1,,0,0,1
+56b02d2670b93aac39b410ec,Blue,Rica,Patel,Female,0,0,2,,0,0,0
+56b02d2670b93aac39b410ed,Blue,Rocco,Sabino,Male,4,1,1,,1,0,1
+56b02d2e70b93aac39b41107,Blue,Brandon,Morrison,Male,1,1,0,,1,1,1
+56bd46be9ae1ec03006943a2,Blue,Nathan,Van Hare,Male,0,0,0,,1,0,1
+56bd47239ae1ec03006943a3,Blue,Cameron,Van Hare,Male,0,0,0,,0,0,0
+56b02d3470b93aac39b4111e,Blue,Shaun,McLaughlin,Male,2,4,3,,0,0,0
+56b02d3470b93aac39b4111f,Blue,Catie,Linton,Female,1,4,1,,0,0,0
+56c00c5de3d2a90300c77084,Blue,Darly,Kittle,Female,0,0,0,,0,0,0
+56b02d9070b93aac39b41258,Blue,Howie,Needleman,Male,0,0,0,,0,0,0
 56b02d7c70b93aac39b41224,Yellow,Michael,Namkung,Male,1,2,3,,5,4,3
 56be606504ba200300155a9d,Yellow,Felix,Perez,Male,,,,,,,
 56bb53b2b9ee42030079eed5,Yellow,Josh,Seiden,Male,0,1,0,,2,1,1
@@ -80,20 +80,20 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56be912b04ba200300155a9f,Red,Michael,Kruger,Male,,,,,,,
 56b02d5b70b93aac39b411ac,Red,Mark,Gadala,Male,,,,,,,
 56ca068be3d0b00300c61fc8,Red,Natalia,Figueroa,Female,,,,,,,
-56bca4689ae1ec030069439f,Grey,Clifford,Rassweiler ,Male,,,,,,,
-56b02d6570b93aac39b411d0,Grey,Shane,Tedder,Male,,,,,,,
-56b02d3670b93aac39b41126,Grey,Chris,Balch,Male,,,,,,,
-56ba473b73f9b90300b9c48d,Grey,David,Gregg,Male,,,,,,,
+56bca4689ae1ec030069439f,Grey,Clifford,Rassweiler ,Male,,1,,,,,
+56b02d6570b93aac39b411d0,Grey,Shane,Tedder,Male,2,1,1,,,,
+56b02d3670b93aac39b41126,Grey,Chris,Balch,Male,,,1,,,,
+56ba473b73f9b90300b9c48d,Grey,David,Gregg,Male,,1,1,,,,
 56b02d3270b93aac39b41115,Grey,Diego,Lopez,Male,,,,,,,
-56b02d3970b93aac39b41130,Grey,Katie,Fox,Female,,,,,,,
+56b02d3970b93aac39b41130,Grey,Katie,Fox,Female,,1,,,,,
 56b02d6b70b93aac39b411e7,Grey,Madelein,Gimenez,Female,,,,,,,
-56bf83fbe3d2a90300c7707e,Grey,Arian,Mizani,Male,,,,,,,
+56bf83fbe3d2a90300c7707e,Grey,Arian,Mizani,Male,,1,,,,,
 56b02d2a70b93aac39b410fb,Grey,Rie,Takano,Female,,,,,,,
-56b02d2570b93aac39b410e8,Grey,Tommy,Rush,Male,,,,,,,
-56b02d2c70b93aac39b41101,Grey,Jordan,Taheri,Male,,,,,,,
-56b02d9670b93aac39b41267,Grey,Jacob,Halberg,Male,,,,,,,
-56b3ff19c7810e030065dc36,Grey,Chad,Weinkoff,Male,,,,,,,
-56b02d2770b93aac39b410ef,Grey,Javier,Sahagun,Male,,,,,,,
+56b02d2570b93aac39b410e8,Grey,Tommy,Rush,Male,6,2,2,,,,
+56b02d2c70b93aac39b41101,Grey,Jordan,Taheri,Male,3,3,,,,,
+56b02d9670b93aac39b41267,Grey,Jacob,Halberg,Male,,1,2,,,,
+56b3ff19c7810e030065dc36,Grey,Chad,Weinkoff,Male,2,,1,,,,
+56b02d2770b93aac39b410ef,Grey,Javier,Sahagun,Male,,2,3,,,,
 56b02d3670b93aac39b41124,Grey,Allen,Turner,Male,,,,,,,
 56c8c25d49329a030083d8f2,Grey,Gerald,Permenter,Male,,,,,,,
 56b02d4970b93aac39b4116c,Green,Alton,Gaines,Male,,,,,,,

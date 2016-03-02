@@ -8,9 +8,13 @@ block head
 block content
   .container(ng-app='StatsApp')
     h1 Spring League Stats
-    section.team-list(ng-controller='StatsViewController')
+    section(ng-controller='StatsViewController')
+
+      h2 Leaderboard
+
       table.table.table-striped
         thead
+          th Rank
           th Team Color
           th First Name
           th Last Name
@@ -19,7 +23,34 @@ block content
           th Defenses
           th Overall
         tbody
-          tr(ng-repeat="player in players | orderBy:'-Overall'")
+          tr(ng-repeat="player in leaderboard | orderBy:'-Overall'")
+            td {{$index + 1}}
+            td
+              span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
+            td {{player["First Name"]}}
+            td {{player["Last Name"]}}
+            td {{player["Assists"]}}
+            td {{player["Scores"]}}
+            td {{player["Defenses"]}}
+            td {{player["Overall"]}}
+
+      br
+      h2 Rising Contenders
+      br
+
+      table.table.table-striped
+        thead
+          th Rank
+          th Team Color
+          th First Name
+          th Last Name
+          th Assists
+          th Scores
+          th Defenses
+          th Overall
+        tbody
+          tr(ng-repeat="player in contenders | orderBy:'-Overall'")
+            td {{$index + leaderboard.length + 1}}
             td
               span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
             td {{player["First Name"]}}
@@ -31,6 +62,7 @@ block content
 
 block js
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js')
   script.
     angular.module('StatsApp', [])
       .controller("StatsViewController",function ($http, $scope) {
@@ -80,8 +112,11 @@ block js
           return o;
         });
 
-        $scope.players = rows;
-        console.log(rows);
+        rows = _.sortBy(rows, function (d) {return d.Overall;}).reverse();
+
+        $scope.leaderboard = rows.splice(0,9);
+        $scope.contenders  = rows;
+
       });
 
       query.error(function (e) {
