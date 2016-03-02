@@ -76,11 +76,14 @@
   }
 }
 
-.orange { background-color: orange; }
-.blue   { background-color: #2A2AD4;}
-.yellow { background-color: #FFFF19;}
-.white  { background-color: white;  }
-.red    { background-color: #FD3C3C;}
-.grey   { background-color: grey;   }
-.green  { background-color: green;  }
-.black  { background-color: black;  }
+
+.orange { background-color: orange;  .stats & {background-color: rgba(orange,  0.25);}}
+.blue   { background-color: #2A2AD4; .stats & {background-color: rgba(#2A2AD4, 0.25);}}
+.yellow { background-color: #FFFF19; .stats & {background-color: rgba(#FFFF19, 0.25);}}
+.white  { background-color: white;   .stats & {background-color: rgba(white,   0.25);}}
+.red    { background-color: #FD3C3C; .stats & {background-color: rgba(#FD3C3C, 0.25);}}
+.grey   { background-color: grey;    .stats & {background-color: rgba(grey,    0.25);}}
+.green  { background-color: green;   .stats & {background-color: rgba(green,   0.25);}}
+.black  { background-color: black;   .stats & {background-color: rgba(black,   0.25);}}
+
+
