@@ -23,14 +23,14 @@ block content
           th Time
           th(col-span="2") Matchup 
         tbody
-          tr(ng-repeat="game in games | filter:colorFilter" ng-class="(game.timestamp - $parent.today > 0 && game.timestamp - $parent.today < diff) ? 'success':'' ")
+          tr(ng-repeat="game in games | filter:colorFilter" ng-class="(game.timestamp - $parent.today > 0) ? '':'text-muted' ")
             td {{game.date | date: 'MMM d'}}
             td {{game.time}}
             td {{game.home}} vs. {{game.away}}
 
 
 block js
-  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js')
   script.
 
     angular.module("scheduleApp", [])
@@ -39,8 +39,6 @@ block js
         $scope.games = [];
         $scope.teams = [];
         $scope.today = new Date().getTime();
-
-        $scope.diff = 7 * 24 * 60 * 60 * 1000;
 
         $scope.colorFilter = function (item) {
           return item;
@@ -70,6 +68,7 @@ block js
         query.success(function (games) {
 
           $scope.games = games.map(function (game) {
+
             game.date      = new Date(game.date);
             game.timestamp = game.date.getTime();
             return game;

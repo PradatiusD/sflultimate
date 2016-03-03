@@ -211,3 +211,4 @@ Park: Shenandoah Park - 1800 SW 21st Ave, Miami, FL 33145
 Fields: Grass 
 Description: Very casual pick up game with mostly beginner players. As the name implies this is a very light hearted game with low competition levels.  The games are great for beginners and a great way to get into the community if just starting to play Ultimate.  Field and Days are subject to change so check the Meet Up for updated info.
 
+<!-- cp 2016\ Spring\ League\ Stats\ -\ Raw\ Data.csv ~/Documents/GitHub/sflultimate/public/stats.csv  -->
