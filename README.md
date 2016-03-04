@@ -82,26 +82,8 @@ The [older website](https://web.archive.org/web/20160110095115/http://sflultimat
 - https://web.archive.org/web/20160110095115/http://sflultimate.com/
 
 
-### Info
-
-We will be playing 8 teams.
-
-1. Orange
-2. Blue
-3. Green
-4. Gray
-5. White
-6. Pink
-7. Red
-8. Black
-
-Dont have games:
-
-- March 6th
 - April 30th finals (Saturday @ Amelia Earhart)
-- 5-7 7-9
 
-Hi Josh Seiden, we just had a draft last night where we picked teams.  By around tonight I should be pushing the team lists up and sharing emails to captains.
 
 If you want a contact, you can email sflultimate@gmail.com, or send a Facebook message to the South Florida Spring League.
 
@@ -137,78 +119,6 @@ Player Page - list of leagues played + team they were on + total stats for that 
 At some point we need to get my computer up and running with keystone, and I need to lend you my notebook with my ideas/sketches in it
 
 
-rpmThese are the games that I pulled from the pick-up Ultimate site that I have heard are legit but I have never played:
-Key Biscayne Ultimate (Never been to this game)
-Contact: Grant
-Email: gkunks@gmail.com
-Phone: 561.247.2684
-Website: http://www.ratradio.net
-
-Sundays: 6:00 @ Mast Academy
-
-Fields: Turf or Grass, depending on which field
-Description: We've been playing at Key Biscayne and Virginia Key for over 10 years now, but we have been adding more and more people over the last few years. Most of our players are from Key Biscayne but we have a good amount who come from the mainland. We range in age from 16 to 60 (average late 20's) years old, mostly male. We are pretty liberal with the rules (ie. NO hold/stall count or bricks) but most violations are enforced one way or another. 
-
-Hialeah Ultimate Frisbee (Never been to this game)
-Contact: Daniela Larez
-Email: daniela.larez@gmail.com
-Website: https://www.facebook.com/groups/87229532865/?notif_t=group_name_change
-
-Thursdays: 6:30PM-9PM
-
-Fields: Grass field Outdoors
-Description: THURSDAYS: 
-Sparks Park
-1301 W 60th St, Hialeah, FL 33012
-6:30 PM – 9:00 PM
-
-SUNDAYS: Please email or follow us at 
-https://www.facebook.com/groups/87229532865/?fref=ts
-for updates
-
-
-These are the games that I have played (and play regularly) and are all a lot of fun.
-
-Saturday Ultimate at Continental Park
-Contact: Roger Oprandi
-Email: Rogeroprandi@gmail.com
-Phone: 786.269.9963
-
-Saturdays: 10 am
-Park: Continental Park - 10000 SW 82 Avenue, Miami, FL 33156
-
-Fields: Grass
-Description: Casual pick up game with all levels welcome. Game on rain or shine at Continental Park. Please bring two shirts, one white and one dark. Most players are wearing cleats.
-
-Sunday Ultimate at Evelyn Greer Park
-Contact: Matthew Mcveigh
-More info at: https://groups.google.com/forum/#!forum/miami-ultimate
-
-Sundays: 9 am
-Park: Continental Park - 10000 SW 82 Avenue, Miami, FL 33156
-
-Fields: Grass
-Description: Casual pick up game with some competitive (but older) players. Game on rain or shine at Evelyn Greer Park. Please bring two shirts, one white and one red. Most players are wearing cleats.
-
-Ultimate at Tropical Park
-
-More info at: https://www.facebook.com/groups/579684452071056/ - (not sure if this is public or private, I can invite you if it is private)
-
-Mondays & Wednesdays: 8 pm
-Occasionally also plays Saturday around 1pm
-Park: Continental Park - 7900 SW 40th St, Miami, FL 33155
-
-Fields: Grass/Dirt
-Description: Casual pick up game with a wide range of experience levels. Rain usually cancels this game as it relies on softball field lights to be on. Game is played in the grass that is in the middle of the 4 softball fields. Most players are wearing cleats.
-
-Ultimate Frisbee for Fun
-
-More info at: http://www.meetup.com/Miami-Ultimate-Frisbee-for-Fun/
-
-Interchanges from Tuesday & Wednesday: 6:45 pm
-Park: Shenandoah Park - 1800 SW 21st Ave, Miami, FL 33145
-
-Fields: Grass 
-Description: Very casual pick up game with mostly beginner players. As the name implies this is a very light hearted game with low competition levels.  The games are great for beginners and a great way to get into the community if just starting to play Ultimate.  Field and Days are subject to change so check the Meet Up for updated info.
-
-<!-- cp 2016\ Spring\ League\ Stats\ -\ Raw\ Data.csv ~/Documents/GitHub/sflultimate/public/stats.csv  -->
+```bash
+cp ~/Downloads/2016\ Spring\ League\ Stats\ -\ Raw\ Data.csv ~/Documents/GitHub/sflultimate/public/stats.csv
+```

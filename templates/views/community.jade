@@ -1,0 +1,164 @@
+extends ../layouts/default
+
+block head
+  meta(property="og:title"        content="League Teams")
+  meta(property="og:url"          content="http://www.sflultimate.com/pickup")
+  meta(property="og:description"  content="Learn about local teams and pickups.")
+
+block content
+  .container(ng-app='CommunityApp')
+    section(ng-controller='PickupsController')
+      h1 Our Ultimate Community
+      p.lead Read below to find all the local pickups taking place in the Broward/Dade county area.
+
+      article(ng-repeat="game in games")
+        .row
+          div.col-sm-8
+            h3
+              | {{game.title}} 
+              span.badge {{game.location.type}}
+              br
+              small {{game.day}} at {{game.time}}
+            p {{game.description}}
+
+          aside.col-sm-4
+            address
+              strong {{game.location.name}}<br>
+              | {{game.location.address.street}}<br>
+              | {{game.location.address.city}}, {{game.location.address.state}}, {{game.location.address.zipCode}}<br>
+            
+            .btn-group
+              a.btn.btn-sm.btn-default(ng-if="game.contact.url" ng-href="{{game.contact.url}}" target="_blank") View Website
+              a.btn.btn-sm.btn-default(ng-if="game.contact.email" ng-href="mailto:{{game.contact.email}}" target="_blank") Send Email
+              a.btn.btn-sm.btn-default(ng-if="game.contact.phone" ng-href="tel:{{game.contanct.phone}}") Call Phone
+              a.btn.btn-sm.btn-default(ng-href="https://www.google.com/maps/place/{{game.location.address.street +' '+game.location.address.city + ' '+game.location.address.state + ' '+game.location.address.zipCode}}" target="_blank") View on Map
+        hr(ng-if="!$last")
+
+block js
+  script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
+  script.
+    angular.module('CommunityApp', [])
+      .controller("PickupsController",function ($http, $scope) {
+
+        $scope.games = [
+          {
+            title: "Ultimate Frisbee for Fun",
+            day: "Tuesdays or Wednesdays",
+            time: "6:45pm",
+            contact: {
+              url: "http://www.meetup.com/Miami-Ultimate-Frisbee-for-Fun/"
+            },
+            location: {
+              name: "Shenandoah Park",
+              address: {
+                street: "1800 SW 21st Ave",
+                city: "Miami",
+                state:  "FL",
+                zipCode: 33145
+              },
+              type: "grass"
+            },
+            description: "Very casual pick up game with mostly beginner players. As the name implies this is a very light hearted game with low competition levels.  The games are great for beginners and a great way to get into the community if just starting to play Ultimate.  Field and Days are subject to change so check the Meet Up for updated info."
+          },
+          {
+            title: "Saturday Ultimate at Continental Park",
+            day: "Saturdays",
+            time: "10am",
+            contact: {
+              name: "Roger Oprandi",
+              email: "RogerOprandi@gmail.com",
+              phone: "7862699963"
+            },
+            location: {
+              name: "Continental Park",
+              type: "grass",
+              address: {
+                street: "10000 SW 82 Avenue",
+                city: "Miami",
+                state: "FL",
+                zipCode: 33156
+              },
+            },
+            description: "Casual pick up game with all levels welcome. Game on rain or shine at Continental Park. Please bring two shirts, one white and one dark. Most players are wearing cleats."
+          },
+          {
+            title: "Sunday Ultimate at Evelyn Greer Park",
+            contact: {
+              name: "Matthew Mcveigh",
+              url: "https://groups.google.com/forum/#!forum/miami-ultimate"
+            },
+            day: "Sundays",
+            time: "9am",
+            location: {
+              name: "Evelyn Greer Park",
+              type:"grass",
+              address: {
+                street: "8200 SW 124th St",
+                city: "Miami",
+                state: "FL",
+                zipCode: 33156
+              }
+            },
+            description:"Casual pick up game with some competitive (but older) players. Game on rain or shine at Evelyn Greer Park. Please bring two shirts, one white and one red. Most players are wearing cleats."
+          },
+          {
+            title: "Ultimate at Tropical Park",
+            day: "Mondays & Wednesdays",
+            time: "8pm",
+            contact: {
+              url:"https://www.facebook.com/groups/579684452071056/"
+            },
+            location: {
+              name: "Tropical Park",
+              address: {
+                street: "7900 SW 40th St",
+                city: "Miami",
+                state: "FL",
+                zipCode: 33155
+              },
+              type: "grass/dirt"
+            },
+            description: "Casual pick up game with a wide range of experience levels. Rain usually cancels this game as it relies on softball field lights to be on. Game is played in the grass that is in the middle of the 4 softball fields. Most players are wearing cleats.  We occasionally also plays Saturday around 1pm."
+          }
+        ];
+
+
+
+      /*
+          These are the games that I pulled from the pick-up Ultimate site that I have heard are legit but I have never played:
+          Key Biscayne Ultimate (Never been to this game)
+          Contact: Grant
+          Email: gkunks@gmail.com
+          Phone: 561.247.2684
+          Website: http://www.ratradio.net
+
+          Sundays: 6:00 @ Mast Academy
+
+          Fields: Turf or Grass, depending on which field
+          Description: We've been playing at Key Biscayne and Virginia Key for over 10 years now, but we have been adding more and more people over the last few years. Most of our players are from Key Biscayne but we have a good amount who come from the mainland. We range in age from 16 to 60 (average late 20's) years old, mostly male. We are pretty liberal with the rules (ie. NO hold/stall count or bricks) but most violations are enforced one way or another. 
+
+          Hialeah Ultimate Frisbee (Never been to this game)
+          Contact: Daniela Larez
+          Email: daniela.larez@gmail.com
+          Website: https://www.facebook.com/groups/87229532865/?notif_t=group_name_change
+
+          Thursdays: 6:30PM-9PM
+
+          Fields: Grass field Outdoors
+          Description: THURSDAYS: 
+          Sparks Park
+          1301 W 60th St, Hialeah, FL 33012
+          6:30 PM – 9:00 PM
+
+          SUNDAYS: Please email or follow us at 
+          https://www.facebook.com/groups/87229532865/?fref=ts
+          for updates
+
+
+          These are the games that I have played (and play regularly) and are all a lot of fun.
+
+
+
+       */
+    });
+

@@ -48,7 +48,7 @@ module.exports = function (app) {
   app.get('/schedule',        routes.views.schedule);
   app.get('/teams',           routes.views.teams);
 
-  ['/terms','/privacy','/draftboard','/stats'].forEach(function (url) {
+  ['/terms','/privacy','/draftboard','/stats','/community'].forEach(function (url) {
 
     var jadeTemplate = url.replace("/",'');
 
