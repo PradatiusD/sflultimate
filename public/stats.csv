@@ -62,7 +62,7 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56c29a819ce86303005ccb99,White,Tommy,Hankin,Male,0,0,0,,2,0,0
 56b02d2570b93aac39b410eb,White,Giulian,Jauregui,Male,0,2,1,,0,0,0
 56c928df49329a030083d8f3,White,Julie,De Souza,Female,0,0,0,,1,0,1
-56c9ec79e3d0b00300c61fc6,White,Hassibullah ,Kushkaki,Male,0,0,0,,0,3,0
+56c9ec79e3d0b00300c61fc6,White,Hassibullah ,Kushkaki,Male,0,0,0,,0,3,1
 56b02d5370b93aac39b41190,Red,Jon,Zisman,Male,1,0,0,,1,0,0
 56b02d2170b93aac39b410dd,Red,Gary,Saltzman,Male,1,0,0,,0,1,1
 56b02d7b70b93aac39b41222,Red,Jovan,Ribadeo,Male,0,0,0,,0,0,0
@@ -74,7 +74,7 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56b02d2f70b93aac39b4110d,Red,Sofia,Toro,Female,0,0,0,,0,0,0
 56b3f355c7810e030065dc35,Red,Drake,Kurlander,Male,1,0,0,,3,0,1
 56b02d5d70b93aac39b411b3,Red,Ian,Wogan,Male,0,0,0,,1,3,1
-56b02d3770b93aac39b41128,Red,Jonatan,Gonzalez,Male,0,0,0,,0,0,0
+56b02d3770b93aac39b41128,Red,1,Gonzalez,Male,0,0,0,,0,0,0
 56b8b07873696403005b95b6,Red,Wyatt,Sharber,Male,0,0,0,,0,0,2
 56be884604ba200300155a9e,Red,Eddie,Rodriguez,Male,0,0,0,,0,0,0
 56be912b04ba200300155a9f,Red,Michael,Kruger,Male,0,0,0,,0,0,0
@@ -112,21 +112,21 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56b02d2c70b93aac39b41100,Green,Chris,Cawley,Male,,,,,,,
 56c648ea3891c1030095ff7e,Green,Francis Yatani,Diamond,Female,,,,,,,
 56b02d4b70b93aac39b41172,Green,Juan,Vila,Male,,,,,,,
-56b02d4a70b93aac39b4116f,Black,Dan,SG,Male,,,,,,,
-56b02d6970b93aac39b411df,Black,Stephen,Gonot,Male,,,,,,,
-56b02d2170b93aac39b410de,Black,Joe,Lackey,Male,,,,,,,
-56b02d7570b93aac39b4120b,Black,UNCLERICK,saxe,Male,,,,,,,
-56b02d3e70b93aac39b41144,Black,Gabriel,Castillo,Male,,,,,,,
-56bf6495d203eb0300ed51dd,Black,Gregory,Dungan,Male,,,,,,,
+56b02d4a70b93aac39b4116f,Black,Dan,SG,Male,1,0,1,,,,
+56b02d6970b93aac39b411df,Black,Stephen,Gonot,Male,,,,,0,2,2
+56b02d2170b93aac39b410de,Black,Joe,Lackey,Male,0,0,1,,3,1,1
+56b02d7570b93aac39b4120b,Black,UNCLERICK,saxe,Male,0,0,0,,0,0,0
+56b02d3e70b93aac39b41144,Black,Gabriel,Castillo,Male,,,,,0,1,0
+56bf6495d203eb0300ed51dd,Black,Gregory,Dungan,Male,0,0,0,,0,0,0
 56b02d2d70b93aac39b41104,Black,Margaret,Rushmore,Female,,,,,,,
-56bb308dc92591030048ffa3,Black,Megan,Bock,Female,,,,,,,
-56b02d4870b93aac39b41168,Black,Chris Loony,Luneburg,Male,,,,,,,
-56b02d1f70b93aac39b410da,Black,Jimi,Glaze,Male,,,,,,,
-56b02d2e70b93aac39b41109,Black,Justin,Roger,Male,,,,,,,
-56b02d3470b93aac39b4111c,Black,Erick,Rodriguez,Male,,,,,,,
-56b02d3170b93aac39b41111,Black,Emiliano,Castillo,Male,,,,,,,
-56b02d2f70b93aac39b4110a,Black,Stacy,Werse,Female,,,,,,,
-56b02d3770b93aac39b41127,Black,Wesley,Edwards,Male,,,,,,,
-56c9c7d3e3d0b00300c61fc5,Black,Michael,Edwards,Male,,,,,,,
-56b02d3670b93aac39b41123,Black,Ben,Leatherman,Male,,,,,,,
-56b02d2b70b93aac39b410fd,Black,W. Allen,Bonner,Male,,,,,,,
+56bb308dc92591030048ffa3,Black,Megan,Bock,Female,0,3,0,,1,0,0
+56b02d4870b93aac39b41168,Black,Chris Loony,Luneburg,Male,2,0,0,,0,0,1
+56b02d1f70b93aac39b410da,Black,Jimi,Glaze,Male,1,0,0,,,,
+56b02d2e70b93aac39b41109,Black,Justin,Roger,Male,0,0,1,,0,3,0
+56b02d3470b93aac39b4111c,Black,Erick,Rodriguez,Male,2,0,1,,4,0,6
+56b02d3170b93aac39b41111,Black,Emiliano,Castillo,Male,1,0,1,,0,1,2
+56b02d2f70b93aac39b4110a,Black,Stacy,Werse,Female,0,1,0,,1,1,1
+56b02d3770b93aac39b41127,Black,Wesley,Edwards,Male,0,1,1,,3,1,2
+56c9c7d3e3d0b00300c61fc5,Black,Michael,Edwards,Male,0,2,2,,0,2,1
+56b02d3670b93aac39b41123,Black,Ben,Leatherman,Male,0,0,0,,1,1,1
+56b02d2b70b93aac39b410fd,Black,W. Allen,Bonner,Male,0,0,1,,,,
