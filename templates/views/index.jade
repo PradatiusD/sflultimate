@@ -22,18 +22,30 @@ block content
           h1 Welcome!
           p South Florida Ultimate's 2016 Spring League season is now under way!
           a.btn.btn-primary.btn-lg(href="/schedule") View Schedule
-    .banner
-      ul
-        li
-          img.img-responsive(src="/images/league-champions-2015-fall.jpg")
-        li
-          img.img-responsive(src="/images/league-champions-2015-spring.jpg")
-        li
-          img.img-responsive(src="/images/league-champions-2014-fall.jpg")
-        li
-          img.img-responsive(src="/images/league-champions-2014-spring.jpg")
-        li
-          img.img-responsive(src="/images/league-champions-2013-spring.jpg")
+    .row
+      .col-sm-8
+        .banner
+          ul
+            li
+              img.img-responsive(src="/images/league-champions-2015-fall.jpg")
+            li
+              img.img-responsive(src="/images/league-champions-2015-spring.jpg")
+            li
+              img.img-responsive(src="/images/league-champions-2014-fall.jpg")
+            li
+              img.img-responsive(src="/images/league-champions-2014-spring.jpg")
+            li
+              img.img-responsive(src="/images/league-champions-2013-spring.jpg")
+      .col-md-4
+          h3 2016 League Standings
+          table.table.table-striped(id="standings")
+            thead
+              th Color
+              th Wins
+              th Losses
+              th Point Diff
+            tbody
+
 block js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js")
   script.
@@ -43,5 +55,19 @@ block js
         autoplay: true,
         arrows: false,
         nav: false
+      });
+
+      var $standings = $("#standings").find('tbody');
+      $.get('/?f=json').done(function (data) {
+
+        data = data.sort(function (team1, team2) {
+          var team1Record = team1.wins - team1.losses;
+          var team2Record = team2.wins - team2.losses;
+          return team2Record - team1Record;
+        });
+
+        data.forEach(function (d) {
+          $standings.append("<tr><td>"+d.color+"</td><td>"+d.wins+"</td><td>"+d.losses+"</td><td>Coming Soon</td></tr>");
+        });
       });
     })(jQuery);
