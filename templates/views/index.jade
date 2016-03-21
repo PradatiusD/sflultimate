@@ -23,7 +23,7 @@ block content
           p South Florida Ultimate's 2016 Spring League season is now under way!
           a.btn.btn-primary.btn-lg(href="/schedule") View Schedule
     .row
-      .col-sm-8
+      .col-md-8
         .banner
           ul
             li
@@ -67,7 +67,7 @@ block js
         });
 
         data.forEach(function (d) {
-          $standings.append("<tr><td>"+d.color+"</td><td>"+d.wins+"</td><td>"+d.losses+"</td><td>Coming Soon</td></tr>");
+          $standings.append("<tr><td>"+d.color+"</td><td>"+d.wins+"</td><td>"+d.losses+"</td><td>TBD</td></tr>");
         });
       });
     })(jQuery);

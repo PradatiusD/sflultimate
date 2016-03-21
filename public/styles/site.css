@@ -5849,7 +5849,13 @@ button.close {
   border-radius: 0; }
 
 .banner.unslider-fade {
-  min-height: 700px; }
+  min-height: 500px; }
+  @media (max-width: 620px) {
+    .banner.unslider-fade {
+      min-height: 350px; } }
+  @media (max-width: 480px) {
+    .banner.unslider-fade {
+      min-height: 225px; } }
   .banner.unslider-fade img {
     width: 100%; }
 

@@ -33,7 +33,15 @@
 }
 
 .banner.unslider-fade {
-  min-height: 700px;
+  min-height: 500px;
+
+  @media (max-width: 620px) {
+    min-height: 350px;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 225px;
+  }
   
   img {
     width: 100%;
