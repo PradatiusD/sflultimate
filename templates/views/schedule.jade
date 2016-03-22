@@ -27,7 +27,10 @@ block content
             td {{game.date | date: 'MMM d'}}
             td {{game.time}}
             td {{game.home}} vs. {{game.away}}
-
+          tr(ng-class="(1461974400000 - $parent.today > 0) ? '':'text-muted' ")
+            td Apr 30
+            td All day
+            td League Finals
 
 block js
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
