@@ -46,23 +46,23 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56b02d2570b93aac39b410e9,Yellow,Anthony,Lopez,Male,0,2,0,,,,,,,,,,,,
 56bfca77e3d2a90300c77081,Yellow,Jody,Dozono,Female,1,2,0,,,,,,,,,,,,
 56b02d2070b93aac39b410dc,Yellow,Tim,Elfrink,Male,3,1,2,,,,,,,,,,,,
-56b02d3370b93aac39b4111b,White,Russell,Barry,Male,0,2,1,,1,2,2,,,,,,,,
-56b431d5c7810e030065dc38,White,Cameron,Frederick,Male,2,0,1,,2,1,2,,,,,,,,
-56b40b2ac7810e030065dc37,White,R. John,Powers,Male,1,0,0,,0,1,1,,,,,,,,
-56b02d3170b93aac39b41113,White,Daniel,Mione,Male,1,1,2,,1,1,1,,,,,,,,
-56b02d8070b93aac39b41230,White,Cory,Rotolo,Male,0,0,0,,0,0,0,,,,,,,,
-56bf7ee2e3d2a90300c7707d,White,Aikeem,Grant,Male,0,7,1,,1,2,0,,,,,,,,
-56bf7756e9d64b0300267652,White,Diego,Gomez,Male,0,0,0,,0,0,0,,,,,,,,
-56b02d2070b93aac39b410db,White,Diane,Loveridge,Female,0,0,0,,0,0,0,,,,,,,,
-56b02d2f70b93aac39b4110b,White,Kevin,Ruda,Male,2,0,0,,0,0,0,,,,,,,,
-56b02d2770b93aac39b410f2,White,Casey,Burrows,Female,1,0,0,,0,0,0,,,,,,,,
-56b02d2b70b93aac39b410ff,White,Daniel,Prada,Male,0,0,0,,1,0,2,,,,,,,,
-56b02d6f70b93aac39b411f7,White,Gaby,Segnini,Female,0,1,1,,0,1,2,,,,,,,,
-56b02d2870b93aac39b410f6,White,Brandon,Garcia,Male,6,0,0,,3,1,2,,,,,,,,
-56c29a819ce86303005ccb99,White,Tommy,Hankin,Male,0,0,0,,2,0,0,,,,,,,,
-56b02d2570b93aac39b410eb,White,Giulian,Jauregui,Male,0,2,1,,0,0,0,,,,,,,,
-56c928df49329a030083d8f3,White,Julie,De Souza,Female,0,0,0,,1,0,1,,,,,,,,
-56c9ec79e3d0b00300c61fc6,White,Hassibullah ,Kushkaki,Male,0,0,0,,0,3,1,,,,,,,,
+56b02d3370b93aac39b4111b,White,Russell,Barry,Male,0,2,1,,1,2,2,,2,2,1,,0,0,0
+56b431d5c7810e030065dc38,White,Cameron,Frederick,Male,2,0,1,,2,1,2,,0,1,4,,0,0,0
+56b40b2ac7810e030065dc37,White,R. John,Powers,Male,1,0,0,,0,1,1,,0,0,0,,0,0,0
+56b02d3170b93aac39b41113,White,Daniel,Mione,Male,1,1,2,,1,1,1,,2,1,2,,0,0,0
+56b02d8070b93aac39b41230,White,Cory,Rotolo,Male,0,0,0,,0,0,0,,0,0,0,,0,0,0
+56bf7ee2e3d2a90300c7707d,White,Aikeem,Grant,Male,0,7,1,,1,2,0,,0,5,0,,0,0,0
+56bf7756e9d64b0300267652,White,Diego,Gomez,Male,0,0,0,,0,0,0,,0,0,0,,0,0,0
+56b02d2070b93aac39b410db,White,Diane,Loveridge,Female,0,0,0,,0,0,0,,0,0,0,,0,0,0
+56b02d2f70b93aac39b4110b,White,Kevin,Ruda,Male,2,0,0,,0,0,0,,0,1,2,,0,0,0
+56b02d2770b93aac39b410f2,White,Casey,Burrows,Female,1,0,0,,0,0,0,,1,0,1,,0,0,0
+56b02d2b70b93aac39b410ff,White,Daniel,Prada,Male,0,0,0,,1,0,2,,0,0,0,,0,0,0
+56b02d6f70b93aac39b411f7,White,Gaby,Segnini,Female,0,1,1,,0,1,2,,0,0,0,,0,0,0
+56b02d2870b93aac39b410f6,White,Brandon,Garcia,Male,6,0,0,,3,1,2,,2,1,1,,0,0,0
+56c29a819ce86303005ccb99,White,Tommy,Hankin,Male,0,0,0,,2,0,0,,4,0,0,,0,0,0
+56b02d2570b93aac39b410eb,White,Giulian,Jauregui,Male,0,2,1,,0,0,0,,2,0,1,,0,0,0
+56c928df49329a030083d8f3,White,Julie,De Souza,Female,0,0,0,,1,0,1,,0,0,0,,0,0,0
+56c9ec79e3d0b00300c61fc6,White,Hassibullah ,Kushkaki,Male,0,0,0,,0,3,1,,0,2,2,,0,0,0
 56b02d5370b93aac39b41190,Red,Jon,Zisman,Male,1,0,0,,1,0,0,,2,0,0,,0,0,0
 56b02d2170b93aac39b410dd,Red,Gary,Saltzman,Male,1,0,0,,0,1,1,,0,1,0,,1,0,2
 56b02d7b70b93aac39b41222,Red,Jovan,Ribadeo,Male,0,0,0,,0,0,0,,0,0,0,,0,0,0
