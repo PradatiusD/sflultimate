@@ -1,9 +1,9 @@
 extends ../layouts/default
 
 block head
-  meta(property="og:title"        content="League Teams")
+  meta(property="og:title"        content="League Stats")
   meta(property="og:url"          content="http://www.sflultimate.com/stats")
-  meta(property="og:description"  content="Find out the leaderboard.")
+  meta(property="og:description"  content="Find out who is making big plays for this year's Spring League.")
 
 block content
   .container(ng-app='StatsApp')
@@ -13,7 +13,7 @@ block content
       .alert.alert-info
         i.fa.fa-info-circle
         strong  Incomplete Stats: 
-        span We still have yet to put in stats for the following teams from <u>Week 3</u> and <u>Week 4</u>:  Yellow & Black
+        span We still have yet to put in stats for the following teams from <u>Week 3</u> and <u>Week 4</u>: Black
 
       h2 Leaderboard
 
@@ -80,6 +80,7 @@ block js
         var headers = rows.splice(0,1)[0].split(",");
 
         rows = rows.map(function (row) {
+
           row   = row.split(",");
           var o = {
             Assists: 0,
