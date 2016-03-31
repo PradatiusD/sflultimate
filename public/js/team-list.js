@@ -41,11 +41,21 @@ app.controller("TeamListController",function ($http, $scope) {
     	team.captains = team.captains.map(matchToPlayerById);
     	team.players  = team.players.map(matchToPlayerById);
 
+      team.menTotal   = 0;
+      team.womenTotal = 0;
+
+      team.captains.concat(team.players).forEach(function (player) {
+        if (player.gender === "Male")   { team.menTotal++;  }
+        if (player.gender === "Female") { team.womenTotal++;}
+      });
+
     	return team;
     });
 
 
     $scope.teams = teams;
+    console.log(teams);
+
     // console.log(createShirtList(teams));
   });
 

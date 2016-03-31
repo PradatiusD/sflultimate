@@ -15,6 +15,8 @@ block content
           | {{team.color}}
         p.lead
           span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}} 
+          br
+          small.text-muted {{team.womenTotal}} ladies, {{team.menTotal}} dudes
         table.table.table-striped.table-bordered
           tr(ng-repeat='player in team.players | orderBy :"-skillLevel"')
             td {{$index + 1}}. {{player.name.first}} {{player.name.last}}
