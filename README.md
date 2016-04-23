@@ -121,4 +121,5 @@ At some point we need to get my computer up and running with keystone, and I nee
 
 ```bash
 cp ~/Downloads/2016\ Spring\ League\ Stats\ -\ Raw\ Data.csv ~/Documents/GitHub/sflultimate/public/stats.csv
+rm ~/Downloads/2016\ Spring\ League\ Stats\ -\ Raw\ Data.csv
 ```

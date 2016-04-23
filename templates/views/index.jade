@@ -58,7 +58,15 @@ block js
       });
 
       var $standings = $("#standings").find('tbody');
+
       $.get('/?f=json').done(function (data) {
+
+        data = Object.keys(data).map(function (color) {
+
+          var o = data[color];
+          o.color = color;
+          return o;
+        });
 
         data = data.sort(function (team1, team2) {
           var team1Record = team1.wins - team1.losses;
@@ -67,7 +75,7 @@ block js
         });
 
         data.forEach(function (d) {
-          $standings.append("<tr><td>"+d.color+"</td><td>"+d.wins+"</td><td>"+d.losses+"</td><td>TBD</td></tr>");
+          $standings.append("<tr><td>"+d.color+"</td><td>"+d.wins+"</td><td>"+d.losses+"</td><td>"+d.pointDiff+"</td></tr>");
         });
       });
     })(jQuery);

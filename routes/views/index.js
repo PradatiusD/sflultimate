@@ -9,48 +9,50 @@ exports = module.exports = function(req, res) {
   // item in the header navigation.
   locals.section = 'home';
 
-  var standings = [
-    {
-      "color": "Orange",
-      "wins": 2,
-      "losses": 2
+  var standings = {
+    "Blue": {
+      "wins": 1,
+      "losses": 6,
+      "pointDiff": -34
     },
-    {
-      "color": "Gray",
+    "Orange": {
+      "wins": 5,
+      "losses": 2,
+      "pointDiff": 33
+    },
+    "Grey": {
       "wins": 4,
-      "losses": 0
+      "losses": 3,
+      "pointDiff": 6
     },
-    {
-      "color": "Blue",
+    "Red": {
       "wins": 1,
-      "losses": 3
+      "losses": 6,
+      "pointDiff": -39
     },
-    {
-      "color": "White",
-      "wins": 3,
-      "losses": 1
+    "Yellow": {
+      "wins": 6,
+      "losses": 1,
+      "pointDiff": 40
     },
-    {
-      "color": "Black",
-      "wins": 1,
-      "losses": "3"
+    "Green": {
+      "wins": 4,
+      "losses": 3,
+      "pointDiff": 4
     },
-    {
-      "color": "Red",
-      "wins": 0,
-      "losses": 4
+    "White": {
+      "wins": 5,
+      "losses": 2,
+      "pointDiff": 13
     },
-    {
-      "color": "Yellow",
-      "wins": "3",
-      "losses": 1
-    },
-    {
-      "color": "Green",
+    "Black": {
       "wins": 2,
-      "losses": 2
+      "losses": 5,
+      "pointDiff": -23
     }
-  ];
+  };
+
+
 
   if (req.query.f === "json") {
     return res.json(standings);
