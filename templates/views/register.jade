@@ -29,6 +29,11 @@ block content
     hr
 
     h3 Registration
+
+    .alert.alert-info
+      strong Refund Policy: 
+      | Should there be an error in your registration (paid for a youth fee when an adult or vice versa), we will provide a refund.  Otherwise we will not be providing refunds.
+
     form#registration(action="register" method="post" autocomplete="off")
       if err
         .alert.alert-danger

@@ -29,7 +29,9 @@ exports.initLocals = function(req, res, next) {
     { label: 'Teams',     key: 'teams',     href: '/teams'},
     { label: 'Schedule',  key: 'schedule',  href: '/schedule'},
     { label: 'Stats',     key: 'stats',     href: '/stats'},
-    { label: 'Community', key: 'community', href: '/community'}
+    { label: 'Community', key: 'community', href: '/community'},
+    { label: 'Terms & Conditions', key: 'terms', href: '/terms'},
+    { label: 'Privacy Policy', key: 'privacy', href: '/privacy'}
   ];
   
   locals.user = req.user;
