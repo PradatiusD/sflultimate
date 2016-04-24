@@ -174,9 +174,9 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
           $scope.standings[forfeitLoser].pointDiff   -= 7;
         }
       }
+
+      // console.log(JSON.stringify($scope.standings, null, 2));
     });
-
-
   });
 
   query.error(function (err) {

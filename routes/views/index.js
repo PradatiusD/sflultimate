@@ -16,14 +16,14 @@ exports = module.exports = function(req, res) {
       "pointDiff": -34
     },
     "Orange": {
-      "wins": 5,
-      "losses": 2,
-      "pointDiff": 33
-    },
-    "Grey": {
       "wins": 4,
       "losses": 3,
-      "pointDiff": 6
+      "pointDiff": 29
+    },
+    "Grey": {
+      "wins": 5,
+      "losses": 2,
+      "pointDiff": 10
     },
     "Red": {
       "wins": 1,

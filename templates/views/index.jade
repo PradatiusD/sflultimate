@@ -74,6 +74,8 @@ block js
           return team2Record - team1Record;
         });
 
+        d.pointDiff = d.pointDiff > 0 ? "+"+d.pointDiff : d.pointDiff;
+
         data.forEach(function (d) {
           $standings.append("<tr><td>"+d.color+"</td><td>"+d.wins+"</td><td>"+d.losses+"</td><td>"+d.pointDiff+"</td></tr>");
         });
