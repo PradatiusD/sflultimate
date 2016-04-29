@@ -118,8 +118,8 @@ Player Page - list of leagues played + team they were on + total stats for that 
 
 At some point we need to get my computer up and running with keystone, and I need to lend you my notebook with my ideas/sketches in it
 
-
 ```bash
+# Update stats
 cp ~/Downloads/2016\ Spring\ League\ Stats\ -\ Raw\ Data.csv ~/Documents/GitHub/sflultimate/public/stats.csv
 rm ~/Downloads/2016\ Spring\ League\ Stats\ -\ Raw\ Data.csv
 ```
