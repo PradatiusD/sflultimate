@@ -70,6 +70,7 @@ app.controller("StatsViewController",function ($http, $scope) {
     });
 
     for (var i = 0; i < rows.length; i++) {
+
       var p = rows[i];
 
       if (p.Gender === "Female") {
@@ -96,6 +97,7 @@ app.controller("StatsViewController",function ($http, $scope) {
     $scope.awards      = awards;
 
     console.log(awards);
+
   });
 
   query.error(function (e) {

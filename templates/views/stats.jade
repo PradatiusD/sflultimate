@@ -33,18 +33,20 @@ block content
             td {{$index + 1}}
             td
               span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
+            td {{player["First Name"]}}
+            td {{player["Last Name"]}}
             td.
-              {{player["First Name"]}}
-              <span class="badge" ng-if="awards[player.Gender].Overall === player.Overall"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">MVP</span>
-              <span class="badge" ng-if="awards[player.Gender].Assists === player.Assists"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">Assist Leader</span>
-              <span class="badge" ng-if="awards[player.Gender].Assists === player.Scores"    ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">Score Leader</span>
-              <span class="badge" ng-if="awards[player.Gender].Defenses === player.Defenses" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">Defenses Leader</span>
+              <span class="badge" ng-if="awards[player.Gender].Assists === player.Assists"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Assists"]}}</span>
+              <span ng-if="awards[player.Gender].Assists !== player.Assists">{{player["Assists"]}}</span>
             td.
-              {{player["Last Name"]}}
-            td {{player["Assists"]}}
-            td {{player["Scores"]}}
-            td {{player["Defenses"]}}
-            td {{player["Overall"]}}
+              <span class="badge" ng-if="awards[player.Gender].Scores === player.Scores"     ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Scores"]}}</span>
+              <span ng-if="awards[player.Gender].Scores !== player.Scores">{{player["Scores"]}}</span>
+            td.
+              <span class="badge" ng-if="awards[player.Gender].Defenses === player.Defenses" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Defenses"]}}</span>
+              <span ng-if="awards[player.Gender].Defenses !== player.Defenses" >{{player["Defenses"]}}</span>
+            td.
+              <span class="badge" ng-if="awards[player.Gender].Overall === player.Overall"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Overall"]}}</span>
+              <span ng-if="awards[player.Gender].Overall !== player.Overall"> {{player["Overall"]}}</span>
 
       br
       h2 Rising Contenders
@@ -65,18 +67,20 @@ block content
             td {{$index + leaderboard.length + 1}}
             td
               span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
-            td. 
-              {{player["First Name"]}}
-              <span class="badge" ng-if="awards[player.Gender].Overall === player.Overall"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">MVP</span>
-              <span class="badge" ng-if="awards[player.Gender].Assists === player.Assists"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">Assist Leader</span>
-              <span class="badge" ng-if="awards[player.Gender].Assists === player.Scores"    ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">Score Leader</span>
-              <span class="badge" ng-if="awards[player.Gender].Defenses === player.Defenses" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">Defenses Leader</span>
-
+            td {{player["First Name"]}}
             td {{player["Last Name"]}}
-            td {{player["Assists"]}}
-            td {{player["Scores"]}}
-            td {{player["Defenses"]}}
-            td {{player["Overall"]}}
+            td.
+              <span class="badge" ng-if="awards[player.Gender].Assists === player.Assists"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Assists"]}}</span>
+              <span ng-if="awards[player.Gender].Assists !== player.Assists">{{player["Assists"]}}</span>
+            td.
+              <span class="badge" ng-if="awards[player.Gender].Scores === player.Scores"     ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Scores"]}}</span>
+              <span ng-if="awards[player.Gender].Scores !== player.Scores">{{player["Scores"]}}</span>
+            td.
+              <span class="badge" ng-if="awards[player.Gender].Defenses === player.Defenses" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Defenses"]}}</span>
+              <span ng-if="awards[player.Gender].Defenses !== player.Defenses" >{{player["Defenses"]}}</span>
+            td.
+              <span class="badge" ng-if="awards[player.Gender].Overall === player.Overall"   ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}">{{player["Overall"]}}</span>
+              <span ng-if="awards[player.Gender].Overall !== player.Overall"> {{player["Overall"]}}</span>
 
 block js
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')

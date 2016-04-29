@@ -24,7 +24,7 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56ba98ac9f5a730300d19cf8,Blue,Brian ,Feldman ,Male,0,1,1,,0,0,1,,1,0,0,,1,0,1,,0,0,1,,0,0,1,,1,0,0,,0,0,0
 56b02d2670b93aac39b410ec,Blue,Rica,Patel,Female,0,0,2,,0,0,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0
 56b02d2670b93aac39b410ed,Blue,Rocco,Sabino,Male,4,1,1,,1,0,1,,0,0,0,,2,0,1,,0,0,0,,2,2,3,,2,1,2,,1,2,2
-56b02d2e70b93aac39b41107,Blue,Brandon,Morrison,Male,1,1,0,,1,1,1,,1,0,3,,2,2,0,,2,0,2,,3,0,7,,2,2,6,,4,2,0
+56b02d2e70b93aac39b41107,Blue,Brandon,Morrison,Male,1,1,0,,1,1,1,,1,0,3,,2,2,0,,2,0,2,,3,0,7,,2,2,6,,4,2,1
 56bd46be9ae1ec03006943a2,Blue,Nathan,Van Hare,Male,0,0,0,,1,0,1,,0,0,0,,0,0,0,,0,0,1,,0,0,0,,0,0,2,,0,2,0
 56bd47239ae1ec03006943a3,Blue,Cameron,Van Hare,Male,0,0,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0,,1,0,0,,0,0,1,,0,0,0
 56b02d3470b93aac39b4111e,Blue,Shaun,McLaughlin,Male,2,4,3,,0,0,0,,0,0,0,,1,1,4,,0,0,0,,3,1,0,,5,0,6,,2,0,1
@@ -90,7 +90,7 @@ Player ID,Team Color,First Name,Last Name,Gender,02/21/16 Assists,02/21/16 Score
 56b02d6b70b93aac39b411e7,Grey,Madelein,Gimenez,Female,0,,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0,,0,0,0
 56bf83fbe3d2a90300c7707e,Grey,Arian,Mizani,Male,0,1,0,,0,3,1,,0,0,0,,0,0,0,,0,1,1,,0,1,0,,0,0,0,,0,0,0
 56b02d2a70b93aac39b410fb,Grey,Rie,Takano,Female,0,0,0,,0,3,1,,0,2,1,,0,0,0,,0,1,0,,0,0,1,,0,0,0,,0,0,0
-56b02d2570b93aac39b410e8,Grey,Tommy,Rush,Male,6,2,2,,0,0,0,,4,0,2,,6,0,2,,0,0,0,,2,0,3,,10,1,4,,5,0,2
+56b02d2570b93aac39b410e8,Grey,Tommy,Rush,Male,6,2,2,,0,0,0,,4,0,2,,6,0,2,,0,0,0,,2,0,3,,10,1,4,,6,0,2
 56b02d2c70b93aac39b41101,Grey,Jordan,Taheri,Male,3,3,0,,9,0,1,,2,2,1,,2,3,0,,2,0,0,,0,0,0,,1,3,0,,2,1,2
 56b02d9670b93aac39b41267,Grey,Jacob,Halberg,Male,0,1,2,,2,3,4,,3,2,1,,0,4,2,,1,0,1,,0,0,0,,0,0,0,,0,0,4
 56b3ff19c7810e030065dc36,Grey,Chad,Weinkoff,Male,2,0,1,,0,3,1,,2,,1,,2,1,1,,0,1,1,,0,0,0,,0,1,0,,0,3,4
