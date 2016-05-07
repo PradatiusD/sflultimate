@@ -95,7 +95,8 @@ keystone.set('email tests', require('./routes/emails'));
 
 keystone.set('nav', {
   'Content': ['posts', 'post-categories'],
-  'League':  ['players','teams','leagues']
+  'League':  ['players','teams','leagues'],
+  'Pickup':  ['pickups']
 });
 
 // Configure Web Server

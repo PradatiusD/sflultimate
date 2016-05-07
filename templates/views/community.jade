@@ -40,106 +40,12 @@ block js
     angular.module('CommunityApp', [])
       .controller("PickupsController",function ($http, $scope) {
 
-        $scope.games = [
-          {
-            title: "Ultimate Frisbee for Fun",
-            day: "Tuesdays or Wednesdays",
-            time: "6:45pm",
-            contact: {
-              url: "http://www.meetup.com/Miami-Ultimate-Frisbee-for-Fun/"
-            },
-            location: {
-              name: "Shenandoah Park",
-              address: {
-                street: "1800 SW 21st Ave",
-                city: "Miami",
-                state:  "FL",
-                zipCode: 33145
-              },
-              type: "grass"
-            },
-            description: "Very casual pick up game with mostly beginner players. As the name implies this is a very light hearted game with low competition levels.  The games are great for beginners and a great way to get into the community if just starting to play Ultimate.  Field and Days are subject to change so check the Meet Up for updated info."
-          },
-          {
-            title: "Saturday Ultimate at Continental Park",
-            day: "Saturdays",
-            time: "10am",
-            contact: {
-              name: "Roger Oprandi",
-              email: "RogerOprandi@gmail.com",
-              phone: "7862699963"
-            },
-            location: {
-              name: "Continental Park",
-              type: "grass",
-              address: {
-                street: "10000 SW 82 Avenue",
-                city: "Miami",
-                state: "FL",
-                zipCode: 33156
-              },
-            },
-            description: "Casual pick up game with all levels welcome. Game on rain or shine at Continental Park. Please bring two shirts, one white and one dark. Most players are wearing cleats."
-          },
-          {
-            title: "Sunday Ultimate at Evelyn Greer Park",
-            contact: {
-              name: "Matthew Mcveigh",
-              url: "https://groups.google.com/forum/#!forum/miami-ultimate"
-            },
-            day: "Sundays",
-            time: "9am",
-            location: {
-              name: "Evelyn Greer Park",
-              type:"grass",
-              address: {
-                street: "8200 SW 124th St",
-                city: "Miami",
-                state: "FL",
-                zipCode: 33156
-              }
-            },
-            description:"Casual pick up game with some competitive (but older) players. Game on rain or shine at Evelyn Greer Park. Please bring two shirts, one white and one red. Most players are wearing cleats."
-          },
-          {
-            title: "Ultimate at Tropical Park",
-            day: "Mondays & Wednesdays",
-            time: "8pm",
-            contact: {
-              url:"https://www.facebook.com/groups/579684452071056/"
-            },
-            location: {
-              name: "Tropical Park",
-              address: {
-                street: "7900 SW 40th St",
-                city: "Miami",
-                state: "FL",
-                zipCode: 33155
-              },
-              type: "grass/dirt"
-            },
-            description: "Casual pick up game with a wide range of experience levels. Rain usually cancels this game as it relies on softball field lights to be on. Game is played in the grass that is in the middle of the 4 softball fields. Most players are wearing cleats.  We occasionally also plays Saturday around 1pm."
-          },
-          {
-            title: "Ultimate Frisbee Ft. Lauderdale",
-            day: "Sundays",
-            time: "4pm",
-            contact: {
-              url: "https://www.facebook.com/groups/1458319214390728/"
-            },
-            location: {
-              name: "Holiday Park",
-              type: "grass",
-              address: {
-                street: "1000 E Sunrise Blvd Fort Lauderdale",
-                city: "Miami",
-                state: "FL",
-                zipCode: 33304
-              },
-            },
-            description: "Relaxed pickup located right in Ft. Lauderdale.  Bring a light, a dark, and cleats!"
-          }
-        ];
+        var query = $http.get('/pickups');
+
+        query.then(function (res) {
+          $scope.games = res.data; 
+        });
+
 
       /*
           These are the games that I pulled from the pick-up Ultimate site that I have heard are legit but I have never played:
@@ -170,11 +76,6 @@ block js
           SUNDAYS: Please email or follow us at 
           https://www.facebook.com/groups/87229532865/?fref=ts
           for updates
-
-
-          These are the games that I have played (and play regularly) and are all a lot of fun.
-
-
 
        */
     });
