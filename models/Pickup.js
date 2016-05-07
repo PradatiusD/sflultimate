@@ -44,7 +44,8 @@ var fields = {
   },
   'contact.url': {
     type:    Types.Url,
-    initial: true
+    initial: true,
+    label:   'Contact URL'
   },
   'location.name': {
     type:     String,
@@ -91,5 +92,5 @@ var fields = {
 
 Pickup.add(fields);
 
-Pickup.defaultColumns = 'title, location.name, location.type'
+Pickup.defaultColumns = 'title, location.name, day, time, location.type';
 Pickup.register();
