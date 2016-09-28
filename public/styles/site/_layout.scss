@@ -52,7 +52,7 @@ $logo-width: 130px;
   height: auto;
 }
 
-.navbar.navbar-inverse {
+.navbar {
   border-radius: 0;
 }
 
@@ -119,3 +119,9 @@ $logo-width: 130px;
 .black  { background-color: black;   .stats & {background-color: rgba(black,   0.25);}}
 
 
+
+.navbar-inverse .navbar-nav > li > a {
+  text-transform: uppercase;
+  font-family: "Roboto Condensed", "Helvetica Neue", "Helvetica", sans-serif;
+  font-weight: 700; 
+}

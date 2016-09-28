@@ -15,8 +15,8 @@ html(lang='en')
     title= title || 'SFL Ultimate'
     link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
 
-    link(rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css")
-    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:400,700,300')
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed")
 
     //- Customise the stylesheet for your site by editing /public/styles/site.sass
     link(rel="stylesheet" href="/styles/site.css")
@@ -45,7 +45,6 @@ html(lang='en')
     #header
 
       //- Customise your site's navigation by changing the navLinks Array in ./routes/middleware.js
-      //- ... or completely change this header to suit your design.
 
       div(role="navigation").navbar.navbar-inverse
         .container-fluid
@@ -61,13 +60,6 @@ html(lang='en')
             ul.nav.navbar-nav.navbar-left
               each link in navLinks
                 li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
-            ul.nav.navbar-nav.navbar-right
-              if user
-                if user.canAccessKeystone
-                  li: a(href='/keystone') Open Keystone
-                li: a(href='/keystone/signout') Sign Out
-              else
-                li: a(href='/keystone/signin') Sign In
 
     //- BODY
     #body

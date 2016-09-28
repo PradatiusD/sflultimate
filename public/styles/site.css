@@ -1055,7 +1055,7 @@ html {
   -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.42857;
   color: #333333;
@@ -1139,8 +1139,8 @@ hr {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: inherit;
-  font-weight: 500;
+  font-family: "Roboto Condensed", "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
   line-height: 1.1;
   color: inherit; }
   h1 small,
@@ -5192,7 +5192,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -5305,7 +5305,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -5862,7 +5862,7 @@ button.close {
   max-width: 100%;
   height: auto; }
 
-.navbar.navbar-inverse {
+.navbar {
   border-radius: 0; }
 
 .banner.unslider-fade {
@@ -5938,3 +5938,8 @@ button.close {
   background-color: black; }
   .stats .black {
     background-color: rgba(0, 0, 0, 0.25); }
+
+.navbar-inverse .navbar-nav > li > a {
+  text-transform: uppercase;
+  font-family: "Roboto Condensed", "Helvetica Neue", "Helvetica", sans-serif;
+  font-weight: 700; }

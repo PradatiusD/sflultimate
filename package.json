@@ -6,13 +6,14 @@
     "npm": "2.14.9"
   },
   "dependencies": {
-    "keystone": "^0.3.16",
     "async": "^1.5.0",
     "braintree": "^1.35.0",
-    "underscore": "^1.8.3",
+    "browserify": "^13.1.0",
+    "dotenv": "^1.1.0",
+    "keystone": "^0.3.16",
     "node-sass": "^3.3.2",
     "node-sass-middleware": "^0.9.7",
-    "dotenv": "^1.1.0"
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "grunt": "^0.4.4",
@@ -23,6 +24,7 @@
     "grunt-node-inspector": "^0.1.5",
     "grunt-nodemon": "^0.2.1",
     "grunt-sass": "^1.0.0",
+    "grunt-shell": "^1.0.0",
     "jshint-stylish": "^2.0.1",
     "load-grunt-configs": "^0.4.1",
     "load-grunt-tasks": "^0.4.0",

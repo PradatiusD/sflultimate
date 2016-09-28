@@ -1,7 +1,7 @@
-'use strict()';
+require('dotenv').config();
 
 var config = {
-	port: 3000
+	port: 5000
 };
 
 module.exports = function(grunt) {
@@ -23,6 +23,15 @@ module.exports = function(grunt) {
 				options: {
 					ignore: ['node_modules/**', 'public/**']
 				}
+			}
+		},
+		shell: {
+			mongodump: {
+				command: [
+					process.env.DATABASE_DUMP_COMMAND,
+					"mongo sflultimate --eval \"printjson(db.dropDatabase())\"",
+					"mongorestore -d sflultimate dump/heroku_8xfcj7cs/",
+				].join(" && ")
 			}
 		}
 	};
@@ -51,5 +60,6 @@ module.exports = function(grunt) {
 	grunt.registerTask('server', function () {
 		grunt.task.run(['serve:' + target]);
 	});
+
 
 };

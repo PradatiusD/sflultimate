@@ -51,7 +51,7 @@ module.exports = function (app) {
 
   ['/terms','/privacy','/draftboard','/stats','/community'].forEach(function (url) {
 
-    var jadeTemplate = url.replace("/",'');
+    var jadeTemplate = url.replace('/','');
 
     app.get(url,  function (req, res) {
       res.render(jadeTemplate);

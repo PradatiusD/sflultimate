@@ -17,7 +17,7 @@ module.exports = function(req, res) {
   var locals = res.locals;
 
   // Get Braintree Token
-  view.on('init', function (next) {
+  view.on("init", function (next) {
 
     gateway.clientToken.generate({}, function (err, response) {
 
@@ -29,18 +29,18 @@ module.exports = function(req, res) {
     });
   });
 
-  locals.section  = 'register';
+  locals.section  = "register";
   locals.formData = {};
 
-  view.on('post', function (next) {
+  view.on("post", function (next) {
 
     for (var p in req.body) {
       locals.formData[p] = req.body[p];
     }
 
-    var leagueFee = (req.body.age === 'Student') ? '65.00': '65.00';
+    var leagueFee = (req.body.age === "Student") ? "65.00": "65.00";
 
-    // var leagueFee = (req.body.age === 'Student') ? '30.00': '50.00';
+    // var leagueFee = (req.body.age === "Student") ? "30.00": "50.00";
 
     var player = Player.model.findById(req.body.user_id).exec(function (err, player) {
 
@@ -60,8 +60,8 @@ module.exports = function(req, res) {
           submitForSettlement: true
         },
         customer: {
-          firstName: req.body['name.first'],
-          lastName:  req.body['name.last'],
+          firstName: req.body["name.first"],
+          lastName:  req.body["name.last"],
           email:     req.body.email,
         },
         customFields: {
@@ -91,11 +91,11 @@ module.exports = function(req, res) {
           if (_.isEmpty(player)) {
             player = new Player.model({
               name: {
-                first:  req.body['name.first'],
-                last:   req.body['name.last']
+                first:  req.body["name.first"],
+                last:   req.body["name.last"]
               },
               email:         req.body.email,
-              password:      req.body['name.first'].substring(0,1)+req.body['name.last'],
+              password:      req.body["name.first"].substring(0,1)+req.body["name.last"],
               shirtSize:     req.body.shirtSize,
               skillLevel:    req.body.skillLevel,
               participation: req.body.participation,
@@ -129,5 +129,5 @@ module.exports = function(req, res) {
   });
   
   // Render the view
-  view.render('register');
+  view.render("register");
 };
