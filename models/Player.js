@@ -3,7 +3,7 @@ var Types = keystone.Field.Types;
 
 /**
  * Player Model
- * ==========
+ * ==============
  */
 
 var Player = new keystone.List('Player');
@@ -83,5 +83,5 @@ Player.schema.virtual('canAccessKeystone').get(function() {
  * Registration
  */
 
-Player.defaultColumns = 'name, email, isAdmin';
+Player.defaultColumns = 'name, email, isAdmin, registered';
 Player.register();
