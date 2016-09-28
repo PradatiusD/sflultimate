@@ -15,7 +15,7 @@ block content
 
     h3 Summary
 
-    p This fall we'll be back at Amelia Earhart Park, just off I-95 at Ives Dairy Road.
+    p This fall we'll be back at Amelia Earhart Park, nearby where Le Jeune Road meets State Road 924.
     iframe(src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14358.205887616712!2d-80.2784486!3d25.8842357!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x5fd60d3c7189a581!2sAmelia+Earhart+Park!5e0!3m2!1sen!2sus!4v1475028057840" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen)
     p Regular season games will be <strong>Tuesday evenings at 8pm, starting October 4th</strong>. We're planning on 9 weeks of play, skipping the Tuesday of Thanksgiving Weekend. <strong>Finals are still being determined, and will be</strong> at Amelia Earhart Park.
 
@@ -33,6 +33,8 @@ block content
       strong Refund Policy: 
       | Should there be an error in your registration (paid for a youth fee when an adult or vice versa), we will provide a refund.  Otherwise we will not be providing refunds.
 
+    p If you see your name on the dropdown as you type your name, please click on it so that we can match your records and get your previous answers to the following questions.
+
     form#registration(action="register" method="post" autocomplete="off")
       if err
         .alert.alert-danger
@@ -43,6 +45,7 @@ block content
         .col-xs-6
           .form-group
             label(for='firstName') First Name
+
             input#firstName.form-control(type='text' name='name.first' placeholder='' value=formData['name.first'] required)
         .col-xs-6
           .form-group

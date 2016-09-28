@@ -29,9 +29,9 @@ module.exports = function(grunt) {
 			mongodump: {
 				command: [
 					process.env.DATABASE_DUMP_COMMAND,
-					"mongo sflultimate --eval \"printjson(db.dropDatabase())\"",
-					"mongorestore -d sflultimate dump/heroku_8xfcj7cs/",
-				].join(" && ")
+					'mongo sflultimate --eval \'printjson(db.dropDatabase())\'',
+					'mongorestore -d sflultimate dump/heroku_8xfcj7cs/',
+				].join(' && ')
 			}
 		}
 	};

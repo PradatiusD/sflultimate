@@ -17,7 +17,7 @@ var fields = {
   },
   gender: {
     type: Types.Select,
-    options: ["Male","Female"],
+    options: ['Male','Female'],
     initial: true
   },
   email: {
@@ -51,7 +51,7 @@ var fields = {
   },
   ageGroup: {
     type: Types.Select,
-    options: ["Student","Adult"],
+    options: ['Student','Adult'],
     initial: true,
     required: true
   },

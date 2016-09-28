@@ -3,12 +3,15 @@ var braintree = require("braintree");
 var Player    = keystone.list("Player");
 var _         = require("underscore");
 
-var gateway = braintree.connect({
+
+var braintreeAccount = {
   environment: braintree.Environment[process.env.BRAINTREE_ENV],
   merchantId:  process.env.BRAINTREE_MERCHANT_ID,
   publicKey:   process.env.BRAINTREE_PUBLIC_KEY,
   privateKey:  process.env.BRAINTREE_PRIVATE_KEY
-});
+};
+
+var gateway = braintree.connect(braintreeAccount);
 
 
 module.exports = function(req, res) {
@@ -38,9 +41,10 @@ module.exports = function(req, res) {
       locals.formData[p] = req.body[p];
     }
 
-    var leagueFee = (req.body.age === "Student") ? "65.00": "65.00";
+    // Late Registration
+    // var leagueFee = (req.body.age === "Student") ? "65.00": "65.00";
 
-    // var leagueFee = (req.body.age === "Student") ? "30.00": "50.00";
+    var leagueFee = (req.body.age === "Student") ? "30.00": "50.00";
 
     var player = Player.model.findById(req.body.user_id).exec(function (err, player) {
 
