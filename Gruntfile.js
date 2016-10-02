@@ -51,6 +51,10 @@ module.exports = function(grunt) {
 		'watch'
 	]);
 
+	grunt.registerTask('restore', [
+		'shell:mongodump'
+	])
+
 	// default option to connect server
 	grunt.registerTask('serve', [
 		'jshint',

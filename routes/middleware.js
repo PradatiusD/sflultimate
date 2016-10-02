@@ -30,7 +30,7 @@ exports.initLocals = function(req, res, next) {
   ];
 
   if (isRegistrationPeriod) {
-    locals.navLinks.push({ label: 'Register',  key: 'register',  href: '/register'});
+    // locals.navLinks.push({ label: 'Register',  key: 'register',  href: '/register'});
   } else {
     locals.navLinks = locals.navLinks.concat([
       { label: 'Teams',     key: 'teams',     href: '/teams'},
