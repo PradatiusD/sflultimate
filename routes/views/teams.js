@@ -12,7 +12,7 @@ module.exports = function (req, res) {
 
   // Else send data
   var playerQuery = Player.model.find().where('registered', true);
-  var teamQuery   = Team.model.find();
+  var teamQuery   = Team.model.find().where('league','57ebb08fbbdf090300cda6e7');
 
   teamQuery.exec(function (err, teams) {
 

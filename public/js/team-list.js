@@ -20,7 +20,8 @@ function createShirtList (teams) {
 
 app.controller("TeamListController",function ($http, $scope) {
 
-  var query = $http.get('/teams?f=json');
+  var url   = '/teams?f=json';
+  var query = $http.get(url);
 
   query.success(function (data) {
 
