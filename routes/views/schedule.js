@@ -1,39 +1,25 @@
 var keystone = require("keystone");
 
 
-var games = [
-  "2/21/2016, 5:00PM, Orange, Blue",
-  "2/21/2016, 5:00PM, Red, Grey",
-  "2/21/2016, 7:00PM, Green, Yellow",
-  "2/21/2016, 7:00PM, Black, White",
-  "2/28/2016, 5:00PM, Blue, Yellow",
-  "2/28/2016, 5:00PM, Red, Black",
-  "2/28/2016, 7:00PM, Orange, Green",
-  "2/28/2016, 7:00PM, Grey, White",
-  "3/13/2016, 5:00PM, Grey, Black",
-  "3/13/2016, 5:00PM, Red, White",
-  "3/13/2016, 7:00PM, Blue, Green",
-  "3/13/2016, 7:00PM, Orange, Yellow",
-  "3/20/2016, 5:00PM, Blue, Grey",
-  "3/20/2016, 5:00PM, Green, Black",
-  "3/20/2016, 7:00PM, Orange, Red",
-  "3/20/2016, 7:00PM, Yellow, White",
-  "4/03/2016, 5:00PM, Orange, White",
-  "4/03/2016, 5:00PM, Red, Yellow",
-  "4/03/2016, 7:00PM, Blue, Black",
-  "4/03/2016, 7:00PM, Green, Grey",
-  "4/10/2016, 5:00PM, Orange, Black",
-  "4/10/2016, 5:00PM, Yellow, Grey",
-  "4/10/2016, 7:00PM, Red, Green",
-  "4/10/2016, 7:00PM, White, Blue",
-  "4/17/2016, 5:00PM, Black, Yellow",
-  "4/17/2016, 5:00PM, Red, Blue",
-  "4/17/2016, 7:00PM, Orange, Grey",
-  "4/17/2016, 7:00PM, Green, White",
-  "4/24/2016, 5:00PM, Orange, Blue",
-  "4/24/2016, 5:00PM, Red, Grey",
-  "4/24/2016, 7:00PM, Green, Yellow",
-  "4/24/2016, 7:00PM, Black, White"
+var games =[
+  "10/04/2016, 8:00PM, Green, Pink",
+  "10/04/2016, 8:00PM, Black, Blue",
+  "10/11/2016, 8:00PM, Pink, Blue",
+  "10/11/2016, 8:00PM, Black, Green",
+  "10/18/2016, 8:00PM, Pink, Black",
+  "10/18/2016, 8:00PM, Blue, Green",
+  "10/25/2016, 8:00PM, Green, Pink",
+  "10/25/2016, 8:00PM, Black, Blue",
+  "11/01/2016, 8:00PM, Pink, Blue",
+  "11/01/2016, 8:00PM, Black, Green",
+  "11/08/2016, 8:00PM, Pink, Black",
+  "11/08/2016, 8:00PM, Blue, Green",
+  "11/15/2016, 8:00PM, Green, Pink",
+  "11/15/2016, 8:00PM, Black, Blue",
+  "11/22/2016, 8:00PM, Pink, Blue",
+  "11/22/2016, 8:00PM, Black, Green",
+  "12/06/2016, 8:00PM, Pink, Black",
+  "12/06/2016, 8:00PM, Blue, Green"
 ];
 
 games = games.map(function (game) {
