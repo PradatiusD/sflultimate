@@ -5,7 +5,7 @@ var app = angular.module("TeamApp",[]);
 
 function createShirtList (teams) {
 
-  var headers = ['Player ID','Team Color','First Name','Last Name','Shirt Size', 'Gender'];
+  var headers = ["Player ID","Team Color","First Name","Last Name","Shirt Size", "Gender"];
   var csv     = headers.join("\t")+"\n";
 
   teams.forEach(function (team){
@@ -20,7 +20,7 @@ function createShirtList (teams) {
 
 app.controller("TeamListController",function ($http, $scope) {
 
-  var url   = '/teams?f=json';
+  var url   = "/teams?f=json";
   var query = $http.get(url);
 
   query.success(function (data) {
@@ -45,7 +45,7 @@ app.controller("TeamListController",function ($http, $scope) {
       team.menTotal   = 0;
       team.womenTotal = 0;
 
-      team.captains.concat(team.players).forEach(function (player) {
+      team.players.forEach(function (player) {
         if (player.gender === "Male")   { team.menTotal++;  }
         if (player.gender === "Female") { team.womenTotal++;}
       });
