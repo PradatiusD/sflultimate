@@ -23,7 +23,7 @@ exports.initLocals = function(req, res, next) {
   
   var locals = res.locals;
 
-  var isRegistrationPeriod = true;
+  var isRegistrationPeriod = false;
   
   locals.navLinks = [
     { label: 'Home',      key: 'home',      href: '/'},
@@ -34,8 +34,8 @@ exports.initLocals = function(req, res, next) {
   } else {
     locals.navLinks = locals.navLinks.concat([
       { label: 'Teams',     key: 'teams',     href: '/teams'},
-      { label: 'Schedule',  key: 'schedule',  href: '/schedule'},
-      { label: 'Stats',     key: 'stats',     href: '/stats'},
+      // { label: 'Schedule',  key: 'schedule',  href: '/schedule'},
+      // { label: 'Stats',     key: 'stats',     href: '/stats'},
     ]);
   }
 
