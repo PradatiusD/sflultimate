@@ -41,7 +41,6 @@ module.exports = function (app) {
   app.get('/gallery',         routes.views.gallery);
   app.all('/contact',         routes.views.contact);
   app.get('/signature',       routes.views.signature);
-  app.all('/register',        routes.views.register);
   app.get('/confirmation',    routes.views.confirmation);
   app.get('/players',         routes.views.players);
   app.get('/pickups',         routes.views.pickups);
@@ -57,6 +56,11 @@ module.exports = function (app) {
       res.render(jadeTemplate);
     });
   });
+
+  var isRegistrationPeriod = false;
+  if (isRegistrationPeriod) {
+    app.all('/register',  routes.views.register);
+  }
 
   // Redirect to old vestigial content
   app.get([
