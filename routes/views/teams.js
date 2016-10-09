@@ -7,7 +7,7 @@ module.exports = function (req, res) {
 
   // If not json render HTML page
   if (req.query.f !== "json") {
-    return res.render('teams');
+    return res.render("teams");
   }
 
   // Else send data
@@ -24,7 +24,8 @@ module.exports = function (req, res) {
           name:       player.name,
           shirtSize:  player.shirtSize,
           skillLevel: player.skillLevel,
-          gender:     player.gender
+          gender:     player.gender,
+          // email:      player.email,
         };
       });
 

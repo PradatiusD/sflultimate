@@ -18,7 +18,12 @@ League.add({
     initial:  true,
     required: true, 
     index:    true
+  },
+  isActive: {
+    type: Types.Boolean,
+    default: false
   }
 });
 
+League.defaultColumns = 'title, isActive';
 League.register();

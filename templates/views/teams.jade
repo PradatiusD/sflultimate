@@ -8,7 +8,7 @@ block head
 block content
   .container(ng-app='TeamApp')
     h1 Spring League Teams
-    section.team-list(ng-controller='TeamListController')
+    section.team-list(ng-controller='TeamListController' ng-init='getTeamsAndPlayers()')
       article.col-md-6.col-lg-4(ng-repeat='team in teams')
         h3 
           span(ng-class='team.color.toLowerCase()').team-color 
