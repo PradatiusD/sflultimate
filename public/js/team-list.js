@@ -46,6 +46,20 @@ function createEmailList (teams) {
   return messages.join("\n");
 }
 
+function createStatsList (teams) {
+  var headers = ["Player ID", "Team Color", "First Name", "Last Name", "Gender"];
+  var csv = headers.join("\t") + "\n";
+
+  teams.forEach(function (team) {
+    team.players.forEach(function (player) {
+      var row = [player._id, team.color, player.name.first, player.name.last, player.gender];
+      csv += row.join("\t") + "\n";
+    });
+  });
+
+  console.log(csv);
+}
+
 app.controller("TeamListController",function ($http, $scope) {
 
   $scope.getTeamsAndPlayers = function () {
@@ -89,6 +103,7 @@ app.controller("TeamListController",function ($http, $scope) {
 
       // console.log(createShirtList(teams));
       // console.log(createEmailList(teams));
+      // console.log(createStatsList(teams));
     }, function (err) {
       alert("There was an issue connecting to database.");
       console.log(err);
