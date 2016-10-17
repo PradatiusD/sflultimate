@@ -1,0 +1,44 @@
+html
+  head
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' media='all')
+    title South Florida Fall League 2016 Stat Sheet
+  body(ng-app='StatSheetApp')
+
+    .container(ng-controller='StatSheetController')
+      div(style='page-break-after: always' ng-repeat="team in teams")
+        header.page-header
+          h1 
+            | Team {{team.color}} 
+            small Stat Sheet
+
+        h3 Opponent:
+        h3 Game Date:
+
+        br
+
+        table.table.table-bordered.table-striped
+          thead
+            th Our Score
+            th Their Score
+          tbody
+            tr
+              td(style='height:100px')
+              td(style='height:100px')
+
+        br
+
+        table.table.table-bordered.table-striped
+          thead
+            th Player Name
+            th Assists
+            th Scores
+            th Defenses
+          tbody
+            tr(ng-repeat="player in team.players | orderBy: 'name.first'")
+              td.lead(style='width: 25%') {{player.name.first}} {{player.name.last}}
+              td(style='width: 25%')
+              td(style='width: 25%')
+              td(style='width: 25%')
+
+    script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
+    script(src='/js/sheets.js')
