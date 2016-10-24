@@ -4,16 +4,41 @@ var app = angular.module("TeamApp",[]);
 
 function createShirtList (teams) {
 
-  var headers = ["Player ID","Team Color","First Name","Last Name","Shirt Size", "Gender"];
-  var csv     = headers.join("\t")+"\n";
+  var jerseys = {};
 
-  teams.forEach(function (team){
+  teams.forEach(function (team) {
+
+    var color = team.color;
+
+    if (!jerseys[color])
+      jerseys[color] = {};
+
     team.players.forEach(function (player) {
-      csv += [player._id, team.color, player.name.first, player.name.last, player.gender].join("\t")+"\n";
+
+      if (!jerseys[color][player.shirtSize])
+        jerseys[color][player.shirtSize] = 0;
+
+      jerseys[color][player.shirtSize]++;
     });
   });
 
-  return csv;
+  var orders = [];
+
+  for (var color in jerseys) {
+    var sizes = jerseys[color];
+
+    var order = Object.keys(sizes).map(function (size) {
+      return {
+        size: size,
+        count: sizes[size],
+        color: color
+      };
+    });
+
+    orders = orders.concat(order);
+  }
+
+  console.log(JSON.stringify(orders, null, 2));
 }
 
 
@@ -101,7 +126,7 @@ app.controller("TeamListController",function ($http, $scope) {
 
       $scope.teams = teams;
 
-      // console.log(createShirtList(teams));
+      console.log(createShirtList(teams));
       // console.log(createEmailList(teams));
       // console.log(createStatsList(teams));
     }, function (err) {

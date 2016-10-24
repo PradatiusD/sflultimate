@@ -35,7 +35,7 @@ exports.initLocals = function(req, res, next) {
     locals.navLinks = locals.navLinks.concat([
       { label: 'Teams',     key: 'teams',     href: '/teams'},
       { label: 'Schedule',  key: 'schedule',  href: '/schedule'},
-      // { label: 'Stats',     key: 'stats',     href: '/stats'},
+      { label: 'Stats',     key: 'stats',     href: '/stats'},
     ]);
   }
 
