@@ -1,9 +1,5 @@
 require('dotenv').config();
 
-var config = {
-	port: 5000
-};
-
 module.exports = function(grunt) {
 
 	// Load grunt tasks automatically
