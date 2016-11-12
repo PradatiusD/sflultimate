@@ -85,6 +85,47 @@ function createStatsList (teams) {
   console.log(csv);
 }
 
+
+function createShirtDistributionList (teams) {
+  var players = [];
+  teams.forEach(function (team) {
+
+    var playersWithColor = team.players.map(function (player) {
+      player.color = team.color;
+      return player;
+    });
+    players = players.concat(playersWithColor);
+  });
+
+  players = players.sort(function (a, b) {
+    if (a.color < b.color) {
+      return -1;
+    }
+
+    if (a.color > b.color) {
+      return 1;
+    }
+
+    var aName = a.name.first + "" + a.name.last;
+    var bName = b.name.first + "" + b.name.last;
+
+    if (aName < bName) {return -1}
+    if (aName > bName) {return 1}
+
+    return 0;
+  });
+
+  players = players.map(function (p) {
+    return {
+      color: p.color,
+      name: p.name.first + " " + p.name.last,
+      size: p.shirtSize
+    }
+  })
+
+  console.log(JSON.stringify(players, null, 2));
+}
+
 app.controller("TeamListController",function ($http, $scope) {
 
   $scope.getTeamsAndPlayers = function () {
@@ -126,9 +167,11 @@ app.controller("TeamListController",function ($http, $scope) {
 
       $scope.teams = teams;
 
-      console.log(createShirtList(teams));
+      // console.log(createShirtList(teams));
       // console.log(createEmailList(teams));
       // console.log(createStatsList(teams));
+      console.log(createShirtDistributionList(teams));
+
     }, function (err) {
       alert("There was an issue connecting to database.");
       console.log(err);

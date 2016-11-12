@@ -42,18 +42,35 @@ block content
             li
               img.img-responsive(src="/images/league-champions-2013-spring.jpg")
       .col-md-4
-          h3 Building Ultimate
-          p Since 1968, The South Florida League brings together beginner and expert players from across Dade & Broward with the expressed goal of growing the awesome sport of Ultimate Frisbee.
-          p We are excited to bring you another season of Ultimate, and look forward to drafting our next set of teams and setting our new schedule.
-          .standings.hidden
+          //- h3 Building Ultimate
+          //- p Since 1968, The South Florida League brings together beginner and expert players from across Dade & Broward with the expressed goal of growing the awesome sport of Ultimate Frisbee.
+          //- p We are excited to bring you another season of Ultimate, and look forward to drafting our next set of teams and setting our new schedule.
+          .standings
             h3 2016 League Standings
             table.table.table-striped(id="standings")
               thead
                 th Color
                 th Wins
                 th Losses
-                th Point Diff
+                //- th Point Diff
               tbody
+                tr
+                  td Green
+                  td 5
+                  td 1
+                tr
+                  td Pink
+                  td 4
+                  td 2
+                tr
+                  td Black
+                  td 3
+                  td 3
+                tr
+                  td Blue
+                  td 1
+                  td 5
+
 
 block js
   script(src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js")
