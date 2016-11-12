@@ -29,10 +29,10 @@ block content
             td 
               span {{game.home}} vs. {{game.away}} 
               span(ng-if="game.homeScore && game.awayScore") ({{game.homeScore}}-{{game.awayScore}})
-          //- tr(ng-class="(1461974400000 - $parent.today > 0) ? '':'text-muted' ")
-          //-   td Apr 30
-          //-   td 10:00AM-4:30PM
-          //-   td League Finals (at Amelia Earhart Park)
+          tr(ng-class="(1481518800000 - $parent.today > 0) ? '':'text-muted' ")
+            td Dec 11
+            td 10:00AM-3:30PM
+            td League Finals (at Ives Estates Park)
 
 block js
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
