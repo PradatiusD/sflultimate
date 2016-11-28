@@ -20,8 +20,8 @@ var games =[
   '11/22/2016, 8:00PM, Black, Green',
   '11/29/2016, 8:00PM, Pink, Black',
   '11/29/2016, 8:00PM, Blue, Green',
-  '10/04/2016, 8:00PM, Green, Pink',
-  '10/04/2016, 8:00PM, Black, Blue'
+  '12/06/2016, 8:00PM, Green, Pink',
+  '12/06/2016, 8:00PM, Black, Blue'
 ];
 
 games = games.map(function (game) {
