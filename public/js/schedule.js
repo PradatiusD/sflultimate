@@ -1,6 +1,6 @@
 (function () {
 
-var app = angular.module("scheduleApp", [])
+var app = angular.module("scheduleApp", []);
 
 app.controller("ScheduleViewController",function ($http, $scope, $filter) {
 
