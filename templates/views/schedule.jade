@@ -29,6 +29,7 @@ block content
             td 
               span {{game.home}} vs. {{game.away}} 
               span(ng-if="game.homeScore && game.awayScore") ({{game.homeScore}}-{{game.awayScore}})
+              //- span(ng-if="!game.homeScore && !game.awayScore && (1481518800000 - $parent.today) > 0") (Missing stats for game)
           tr(ng-class="(1481518800000 - $parent.today > 0) ? '':'text-muted' ")
             td Dec 11
             td 10:00AM-5:30PM
