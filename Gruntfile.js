@@ -22,7 +22,7 @@ module.exports = function(grunt) {
 			}
 		},
 		shell: {
-			mongodump: {
+			mongorestore: {
 				command: [
 					process.env.DATABASE_DUMP_COMMAND,
 					'mongo sflultimate --eval \'printjson(db.dropDatabase())\'',
@@ -38,9 +38,7 @@ module.exports = function(grunt) {
 	grunt.initConfig(configs);
 
 	// load jshint
-	grunt.registerTask('lint', [
-		'jshint'
-	]);
+	grunt.registerTask('lint', ['jshint']);
 
 	grunt.registerTask('dev', [
 		'sass',
@@ -48,8 +46,8 @@ module.exports = function(grunt) {
 	]);
 
 	grunt.registerTask('restore', [
-		'shell:mongodump'
-	])
+		'shell:mongorestore'
+	]);
 
 	// default option to connect server
 	grunt.registerTask('serve', [
@@ -61,5 +59,5 @@ module.exports = function(grunt) {
 		grunt.task.run(['serve:' + target]);
 	});
 
-
+	grunt.registerTask('default', ['serve'])
 };

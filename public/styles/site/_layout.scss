@@ -1,19 +1,77 @@
-#header {
-  margin-top: 2em;
+@import "./../../../bower_components/sass-mediaqueries/media-queries";
+
+.features {
+  background-color: rgba(black, 0.10);
+  color: black;
+  font-size: 1.15em;
+  h3 {
+    margin-top: 0.5em;
+  }
+  padding: 1em 0em;
 }
 
-$logo-width: 130px;
-
-.navbar-brand {
+.champions {
   position: relative;
-  width: 174px;
+  text-align: center;
+
+  figure {
+    width: 24%;
+    display: inline-block;
+    background: rgba(black, 0.10);
+    margin-bottom: -3px;
+    @include max-screen (772px) {
+      width: 48%;
+    }
+  }
+
+  aside {
+    position: absolute;
+    color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow: 2px 2px 4px rgba(black, 0.55);
+
+    h2 {
+      font-size: 5em;
+      font-weight: 400;
+      white-space: nowrap;
+
+      @include max-screen(1039px) {
+        font-size: 3em;
+      }
+
+    }
+    p {
+      font-size: 2em;
+      @include max-screen(1039px) {
+        font-size: 1.5em;
+      }
+    }
+
+    h2, p {
+      padding: 0.25em 1.5em;
+      background: rgba(black, 0.55);
+    }
+
+  }
+}
+
+
+.container-fluid div.navbar-header a.navbar-brand {
+  position: relative;
+  width: 200px;
+  margin-right: 1em;
+  margin-left: 0.5em;
 
   img {
+    max-width: 100%;
+    height: auto;
     position: absolute;
-    top: -25px;
-    left: 20px;
-    width: $logo-width;
-    height: (152/200) * $logo-width;
+    top: 50%;
+    left: 50%;
+    margin-left: -100px;
+    margin-top: -21px;
   }
 }
 
@@ -21,12 +79,13 @@ $logo-width: 130px;
   margin: 0 auto 1em auto;
 }
 
-#footer {
+.site-footer {
   margin-top: 30px;
-  margin-bottom: 10px;
   border-top: 1px solid #eeeeee;
   padding-top: 30px;
-  color: #777777;
+  color: rgba(black, 0.90);
+  background: rgba(black, 0.10);
+  vertical-align: bottom;
 
   .fa {
     color: #FFF;
@@ -120,8 +179,13 @@ $logo-width: 130px;
 .pink   { background-color: #ff40b3; .stats & {background-color: rgba(#ff40b3, 0.25);}}
 
 
-.navbar-inverse .navbar-nav > li > a {
-  text-transform: uppercase;
-  font-family: "Roboto Condensed", "Helvetica Neue", "Helvetica", sans-serif;
-  font-weight: 700; 
+
+.navbar-inverse {
+  .navbar-nav > li > a {
+    text-transform: uppercase;
+    font-family: $headings-font-family;
+    font-size: 20px;
+  }
+
+  margin-bottom: 0;
 }

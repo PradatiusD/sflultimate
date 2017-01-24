@@ -13,99 +13,50 @@ block css
   link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/css/unslider.css")
 
 block content
-  .container
-    .jumbotron
-      .row
-        .col-sm-4
-          img.logo-circled.img-responsive(src='/images/logo-circled.png')
-        .col-sm-8
-          h1 Welcome!
-          p Check out this season's schedule.  More sats to come soon!
-          //- a.btn.btn-primary.btn-lg(href="/register")
-            //- i.fa.fa-sign-in
-            //- |  Register Now!
-          a.btn.btn-primary.btn-lg(href="/schedule") View Schedule
-    .row
-      .col-md-8
-        .banner
-          ul
-            li
-              img.img-responsive(src="/images/league-champions-2016-spring.jpg")
-            li
-              img.img-responsive(src="/images/league-champions-2015-fall.jpg")
-            li
-              img.img-responsive(src="/images/league-champions-2015-spring.jpg")
-            li
-              img.img-responsive(src="/images/league-champions-2014-fall.jpg")
-            li
-              img.img-responsive(src="/images/league-champions-2014-spring.jpg")
-            li
-              img.img-responsive(src="/images/league-champions-2013-spring.jpg")
-      .col-md-4
-          //- h3 Building Ultimate
-          //- p Since 1968, The South Florida League brings together beginner and expert players from across Dade & Broward with the expressed goal of growing the awesome sport of Ultimate Frisbee.
-          //- p We are excited to bring you another season of Ultimate, and look forward to drafting our next set of teams and setting our new schedule.
-          .standings
-            h3 2016 League Standings
-            table.table.table-striped(id="standings")
-              thead
-                th Color
-                th Wins
-                th Losses
-                //- th Point Diff
-              tbody
-                tr
-                  td Black
-                  td 6
-                  td 3
-                tr
-                  td Green
-                  td 6
-                  td 3
-                tr
-                  td Pink
-                  td 5
-                  td 4
-                tr
-                  td Blue
-                  td 1
-                  td 8
 
+  .call-to-action
+    h3 Time To Cleat Up
+    p Since 1989, we together players from across Dade & Broward counties to help grow the awesome sport of Ultimate Frisbee.
+    p We are excited to bring you another season, and look forward to drafting our next set of teams and setting our new schedule.
+    img.img-responsive(src="/images/time-to-cleat-up.jpg")
+
+
+  .features
+    .container
+      .row
+        article.col-sm-4.text-center
+          i.fa.fa-smile-o.fa-4x
+          h3 Community
+          p From club athletes to newbies, league welcomes players of all skills & ability 
+        article.col-sm-4.text-center
+          i.fa.fa-trophy.fa-4x
+          h3 Play Ultimate
+          p We have 10 regular season games and our playoff tournament
+        article.col-sm-4.text-center
+          i.fa.fa-female.fa-4x
+          h3 Ladies Welcome
+          p Our league is co-ed, and is always excited to invite new lady players!
+
+  section.champions
+    aside.text-center
+        h2 Hall of Fame
+        p The past champions of the South Florida 
+    div
+      figure
+        img.img-responsive(src="/images/league-champions-2016-fall.jpg")
+      figure
+        img.img-responsive(src="/images/league-champions-2016-spring.jpg")
+      figure
+        img.img-responsive(src="/images/league-champions-2015-fall.jpg")
+      figure
+        img.img-responsive(src="/images/league-champions-2015-spring.jpg")
+      figure
+        img.img-responsive(src="/images/league-medals-2015-spring.jpg")
+      figure
+        img.img-responsive(src="/images/league-champions-2014-fall.jpg")
+      figure
+        img.img-responsive(src="/images/league-champions-2014-spring.jpg")
+      figure
+        img.img-responsive(src="/images/league-champions-2013-spring.jpg")
 
 block js
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/js/unslider-min.js")
-  script.
-    (function ($){
-      $('.banner').unslider({
-        animation: 'fade',
-        autoplay: true,
-        arrows: false,
-        nav: false
-      });
-
-      return
-
-      var $standings = $("#standings").find('tbody');
-
-      $.get('/?f=json').done(function (data) {
-
-        data = Object.keys(data).map(function (color) {
-
-          var o = data[color];
-          o.color = color;
-          return o;
-        });
-
-        data = data.sort(function (team1, team2) {
-          var team1Record = team1.wins - team1.losses;
-          var team2Record = team2.wins - team2.losses;
-          return team2Record - team1Record;
-        });
-
-
-        data.forEach(function (d) {
-          d.pointDiff = d.pointDiff > 0 ? "+"+d.pointDiff : d.pointDiff;
-          $standings.append("<tr><td>"+d.color+"</td><td>"+d.wins+"</td><td>"+d.losses+"</td><td>"+d.pointDiff+"</td></tr>");
-        });
-      });
-    })(jQuery);

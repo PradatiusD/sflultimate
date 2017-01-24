@@ -35,3 +35,4 @@ tmp
 dump
 dump.zip
 scripts/*.csv
+bower_components

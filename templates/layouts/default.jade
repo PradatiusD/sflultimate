@@ -16,7 +16,7 @@ html(lang='en')
     link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
 
     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css")
-    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed")
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400|Source+Sans+Pro:400,700")
 
     //- Customise the stylesheet for your site by editing /public/styles/site.sass
     link(rel="stylesheet" href="/styles/site.css")
@@ -43,6 +43,8 @@ html(lang='en')
 
     //- HEADER
     #header
+
+      block header
 
       //- Customise your site's navigation by changing the navLinks Array in ./routes/middleware.js
 
@@ -80,13 +82,24 @@ html(lang='en')
 
 
     //- FOOTER
-    .container: #footer
-      a(href='https://www.facebook.com/sflultimate/' target='blank')
-        i.fa.fa-facebook
-      a(href='mailto:sflultimate@gmail.com' target='blank')
-        i.fa.fa-envelope
 
-      span Organized by South Florida Ultimate Inc., a local non-for-profit.
+    footer.site-footer
+      .container
+        .row
+          .col-sm-8
+            span Organized by South Florida Ultimate Inc., a local non-for-profit.
+            div
+              a(href='https://www.facebook.com/sflultimate/' target='blank')
+                i.fa.fa-facebook
+              a(href='mailto:sflultimate@gmail.com' target='blank')
+                i.fa.fa-envelope
+
+          .col-sm-4
+            h4 Footer Links
+            ul
+              each link in footerLinks
+                li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
+
 
 
     //- JAVASCRIPT

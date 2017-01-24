@@ -20,6 +20,7 @@ module.exports = {
 	livereload: {
 		files: [
 			'public/styles/**/*.css',
+			'templates/**/*.jade'
 		],
 		options: {
 			livereload: true
