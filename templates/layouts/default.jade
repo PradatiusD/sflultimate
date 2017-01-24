@@ -84,22 +84,25 @@ html(lang='en')
     //- FOOTER
 
     footer.site-footer
-      .container
-        .row
-          .col-sm-8
-            span Organized by South Florida Ultimate Inc., a local non-for-profit.
-            div
-              a(href='https://www.facebook.com/sflultimate/' target='blank')
-                i.fa.fa-facebook
-              a(href='mailto:sflultimate@gmail.com' target='blank')
-                i.fa.fa-envelope
+      .container: .row
+        .col-sm-8
+          br
+          div
+            a(href='https://www.facebook.com/sflultimate/' target='blank')
+              i.fa.fa-facebook
+            a(href='mailto:sflultimate@gmail.com' target='blank')
+              i.fa.fa-envelope
+          br
+          span Organized by South Florida Ultimate Inc., a local non-for-profit.
+          br
+        .col-sm-4
+          h4 Links
+          ul
+            each link in footerLinks
+              li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
 
-          .col-sm-4
-            h4 Footer Links
-            ul
-              each link in footerLinks
-                li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
-
+      div.text-right.credits    
+        .container Site built by <a href="http://danielprada.co" target="_blank">Daniel Prada</a>
 
 
     //- JAVASCRIPT

@@ -57,8 +57,7 @@ module.exports = function (app) {
     });
   });
 
-  var isRegistrationPeriod = false;
-  if (isRegistrationPeriod) {
+  if (keystone.get('isRegistrationPeriod')) {
     app.all('/register',  routes.views.register);
   }
 

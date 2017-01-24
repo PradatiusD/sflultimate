@@ -5,25 +5,32 @@ block head
   meta(property="og:url"          content="http://www.sflultimate.com/register")
   meta(property="og:description"  content="Registration closes Sunday October 2nd, so sign up to save your spot!")
 
-  meta(property="og:image"        content="http://www.sflultimate.com/images/open-graph/registration.jpg")
-  meta(property="og:image:width"  content="1200")
-  meta(property="og:image:height" content="630")
+  meta(property="og:image"        content="http://www.sflultimate.com/images/elfrink-sky.jpg")
+  //- meta(property="og:image:width"  content="1200")
+  //- meta(property="og:image:height" content="630")
 
 block content
-  .container: .row: .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
-    h1 2016 Fall League Registration
+
+  .hero-sky
+    .container
+      h1 2017 Spring League Registration
+  
+  .container.register: .row: .col-md-12
 
     h3 Summary
 
-    p This fall we'll be back at Amelia Earhart Park, nearby where Le Jeune Road meets State Road 924.
-    iframe(src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14358.205887616712!2d-80.2784486!3d25.8842357!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x5fd60d3c7189a581!2sAmelia+Earhart+Park!5e0!3m2!1sen!2sus!4v1475028057840" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen)
-    p Regular season games will be <strong>Tuesday evenings at 8pm, starting October 4th</strong>. We're planning on 9 weeks of play, skipping the Tuesday of Thanksgiving Weekend. <strong>Finals are still being determined, and will be</strong> at Amelia Earhart Park.
+    p This Spring we'll be back at Ives Estates Park, nearby where I-95 meets Ives Dairy Road.
+    iframe(src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4926.558158835997!2d-80.17054581931154!3d25.969331102576923!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9ac3d69e2ec2d%3A0xa21f0a46872e76b8!2sIves+Estates+Park!5e1!3m2!1sen!2sus!4v1485232989731', width='100%', height='350', frameborder='0', style='border:0', allowfullscreen='')
+    p Regular season games will be <strong>Sunday afternoons from 4-8pm, starting February 12th</strong>. We're planning on 10 weeks of play, skipping Easter Sunday (April 16th) and April 23rd. <strong>Finals are still being confirmed, but are planned to be Amelia Earhart Park on Saturday, May 6th.</strong>
 
-    p Registration is open <strong>as of September 28th</strong> and the costs are:
+    p Registration is open <strong>as of today</strong> and the costs are:
+
     ul
       li $30 for students
       li $50 for everyone else
-    p The fee includes the games, playoffs & events.  Late registration (at a $65 fee for everyone, as space permits) will continue until after the first week of play.
+
+    p Registration will close Thursday, February 9th.
+    //- p The fee includes the games, playoffs & events.  Late registration (at a $65 fee for everyone, as space permits) will continue until after the first week of play.
 
     hr
 
@@ -40,28 +47,28 @@ block content
         .alert.alert-danger
           strong Error: 
           span=err
-      input#user_id.form-control.hidden(type='user_id' autocomplete='false' name='user_id' placeholder='' value=formData.user_id)
+      input#user_id.input-lg.form-control.hidden(type='user_id' autocomplete='false' name='user_id' placeholder='' value=formData.user_id)
       .row
         .col-xs-6
           .form-group
             label(for='firstName') First Name
 
-            input#firstName.form-control(type='text' name='name.first' placeholder='' value=formData['name.first'] required)
+            input#firstName.input-lg.form-control(type='text' name='name.first' placeholder='' value=formData['name.first'] required)
         .col-xs-6
           .form-group
             label(for='lastName') Last Name
-            input#lastName.form-control(type='text' name='name.last' placeholder='' value=formData['name.last'] required)
+            input#lastName.input-lg.form-control(type='text' name='name.last' placeholder='' value=formData['name.last'] required)
 
       //- Email
       .form-group
         label(for='email') Email address
-        input#email.form-control(type='email' name='email'   placeholder='' value=formData.email required)
+        input#email.input-lg.form-control(type='email' name='email'   placeholder='' value=formData.email required)
 
       //- Pairing
       .form-group
         label(for='partner') Partner<br><small>If you would like to pair up with another player for sign-up, write their name here.</small>
-        input#partner.form-control(type='partner' autocomplete='false' name='partner' placeholder='' value=formData.partner)
-        input#partner_id.form-control.hidden(type='partner_id' autocomplete='false' name='partner_id' placeholder='' value=formData.partner_id)
+        input#partner.input-lg.form-control(type='partner' autocomplete='false' name='partner' placeholder='' value=formData.partner)
+        input#partner_id.input-lg.form-control.hidden(type='partner_id' autocomplete='false' name='partner_id' placeholder='' value=formData.partner_id)
 
       //- Age Group
       #age
@@ -81,7 +88,7 @@ block content
       p
         small Knowing how often you plan on being there helps captains pick well-rounded teams
 
-      select#participation.form-control(name="participation" value=formData.participation)
+      select#participation.input-lg.form-control(name="participation" value=formData.participation)
         option(value="30") Less than 30%
         option(value="50") Around 50%
         option(value="80" selected="selected") Greater than 80%
@@ -89,7 +96,7 @@ block content
 
       //- Shirt Size
       label(for="shirtSize" name="shirtSize") Shirt Size
-      select#shirtSize.form-control(name="shirtSize" value=formData.shirtSize)
+      select#shirtSize.input-lg.form-control(name="shirtSize" value=formData.shirtSize)
         option(value="S") S
         option(value="M") M
         option(value="L") L
@@ -99,7 +106,7 @@ block content
 
       //- Skill Level
       label(for="skillLevel" name="skillLevel") Skill Level
-      select#skillLevel.form-control(name="skillLevel" value=formData.skillLevel)
+      select#skillLevel.input-lg.form-control(name="skillLevel" value=formData.skillLevel)
         option(value='1') 1 - Absolute Beginner
         option(value='2') 2 - Hey wait, what's a flick?
         option(value='3') 3 - Working on throws, basic knowledge of game

@@ -9,7 +9,7 @@
  */
 
 var _ = require('underscore');
-
+var keystone = require('keystone');
 
 /**
   Initialises the standard view locals
@@ -22,31 +22,29 @@ var _ = require('underscore');
 exports.initLocals = function(req, res, next) {
   
   var locals = res.locals;
-
-  var isRegistrationPeriod = false;
   
   locals.navLinks = [
-    { label: 'Home',      key: 'home',      href: '/'},
+    {label: 'Home',      key: 'home',      href: '/'},
   ];
 
-  if (isRegistrationPeriod) {
-    locals.navLinks.push({ label: 'Register',  key: 'register',  href: '/register'});
+  if (keystone.get('isRegistrationPeriod')) {
+    locals.navLinks.push({label: 'Register',  key: 'register',  href: '/register'});
   } else {
     locals.navLinks = locals.navLinks.concat([
-      { label: 'Teams',     key: 'teams',     href: '/teams'},
-      { label: 'Schedule',  key: 'schedule',  href: '/schedule'},
-      { label: 'Stats',     key: 'stats',     href: '/stats'},
+      {label: 'Teams',     key: 'teams',     href: '/teams'},
+      {label: 'Schedule',  key: 'schedule',  href: '/schedule'},
+      {label: 'Stats',     key: 'stats',     href: '/stats'}
     ]);
   }
 
   locals.navLinks = locals.navLinks.concat([
-    { label: 'Local Pickups', key: 'community', href: '/community'}
+    {label: 'Local Pickups', key: 'community', href: '/community'}
   ]);
 
   locals.footerLinks = [
-    { label: 'Terms & Conditions', key: 'terms', href: '/terms'},
-    { label: 'Privacy Policy', key: 'privacy', href: '/privacy'},
-    { label: 'Local Pickups', key: 'community', href: '/community'}
+    {label: 'Terms & Conditions', key: 'terms', href: '/terms'},
+    {label: 'Privacy Policy', key: 'privacy', href: '/privacy'},
+    {label: 'Local Pickups', key: 'community', href: '/community'}
   ];
   
   locals.user = req.user;

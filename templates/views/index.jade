@@ -3,23 +3,25 @@ extends ../layouts/default
 block head
   meta(property="og:title"        content="South Florida Ulitmate")
   meta(property="og:url"          content="http://www.sflultimate.com/")
-  meta(property="og:description"  content="Since 1968, we promote, develop, & enjoy the sport of Ultimate Frisbee in the Miami & Ft. Lauderdale area, working always as a non-for-profit organization.")
+  meta(property="og:description"  content="Since 1989, players from Dade & Broward counties unite to grow the awesome sport of Ultimate Frisbee.")
 
-  meta(property="og:image"        content="http://www.sflultimate.com/images/open-graph/homepage.jpg")
-  meta(property="og:image:width"  content="1200")
-  meta(property="og:image:height" content="630")
+  meta(property="og:image"        content="http://www.sflultimate.com/images/time-to-cleat-up.jpg")
+  //- meta(property="og:image:width"  content="1200")
+  //- meta(property="og:image:height" content="630")
 
 block css
-  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/unslider/2.0.3/css/unslider.css")
 
 block content
 
   .call-to-action
-    h3 Time To Cleat Up
-    p Since 1989, we together players from across Dade & Broward counties to help grow the awesome sport of Ultimate Frisbee.
-    p We are excited to bring you another season, and look forward to drafting our next set of teams and setting our new schedule.
-    img.img-responsive(src="/images/time-to-cleat-up.jpg")
-
+    .container
+      .row
+        .col-md-8
+          h1 Time To Cleat Up
+          p Since 1989, players from Dade & Broward counties unite to grow the awesome sport of Ultimate Frisbee.
+          p We are excited to bring you another season, and look forward to drafting our next set of teams and setting our new schedule.
+      div.text-center
+        a.btn.btn-lg.btn-primary(href="/register") Register
 
   .features
     .container
