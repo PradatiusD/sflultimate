@@ -19,7 +19,7 @@ keystone.init({
   name: 'SFLUltimate',
   brand: 'SFLUltimate',
   
-  sass: 'public',
+  // sass: 'public',
   static: 'public',
   favicon: 'public/favicon.ico',
   views: 'templates/views',
