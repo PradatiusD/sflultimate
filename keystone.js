@@ -20,7 +20,7 @@ keystone.init({
   brand: 'SFLUltimate',
   
   sass: 'public',
-  'static': 'public',
+  static: 'public',
   favicon: 'public/favicon.ico',
   views: 'templates/views',
   'view engine': 'jade',

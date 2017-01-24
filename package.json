@@ -1,6 +1,6 @@
 {
   "name": "sflultimate",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "engines": {
     "node": "0.12.9",
     "npm": "2.14.9"
@@ -13,7 +13,9 @@
     "keystone": "^0.3.16",
     "node-sass": "^3.3.2",
     "node-sass-middleware": "^0.9.7",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "bower": "1.8.0"
+
   },
   "devDependencies": {
     "grunt": "^0.4.4",
@@ -33,7 +35,8 @@
     "time-grunt": "^0.3.1"
   },
   "scripts": {
-    "start": "node keystone.js"
+    "start": "node keystone.js",
+    "postinstall": "./node_modules/bower/bin/bower install"
   },
   "main": "keystone.js",
   "private": true
