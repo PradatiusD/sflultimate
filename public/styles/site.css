@@ -5838,11 +5838,14 @@ button.close {
   background-position: center center;
   font-size: 1.5em; }
 
+.sfl-divider {
+  border-color: #dedede;
+  max-width: 60%; }
+
 .call-to-action {
-  background: url("/images/time-to-cleat-up.jpg");
   background-size: cover;
   background-position: center top;
-  padding: 2em 0;
+  padding: 6em 0;
   color: white; }
   .call-to-action h1 {
     margin-top: 0;
@@ -5992,50 +5995,60 @@ button.close {
     .schedule .team-color:hover {
       opacity: 0.9; }
 
-.orange {
-  background-color: orange; }
-  .stats .orange {
-    background-color: rgba(255, 165, 0, 0.25); }
+.black {
+  background-color: black; }
+  .stats .black {
+    background-color: rgba(0, 0, 0, 0.25); }
 
 .blue {
   background-color: #2A2AD4; }
   .stats .blue {
     background-color: rgba(42, 42, 212, 0.25); }
 
-.yellow {
-  background-color: #FFFF19; }
-  .stats .yellow {
-    background-color: rgba(255, 255, 25, 0.25); }
-
-.white {
-  background-color: white; }
-  .stats .white {
-    background-color: rgba(255, 255, 255, 0.25); }
-
-.red {
-  background-color: #FD3C3C; }
-  .stats .red {
-    background-color: rgba(253, 60, 60, 0.25); }
+.green {
+  background-color: green; }
+  .stats .green {
+    background-color: rgba(0, 128, 0, 0.25); }
 
 .grey {
   background-color: grey; }
   .stats .grey {
     background-color: rgba(128, 128, 128, 0.25); }
 
-.green {
-  background-color: green; }
-  .stats .green {
-    background-color: rgba(0, 128, 0, 0.25); }
-
-.black {
-  background-color: black; }
-  .stats .black {
-    background-color: rgba(0, 0, 0, 0.25); }
+.orange {
+  background-color: orange; }
+  .stats .orange {
+    background-color: rgba(255, 165, 0, 0.25); }
 
 .pink {
   background-color: #ff40b3; }
   .stats .pink {
     background-color: rgba(255, 64, 179, 0.25); }
+
+.purple {
+  background-color: purple; }
+  .stats .purple {
+    background-color: rgba(128, 0, 128, 0.25); }
+
+.red {
+  background-color: #FD3C3C; }
+  .stats .red {
+    background-color: rgba(253, 60, 60, 0.25); }
+
+.white {
+  background-color: white; }
+  .stats .white {
+    background-color: rgba(255, 255, 255, 0.25); }
+
+.yellow {
+  background-color: #FFFF19; }
+  .stats .yellow {
+    background-color: rgba(255, 255, 25, 0.25); }
+
+.crimson {
+  background-color: crimson; }
+  .stats .crimson {
+    background-color: rgba(220, 20, 60, 0.25); }
 
 .navbar-inverse {
   margin-bottom: 0; }
