@@ -2,6 +2,8 @@
 
 // To captain
 // send email of people
+var globalEmails = [];
+
 
 db.teams.find({league:ObjectId('589f1ea1e233f50400259325')}).forEach(function (team) {
   
@@ -18,8 +20,11 @@ db.teams.find({league:ObjectId('589f1ea1e233f50400259325')}).forEach(function (t
     }
 
     playerEmails += '\n<' + player.name.first + ' ' + player.name.last + '> ' + player.email;
+    globalEmails.push(player.email);
   });
 
-  print(email);
-  print(playerEmails);
+  // print(email);
+  // print(playerEmails);
 });
+
+print(globalEmails.join(", "))

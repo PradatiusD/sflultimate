@@ -8,10 +8,7 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
   $scope.teams  = [];
   $scope.standings = {};
 
-  $scope.forfeits = {
-    Green: ["White"],
-    Yellow: ["White"]
-  };
+  $scope.forfeits = {};
 
   // Today plus one day of separation
   var dayInMilliseconds = 1000 * 60 * 60 * 24;
@@ -72,6 +69,8 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
       
     var queryStats = $http.get("/stats.csv");
     queryStats.success(function (stats) {
+
+      return
       
       stats   = stats.split('\n');
       var headers = stats.splice(0,1)[0].split(',');

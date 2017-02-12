@@ -15,7 +15,6 @@
     "node-sass-middleware": "^0.9.7",
     "underscore": "^1.8.3",
     "bower": "1.8.0"
-
   },
   "devDependencies": {
     "grunt": "^0.4.4",
@@ -30,6 +29,7 @@
     "jshint-stylish": "^2.0.1",
     "load-grunt-configs": "^0.4.1",
     "load-grunt-tasks": "^0.4.0",
+    "moment": "^2.17.1",
     "open": "0.0.5",
     "request": "^2.67.0",
     "time-grunt": "^0.3.1"
