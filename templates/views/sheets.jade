@@ -1,6 +1,6 @@
 html
   head
-    title South Florida Fall League 2016 Stat Sheet
+    title South Florida Spring League 2017 Stat Sheet
     link(rel='stylesheet' href='/styles/site.css' media='all')
     link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed")
     style.
@@ -18,7 +18,7 @@ html
       }
 
       .logo {
-        max-height: 340px;
+        max-height: 400px;
         float: right;
         margin-top: 1em;
       }
@@ -29,7 +29,7 @@ html
 
       section(ng-repeat="team in teams" style='page-break-after: always')
         .row
-          .col-xs-8
+          .col-xs-7
             header.page-header
               h1 
                 | Team {{team.color}} 
@@ -48,8 +48,8 @@ html
                 tr
                   td(style='width: 40%') Opponent:
                   td
-          .col-xs-4
-            img(src='/images/flamingo-logo.png' class='img-responsive logo')
+          .col-xs-5
+            img(src='/images/city-logo.png' class='img-responsive logo')
 
         hr
         br
@@ -68,7 +68,7 @@ html
               td(style='width: 25%')
 
         p.text-muted
-          em Please fill out and return to SFL Ultimate staff.  Stats allow us to determine awards (MVP, assist, score, defensive leaders) for each gender as well as help us resolve seeding for the tournament. Thank you!
+          em Please fill out and return to SFL Ultimate staff.  Stats allow us to determine awards (MVP, assist, score, defensive leaders) for each gender as well as help us resolve seeding for the playoff tournament. Thank you!
 
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
     script(src='/js/sheets.js')

@@ -170,7 +170,7 @@ app.controller("TeamListController",function ($http, $scope) {
       // console.log(createShirtList(teams));
       // console.log(createEmailList(teams));
       // console.log(createStatsList(teams));
-      console.log(createShirtDistributionList(teams));
+      // console.log(createShirtDistributionList(teams));
 
     }, function (err) {
       alert("There was an issue connecting to database.");
