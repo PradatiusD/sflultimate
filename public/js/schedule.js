@@ -69,16 +69,13 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
       
     var queryStats = $http.get("/stats.csv");
     queryStats.success(function (stats) {
-
-      return
       
-      stats   = stats.split('\n');
+      stats = stats.split('\n');
       var headers = stats.splice(0,1)[0].split(',');
 
       var playedGames = headers.filter(function (d) {
         return d.toLowerCase().indexOf('scores') > -1;
       });
-
 
       stats = stats.map(function (stat, i) {
 
