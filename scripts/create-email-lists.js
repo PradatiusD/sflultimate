@@ -1,4 +1,7 @@
 
+/*
+ * mongo sflultimate scripts/create-email-lists.js 
+ */
 
 // To captain
 // send email of people
@@ -27,4 +30,4 @@ db.teams.find({league:ObjectId('589f1ea1e233f50400259325')}).forEach(function (t
   // print(playerEmails);
 });
 
-print(globalEmails.join(", "))
+print(globalEmails.sort().join(", "));

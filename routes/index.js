@@ -57,9 +57,9 @@ module.exports = function (app) {
     });
   });
 
-  if (keystone.get('isRegistrationPeriod')) {
+  // if (keystone.get('isRegistrationPeriod')) {
     app.all('/register',  routes.views.register);
-  }
+  // }
 
   // Redirect to old vestigial content
   app.get([
