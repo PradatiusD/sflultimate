@@ -42,7 +42,7 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
           return true;
         }
       }
-    }
+    };
   };
 
   var query = $http.get("/schedule?f=json");
@@ -74,7 +74,7 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
       var headers = stats.splice(0,1)[0].split(',');
 
       var playedGames = headers.filter(function (d) {
-        return d.toLowerCase().indexOf('scores') > -1;
+        return d.toLowerCase().indexOf('s\'s') > -1;
       });
 
       stats = stats.map(function (stat, i) {
@@ -89,34 +89,35 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
         return o;
       });
 
+
       var scores = {};
 
-      stats = stats.forEach(function (stat) {
+      stats.forEach(function (stat) {
 
-        var statColor = stat["Team Color"];
+        var teamColor = stat["Team Color"];
 
-        if (!scores[statColor]) {
-          scores[statColor] = {};
+        if (!scores[teamColor]) {
+          scores[teamColor] = {};
         }
 
         playedGames.forEach(function (playedGame) {
 
-          if (!scores[statColor][playedGame]) {
-            scores[statColor][playedGame] = 0;
+          if (!scores[teamColor][playedGame]) {
+            scores[teamColor][playedGame] = 0;
           }
 
           var points = stat[playedGame].length > 0 ? parseInt(stat[playedGame]): 0;
-          scores[statColor][playedGame] += points;
+
+          scores[teamColor][playedGame] += points;
         });
       });
-
 
       $scope.games = $scope.games.map(function (game) {
 
         var date = $filter('date')(game.date, 'MM/dd/yy');
 
-        game.homeScore = scores[game.home][date +" Scores"];  
-        game.awayScore = scores[game.away][date +" Scores"];
+        game.homeScore = scores[game.home][date +" S's"];  
+        game.awayScore = scores[game.away][date +" S's"];
 
         // add to team if home color is greater than away color
         if (!$scope.standings[game.away]) {

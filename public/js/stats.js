@@ -1,19 +1,19 @@
 (function () {
 
-var app = angular.module('StatsApp', [])
+var app = angular.module('StatsApp', []);
 
-app.controller("StatsViewController",function ($http, $scope) {
+app.controller('StatsViewController',function ($http, $scope) {
 
-  var query = $http.get("/stats.csv");
+  var query = $http.get('/stats.csv');
 
   query.success(function (data) {
 
-    var rows    = data.split("\n");
-    var headers = rows.splice(0,1)[0].split(",");
+    var rows    = data.split('\n');
+    var headers = rows.splice(0,1)[0].split(',');
 
     rows = rows.map(function (row) {
 
-      row   = row.split(",");
+      row   = row.split(',');
       var o = {
         Assists: 0,
         Scores: 0,
@@ -28,15 +28,15 @@ app.controller("StatsViewController",function ($http, $scope) {
 
           var cellNum = parseInt(cell) || 0;
 
-          if (column.indexOf("Assists") > -1) {
+          if (column.indexOf('A\'s') > -1) {
             o.Assists  += cellNum;
           }
 
-          if (column.indexOf('Scores') > -1) {
+          if (column.indexOf('S\'s') > -1) {
             o.Scores   += cellNum;
           }
 
-          if (column.indexOf('Defenses') > -1) {
+          if (column.indexOf('D\'s') > -1) {
             o.Defenses += cellNum;
           }
 
@@ -62,7 +62,7 @@ app.controller("StatsViewController",function ($http, $scope) {
       Female: {}
     };
 
-    var keys = ["Assists", "Scores", "Defenses", "Overall"];
+    var keys = ['Assists', 'Scores', 'Defenses', 'Overall'];
 
     keys.forEach(function (key) {
       awards.Female[key] = 0;
@@ -73,7 +73,7 @@ app.controller("StatsViewController",function ($http, $scope) {
 
       var p = rows[i];
 
-      if (p.Gender === "Female") {
+      if (p.Gender === 'Female') {
         for (var j = 0; j < keys.length; j++) {
           var key = keys[j];
           if (p[key] > awards.Female[key]) {
@@ -82,7 +82,7 @@ app.controller("StatsViewController",function ($http, $scope) {
         } 
       }
 
-      if (p.Gender === "Male") {
+      if (p.Gender === 'Male') {
         for (var j = 0; j < keys.length; j++) {
           var key = keys[j];
           if (p[key] > awards.Male[key]) {
@@ -101,7 +101,7 @@ app.controller("StatsViewController",function ($http, $scope) {
   });
 
   query.error(function (e) {
-    alert("Error connecting to database.");
+    alert('Error connecting to database.');
   })
 });
 
