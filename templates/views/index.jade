@@ -41,6 +41,27 @@ block content
           h3 Ladies Welcome
           p Our league is co-ed, and is always excited to invite new lady players!
 
+  .container(ng-app="scheduleApp")
+    .row
+      .col-md-4
+        h3 Current Standings
+        p Here you can see the current standings for the league teams!
+      .col-md-8
+        div(ng-controller="ScheduleViewController")
+          table.table.table-striped.table-bordered.text-center(style="margin-top: 2em;")
+            thead 
+              th.text-center Color
+              th.text-center Wins
+              th.text-center Losses
+              th.text-center Point Differential
+            tbody
+              tr(ng-repeat="team in standingsArr | orderBy:'-wins'")
+                td {{team.color}}
+                td {{team.wins}}
+                td {{team.losses}}
+                td {{team.pointDiff}}
+
+
   section.champions
     aside.text-center
         h2 Hall of Fame
@@ -64,3 +85,5 @@ block content
         img.img-responsive(src="/images/league-champions-2013-spring.jpg")
 
 block js
+  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
+  script(src="/js/schedule.js")

@@ -173,6 +173,16 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
       }
 
       console.log(JSON.stringify($scope.standings, null, 2));
+
+      $scope.standingsArr = [];
+      for (var o in $scope.standings) {
+        $scope.standingsArr.push({
+          color: o,
+          wins: $scope.standings[o].wins,
+          losses: $scope.standings[o].losses,
+          pointDiff: $scope.standings[o].pointDiff
+        });
+      }
     });
   });
 
