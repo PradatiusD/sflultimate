@@ -29,7 +29,7 @@ block content
           th Defenses
           th Overall
         tbody
-          tr(ng-repeat="player in leaderboard | orderBy:'-Overall'")
+          tr(ng-repeat="player in leaderboard | orderBy:'-Overall'" ng-if="player['Player ID']")
             td {{$index + 1}}
             td
               span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
@@ -63,7 +63,7 @@ block content
           th Defenses
           th Overall
         tbody
-          tr(ng-repeat="player in contenders | orderBy:'-Overall'")
+          tr(ng-repeat="player in contenders | orderBy:'-Overall'" ng-if="player['Player ID']")
             td {{$index + leaderboard.length + 1}}
             td
               span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 

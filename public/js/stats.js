@@ -6,7 +6,9 @@ app.controller('StatsViewController',function ($http, $scope) {
 
   var query = $http.get('/stats.csv');
 
-  query.success(function (data) {
+  query.then(function (response) {
+
+    var data = response.data;
 
     var rows    = data.split('\n');
     var headers = rows.splice(0,1)[0].split(',');
@@ -50,10 +52,6 @@ app.controller('StatsViewController',function ($http, $scope) {
       return o;
     });
 
-// maleAssist Leader:  Tommy Rush
-// Scoring Leader:  Aikeem Grant
-// Defensive Leader:  Brandon Morrison
-// MVP:  Frank Grande
 
     rows = _.sortBy(rows, function (d) {return d.Overall;}).reverse();
 
@@ -98,11 +96,10 @@ app.controller('StatsViewController',function ($http, $scope) {
 
     console.log(awards);
 
+  }).catch(function (e) {
+    console.log(e);
+    alert("There was an error calculating stats.")
   });
-
-  query.error(function (e) {
-    alert('Error connecting to database.');
-  })
 });
 
 })();

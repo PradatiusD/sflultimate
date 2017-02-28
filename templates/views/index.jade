@@ -55,8 +55,9 @@ block content
               th.text-center Losses
               th.text-center Point Differential
             tbody
-              tr(ng-repeat="team in standingsArr | orderBy:'-wins'")
-                td {{team.color}}
+              tr(ng-repeat="team in standingsArr")
+                td.text-left
+                  {{team.color}}
                 td {{team.wins}}
                 td {{team.losses}}
                 td {{team.pointDiff}}

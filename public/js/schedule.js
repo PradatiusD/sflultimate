@@ -47,10 +47,11 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
 
   var query = $http.get("/schedule?f=json");
 
-  query.success(function (games) {
+  query.then(function (response) {
+
+    var games = response.data;
 
     $scope.games = games.map(function (game) {
-
       game.date      = new Date(game.date);
       game.timestamp = game.date.getTime();
       return game;
@@ -58,7 +59,7 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
 
     var teams = [];
 
-    games.forEach(function (game) {
+    $scope.games.forEach(function (game) {
       if (teams.indexOf(game.home) === -1) {
         teams.push(game.home);
       }
@@ -68,10 +69,21 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
 
       
     var queryStats = $http.get("/stats.csv");
-    queryStats.success(function (stats) {
+    queryStats.then(function (response) {
+
+      var stats = response.data;
       
       stats = stats.split('\n');
-      var headers = stats.splice(0,1)[0].split(',');
+      var headers = stats.splice(0,1)[0].split(',').map(function (column) {
+
+        if (column.indexOf('/') === -1) return column;
+
+        if (!column.match(/^\d\d/)) {
+          return "0" + column;
+        }
+
+        return column;
+      });
 
       var playedGames = headers.filter(function (d) {
         return d.toLowerCase().indexOf('s\'s') > -1;
@@ -88,7 +100,6 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
 
         return o;
       });
-
 
       var scores = {};
 
@@ -183,10 +194,19 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
           pointDiff: $scope.standings[o].pointDiff
         });
       }
-    });
-  });
 
-  query.error(function (err) {
+      $scope.standingsArr = $scope.standingsArr.sort(function (a, b) {
+        if (a.wins > b.wins) return -1;
+        if (a.wins < b.wins) return 1;
+
+        if (a.pointDiff > b.pointDiff) return -1;
+        if (a.pointDiff < b.pointDiff) return 1;
+        return 0;
+      })
+
+    });
+
+  }).catch(function (err) {
     console.log(err);
   });
 
