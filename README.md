@@ -123,3 +123,7 @@ At some point we need to get my computer up and running with keystone, and I nee
 cp ~/Downloads/*.csv ~/GitHub/sflultimate/public/stats.csv
 rm ~/Downloads/*.csv
 ```
+
+```js
+db.teams.find({_id:ObjectId("589f2c71e233f5040025932a")}).forEach(function (d){d.players.push(ObjectId("56b02d2870b93aac39b410f6")); printjson(d.players); db.teams.save(d);})
+```
