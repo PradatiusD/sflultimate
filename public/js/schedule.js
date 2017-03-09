@@ -78,10 +78,16 @@ app.controller("ScheduleViewController",function ($http, $scope, $filter) {
 
         if (column.indexOf('/') === -1) return column;
 
-        if (!column.match(/^\d\d/)) {
-          return "0" + column;
-        }
+        var _date = column.match(/\d{1,}\/\d{1,}\/\d{1,}/);
 
+        var date = _date[0].split("/").map(function (d) {
+          if (d.length === 1) {
+            return "0" + d;
+          }
+          return d;
+        }).join("/");
+
+        column = column.replace(_date, date);
         return column;
       });
 
