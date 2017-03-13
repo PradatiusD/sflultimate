@@ -125,5 +125,9 @@ rm ~/Downloads/*.csv
 ```
 
 ```js
-db.teams.find({_id:ObjectId("589f2c71e233f5040025932a")}).forEach(function (d){d.players.push(ObjectId("56b02d2870b93aac39b410f6")); printjson(d.players); db.teams.save(d);})
+db.teams.find({_id:ObjectId("589f2a96e233f50400259329")}).forEach(function (d){
+  d.players.push(ObjectId("58c55d4ebb883b0400a22963")); 
+  printjson(d.players); 
+  db.teams.save(d);
+});
 ```
