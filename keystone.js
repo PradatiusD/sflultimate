@@ -3,7 +3,7 @@
 require('dotenv').load();
 
 // Require keystone
-var keystone = require('keystone');
+const keystone = require('keystone');
 
 
 /*
@@ -14,7 +14,7 @@ var keystone = require('keystone');
  * and documentation.
  */
 
-keystone.init({
+const keystoneConfig = {
 
   name: 'SFLUltimate',
   brand: 'SFLUltimate',
@@ -25,15 +25,16 @@ keystone.init({
   views: 'templates/views',
   'view engine': 'jade',
   
-  emails: 'templates/emails',
-
+  emails: 'templates/emails',  
   mongo: process.env.MONGOLAB_URI,
   
   'auto update': true,
   session: true,
   auth: true,
   'user model': 'Player'
-});
+};
+
+keystone.init(keystoneConfig);
 
 // Load your project's Models
 
@@ -50,10 +51,10 @@ keystone.set('locals', {
   editable: keystone.content.editable
 });
 
-keystone.set('isRegistrationPeriod', false);
+keystone.set('isRegistrationPeriod', true);
+
 
 // Load your project's Routes
-
 keystone.set('routes', require('./routes'));
 
 

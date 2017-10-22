@@ -6,13 +6,35 @@
 }
 
 .hero-sky {
-  background: url("/images/elfrink-sky.jpg");
+  background: url("/images/beach-andrea-dumping.jpg");
   background-size: cover;
-  color: white;
-  text-shadow: 2px 2px 11px black;
-  padding: 8em 0 2em;
   background-position: center center;
-  font-size: 1.5em;
+
+  .container {
+    position: relative;
+    min-height: 800px;
+
+    @include max-screen (840px) {
+      min-height: 400px;
+    }
+  }
+
+  h1 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: white;    
+    text-shadow: 2px 2px 11px rgba(black, 0.8);
+    background-color: rgba(black, 0.30);
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    font-size: 3.5em;
+    font-weight: 300;
+
+    @include max-screen (480px) {
+      font-size: 2.5em;
+    }
+  }
 }
 
 .sfl-divider {
@@ -22,7 +44,7 @@
 
 .call-to-action {
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
   padding: 6em 0;
   color: white;
   h1 {
@@ -42,6 +64,8 @@
   h1, p {
     display: inline-block;
     background: rgba(black, 0.40);
+    font-weight: 300;
+    text-shadow: 2px 2px 11px rgba(black, 0.8); 
     padding: 0.5em 1em;
   }
 
@@ -77,12 +101,22 @@
   text-align: center;
 
   figure {
-    width: 24%;
+    width: 33%;
     display: inline-block;
-    background: rgba(black, 0.10);
+    background: rgba(0, 0, 0, 0.1);
     margin-bottom: -3px;
-    @include max-screen (772px) {
-      width: 48%;
+    background-size: cover;
+    min-height: 500px;
+    background-position: center center;
+
+    @include max-screen (1617px) {
+      min-height: 300px;
+    }
+    @include max-screen (850px) {
+      min-height: 200px;
+    }
+    @include max-screen (480px) {
+      min-height: 100px;
     }
   }
 
@@ -120,20 +154,19 @@
 }
 
 
-.container-fluid div.navbar-header a.navbar-brand {
-  position: relative;
-  width: 200px;
-  margin-right: 1em;
-  margin-left: 0.5em;
+.container-fluid a.navbar-brand {
+  float: none;
+  max-width: 300px;
+  margin: 0 auto !important;
+  height: auto;
+  display: block;
+  padding: 0;
+  text-align: center;
 
   img {
+    margin-top: 1em;
+    display: block;
     max-width: 100%;
-    height: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-left: -100px;
-    margin-top: -21px;
   }
 }
 
@@ -243,14 +276,11 @@
 .crimson { background-color: crimson; .stats & {background-color: rgba(crimson,  0.25);}}
 
 
+.navbar-collapse {
+  border-top: 1px solid rgba(16, 16, 16, 0.37) !important;  
+}
 
-.navbar-inverse {
-  .navbar-nav > li > a {
-    text-transform: uppercase;
-    font-family: $headings-font-family;
-    font-size: 20px;
-  }
-
+#header > .navbar {
   margin-bottom: 0;
 }
 

@@ -1,17 +1,17 @@
 {
   "name": "sflultimate",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "engines": {
-    "node": "6.9.4",
+    "node": "6.10.3",
     "npm": "3.10.10"
   },
   "dependencies": {
     "async": "^1.5.0",
     "bower": "1.8.0",
-    "braintree": "^1.35.0",
+    "braintree": "^1.47.1",
     "browserify": "^13.1.0",
     "dotenv": "^1.1.0",
-    "keystone": "^0.3.19",
+    "keystone": "^0.3.22",
     "node-sass": "^4.5.0",
     "node-sass-middleware": "^0.11.0",
     "underscore": "^1.8.3"
@@ -22,7 +22,7 @@
     "grunt-contrib-jshint": "^0.7.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express-server": "^0.4.17",
-    "grunt-node-inspector": "^0.1.5",
+    "grunt-node-inspector": "^1.0.0",
     "grunt-nodemon": "^0.2.1",
     "grunt-sass": "^2.0.0",
     "grunt-shell": "^1.0.0",

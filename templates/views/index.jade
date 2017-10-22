@@ -13,15 +13,15 @@ block css
 
 block content
 
-  .call-to-action(style='background-image:url("/images/aikeem-the-dream.jpg")')
+  .call-to-action(style='background-image:url("/images/hatter-beach-ultimate.jpg")')
     .container
       .row
-        .col-md-8
-          h1 Time To Cleat Up
+        .col-md-6
+          h1 It's Beach Time!
           p Since 1999, players from Dade & Broward counties unite to grow the awesome sport of Ultimate Frisbee.
-          p Teams have been drafted.
+          p We now have the pleasure of welcoming you to our own very 1st South Florida beach league!
       div.text-center
-        a.btn.btn-lg.btn-primary(href="/teams") See Your Teams
+        a.btn.btn-lg.btn-primary(href="/register") Sign up
 
   .features
     .container
@@ -41,26 +41,27 @@ block content
           h3 Ladies Welcome
           p Our league is co-ed, and is always excited to invite new lady players!
 
-  .container(ng-app="scheduleApp")
-    .row
-      .col-md-4
-        h3 Current Standings
-        p Here you can see the current standings for the league teams!
-      .col-md-8
-        div(ng-controller="ScheduleViewController")
-          table.table.table-striped.table-bordered.text-center(style="margin-top: 2em;")
-            thead 
-              th.text-center Color
-              th.text-center Wins
-              th.text-center Losses
-              th.text-center Point Differential
-            tbody
-              tr(ng-repeat="team in standingsArr")
-                td.text-left
-                  {{team.color}}
-                td {{team.wins}}
-                td {{team.losses}}
-                td {{team.pointDiff}}
+  //- Commented out
+    .container(ng-app="scheduleApp")
+      .row
+        .col-md-4
+          h3 Current Standings
+          p Here you can see the current standings for the league teams!
+        .col-md-8
+          div(ng-controller="ScheduleViewController")
+            table.table.table-striped.table-bordered.text-center(style="margin-top: 2em;")
+              thead 
+                th.text-center Color
+                th.text-center Wins
+                th.text-center Losses
+                th.text-center Point Differential
+              tbody
+                tr(ng-repeat="team in standingsArr")
+                  td.text-left
+                    {{team.color}}
+                  td {{team.wins}}
+                  td {{team.losses}}
+                  td {{team.pointDiff}}
 
 
   section.champions
@@ -68,22 +69,8 @@ block content
         h2 Hall of Fame
         p The past champions of South Florida 
     div
-      figure
-        img.img-responsive(src="/images/league-champions-2016-fall.jpg")
-      figure
-        img.img-responsive(src="/images/league-champions-2016-spring.jpg")
-      figure
-        img.img-responsive(src="/images/league-champions-2015-fall.jpg")
-      figure
-        img.img-responsive(src="/images/league-champions-2015-spring.jpg")
-      figure
-        img.img-responsive(src="/images/league-medals-2015-spring.jpg")
-      figure
-        img.img-responsive(src="/images/league-champions-2014-fall.jpg")
-      figure
-        img.img-responsive(src="/images/league-champions-2014-spring.jpg")
-      figure
-        img.img-responsive(src="/images/league-champions-2013-spring.jpg")
+      for image in hallOfFameImages
+        figure(style='background-image: url(/images/#{image});')
 
 block js
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")

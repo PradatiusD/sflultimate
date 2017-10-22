@@ -18,16 +18,16 @@
  * http://expressjs.com/api.html#app.VERB
  */
 
-var keystone = require('keystone');
-var middleware = require('./middleware');
-var importRoutes = keystone.importer(__dirname);
+const keystone = require('keystone');
+const middleware = require('./middleware');
+const importRoutes = keystone.importer(__dirname);
 
 // Common Middleware
 keystone.pre('routes', middleware.initLocals);
 keystone.pre('render', middleware.flashMessages);
 
 // Import Route Controllers
-var routes = {
+const routes = {
   views: importRoutes('./views')
 };
 
@@ -48,20 +48,22 @@ module.exports = function (app) {
   app.get('/schedule',        routes.views.schedule);
   app.get('/teams',           routes.views.teams);
 
-  ['/terms','/privacy','/draftboard','/stats','/community','/sheets'].forEach(function (url) {
+  // Content Pages
+  const contentRoutes = ['/terms','/privacy','/draftboard','/stats','/community','/sheets'];
 
-    var jadeTemplate = url.replace('/','');
+  contentRoutes.forEach(function (url) {
+    const jadeTemplate = url.replace('/','');
 
     app.get(url,  function (req, res) {
       res.render(jadeTemplate);
     });
   });
 
-  // if (keystone.get('isRegistrationPeriod')) {
+  if (keystone.get('isRegistrationPeriod')) {
     app.all('/register',  routes.views.register);
-  // }
+  }
 
-  // Redirect to old vestigial content
+  // Redirect old pages to homepage
   app.get([
     '/sched.html',
     '/teams.html',

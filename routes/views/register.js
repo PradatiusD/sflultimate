@@ -4,14 +4,15 @@ var Player    = keystone.list("Player");
 var _         = require("underscore");
 
 
-var braintreeAccount = {
+const braintreeAccount = {
   environment: braintree.Environment[process.env.BRAINTREE_ENV],
   merchantId:  process.env.BRAINTREE_MERCHANT_ID,
   publicKey:   process.env.BRAINTREE_PUBLIC_KEY,
   privateKey:  process.env.BRAINTREE_PRIVATE_KEY
 };
 
-var gateway = braintree.connect(braintreeAccount);
+
+const gateway = braintree.connect(braintreeAccount);
 
 
 module.exports = function(req, res) {
@@ -25,7 +26,8 @@ module.exports = function(req, res) {
     gateway.clientToken.generate({}, function (err, response) {
 
       if (err || !response.clientToken) {
-        console.log(err); throw err;
+        console.log(err); 
+        throw err;
       }
       locals.braintree_token = response.clientToken;
       next();
@@ -37,14 +39,12 @@ module.exports = function(req, res) {
 
   view.on("post", function (next) {
 
-    for (var p in req.body) {
+    for (let p in req.body) {
       locals.formData[p] = req.body[p];
     }
 
     // Late Registration
-    // var leagueFee = (req.body.age === "Student") ? "65.00": "65.00";
-
-    var leagueFee = (req.body.age === "Student") ? "30.00": "50.00";
+    const leagueFee = (req.body.age === "Student") ? "10.00": "15.00";
 
     var player = Player.model.findById(req.body.user_id).exec(function (err, player) {
 
@@ -86,6 +86,7 @@ module.exports = function(req, res) {
         }
 
         if (!result.success) {
+          console.log(JSON.stringify(locals.err, null, 2));
           locals.err = JSON.stringify(result);
           return next();
         }
@@ -106,6 +107,7 @@ module.exports = function(req, res) {
               ageGroup:      req.body.age,
               registered:    true
             });
+
           } else {
 
             player.registered    = true;

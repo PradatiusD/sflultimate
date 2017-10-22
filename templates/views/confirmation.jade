@@ -1,8 +1,22 @@
 extends ../layouts/default
 
+block head
+  link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/jsSocials/1.5.0/jssocials.css")
+  link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/jsSocials/1.5.0/jssocials-theme-flat.css")
+
 block content
-  .container: .jumbotron
+  .container: .jumbotron(style="margin-top: 1em")
     h1 Thank you!
-    p We've successfully received your payment!  Should you have any questions, feel free to email us at <strong>sflultimate@gmail.com</strong>.
-    p.text-center 
-      a.btn.btn-primary.btn-lg(href="/") Return to Homepage
+    p We've successfully received your payment!
+    p Feel free to share the joy of having signed up to play beach ultimate!
+    div#share.text-center
+
+  script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/jsSocials/1.5.0/jssocials.min.js")
+  script.
+    jQuery("#share").jsSocials({
+      shares: ["twitter", "facebook", "googleplus", "linkedin", "pinterest", "stumbleupon", "whatsapp"],
+      url: "http://sflultimate.com",
+      text: "I just finished registering for a beach ultimate frisbee league happening in South Florida!",
+      shareIn: "popup"
+    });

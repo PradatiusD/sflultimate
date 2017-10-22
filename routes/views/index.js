@@ -1,57 +1,33 @@
-var keystone = require('keystone');
+const keystone = require('keystone');
 
 exports = module.exports = function(req, res) {
 
-  var view = new keystone.View(req, res);
-  var locals = res.locals;
+  const view = new keystone.View(req, res);
+  let locals = res.locals;
   
   // locals.section is used to set the currently selected
   // item in the header navigation.
   locals.section = 'home';
 
-  var standings = {
-    "Blue": {
-      "wins": 1,
-      "losses": 6,
-      "pointDiff": -34
-    },
-    "Orange": {
-      "wins": 4,
-      "losses": 3,
-      "pointDiff": 29
-    },
-    "Grey": {
-      "wins": 5,
-      "losses": 2,
-      "pointDiff": 10
-    },
-    "Red": {
-      "wins": 1,
-      "losses": 6,
-      "pointDiff": -39
-    },
-    "Yellow": {
-      "wins": 6,
-      "losses": 1,
-      "pointDiff": 40
-    },
-    "Green": {
-      "wins": 4,
-      "losses": 3,
-      "pointDiff": 4
-    },
-    "White": {
-      "wins": 5,
-      "losses": 2,
-      "pointDiff": 13
-    },
-    "Black": {
-      "wins": 2,
-      "losses": 5,
-      "pointDiff": -23
-    }
+  const standings = {
+    // "Blue": {
+    //   "wins": 1,
+    //   "losses": 6,
+    //   "pointDiff": -34
+    // }
   };
 
+  locals.hallOfFameImages = [
+    "league-champions-2017-spring.jpg",
+    "league-champions-2016-fall.jpg",
+    "league-champions-2016-spring.jpg",
+    "league-champions-2015-fall.jpg",
+    "league-champions-2015-spring.jpg",
+    "league-medals-2015-spring.jpg",
+    "league-champions-2014-fall.jpg",
+    "league-champions-2014-spring.jpg",
+    "league-champions-2013-spring.jpg",
+  ];
 
 
   if (req.query.f === "json") {
