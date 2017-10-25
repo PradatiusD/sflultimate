@@ -40,13 +40,15 @@ module.exports = function(req, res) {
   view.on("post", function (next) {
 
     for (let p in req.body) {
-      locals.formData[p] = req.body[p];
+      if (req.body.hasOwnProperty(p)) {
+        locals.formData[p] = req.body[p];
+      }
     }
 
     // Late Registration
     const leagueFee = (req.body.age === "Student") ? "10.00": "15.00";
 
-    var player = Player.model.findById(req.body.user_id).exec(function (err, player) {
+    Player.model.findById(req.body.user_id).exec(function (err, player) {
 
       if (_.isUndefined(player)) {
         player = {};

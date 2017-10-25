@@ -1,6 +1,6 @@
-var keystone = require('keystone');
-var Team     = keystone.list('Team');
-var Player   = keystone.list('Player');
+const keystone = require("keystone");
+const Team     = keystone.list("Team");
+const Player   = keystone.list("Player");
 
 module.exports = function (req, res) {
 

@@ -6,13 +6,13 @@
   "forin": true,
   "freeze": true,
   "immed": true,
-  "indent": 1,  /* custom */
+  "indent": 2,  /* custom */
   "latedef": true,
   "newcap": true,
   "noarg": true,
   "noempty": true,
-  "nonbsp": true,
   "nonew": true,
+  "esversion": 6,
   "plusplus": false,  /* custom */
   "quotmark": true,
   "undef": true,
@@ -28,7 +28,6 @@
   "boss": true,  /* custom */
   "debug": false,
   "eqnull": true,  /* custom */
-  "esversion": 6,
   "evil": false,
   "expr": false,
   "funcscope": false,
@@ -48,10 +47,7 @@
   "shadow": false,
   "sub": false,
   "supernew": false,
-  "noyield": false,
-  "browser": true,  /* custom */
   "node": true,  /* custom */
-  "onevar": true,  /* custom */
   "globals": {  /* custom */
     /* MOCHA: http://stackoverflow.com/a/19572515/130638 */
     "describe"   : false,

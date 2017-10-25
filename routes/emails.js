@@ -11,7 +11,7 @@
  * can be previewed at /keystone/test-email/{key}
  */
 
-var keystone = require('keystone');
+var keystone = require("keystone");
 
 
 // To test enquiry notifications we create a dummy enquiry that
@@ -19,20 +19,20 @@ var keystone = require('keystone');
 
 module.exports["enquiry-notification"] = function (req, res, callback) {
 				
-	var Enquiry = keystone.list('Enquiry');
+	var Enquiry = keystone.list("Enquiry");
 	
 	var newEnquiry = new Enquiry.model({
-		name: { first: 'Test', last: 'User' },
-		email: 'contact@sflultimate.com',
-		phone: '+61 2 1234 5678',
-		enquiryType: 'message',
-		message: { md: 'Nice enquiry notification.' }
+		name: { first: "Test", last: "User" },
+		email: "contact@sflultimate.com",
+		phone: "+61 2 1234 5678",
+		enquiryType: "message",
+		message: { md: "Nice enquiry notification." }
 	});
 	
 	callback(null, {
-		admin: 'Admin User',
+		admin: "Admin User",
 		enquiry: newEnquiry,
-		enquiry_url: '/keystone/enquiries/'
+		enquiry_url: "/keystone/enquiries/"
 	});
 	
 	

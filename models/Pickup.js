@@ -1,13 +1,13 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+const keystone = require("keystone");
+const Types = keystone.Field.Types;
 
 /**
  * League Model
  * =============
  */
 
-var Pickup = new keystone.List('Pickup', {
-  map: {name: 'title'}
+var Pickup = new keystone.List("Pickup", {
+  map: {name: "title"}
 });
 
 var fields = {
@@ -30,60 +30,60 @@ var fields = {
     required: true,
     label: "Start Time"
   },
-  'contact.name': {
+  "contact.name": {
     type:     String,
     initial:  true
   },
-  'contact.email': {
+  "contact.email": {
     type: Types.Email, 
     initial: true
   },
-  'contact.phone': {
+  "contact.phone": {
     type:     String,
     initial:  true
   },
-  'contact.url': {
+  "contact.url": {
     type:    Types.Url,
     initial: true,
-    label:   'Contact URL'
+    label:   "Contact URL"
   },
-  'location.name': {
+  "location.name": {
     type:     String,
     initial:  true,
     required: true
   },
-  'location.type': {
+  "location.type": {
     type: Types.Select,
     options: ["grass","turf", "beach", "indoor"],
     initial:  true,
     required: true,
-    label: 'Field Type'
+    label: "Field Type"
   },
-  'location.address.street': {
+  "location.address.street": {
     type:     String,
     initial:  true,
     required: true,
-    label: 'Street Address'
+    label: "Street Address"
   },
-  'location.address.city': {
+  "location.address.city": {
     type:     String,
     initial:  true,
     required: true,
-    label: 'City'
+    label: "City"
   },
-  'location.address.state': {
+  "location.address.state": {
     type:     String,
     initial:  true,
     required: true,
-    label: 'State'
+    label: "State"
   },
-  'location.address.zipCode': {
+  "location.address.zipCode": {
     type:     Number,
     initial:  true,
     required: true,
-    label: 'Zip Code'
+    label: "Zip Code"
   },
-  'description': {
+  "description": {
     type:     Types.Textarea,
     initial:  true,
     required: true    
@@ -92,5 +92,5 @@ var fields = {
 
 Pickup.add(fields);
 
-Pickup.defaultColumns = 'title, location.name, day, time, location.type';
+Pickup.defaultColumns = "title, location.name, day, time, location.type";
 Pickup.register();

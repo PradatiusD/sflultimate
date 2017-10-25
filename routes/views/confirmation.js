@@ -7,7 +7,7 @@ module.exports = function(req, res) {
   const referer = req.headers.referer;
 
   if (!referer) {
-    return view.render('errors/500');    
+    return view.render("errors/500");    
   }
 
   // Validate if last 7 characters of HTTP referrer are /register
@@ -15,8 +15,8 @@ module.exports = function(req, res) {
   const referedFromRegistration = last7referrerChars === "/register";
 
   if (referedFromRegistration) {
-    view.render('confirmation');    
+    view.render("confirmation");    
   } else {
-    view.render('errors/500');
+    view.render("errors/500");
   }
 };

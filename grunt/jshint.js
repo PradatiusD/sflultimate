@@ -1,10 +1,11 @@
 module.exports = {
 	options: {
 		reporter: 'node_modules/jshint-stylish',
-		force: true
+		jshintrc: true
 	},
-	all: [ 'routes/**/*.js',
-				 'models/**/*.js'
+	all: [ 
+		'routes/**/*.js',
+		'models/**/*.js'
 	],
 	server: [
 		'./keystone.js'

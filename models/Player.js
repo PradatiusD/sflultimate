@@ -34,8 +34,7 @@ var fields = {
   shirtSize: {
     type: Types.Select,
     options: 'S, M, L, XL, XXL, XXXL',
-    initial: true,
-    required: true
+    initial: true
   },
   skillLevel: {
     type: Types.Select,

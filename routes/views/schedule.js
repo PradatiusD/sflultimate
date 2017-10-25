@@ -1,6 +1,4 @@
-var keystone = require('keystone');
-
-var games =[
+var games = [
   '02/12/2017, 4:00PM, Yellow, White',
   '02/12/2017, 4:00PM, Purple, Crimson',
   '02/12/2017, 6:00PM, Blue, Green',
@@ -46,8 +44,6 @@ games = games.map(function (game) {
 });
 
 module.exports = function(req, res) {
-  
-  var view = new keystone.View(req, res);
 
   if (req.query.f === 'json') {
     return res.json(games);

@@ -2,7 +2,7 @@
  * This file is where you define your application routes and controllers.
  * 
  * Start by including the middleware you want to run for every request;
- * you can attach middleware to the pre('routes') and pre('render') events.
+ * you can attach middleware to the pre("routes") and pre("render") events.
  * 
  * For simplicity, the default setup for route controllers is for each to be
  * in its own file, and we import all the files in the /routes/views directory.
@@ -18,69 +18,70 @@
  * http://expressjs.com/api.html#app.VERB
  */
 
-const keystone = require('keystone');
-const middleware = require('./middleware');
+const keystone = require("keystone");
+const middleware = require("./middleware");
 const importRoutes = keystone.importer(__dirname);
 
 // Common Middleware
-keystone.pre('routes', middleware.initLocals);
-keystone.pre('render', middleware.flashMessages);
+keystone.pre("routes", middleware.initLocals);
+keystone.pre("render", middleware.flashMessages);
 
 // Import Route Controllers
 const routes = {
-  views: importRoutes('./views')
+  views: importRoutes("./views")
 };
 
 // Setup Route Bindings
 module.exports = function (app) {
   
   // Views
-  app.get('/',                routes.views.index);
-  app.get('/blog/:category?', routes.views.blog);
-  app.get('/blog/post/:post', routes.views.post);
-  app.get('/gallery',         routes.views.gallery);
-  app.all('/contact',         routes.views.contact);
-  app.get('/signature',       routes.views.signature);
-  app.get('/confirmation',    routes.views.confirmation);
-  app.get('/players',         routes.views.players);
-  app.get('/pickups',         routes.views.pickups);
-  app.get('/captains',        routes.views.captains);
-  app.get('/schedule',        routes.views.schedule);
-  app.get('/teams',           routes.views.teams);
+  app.get("/",                routes.views.index);
+  app.get("/blog/:category?", routes.views.blog);
+  app.get("/blog/post/:post", routes.views.post);
+  app.get("/gallery",         routes.views.gallery);
+  app.all("/contact",         routes.views.contact);
+  app.get("/signature",       routes.views.signature);
+  app.get("/confirmation",    routes.views.confirmation);
+  app.get("/players",         routes.views.players);
+  app.get("/pickups",         routes.views.pickups);
+  app.get("/captains",        routes.views.captains);
+  app.get("/schedule",        routes.views.schedule);
+  app.get("/teams",           routes.views.teams);
 
   // Content Pages
-  const contentRoutes = ['/terms','/privacy','/draftboard','/stats','/community','/sheets'];
+  const contentRoutes = ["/terms","/privacy","/draftboard","/stats","/community","/sheets"];
 
   contentRoutes.forEach(function (url) {
-    const jadeTemplate = url.replace('/','');
+
+    const jadeTemplate = url.replace("/","");
 
     app.get(url,  function (req, res) {
       res.render(jadeTemplate);
     });
   });
 
-  if (keystone.get('isRegistrationPeriod')) {
-    app.all('/register',  routes.views.register);
+  if (keystone.get("isRegistrationPeriod")) {
+    app.all("/register",  routes.views.register);
   }
 
   // Redirect old pages to homepage
   app.get([
-    '/sched.html',
-    '/teams.html',
-    '/about.html',
-    '/statistics.asp',
-    '/pics.html',
-    '/community.html',
-    '/sched.asp',
-    '/players.asp',
-    '/register.html',
-    '/bio.asp',
-    '/images/n-logo.png'
+    "/sched.html",
+    "/teams.html",
+    "/about.html",
+    "/statistics.asp",
+    "/pics.html",
+    "/community.html",
+    "/sched.asp",
+    "/players.asp",
+    "/register.html",
+    "/bio.asp",
+    "/images/n-logo.png"
   ], function (req, res) {
-    res.redirect(301, '/');
+    res.redirect(301, "/");
   });
   
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
-  // app.get('/protected', middleware.requireUser, routes.views.protected);
+  // app.get("/protected", middleware.requireUser, routes.views.protected);
   
 };

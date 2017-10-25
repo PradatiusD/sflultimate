@@ -1,4 +1,4 @@
-const keystone = require('keystone');
+const keystone = require("keystone");
 
 exports = module.exports = function(req, res) {
 
@@ -7,7 +7,7 @@ exports = module.exports = function(req, res) {
   
   // locals.section is used to set the currently selected
   // item in the header navigation.
-  locals.section = 'home';
+  locals.section = "home";
 
   const standings = {
     // "Blue": {
@@ -36,6 +36,6 @@ exports = module.exports = function(req, res) {
   }
   
   // Render the view
-  view.render('index');
+  view.render("index");
   
 };
