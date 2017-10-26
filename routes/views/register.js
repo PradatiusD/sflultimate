@@ -84,6 +84,7 @@ module.exports = function(req, res) {
 
         if (err) {
           locals.err = err;
+          console.log(err);
           return next();
         }
 
