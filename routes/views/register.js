@@ -74,9 +74,10 @@ module.exports = function(req, res) {
           partner:       req.body.partner,
           partner_id:    req.body.partner_id,
           age:           req.body.age,
+          gender:        req.body.gender,
           shirt_size:    req.body.shirtSize,
           skill_level:   req.body.skillLevel,
-          participation: req.body.participation
+          participation: req.body.participation,
         }
       };
 
@@ -104,6 +105,7 @@ module.exports = function(req, res) {
               },
               email:         req.body.email,
               password:      req.body["name.first"].substring(0,1)+req.body["name.last"],
+              gender:        req.body.gender,
               shirtSize:     req.body.shirtSize,
               skillLevel:    req.body.skillLevel,
               participation: req.body.participation,

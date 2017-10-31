@@ -75,6 +75,15 @@ block content
         input#partner.input-lg.form-control(type='partner' autocomplete='false' name='partner' placeholder='' value=formData.partner)
         input#partner_id.input-lg.form-control.hidden(type='partner_id' autocomplete='false' name='partner_id' placeholder='' value=formData.partner_id)
 
+      //- Gender
+      label(for="gender" name="gender") Gender
+
+      select#gender.input-lg.form-control(name="gender" value=formData.gender)
+        option(value="Female") Female
+        option(value="Male") Male
+      br
+
+
       //- Age Group
       #age
         label Are you a:
