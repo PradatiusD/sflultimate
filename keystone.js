@@ -51,7 +51,7 @@ keystone.set('locals', {
   editable: keystone.content.editable
 });
 
-keystone.set('isRegistrationPeriod', true);
+keystone.set('isRegistrationPeriod', false);
 
 
 // Load your project's Routes
