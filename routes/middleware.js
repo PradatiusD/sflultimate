@@ -9,7 +9,7 @@
  */
 
 var _ = require('underscore');
-var keystone = require('keystone');
+// const keystone = require('keystone');
 
 /**
   Initialises the standard view locals

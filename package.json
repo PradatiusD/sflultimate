@@ -1,43 +1,33 @@
 {
   "name": "sflultimate",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "engines": {
-    "node": "6.10.3",
-    "npm": "3.10.10"
+    "node": "8.10.0",
+    "npm": "5.6.0"
   },
   "dependencies": {
-    "async": "^1.5.0",
-    "bower": "1.8.0",
-    "braintree": "^1.47.1",
-    "browserify": "^13.1.0",
-    "dotenv": "^1.1.0",
-    "keystone": "^0.3.22",
-    "node-sass": "^4.5.0",
-    "node-sass-middleware": "^0.11.0",
-    "underscore": "^1.8.3"
+    "async": "^2.6.1",
+    "bower": "^1.8.4",
+    "braintree": "^2.13.1",
+    "browserify": "^16.2.3",
+    "dotenv": "^6.1.0",
+    "jade": "^1.11.0",
+    "keystone": "^4.0.0"
   },
   "devDependencies": {
-    "grunt": "^0.4.4",
-    "grunt-concurrent": "^0.5.0",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-express-server": "^0.4.17",
-    "grunt-node-inspector": "^1.0.0",
-    "grunt-nodemon": "^0.2.1",
-    "grunt-sass": "^2.0.0",
-    "grunt-shell": "^1.0.0",
-    "jshint-stylish": "^2.0.1",
-    "load-grunt-configs": "^0.4.1",
-    "load-grunt-tasks": "^0.4.0",
-    "moment": "^2.17.1",
-    "open": "0.0.5",
-    "request": "^2.67.0",
-    "time-grunt": "^0.3.1"
+    "grunt": "^1.0.3",
+    "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-jshint": "^2.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-nodemon": "^0.4.2",
+    "grunt-shell": "^2.1.0",
+    "jshint-stylish": "^2.2.1",
+    "load-grunt-configs": "^1.0.0",
+    "load-grunt-tasks": "^4.0.0",
+    "node-sass-middleware": "^0.11.0",
+    "time-grunt": "^2.0.0"
   },
-  "scripts": {
-    "start": "node keystone.js",
-    "postinstall": "./node_modules/bower/bin/bower install"
-  },
+  "scripts": {},
   "main": "keystone.js",
   "private": true
 }
