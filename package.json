@@ -27,7 +27,10 @@
     "node-sass-middleware": "^0.11.0",
     "time-grunt": "^2.0.0"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "node keystone.js",
+    "postinstall": "./node_modules/bower/bin/bower install"
+  },
   "main": "keystone.js",
   "private": true
 }
