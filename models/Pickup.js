@@ -6,11 +6,11 @@ const Types = keystone.Field.Types;
  * =============
  */
 
-var Pickup = new keystone.List("Pickup", {
+const Pickup = new keystone.List("Pickup", {
   map: {name: "title"}
 });
 
-var fields = {
+const fields = {
   title: { 
     type:     String,
     initial:  true,
@@ -82,6 +82,18 @@ var fields = {
     initial:  true,
     required: true,
     label: "Zip Code"
+  },
+  "location.latitude": {
+    type:     Number,
+    initial:  false,
+    required: false,
+    label: "Latitude"
+  },
+  "location.longitude": {
+    type:     Number,
+    initial:  false,
+    required: false,
+    label: "Longitude"
   },
   "description": {
     type:     Types.Textarea,
