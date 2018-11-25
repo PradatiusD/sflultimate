@@ -5829,6 +5829,14 @@ button.close {
     opacity: 1;
     transform: translateY(0%); } }
 
+#pickup-listing-map {
+  height: 450px; }
+  #pickup-listing-map #content {
+    font-size: 1.2em;
+    line-height: 1.4em;
+    font-weight: normal;
+    max-width: 400px; }
+
 .hero-sky {
   background: url("/images/beach-andrea-dumping.jpg");
   background-size: cover;

@@ -11,6 +11,10 @@ block content
       h1 Our Ultimate Community
       p.lead Read below to find all the local pickups taking place in the Broward/Dade county area.
 
+      h2 Local Map
+      #pickup-listing-map
+
+      h2 Full List
       article(ng-repeat="game in games")
         .row
           div.col-sm-8
@@ -36,14 +40,5 @@ block content
 
 block js
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
-  script.
-    angular.module('CommunityApp', [])
-      .controller("PickupsController",function ($http, $scope) {
-
-        var query = $http.get('/pickups');
-
-        query.then(function (res) {
-          $scope.games = res.data; 
-        });
-    });
-
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDld-_TKoN-4PGLgQ1-JwN607eT4RfAMSQ')
+  script(src='js/pickup-listings.js')
