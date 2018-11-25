@@ -18,19 +18,6 @@
             
             res.data.forEach(function (game) {
 
-
-                /*
-span.badge {{game.location.type}}
-br
-small {{game.day}} at {{game.time}}
-p {{game.description}}
-
-aside.col-sm-4
-address
-
-
-                */
-
                 var contentString = ''+
                 '<div id="content">'+
                     '<div id="siteNotice">'+
