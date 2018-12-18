@@ -1,144 +1,118 @@
-var keystone  = require("keystone");
-var braintree = require("braintree");
-var Player    = keystone.list("Player");
-var _         = require("underscore");
-
+const keystone  = require("keystone");
+const braintree = require("braintree");
+const HatterPlayer = keystone.list("HatterPlayer");
+// const _ = require("underscore");
 
 const braintreeAccount = {
-  environment: braintree.Environment[process.env.BRAINTREE_ENV],
-  merchantId:  process.env.BRAINTREE_MERCHANT_ID,
-  publicKey:   process.env.BRAINTREE_PUBLIC_KEY,
-  privateKey:  process.env.BRAINTREE_PRIVATE_KEY
+    environment: braintree.Environment[process.env.BRAINTREE_ENV],
+    merchantId:  process.env.BRAINTREE_MERCHANT_ID,
+    publicKey:   process.env.BRAINTREE_PUBLIC_KEY,
+    privateKey:  process.env.BRAINTREE_PRIVATE_KEY
 };
 
 
 const gateway = braintree.connect(braintreeAccount);
 
-
 module.exports = function(req, res) {
-  
-  var view = new keystone.View(req, res);
-  var locals = res.locals;
 
-  // Get Braintree Token
-  view.on("init", function (next) {
+    var view = new keystone.View(req, res);
+    var locals = res.locals;
 
-    gateway.clientToken.generate({}, function (err, response) {
+    // Get Braintree Token
+    view.on("init", function (next) {
 
-      if (err || !response.clientToken) {
-        console.log(err); 
-        throw err;
-      }
-      locals.braintree_token = response.clientToken;
-      next();
+        gateway.clientToken.generate({}, function (err, response) {
+
+            if (err || !response.clientToken) {
+                console.log(err);
+                throw err;
+            }
+            locals.braintree_token = response.clientToken;
+            next();
+        });
     });
-  });
 
-  locals.section  = "register";
-  locals.formData = {};
+    locals.section  = "register";
+    locals.formData = {};
 
-  view.on("post", function (next) {
+    view.on("post", function (next) {
 
-    for (let p in req.body) {
-      if (req.body.hasOwnProperty(p)) {
-        locals.formData[p] = req.body[p];
-      }
-    }
-
-    // Late Registration
-    const leagueFee = (req.body.age === "Student") ? "10.00": "15.00";
-
-    Player.model.findById(req.body.user_id).exec(function (err, player) {
-
-      if (_.isUndefined(player)) {
-        player = {};
-      }
-
-      if (player.registered) {
-        locals.err = "You are already registered.";
-        return next();
-      }
-
-      var purchase = {
-        amount: leagueFee,
-        paymentMethodNonce: req.body.payment_method_nonce,
-        options: {
-          submitForSettlement: true
-        },
-        customer: {
-          firstName: req.body["name.first"],
-          lastName:  req.body["name.last"],
-          email:     req.body.email,
-        },
-        customFields: {
-          partner:       req.body.partner,
-          partner_id:    req.body.partner_id,
-          age:           req.body.age,
-          gender:        req.body.gender,
-          shirt_size:    req.body.shirtSize,
-          skill_level:   req.body.skillLevel,
-          participation: req.body.participation,
-        }
-      };
-
-      gateway.transaction.sale(purchase, function (err, result) {
-
-        if (err) {
-          locals.err = err;
-          console.log(err);
-          return next();
+        
+        let amount;
+        
+        switch (req.body.registration_dates.length) {
+            case 0:
+                locals.err = "Please pick at least one registration date";
+                return next();
+            case 1:
+                amount = 20;
+                break;
+            case 2:
+                amount = 40;
+                break;
+            case 3:
+                amount = 50;
+                break;
         }
 
-        if (!result.success) {
-          console.log(JSON.stringify(locals.err, null, 2));
-          locals.err = JSON.stringify(result);
-          return next();
-        }
+        const purchase = {
+            amount: amount,
+            paymentMethodNonce: req.body.payment_method_nonce,
+            options: {
+                submitForSettlement: true
+            },
+            customer: {
+                firstName: req.body.first_name,
+                lastName: req.body.last_name,
+                email: req.body.email,
+            },
+            customFields: {
+                partner: req.body.partner_name,
+                gender: req.body.gender,
+                skill_level: req.body.skillLevel,
+                participation: req.body.registration_dates
+            }
+        };
+        
+        gateway.transaction.sale(purchase, function (err, result) {
 
-        if (result.success) {
+            if (err) {
+                locals.err = err;
+                console.log(err);
+                return next();
+            }
 
-          if (_.isEmpty(player)) {
-            player = new Player.model({
-              name: {
-                first:  req.body["name.first"],
-                last:   req.body["name.last"]
-              },
-              email:         req.body.email,
-              password:      req.body["name.first"].substring(0,1)+req.body["name.last"],
-              gender:        req.body.gender,
-              shirtSize:     req.body.shirtSize,
-              skillLevel:    req.body.skillLevel,
-              participation: req.body.participation,
-              ageGroup:      req.body.age,
-              registered:    true
+            if (!result.success) {
+                console.log(JSON.stringify(locals.err, null, 2));
+                locals.err = JSON.stringify(result);
+                return next();
+            }
+
+            const player = new HatterPlayer.model({
+                name: {
+                    first: req.body.first_name,
+                    last: req.body.last_name
+                },
+                email: req.body.email,
+                partners: req.body.partner_name,
+                gender: req.body.gender,
+                skillLevel: req.body.skillLevel,
+                dates_registered: req.body.registration_dates,
+                comments: req.body.comments || ""
             });
 
-          } else {
+            player.save((err) => {
+                if (err) {
+                    locals.err = err;
+                    console.log(err);
+                    return next();
+                }
 
-            player.registered    = true;
-            player.participation = req.body.participation;
-            player.ageGroup      = req.body.age;
-            player.shirtSize     = req.body.shirtSize;
-            player.skillLevel    = req.body.skillLevel;
-          }
-
-          if (req.body.partner_id) {
-            player.partner = req.body.partner_id;
-          }
-
-          player.save(function (err) {
-            if (err) throw err;
-            return res.redirect("/confirmation");
-          });
-        } else {
-          next();
-        }
-
-      });
-
+                res.redirect("/confirmation");
+            });
+        });
     });
-  });
-  
-  // Render the view
-  view.render("register");
+
+    // Render the view
+    view.render("register");
 };

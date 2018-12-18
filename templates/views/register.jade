@@ -39,35 +39,40 @@ block content
             
         h3 Registration
 
-        form#registration(autocomplete="off")
+        form#registration(method="post" action="register" autocomplete="off")
+
+            if err
+                .alert.alert-danger
+                    strong Error: 
+                    span=err
             
             .row
                 .col-md-6
                     .form-group
                         label(for='first_name') First Name
-                        input#first_name.input-lg.form-control(type='text' name='first_name' placeholder='' value=formData.firstName required)
+                        input#first_name.input-lg.form-control(type='text' name='first_name' placeholder='' required)
                 .col-md-6
                     .form-group
                         label(for='last_name') Last Name
-                        input#last_name.input-lg.form-control(type='text' name='last_name' placeholder='' value=formData.lastName required)
+                        input#last_name.input-lg.form-control(type='text' name='last_name' placeholder='' required)
                         
             .form-group
                 label(for='email') Email Address
-                input#email.input-lg.form-control(type='email' name='email' placeholder='' value=formData.email required)
+                input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
             
             .form-group
                 label(for='partner_name') Partner Name
-                input#partner_name.input-lg.form-control(type='text' name='partner_name' placeholder='' value=formData.email required)
+                input#partner_name.input-lg.form-control(type='text' name='partner_name' placeholder='' required)
             
             .form-group
                 label(for="gender" name="gender") Gender
-                select#gender.input-lg.form-control(name="gender" value=formData.gender)
+                select#gender.input-lg.form-control(name="gender" value='')
                     option(value='Female') Female
                     option(value='Male') Male
 
             .form-group
                 label(for="skillLevel" name="skillLevel") Skill Level
-                    select#skillLevel.input-lg.form-control(name="skillLevel" value=formData.skillLevel)
+                    select#skillLevel.input-lg.form-control(name="skillLevel")
                         option(value='1') 1 - Absolute Beginner
                         option(value='2') 2 - Hey wait, what's a flick?
                         option(value='3') 3 - Working on throws, basic knowledge of game
@@ -80,7 +85,7 @@ block content
 
             .form-group
                 label Comments
-                textarea.form-control
+                textarea(name="comments").form-control
                         
                         
             .form-group#registration_dates
@@ -88,22 +93,22 @@ block content
                 
                 .checkbox
                     label
-                        input(type="checkbox" value="")
+                        input(type="checkbox" name="registration_dates" value="2019-01-05")
                         | Saturday January 5th, 2019
                 .checkbox
                     label
-                        input(type="checkbox" value="")
+                        input(type="checkbox" name="registration_dates" value="2019-02-02")
                         | Saturday February 2nd, 2019
                 .checkbox
                     label
-                        input(type="checkbox" value="")
+                        input(type="checkbox" name="registration_dates" value="2019-03-02")
                         | Saturday March 2nd, 2019
 
             h3 Waiver
 
             .checkbox
                 label
-                    input(type='checkbox', value='' required)
+                    input(type='checkbox', name='terms_conditions' required)
                     | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
 
             h3 Payment Information
