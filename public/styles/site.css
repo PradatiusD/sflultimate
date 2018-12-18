@@ -5837,6 +5837,11 @@ button.close {
     font-weight: normal;
     max-width: 400px; }
 
+.beach-series-logo {
+  max-width: 450px;
+  margin: 0 auto;
+  display: block; }
+
 .hero-sky {
   background: url("/images/beach-andrea-dumping.jpg");
   background-size: cover;

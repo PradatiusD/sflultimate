@@ -1,8 +1,8 @@
 @import "./../../../node_modules/sass-mediaqueries/media-queries";
 
 @keyframes fadein {
-    from { opacity: 0; transform: translateY(100%)}
-    to   { opacity: 1; transform: translateY(0%)}
+  from { opacity: 0; transform: translateY(100%)}
+  to   { opacity: 1; transform: translateY(0%)}
 }
 
 #pickup-listing-map {
@@ -13,6 +13,12 @@
     font-weight: normal;
     max-width: 400px;
   }
+}
+
+.beach-series-logo {
+  max-width: 450px;
+  margin: 0 auto;
+  display: block;
 }
 
 .hero-sky {
@@ -33,7 +39,7 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    color: white;    
+    color: white;
     text-shadow: 2px 2px 11px rgba(black, 0.8);
     background-color: rgba(black, 0.30);
     padding: 0.5em 1em;
@@ -75,7 +81,7 @@
     display: inline-block;
     background: rgba(black, 0.40);
     font-weight: 300;
-    text-shadow: 2px 2px 11px rgba(black, 0.8); 
+    text-shadow: 2px 2px 11px rgba(black, 0.8);
     padding: 0.5em 1em;
   }
 
@@ -230,7 +236,7 @@
   @media (max-width: 480px) {
     min-height: 225px;
   }
-  
+
   img {
     width: 100%;
   }
@@ -287,7 +293,7 @@
 
 
 .navbar-collapse {
-  border-top: 1px solid rgba(16, 16, 16, 0.37) !important;  
+  border-top: 1px solid rgba(16, 16, 16, 0.37) !important;
 }
 
 #header > .navbar {
