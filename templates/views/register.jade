@@ -1,18 +1,13 @@
 extends ../layouts/default
 
 block head
-    meta(property="og:title"        content="Register now for Spring League!")
+    meta(property="og:title"        content="Register now for the SFL Ultimate Beach Series!")
     meta(property="og:url"          content="http://www.sflultimate.com/register")
-    meta(property="og:description"  content="Sign up to secure your spot!")
-
-    meta(property="og:image"        content="http://www.sflultimate.com/images/beach-andrea-dumping.jpg")
-    //- meta(property="og:image:width"  content="1200")
-    //- meta(property="og:image:height" content="630")
+    meta(property="og:description"  content="Sign up for the upcoming three beach hatters on January 5th, February 2nd, and March 2nd!")
+    meta(property="og:image"        content="http://www.sflultimate.com/images/beach-ultimate-series-logo.jpg")
 
 block content
-
-    //.hero-sky: .container: h1 2017 Fall League Registration
-
+    
     .container.register: .row: .col-md-12
         
         img.beach-series-logo(src='/images/beach-ultimate-series-logo.jpg')
@@ -29,9 +24,9 @@ block content
             li Saturday February 2nd, 2019 
             li Saturday March 2, 2019 
 
-        p Register as an individual or as a pair. We'll make even teams and play a round robin!
+        p Register as an individual or as a pair. We'll make even teams and play a round robin!  The format will be 3:1 or 2:2 depending on attendance.
         p Each event cost $20 per player. You can sign for each one individually or all 3 for $50. 
-        p A portion of the proceeds will go to support the upcoming season of Fiasco Ultimate, South Florida's spicy women's team! 
+        p Half of all proceeds will go to support the upcoming season of Fiasco Ultimate, South Florida's spicy women's team! 
         p There will also have discs and merch for sale.
         p Post game tournament party is across the street at Park and Ocean! 
         
@@ -71,20 +66,33 @@ block content
                     option(value='Male') Male
 
             .form-group
+                label(for="skillLevel" name="skillLevel") Skill Level
+                    select#skillLevel.input-lg.form-control(name="skillLevel" value=formData.skillLevel)
+                        option(value='1') 1 - Absolute Beginner
+                        option(value='2') 2 - Hey wait, what's a flick?
+                        option(value='3') 3 - Working on throws, basic knowledge of game
+                        option(value='4') 4 - Pickup player, okay throws
+                        option(value='5') 5 - Decent backhand & forehand. Little to no club experience
+                        option(value='6') 6 - Fairly solid backhand & forehand. Some club experience
+                        option(value='7') 7 - Tourney experience. Several years of club
+                        option(value='8') 8 - Club level, solid all around, not prone to errors
+                        option(value='9') 9 - Rock star. spot on throws, awesome D
+
+            .form-group#registration_dates
                 label Registration Dates
                 
                 .checkbox
                     label
                         input(type="checkbox" value="")
-                        | Saturday January 5, 2019
+                        | Saturday January 5th, 2019
                 .checkbox
                     label
                         input(type="checkbox" value="")
-                        | Saturday January 5, 2019
+                        | Saturday February 2nd, 2019
                 .checkbox
                     label
                         input(type="checkbox" value="")
-                        | Saturday March 2, 2019
+                        | Saturday March 2nd, 2019
 
             h3 Waiver
 
@@ -95,7 +103,7 @@ block content
 
             h3 Payment Information
             
-            p Your will be charged <strong>$20.00</strong>.
+            p Your will be charged <strong id="total_cost">N/A, please pick a date</strong>.
 
             #payment-form
 
@@ -124,7 +132,6 @@ block content
                     button.btn.btn-primary(type='button', data-dismiss='modal') Close
 
 block js
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.0/bootstrap3-typeahead.min.js")
     script(src='https://js.braintreegateway.com/v2/braintree.js')
     script.
         var clientToken = "#{braintree_token}";

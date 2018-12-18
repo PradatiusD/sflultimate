@@ -15,7 +15,8 @@
     "keystone": "^4.0.0",
     "node-sass": "^4.10.0",
     "sass-mediaqueries": "^1.6.1",
-    "superagent": "^4.0.0"
+    "superagent": "^4.0.0",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "grunt": "^1.0.3",
