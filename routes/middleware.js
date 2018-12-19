@@ -29,7 +29,7 @@ exports.initLocals = function(req, res, next) {
 
   
   // if (keystone.get('isRegistrationPeriod')) {
-  //   locals.navLinks.push({label: 'Register',  key: 'register',  href: '/register'});
+    locals.navLinks.push({label: 'Register for Beach Series',  key: 'register',  href: '/register'});
   // } 
   // else {
     // locals.navLinks = locals.navLinks.concat([
