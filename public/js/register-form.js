@@ -32,8 +32,7 @@ braintree.setup(clientToken, "dropin", {
                 $totalCost.text("$50.00");
                 break;
         }
-        
-        
     });
+    
 
 })(jQuery);

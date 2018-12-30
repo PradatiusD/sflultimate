@@ -37,13 +37,14 @@ module.exports = function(req, res) {
 
     view.on("post", function (next) {
 
+        if (!req.body.registration_dates) {
+            locals.err = "Please pick at least one registration date";
+            return next();
+        }
         
         let amount;
         
         switch (req.body.registration_dates.length) {
-            case 0:
-                locals.err = "Please pick at least one registration date";
-                return next();
             case 1:
                 amount = 20;
                 break;
@@ -54,7 +55,7 @@ module.exports = function(req, res) {
                 amount = 50;
                 break;
         }
-
+        
         const purchase = {
             amount: amount,
             paymentMethodNonce: req.body.payment_method_nonce,

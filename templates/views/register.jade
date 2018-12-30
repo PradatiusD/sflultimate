@@ -9,6 +9,12 @@ block head
 block content
     
     .container.register: .row: .col-md-12
+
+        if err
+            br
+            .alert.alert-danger
+                strong Error: 
+                span=err
         
         img.beach-series-logo(src='/images/beach-ultimate-series-logo.jpg')
 
@@ -40,11 +46,7 @@ block content
         h3 Registration
 
         form#registration(method="post" action="register" autocomplete="off")
-
-            if err
-                .alert.alert-danger
-                    strong Error: 
-                    span=err
+            
             
             .row
                 .col-md-6
@@ -122,7 +124,7 @@ block content
             #payment-form
 
             .text-center
-                button.btn.btn-default.btn-lg.btn-primary(type='submit') Submit
+                button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submit-button') Submit
 
     .modal.fade(tabindex='-1', role='dialog' id='waiver')
         .modal-dialog.modal-lg
