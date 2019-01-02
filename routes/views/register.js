@@ -1,7 +1,7 @@
 const keystone  = require("keystone");
 const braintree = require("braintree");
 const HatterPlayer = keystone.list("HatterPlayer");
-// const _ = require("underscore");
+const _ = require("underscore");
 
 const braintreeAccount = {
     environment: braintree.Environment[process.env.BRAINTREE_ENV],
@@ -44,9 +44,9 @@ module.exports = function(req, res) {
         
         let amount;
         
-        console.log("POST_BODY", req.body.registration_dates);
+        const datesForForm = _.isArray(req.body.registration_dates) ? req.body.registration_dates.length : req.body.registration_dates.split(',').length;
         
-        switch (req.body.registration_dates.length) {
+        switch (datesForForm) {
             case 1:
                 amount = 20;
                 break;
