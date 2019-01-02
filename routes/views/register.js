@@ -44,6 +44,8 @@ module.exports = function(req, res) {
         
         let amount;
         
+        console.log("REG_DATES_LOG", req.body.registration_dates);
+        
         switch (req.body.registration_dates.length) {
             case 1:
                 amount = 20;
@@ -75,7 +77,7 @@ module.exports = function(req, res) {
             }
         };
         
-        gateway.transaction.sale(purchase, function (err, result) {
+        gateway.transaction.sale(purchase, (err, result) => {
 
             if (err) {
                 locals.err = err;
