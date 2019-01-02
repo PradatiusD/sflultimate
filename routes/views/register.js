@@ -44,7 +44,7 @@ module.exports = function(req, res) {
         
         let amount;
         
-        console.log("REG_DATES_LOG", req.body.registration_dates);
+        console.log("POST_BODY", req.body.registration_dates);
         
         switch (req.body.registration_dates.length) {
             case 1:
