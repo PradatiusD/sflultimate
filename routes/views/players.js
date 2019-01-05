@@ -1,35 +1,11 @@
-var keystone = require('keystone');
-var Player = keystone.list('Player');
-
+const keystone = require('keystone');
+const Player = keystone.list('HatterPlayer');
 
 module.exports = function (req, res) {
- 
-  var query = Player.model.find();
 
-  if (req.query.registered) {
-    query.where('registered', true);
-  }
-
-  query.exec(function (err, players) {
-
-      players = players.map(function (p) {
-
-        return {
-          id:            p._id,
-          email:         p.email,
-          full_name:     p.name,
-          skill:         parseInt(p.skillLevel),
-          size:          p.shirtSize,
-          age:           p.ageGroup,
-          participation: parseInt(p.participation),
-          gender:        p.gender,
-          partner:       p.partner,
-          registered:    p.registered
-        };
-
-      });
-
-      res.json(players);
-
+    const query = Player.model.find();
+    
+    query.exec(function (err, players) {
+        res.json(players);
     });
 };
