@@ -9,6 +9,13 @@ block content
         h1 Draftboard
         #draftboard(ng-controller='PlayerTableController')
             p.lead There are {{players.length}} players registered.
+            
+            .button-group
+                .btn.btn-default(ng-click="") All
+                .btn.btn-default(ng-click="Feb 2nd") Jan. 5th Event
+                .btn.btn-default(ng-click="") Feb. 2nd
+                .btn.btn-default(ng-click="") March 2nd
+            
             table.table.table-hover.table-striped
                 thead
                     th Number
