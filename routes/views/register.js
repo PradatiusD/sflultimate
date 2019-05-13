@@ -44,7 +44,7 @@ module.exports = function(req, res) {
         
         let amount;
         
-        const datesForForm = _.isArray(req.body.registration_dates) ? req.body.registration_dates.length : req.body.registration_dates.split(',').length;
+        const datesForForm = _.isArray(req.body.registration_dates) ? req.body.registration_dates.length : req.body.registration_dates.split(",").length;
         
         switch (datesForForm) {
             case 1:

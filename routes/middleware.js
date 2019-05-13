@@ -8,7 +8,7 @@
  * modules in your project's /lib directory.
  */
 
-var _ = require('underscore');
+const _ = require('underscore');
 // const keystone = require('keystone');
 
 /**
@@ -29,9 +29,8 @@ exports.initLocals = function(req, res, next) {
 
   
   // if (keystone.get('isRegistrationPeriod')) {
-    locals.navLinks.push({label: 'Register for Beach Series',  key: 'register',  href: '/register'});
-  // } 
-  // else {
+  //   locals.navLinks.push({label: 'Register for Beach Series',  key: 'register',  href: '/register'});
+  // } else {
     // locals.navLinks = locals.navLinks.concat([
     //   {label: 'Teams',     key: 'teams',     href: '/teams'},
     //   {label: 'Schedule',  key: 'schedule',  href: '/schedule'},
