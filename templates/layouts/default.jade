@@ -105,6 +105,8 @@ html(lang='en')
         .col-sm-8
           br
           div
+            a(href='https://www.instagram.com/sflultimate/' target='blank')
+                i.fa.fa-instagram
             a(href='https://www.facebook.com/sflultimate/' target='blank')
               i.fa.fa-facebook
             a(href='mailto:sflultimate@gmail.com' target='blank')
@@ -116,7 +118,7 @@ html(lang='en')
           h4 Links
           ul
             each link in footerLinks
-              li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
+              li(class=(section === link.key ? 'active' : null)): a(href=link.href)= link.label
 
       div.text-right.credits    
         .container Site built by <a href="http://danielprada.co" target="_blank">Daniel Prada</a>

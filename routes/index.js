@@ -49,15 +49,24 @@ module.exports = function (app) {
   app.get("/teams",           routes.views.teams);
 
   // Content Pages
-  const contentRoutes = ["/terms","/privacy","/draftboard","/stats","/community","/sheets"];
+  const contentRoutes = [
+      "terms",
+      "privacy",
+      "draftboard",
+      "stats",
+      "community",
+      "sheets",
+      "club-teams",
+      "clinics"
+  ];
 
-  contentRoutes.forEach(function (url) {
+  contentRoutes.forEach((url) => {
 
     const jadeTemplate = url.replace("/","");
-
-    app.get(url,  function (req, res) {
+    app.get(`/${url}`, (req, res) => {
       res.render(jadeTemplate);
     });
+
   });
 
   if (keystone.get("isRegistrationPeriod")) {
