@@ -9,7 +9,7 @@ module.exports = function (req, res) {
         {
             title: 'El Niño',
             category: 'Open',
-            description: 'El Niño Ultimate is a high-level open club team based out of Oakland Park, Florida. In 2019, they were Florida Section Champions and in 2018 placed 5th at the  USAU South East Regional Championships.',
+            description: 'El Niño Ultimate is a high-level open club team based out of Oakland Park, Florida. In 2018, they were Florida Section Champions and in 2018 placed 5th at the USAU South East Regional Championships.',
             image: '/images/teams/el-nino.jpg',
             links: [
                 {
@@ -33,7 +33,7 @@ module.exports = function (req, res) {
         {
             title: 'Fiasco',
             category: 'Women',
-            description: 'Fiasco is a high-level women\'s club team based in Broward and Dade counties.  Fiasco\'s next tryout is Sunday, May 19 from 12-3 in Biscayne Park at the Ed Burke Recreation Center.',
+            description: 'Fiasco is a high-level women\'s club team based in Broward and Dade counties. Fiasco\'s next tryout is Sunday, May 19 from 12-3 in Biscayne Park at the Ed Burke Recreation Center.',
             image: '/images/teams/fiasco.jpg',
             links: [
                 {
