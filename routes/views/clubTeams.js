@@ -51,10 +51,10 @@ module.exports = function (req, res) {
             ]
         },
         {
-            title: 'Fire Ultimate',
+            title: 'Miami Fire Ultimate',
             category: 'Mixed',
-            description: 'Fire Ultimate is a new mixed club ultimate team based from Miami.',
-            image: '/images/teams/fire-ultimate.png',
+            description: 'Miami Fire Ultimate is a new mixed club ultimate team based from Miami.',
+            image: '/images/teams/fire-ultimate-dark.png',
             links: [
                 {
                     url: 'https://www.facebook.com/FireUltimateClub/',
