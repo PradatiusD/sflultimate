@@ -31,9 +31,10 @@ const routes = {
   views: importRoutes("./views")
 };
 
+
 // Setup Route Bindings
 module.exports = function (app) {
-  
+    
   // Views
   app.get("/",                routes.views.index);
   app.get("/blog/:category?", routes.views.blog);
@@ -47,6 +48,7 @@ module.exports = function (app) {
   app.get("/captains",        routes.views.captains);
   app.get("/schedule",        routes.views.schedule);
   app.get("/teams",           routes.views.teams);
+  app.get("/club-teams",      routes.views.clubTeams);
 
   // Content Pages
   const contentRoutes = [
@@ -56,7 +58,6 @@ module.exports = function (app) {
       "stats",
       "community",
       "sheets",
-      "club-teams",
       "clinics"
   ];
 
