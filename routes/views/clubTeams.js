@@ -53,7 +53,7 @@ module.exports = function (req, res) {
         {
             title: 'Miami Fire Ultimate',
             category: 'Mixed',
-            description: 'Miami Fire Ultimate is a new mixed club ultimate team based from Miami.',
+            description: 'Miami Fire Ultimate is a new mixed club ultimate team based from Miami. This team was originated in Colombia and in 2019 started its process to form a presence here in South Florida.',
             image: '/images/teams/fire-ultimate-dark.png',
             links: [
                 {
