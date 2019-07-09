@@ -40,13 +40,15 @@ exports.initLocals = function(req, res, next) {
 
     locals.navLinks = locals.navLinks.concat([
         {label: 'Local Pickups', key: 'community', href: '/community'},
-        {label: 'Club Teams', key: 'club-teams', href: '/club-teams'}
+        {label: 'Club Teams', key: 'club-teams', href: '/club-teams'},
+        {label: 'Clinics/Camps', key: 'clinics', href: '/clinics'},
     ]);
 
     locals.footerLinks = [
         {label: 'Terms & Conditions', key: 'terms', href: '/terms'},
         {label: 'Privacy Policy', key: 'privacy', href: '/privacy'},
-        {label: 'Local Pickups', key: 'community', href: '/community'}
+        {label: 'Local Pickups', key: 'community', href: '/community'},
+        {label: 'Clinics/Camps', key: 'clinics', href: '/clinics'}
     ];
 
     locals.user = req.user;

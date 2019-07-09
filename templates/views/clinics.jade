@@ -6,6 +6,7 @@ block head
     meta(property="og:description"  content="Discover a way to host a ultimate frisbee clinic at your organization!")
     
     style.
+        
         img.parallax-image {
             max-width: 100%;
             width: 100%;
@@ -14,6 +15,12 @@ block head
 
         .simpleParallax {
             height: 500px;
+        }
+        
+        .ultimate-soul-logo-container {
+            background: #f3f3f3;
+            border-top: 23px solid #8cdefa;
+            border-bottom: 23px solid #8cdefa;
         }
         
         .ultimate-soul-logo {
@@ -32,24 +39,134 @@ block head
         .site-footer {
             margin-top: 0;
         }
+        
+        h1, .h1 {
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 200;
+            color: #000172;
+        }
+        
+        .btn.btn-large {
+            padding: 0.5em 1.25em;
+            font-size: 20px;
+            border: 3px solid #5872d2;
+            background: #8092fa;
+            margin: 0 auto;
+            display: inline-block;
+        }
+        
+        .last-div {
+            margin-bottom: 30px;
+        }
+        
+        .information {
+            font-size: 20px;
+            line-height: 1.618;
+            color: white;
+            padding-top: 2em;
+            padding-bottom: 2em;
+            margin-top: 1em;
+            margin-bottom: 1em;
+            position: relative;
+            background-color: #2790af;
+        }
 
+        .information::after {
+            content: "";
+            background-image: url(/images/ultimate-soul/looking-down.jpg);
+            opacity: 0.1;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+            background-size: cover;
+        }
+
+        .information .h1 {
+            border-bottom: white 10px solid;
+            padding-bottom: 20px;
+        }
+
+        .information .h1, .things-we-teach {
+            color: white;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: left;
+            font-size: 3em;
+            line-height: 1;
+            font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+        }
+        
+        .things-we-teach {
+            color: #5872d2;
+            border-left: #8092fa 10px solid;
+            padding-left: 20px;
+            margin-left: 40px;
+        }
+        
 block content
     
     img(class='parallax-image' src='/images/ultimate-soul/smiles.jpg')
-    
-    .container
+
+    .container.text-center
 
         img(src='/images/ultimate-soul/ultimate-soul-logo.png' class='ultimate-soul-logo')
 
-        h3 About Ultimate Soul
+        h1 Join the New Sports Academy
+        
+        p.lead We are world-level Ultimate players with different professional backgrounds and one mission: to establish sports as an universal right that fosters positive values.
 
-        p ULTIMATE SOUL, inc. is a nonprofit organization that perceives sports as a tool for education and self-improvement that aims to promote and foster positive values in individuals and low, medium, and high-performance athletes. We encourage sports as a tool for peace, a social concept where the dynamics between the elements create synergy that interacts with the direct and indirect context.
+        a.btn.btn-primary.btn-large(href='https://ultimate-soul.com/indexENG.html#academy' target='_blank') Learn More
+        
+        hr
+        
+    .container-fluid
+        .row
+            .col-md-4
+                h3.things-we-teach.h1.
+                    Things<br/>
+                    We<br/>
+                    Teach
+            .col-md-8
+                article
+                    h4 Positive Values
+                    p We use sports as a tool for education and self-improvement
+                article
+                    h4 Gender Equality
+                    p We actively encourage mixed gender play
+                article
+                    h4 Teamwork
+                    p We emphasize communication and collaboration
+                article
+                    h4 Communication
+                    p We use the self-officiation as practice to resolve conflict
 
-        p We are world-level Ultimate players that have different professional backgrounds and our mission is to establish sports as an universal right that fosters positive values.
+    .information                
+        .container
+            .row.about-ultimate
+                .col-md-7
+                    p As a USA nonprofit, we collaborate with South Florida Ultimate to promote the sport of Ultimate Frisbee and establishing atlethism programs, except we specifically focus on sports psychology. 
+                    p We are leading the first youth Ultimate program in South Florida that includes children with psychiatric diagnosis such as: 
+                    ul
+                        li Attention Deficit/Hyperactivity Disorder
+                        li Oppositional Defiant Disorder
+                        li Depression
+                    p As part of our Ultimate promotion projects, we have sponsored South Florida Ultimate tournaments and we have developed clinics for religious nonprofits in order to promote the sport and its values. 
+                    p Ultimate Soul, inc is also managing the organizational development of FIRE Ultimate Miami, a worldwide recognized team that was originated in Colombia and has now started its new team formation in Florida with our support.
+                .col-md-5
+                    h3.h1. 
+                        About<br/>
+                        Ultimate<br/>
+                        Soul
 
-        p Ultimate Soul, inc. is an organization that was born in Buenos Aires, Argentina. There we were able to facilitate ultimate clinics, develop different teams, and support these and other teams with organizational management processes. At last we leaved a historical legacy for the Ultimate community in Argentina, we managed thet team formation that represented the country for the first time in the Worl Ultimate Club Championship 2018 in Cincinatti, Ohio. With this team we were able to develop an inclusive process for all level players, that consisted in a wide range of skillset, from a Junior player to high level players.
-
-        p We are currently a legally established nonprofit organization in USA. We are working along with South Florida Ultimate developing the community of Florida, where we are dedicated to the promotion of the sport establishing atlethism programs with a focus on sports psychology. We are leading the first youth Ultimate program in South Florida that includes children with psychiatric diagnosis (Attention Deficit /Hyperactivity Disorder, Oppositional Defiant Disorder, and Depression). As part of our Ultimate promotion projects, we have sponsored South Florida Ultimate tournaments and we have developed clinics for religious nonprofits in order to promote the sport and its values. Ultimate Soul, inc is also managing the organizational development of FIRE Ultimate Miami, a worldwide recognized team that was originated in Colombia and has now started its new team formation in Florida with our support. You can find more information about our services in our web page: https://ultimate-soul.com/
+    .container.text-center.last-div
+        p.h1 Join the New Sports Academy
+        p.lead We are currently taking in the next set of kids excited to play this new sport!
+        a.btn.btn-primary.btn-large(href='https://ultimate-soul.com/indexENG.html#academy' target='_blank') Learn More
 
     
     img(class='team-image' src='/images/ultimate-soul/team.jpg')
