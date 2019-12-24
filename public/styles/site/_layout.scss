@@ -60,10 +60,23 @@
 }
 
 .call-to-action {
+  position: relative;
   background-size: cover;
   background-position: center center;
   padding: 6em 0;
   color: white;
+
+  .video-full-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    video {
+      width: 100%;
+    }
+  }
+
   h1 {
     margin-top: 0;
     animation-duration: 3s;
@@ -104,13 +117,14 @@
 }
 
 .features {
-  background-color: rgba(black, 0.10);
   color: black;
   font-size: 1.15em;
+  padding: 1em 0em;
+  position: relative;
+  background: white;
   h3 {
     margin-top: 0.5em;
   }
-  padding: 1em 0em;
 }
 
 .champions {

@@ -33,7 +33,8 @@
     "time-grunt": "^2.0.0"
   },
   "scripts": {
-    "start": "node keystone.js"
+    "start": "node keystone.js",
+    "dev": "nodemon keystone.js"
   },
   "main": "keystone.js",
   "private": true
