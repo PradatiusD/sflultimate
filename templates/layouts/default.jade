@@ -56,7 +56,7 @@ html(lang='en')
     //- End Facebook Pixel Code
 
   //- HTML BODY
-  body
+  body(class="page-"+ section)
 
     //- HEADER
     #header
@@ -120,7 +120,7 @@ html(lang='en')
             each link in footerLinks
               li(class=(section === link.key ? 'active' : null)): a(href=link.href)= link.label
 
-      div.text-right.credits    
+      div.text-right.credits
         .container Site built by <a href="http://danielprada.co" target="_blank">Daniel Prada</a>
 
 

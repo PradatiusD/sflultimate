@@ -33,12 +33,9 @@ module.exports = function(grunt) {
 	};
 
 	var configs = require('load-grunt-configs')(grunt, options);
-	
+
 	// Project configuration.
 	grunt.initConfig(configs);
-
-	// load jshint
-	grunt.registerTask('lint', ['jshint']);
 
 	grunt.registerTask('dev', [
 		'sass',

@@ -7,47 +7,44 @@ block head
     meta(property="og:image"        content="http://www.sflultimate.com/images/beach-ultimate-series-logo.jpg")
 
 block content
-    
+
     .container.register: .row: .col-md-12
 
         if err
             br
             .alert.alert-danger
-                strong Error: 
+                strong Error:
                 span=err
-        
+
         img.beach-series-logo(src='/images/beach-ultimate-series-logo.jpg')
 
         p Greetings beach ultimate lovers!
-        
-        p South Florida Ultimate is happy to announce a series of beach ultimate hat tournaments coming in 2019!
-        
+
+        p South Florida Ultimate is happy to announce a series of beach ultimate hat tournaments coming in 2020!
+
         h3 Description
-        p The series consists of 3 beach ultimate Frisbee hat tournaments held on the following three dates, each one starting at 10am sharp.
+        p The series consists of two beach ultimate Frisbee hat tournaments held on the following dates, each one starting at 10am sharp.
 
         ul
-            li Saturday January 5, 2019
-            li Saturday February 2nd, 2019 
-            li Saturday March 2, 2019 
+            li Saturday January 11th, 2020
+            li Saturday February 2nd, 2020
 
         p Register as an individual or as a pair. We'll make even teams and play a round robin!  The format will be 3:1 or 2:2 depending on attendance.
-        p Each event cost $20 per player. You can sign for each one individually or all 3 for $50. 
-        p Half of all proceeds will go to support the upcoming season of Fiasco Ultimate, South Florida's spicy women's team! 
-        p There will also have discs and merch for sale.
-        p Post game tournament party is across the street at Park and Ocean! 
-        
+        p Each event cost $20 per player. You can sign for each one individually or both for $30.
+        p Post game tournament party is across the street at Park and Ocean!
+
         h3 Location
         p Games will be held the beach across from Hugh Taylor Birch State Park, 3109 E Sunrise Blvd. Ft Lauderdale, FL.
         p There is all day parking available in the park for $6 per vehicle.
-        
+
         iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2595.3871114681165!2d-80.10347306511046!3d26.14049539386033!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x6f9406a6e78e90c1!2sPark+%26+Ocean!5e1!3m2!1sen!2sus!4v1508698698564" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen)
 
-            
+
         h3 Registration
 
         form#registration(method="post" action="register" autocomplete="off")
-            
-            
+
+
             .row
                 .col-md-6
                     .form-group
@@ -57,15 +54,15 @@ block content
                     .form-group
                         label(for='last_name') Last Name
                         input#last_name.input-lg.form-control(type='text' name='last_name' placeholder='' required)
-                        
+
             .form-group
                 label(for='email') Email Address
                 input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
-            
+
             .form-group
                 label(for='partner_name') Partner Name
                 input#partner_name.input-lg.form-control(type='text' name='partner_name' placeholder='' required)
-            
+
             .form-group
                 label(for="gender" name="gender") Gender
                 select#gender.input-lg.form-control(name="gender" value='')
@@ -88,23 +85,19 @@ block content
             .form-group
                 label Comments
                 textarea(name="comments").form-control
-                        
-                        
+
+
             .form-group#registration_dates
                 label Registration Dates
-                
+
                 .checkbox
                     label
                         input(type="checkbox" name="registration_dates" value="2019-01-05")
-                        | Saturday January 5th, 2019
+                        | Saturday, January 5th, 2020
                 .checkbox
                     label
-                        input(type="checkbox" name="registration_dates" value="2019-02-02")
-                        | Saturday February 2nd, 2019
-                .checkbox
-                    label
-                        input(type="checkbox" name="registration_dates" value="2019-03-02")
-                        | Saturday March 2nd, 2019
+                        input(type="checkbox" name="registration_dates" value="2019-02-03")
+                        | Saturday, February 3nd, 2020
 
             h3 Waiver
 
@@ -114,11 +107,11 @@ block content
                     | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
 
             h3 Payment Information
-            
+
             p Your will be charged <strong id="total_cost">N/A, please pick a date</strong>.
-            
-            .alert.alert-info 
-                strong Please note: 
+
+            .alert.alert-info
+                strong Please note:
                 | We will be allowing registrations the day of the event on-site but they will be $25.
 
             #payment-form

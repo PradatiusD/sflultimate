@@ -315,8 +315,32 @@
   margin-bottom: 0;
 }
 
-.register {
-  font-size: 1.2em;
+.page-register {
+
+  .container {
+    font-size: 1.2em;
+  }
+
+  .navbar-brand {
+    display: none !important;
+  }
+
+  .site-footer a {
+    color: #15698c;
+  }
+
+  .site-footer .fa {
+    background-color: #26abe3;
+  }
+
+  .navbar-inverse, .credits, .btn-lg {
+    background-color: #26abe3;
+    border-color: #15698c;
+  }
+
+  .navbar-inverse .navbar-nav > li > a {
+    color: white;
+  }
 }
 
 .credits {
@@ -328,3 +352,4 @@
     color: lighten($brand-primary, 40%);
   }
 }
+

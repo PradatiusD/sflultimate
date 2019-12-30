@@ -6106,8 +6106,24 @@ button.close {
 #header > .navbar {
   margin-bottom: 0; }
 
-.register {
+.page-register .container {
   font-size: 1.2em; }
+
+.page-register .navbar-brand {
+  display: none !important; }
+
+.page-register .site-footer a {
+  color: #15698c; }
+
+.page-register .site-footer .fa {
+  background-color: #26abe3; }
+
+.page-register .navbar-inverse, .page-register .credits, .page-register .btn-lg, .page-register .btn-group-lg > .btn {
+  background-color: #26abe3;
+  border-color: #15698c; }
+
+.page-register .navbar-inverse .navbar-nav > li > a {
+  color: white; }
 
 .credits {
   background: #804399;
