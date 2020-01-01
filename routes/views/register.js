@@ -99,13 +99,15 @@ module.exports = function (req, res) {
         return next()
       }
 
+      // eslint-disable-next-line new-cap
       const player = new HatterPlayer.model({
         name: {
           first: first_name,
           last: last_name
         },
         email: email,
-        partners: partner_name,
+        // eslint-disable-next-line camelcase
+        partners: partner_name || '',
         gender: gender,
         skillLevel: skillLevel,
         dates_registered: registration_dates,

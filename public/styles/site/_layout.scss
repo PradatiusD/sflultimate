@@ -23,9 +23,8 @@
 }
 
 .hero-sky {
-  background: url("/images/beach-andrea-dumping.jpg");
   background-size: cover;
-  background-position: center center;
+  background: url("/images/beach-andrea-dumping.jpg") center center;
 
   .container {
     position: relative;
@@ -317,16 +316,29 @@
 
 .page-register {
 
+  .call-to-action {
+    display: block;
+    padding: 0;
+  }
+
+  .video-full-screen {
+    position: inherit;
+  }
+
   .container {
     font-size: 1.2em;
   }
 
-  .navbar-brand {
-    display: none !important;
-  }
-
   .site-footer a {
     color: #15698c;
+  }
+
+  .navbar-inverse .navbar-nav > .active > a {
+    background-color: #17688a;
+  }
+
+  .navbar-inverse .navbar-collapse {
+    border-color: #ffffff2e !important;
   }
 
   .site-footer .fa {

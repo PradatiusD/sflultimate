@@ -8,8 +8,8 @@
  * modules in your project's /lib directory.
  */
 
-const _ = require('underscore');
-// const keystone = require('keystone');
+const _ = require('underscore')
+const keystone = require('keystone')
 
 /**
  Initialises the standard view locals
@@ -19,76 +19,68 @@ const _ = require('underscore');
  or replace it with your own templates / logic.
  */
 
-exports.initLocals = function(req, res, next) {
+exports.initLocals = function (req, res, next) {
+  const { locals } = res
 
-    var locals = res.locals;
+  locals.navLinks = [
+    { label: 'Home', key: 'home', href: '/' }
+  ]
 
-    locals.navLinks = [
-        {label: 'Home',      key: 'home',      href: '/'},
-    ];
+  if (keystone.get('isRegistrationPeriod')) {
+    locals.navLinks.push({ label: 'Register for Beach Series', key: 'register', href: '/register' })
+  }
+  // else {
+  // locals.navLinks = locals.navLinks.concat([
+  //   {label: 'Teams',     key: 'teams',     href: '/teams'},
+  //   {label: 'Schedule',  key: 'schedule',  href: '/schedule'},
+  //   {label: 'Stats',     key: 'stats',     href: '/stats'}
+  // ]);
+  // }
 
+  locals.navLinks = locals.navLinks.concat([
+    { label: 'Local Pickups', key: 'community', href: '/community' },
+    { label: 'Club Teams', key: 'club-teams', href: '/club-teams' },
+    { label: 'Clinics/Camps', key: 'clinics', href: '/clinics' }
+  ])
 
-    // if (keystone.get('isRegistrationPeriod')) {
-    //   locals.navLinks.push({label: 'Register for Beach Series',  key: 'register',  href: '/register'});
-    // } else {
-    // locals.navLinks = locals.navLinks.concat([
-    //   {label: 'Teams',     key: 'teams',     href: '/teams'},
-    //   {label: 'Schedule',  key: 'schedule',  href: '/schedule'},
-    //   {label: 'Stats',     key: 'stats',     href: '/stats'}
-    // ]);
-    // }
+  locals.footerLinks = [
+    { label: 'Terms & Conditions', key: 'terms', href: '/terms' },
+    { label: 'Privacy Policy', key: 'privacy', href: '/privacy' },
+    { label: 'Local Pickups', key: 'community', href: '/community' },
+    { label: 'Clinics/Camps', key: 'clinics', href: '/clinics' }
+  ]
 
-    locals.navLinks = locals.navLinks.concat([
-        {label: 'Local Pickups', key: 'community', href: '/community'},
-        {label: 'Club Teams', key: 'club-teams', href: '/club-teams'},
-        {label: 'Clinics/Camps', key: 'clinics', href: '/clinics'},
-    ]);
+  locals.user = req.user
 
-    locals.footerLinks = [
-        {label: 'Terms & Conditions', key: 'terms', href: '/terms'},
-        {label: 'Privacy Policy', key: 'privacy', href: '/privacy'},
-        {label: 'Local Pickups', key: 'community', href: '/community'},
-        {label: 'Clinics/Camps', key: 'clinics', href: '/clinics'}
-    ];
-
-    locals.user = req.user;
-
-    next();
-
-};
-
+  next()
+}
 
 /**
  Fetches and clears the flashMessages before a view is rendered
  */
 
-exports.flashMessages = function(req, res, next) {
+exports.flashMessages = function (req, res, next) {
+  var flashMessages = {
+    info: req.flash('info'),
+    success: req.flash('success'),
+    warning: req.flash('warning'),
+    error: req.flash('error')
+  }
 
-    var flashMessages = {
-        info:    req.flash('info'),
-        success: req.flash('success'),
-        warning: req.flash('warning'),
-        error:   req.flash('error')
-    };
+  res.locals.messages = _.any(flashMessages, function (msgs) { return msgs.length }) ? flashMessages : false
 
-    res.locals.messages = _.any(flashMessages, function(msgs) { return msgs.length; }) ? flashMessages : false;
-
-    next();
-
-};
-
+  next()
+}
 
 /**
  Prevents people from accessing protected pages when they're not signed in
  */
 
-exports.requireUser = function(req, res, next) {
-
-    if (!req.user) {
-        req.flash('error', 'Please sign in to access this page.');
-        res.redirect('/keystone/signin');
-    } else {
-        next();
-    }
-
-};
+exports.requireUser = function (req, res, next) {
+  if (!req.user) {
+    req.flash('error', 'Please sign in to access this page.')
+    res.redirect('/keystone/signin')
+  } else {
+    next()
+  }
+}

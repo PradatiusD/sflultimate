@@ -73,7 +73,6 @@ mongorestore --host 127.0.0.1 --port=27017 -d sflultimate dump/heroku_8xfcj7cs
 
 Thanks to[wayback machine](https://web.archive.org/web/20160110095115/http://sflultimate.com/).
 
-
 To Do:
 
 - Have league prices set at the database, not code level
