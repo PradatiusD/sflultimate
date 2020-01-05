@@ -79,7 +79,8 @@ module.exports = function (req, res) {
         email: email
       },
       customFields: {
-        partner: partner_name,
+        // eslint-disable-next-line camelcase
+        partner: partner_name || '',
         gender: gender,
         skill_level: skillLevel,
         participation: registration_dates
