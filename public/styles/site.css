@@ -5884,7 +5884,12 @@ button.close {
     overflow: hidden;
     width: 100%; }
     .call-to-action .video-full-screen video {
-      width: 100%; }
+      width: 100%;
+      height: auto; }
+      @media only screen and (max-width: 1279px) {
+        .call-to-action .video-full-screen video {
+          height: 100%;
+          width: auto; } }
   .call-to-action h1 {
     margin-top: 0;
     animation-duration: 3s; }

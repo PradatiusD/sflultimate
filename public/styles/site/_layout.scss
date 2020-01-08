@@ -73,6 +73,11 @@
     width: 100%;
     video {
       width: 100%;
+      height: auto;
+      @include max-screen(1279px) {
+        height: 100%;
+        width: auto;
+      }
     }
   }
 
