@@ -5,7 +5,7 @@ block head
     meta(property="og:url" content="http://www.sflultimate.com/register")
     meta(property="og:description" content="Sign up for the upcoming three beach hatters on Sat. Jan. 11th & Sat. February 1st")
     meta(property="og:image" content="http://www.sflultimate.com/images/beach-ultimate-series-logo.jpg")
-
+    script(src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w")
 block content
 
     .container.register: .row: .col-md-12
@@ -111,6 +111,8 @@ block content
             .alert.alert-info
                 strong Please note:
                 | We will be allowing registrations the day of the event on-site but they will be $25.
+
+            input(id="recaptcha" name='recaptcha_token' type='hidden')
 
             #payment-form
 

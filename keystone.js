@@ -1,10 +1,9 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
-require('dotenv').load();
+require('dotenv').load()
 
 // Require keystone
-const keystone = require('keystone');
-
+const keystone = require('keystone')
 
 /*
  * Keystone Configuration
@@ -18,27 +17,27 @@ const keystoneConfig = {
 
   name: 'SFLUltimate',
   brand: 'SFLUltimate',
-  
+
   sass: 'public',
   static: 'public',
   favicon: 'public/favicon.ico',
   views: 'templates/views',
   'view engine': 'jade',
-  
-  emails: 'templates/emails',  
+
+  emails: 'templates/emails',
   mongo: process.env.MONGOLAB_URI,
-  
+
   'auto update': true,
   session: true,
   auth: true,
   'user model': 'Player'
-};
+}
 
-keystone.init(keystoneConfig);
+keystone.init(keystoneConfig)
 
 // Load your project's Models
 
-keystone.import('models');
+keystone.import('models')
 
 // Setup common locals for your templates. The following are required for the
 // bundled templates and layouts. Any runtime locals (that should be set uniquely
@@ -49,14 +48,12 @@ keystone.set('locals', {
   env: keystone.get('env'),
   utils: keystone.utils,
   editable: keystone.content.editable
-});
+})
 
-keystone.set('isRegistrationPeriod', true);
-
+keystone.set('isRegistrationPeriod', true)
 
 // Load your project's Routes
-keystone.set('routes', require('./routes'));
-
+keystone.set('routes', require('./routes'))
 
 // Setup common locals for your emails. The following are required by Keystone's
 // default email templates, you may remove them if you're using your own.
@@ -74,20 +71,19 @@ keystone.set('email locals', {
       border_color: '#1a7cb7'
     }
   }
-});
-
+})
 
 // Configure the navigation bar in Keystone's Admin UI
 
 keystone.set('nav', {
-  'Content': ['posts', 'post-categories'],
-  'League':  ['players','teams','leagues'],
-  'Pickup':  ['pickups']
-});
+  Content: ['posts', 'post-categories'],
+  League: ['players', 'teams', 'leagues'],
+  Pickup: ['pickups']
+})
 
 // Configure Web Server
-keystone.set('port', process.env.PORT || 5000);
+keystone.set('port', process.env.PORT || 5000)
 
 // Start Keystone to connect to your database and initialise the web server
 
-keystone.start();
+keystone.start()
