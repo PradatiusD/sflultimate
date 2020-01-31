@@ -8,13 +8,13 @@
   "dependencies": {
     "async": "^2.6.1",
     "bower": "^1.8.4",
-    "braintree": "^2.13.1",
+    "braintree": "^2.21.0",
     "browserify": "^16.2.3",
     "dotenv": "^6.1.0",
     "eslint": "^6.8.0",
     "jade": "^1.11.0",
     "keystone": "^4.2.1",
-    "node-sass": "^4.10.0",
+    "node-sass": "^4.13.1",
     "sass-mediaqueries": "^1.6.1",
     "superagent": "^4.0.0",
     "underscore": "^1.9.1"
