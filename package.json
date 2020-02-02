@@ -2,8 +2,8 @@
   "name": "sflultimate",
   "version": "2.0.0",
   "engines": {
-    "node": "8.10.0",
-    "npm": "6.13.1"
+    "node": "8.17.0",
+    "npm": "6.13.4"
   },
   "dependencies": {
     "async": "^2.6.1",

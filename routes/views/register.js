@@ -19,18 +19,32 @@ const braintreeAccount = {
   privateKey: BRAINTREE_PRIVATE_KEY
 }
 
-const gateway = braintree.connect(braintreeAccount)
+let gateway
+
+try {
+  gateway = braintree.connect(braintreeAccount)
+} catch (e) {
+  console.log('Braintree.connect.err', e)
+  gateway = null
+}
 
 module.exports = function (req, res) {
   const view = new keystone.View(req, res)
   const locals = res.locals
 
-  // Get Braintree Token
+  /*
+   * Get Braintree Token
+   */
   view.on('init', function (next) {
+    if (!gateway) {
+      locals.err = 'Unable to connect to gateway'
+      return next()
+    }
+
     gateway.clientToken.generate({}, function (err, response) {
       if (err || !response.clientToken) {
-        console.log(err)
-        throw err
+        locals.err = err
+        return next()
       }
       locals.braintree_token = response.clientToken
       next()
@@ -59,7 +73,6 @@ module.exports = function (req, res) {
     }
 
     request(params, (err, response, data) => {
-      console.log(params, data)
       if (err) {
         locals.err = JSON.stringify(err)
         return next()
@@ -107,6 +120,11 @@ module.exports = function (req, res) {
           skill_level: skillLevel,
           participation: registration_dates
         }
+      }
+
+      if (!gateway) {
+        locals.err = 'Unable to connect to gateway'
+        return next()
       }
 
       gateway.transaction.sale(purchase, (err, result) => {
