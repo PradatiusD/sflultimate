@@ -1,6 +1,5 @@
 const keystone = require('keystone')
-const HatterPlayer = keystone.list('HatterPlayer')
-const _ = require('underscore')
+const TournamentTeam = keystone.list('TournamentTeam')
 const { validateRecaptchaToken, generateGatewayClientToken, createSale } = require('./../utils')
 
 module.exports = function (req, res) {
@@ -24,14 +23,8 @@ module.exports = function (req, res) {
   locals.formData = {}
 
   view.on('post', async function (next) {
-    const {
-      // eslint-disable-next-line camelcase
-      registration_dates, payment_method_nonce, first_name, last_name, partner_name, recaptcha_token,
-      email,
-      gender,
-      skillLevel,
-      comments
-    } = req.body
+    // eslint-disable-next-line camelcase
+    const { payment_method_nonce, recaptcha_token, first_name, last_name, email } = req.body
 
     try {
       const recaptchaResponse = await validateRecaptchaToken(recaptcha_token)
@@ -44,27 +37,22 @@ module.exports = function (req, res) {
       return next()
     }
 
-    // eslint-disable-next-line camelcase
-    if (!registration_dates) {
-      locals.err = 'Please pick at least one registration date'
-      return next()
-    }
-
-    let amount
-
-    const datesForForm = _.isArray(registration_dates) ? registration_dates.length : registration_dates.split(',').length
-
-    switch (datesForForm) {
-      case 1:
-        amount = 20
-        break
-      case 2:
-        amount = 30
-        break
+    const players = []
+    let teammate = {}
+    for (const key in req.body) {
+      if (key.indexOf('teammate') > -1) {
+        const prop = key.replace(/teammate_\d*_/g, '')
+        const value = req.body[key]
+        teammate[prop] = value
+        if (teammate.first_name && teammate.last_name && teammate.email) {
+          players.push(teammate)
+          teammate = {}
+        }
+      }
     }
 
     const purchase = {
-      amount: amount,
+      amount: 150,
       paymentMethodNonce: payment_method_nonce,
       options: {
         submitForSettlement: true
@@ -75,11 +63,8 @@ module.exports = function (req, res) {
         email: email
       },
       customFields: {
-        // eslint-disable-next-line camelcase
-        partner: partner_name || '',
-        gender: gender,
-        skill_level: skillLevel,
-        participation: registration_dates
+        player_names: players.map(p => `${p.first_name} ${p.last_name}`).join(', '),
+        player_emails: players.map(p => p.email).join(', ')
       }
     }
 
@@ -91,22 +76,20 @@ module.exports = function (req, res) {
         return next()
       }
 
-      // eslint-disable-next-line new-cap
-      const player = new HatterPlayer.model({
-        name: {
+      const modelParams = {
+        organizer_name: {
           first: first_name,
           last: last_name
         },
-        email: email,
+        organizer_email: email,
         // eslint-disable-next-line camelcase
-        partners: partner_name || '',
-        gender: gender,
-        skillLevel: skillLevel,
-        dates_registered: registration_dates,
-        comments: comments || ''
-      })
+        players: players
+      }
 
-      await player.save()
+      // eslint-disable-next-line new-cap
+      const tourneyTeam = new TournamentTeam.model(modelParams)
+
+      await tourneyTeam.save()
       res.redirect('/confirmation')
     } catch (err) {
       locals.err = err
@@ -116,5 +99,5 @@ module.exports = function (req, res) {
   })
 
   // Render the view
-  view.render('register')
+  view.render('register-team')
 }

@@ -68,6 +68,7 @@ module.exports = function (app) {
 
   if (keystone.get('isRegistrationPeriod')) {
     app.all('/register', routes.views.register)
+    app.all('/register-team', routes.views.registerTeams)
   }
 
   // Redirect old pages to homepage

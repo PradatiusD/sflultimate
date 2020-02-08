@@ -1,0 +1,119 @@
+extends ../layouts/default
+
+block head
+    meta(property="og:title" content="Register now for the SFL Ultimate Beach Series!")
+    meta(property="og:url" content="http://www.sflultimate.com/register")
+    meta(property="og:description" content="Sign up for the upcoming three beach hatters on Sat. Jan. 11th & Sat. February 1st")
+    meta(property="og:image" content="http://www.sflultimate.com/images/beach-ultimate-series-logo.jpg")
+    script(src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w")
+block content
+
+    .container.register: .row: .col-md-12
+
+        if err
+            br
+            .alert.alert-danger
+                strong Error:
+                span=err
+        br
+        br
+
+        p We are pumped to bring our first team beach ultimate tournament to South Florida.
+
+        p Join us on Saturday March 7th, 2020 at beautiful Crandon Park in Miami for a 4 on 4 beach tournament. We are looking for 6-8 teams of a maximum 10 person roster for a one day tournament or round robin.  Depending on the number of teams we will either play a round robin or bracket and play 4-5 games.  The on-field gender ratio is 2:2 but can be changed if both captains agree prior to each point.
+
+        p Tournament fee is $150 per team and we will provide standard tournament snacks (bagels, bananas, oranges, apples) and water. We will have at least 1 lined field and will try to cycle teams through so every team can play at least one game on the port-a-field. We will also have prizes for the winning team and most spirited team!
+
+        ul
+            li What: A 6-8 team 4 on 4 beach ultimate tournament. Maximum 10 person roster! Only 10! 10!
+            li Where: Crandon Park in Miami
+            li When: Saturday March 7th, 2020 from 10am - 4pm
+            li Why: Beach ultimate!
+
+        iframe(src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d6113.098253730179!2d-80.1582365!3d25.7097611!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b58c7ad31201%3A0x752d0a1cf45fb85a!2sCrandon%20Park!5e1!3m2!1sen!2sus!4v1581155351814!5m2!1sen!2sus" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen)
+
+
+        h3 Registration
+
+        form#registration(method="post" action="register-team" autocomplete="off")
+
+            .row
+                .col-md-6
+                    .form-group
+                        label(for='first_name') First Name
+                        input#first_name.input-lg.form-control(type='text' name='first_name' placeholder='' required)
+                .col-md-6
+                    .form-group
+                        label(for='last_name') Last Name
+                        input#last_name.input-lg.form-control(type='text' name='last_name' placeholder='' required)
+
+            .form-group
+                label(for='email') Email Address
+                input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
+
+            .form-group
+                label Comments
+                textarea(name="comments").form-control
+
+            .form-group
+                each _, i in Array(10)
+                    label(for='player_'+i)='Player # '+ (i+1)
+                    .row
+                        .col-md-4
+                            .form-group
+                                input.input-lg.form-control(type='text' id='teammate_'+i+'_first_name' name='teammate_'+i+'_first_name' placeholder='First Name')
+                        .col-md-4
+                            .form-group
+                                input.input-lg.form-control(type='text' id='teammate_'+i+'_last_name' name='teammate_'+i+'_last_name' placeholder='Last Name')
+                        .col-md-4
+                            .form-group
+                                input.input-lg.form-control(type='email' id='teammate_'+i+'_email' name='teammate_'+i+'_email' placeholder='Email Address')
+
+            h3 Waiver
+
+            .checkbox
+                label
+                    input(type='checkbox', name='terms_conditions' required)
+                    | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
+
+            h3 Payment Information
+
+            p You will be charged <strong id="total_cost">N/A, please pick a date</strong>.
+
+            .alert.alert-info
+                strong Please note:
+                | We will be allowing registrations the day of the event on-site but they will be $25.
+
+            input(id="recaptcha" name='recaptcha_token' type='hidden')
+
+            #payment-form
+
+            .text-center
+                button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submit-button') Submit
+
+    .modal.fade(tabindex='-1', role='dialog' id='waiver')
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') ×
+                    h4.modal-title Waiver
+                .modal-body
+                    p
+                        | 1. In consideration for receiving permission to participate in the South Florida Ultimate Spring League I hereby <strong>release, waive, discharge, and convenant not to sue</strong> South Florida Ultimate, their officers, agents, or employees (hereinafter referred to as <strong>releasees</strong>) from any and all liability, claims, demands, actions, and causes of action whatsoever arising out of or related to any loss, damage, or injury, including death, that may be sustained by me, or to any property belonging to me, while participating in such activity, while in, on or upon the premises where the activities are being conducted, <strong>regardless of whether such loss is caused by the negligence of the releasees</strong>, or otherwise and regardless of whether such liability arises in tort, contract, strict liability, or otherwise, to the fullest extent allowed by law.
+                    p
+                        | 2. I am fully aware of the risks and hazards connected with the activities of Ultimate, and I am aware that such activities include the risk of injury and even death, and I hereby elect to voluntarily participate in said activities, knowing that the activities may be hazardous to my property and me. I understand that South Florida Ultimate does not require me to participate in this activity. I voluntarily assume full responsibility for any risks of loss, property damage, or personal injury, including death, that may be sustained by me, or any loss or damage to property owned by me, as a result of being engaged in such an activities, <strong>whether caused by the negligence of releasees</strong> or otherwise, to the fullest extent allowed by law.
+                    p
+                        | 3. I further hereby <strong>agree to indemnify and hold harmless the releasees</strong> from any loss, liability, damage, or costs, including court costs and attorneys' fees that Releases may incur due to my participation in said activities, <strong>whether caused by the negligence of releasees</strong> or otherwise, to the fullest extent allowed by law.
+                    p
+                        | 4. It is my express intent that this Waiver and Hold Harmless Agreement shall bind the members of my family and spouse, if I am alive, and my heirs, assigns and personal representative, if I am deceased, and shall be deemed as a <strong>release, waiver, discharge, and covenant not to sue</strong> the above-named RELEASEES. I hereby further agree that this Waiver of Liability and Hold Harmless Agreement shall be construed in accordance with the laws of the State of Florida and that any mediation, suit, or other proceeding must be filed or entered into only in Florid and the federal or state courts of Maryland. Any portion of this document deemed unlawful or unenforceable is severable and shall be stricken without any effect on the enforceability of the remaining provisions.
+                    p
+                        | <strong>In completing this registration, I acknowledge and represent that</strong> I have read the foregoing Wavier of Liability and Hold Harmless Agreement, understand it and sign it voluntarily as my own free act and deed; no oral representations, statements, or inducements, apart from the foregoing written agreement, have been made; I am at least eighteen (18) years of age and fully competent; and I execute this Agreement for full, adequate and complete consideration fully intending to be bound by same.
+                .modal-footer
+                    button.btn.btn-primary(type='button', data-dismiss='modal') Close
+
+block js
+    script(src='https://js.braintreegateway.com/v2/braintree.js')
+    script.
+        var clientToken = "#{braintree_token}";
+    script(src='js/register-form.js')

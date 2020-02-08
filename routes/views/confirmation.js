@@ -1,22 +1,21 @@
-const keystone = require("keystone");
+const keystone = require('keystone')
+const url = require('url')
 
-module.exports = function(req, res) {
-  
-  const view = new keystone.View(req, res);
+module.exports = function (req, res) {
+  const view = new keystone.View(req, res)
 
-  const referer = req.headers.referer;
+  const { referer } = req.headers
 
   if (!referer) {
-    return view.render("errors/500");    
+    return view.render('errors/500')
   }
 
-  // Validate if last 7 characters of HTTP referrer are /register
-  const last7referrerChars = referer.substring(referer.length - "/register".length, referer.length);
-  const referedFromRegistration = last7referrerChars === "/register";
+  const parsedURL = new url.URL(referer)
+  const validPathNames = ['/register-team', '/register']
 
-  if (referedFromRegistration) {
-    view.render("confirmation");    
+  if (validPathNames.indexOf(parsedURL.pathname) > -1) {
+    view.render('confirmation')
   } else {
-    view.render("errors/500");
+    view.render('errors/500')
   }
-};
+}
