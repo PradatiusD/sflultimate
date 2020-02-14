@@ -2,7 +2,7 @@ extends ../layouts/default
 
 block head
   meta(property="og:title"        content="League Teams")
-  meta(property="og:url"          content="http://www.sflultimate.com/teams")
+  meta(property="og:url"          content="https://www.sflultimate.com/teams")
   meta(property="og:description"  content="Find out who is on your team for Spring League.")
 
 block content
@@ -10,11 +10,11 @@ block content
     h1 Spring League Teams
     section.team-list(ng-controller='TeamListController' ng-init='getTeamsAndPlayers()')
       article.col-md-6.col-lg-4(ng-repeat='team in teams')
-        h3 
-          span(ng-class='team.color.toLowerCase()').team-color 
+        h3
+          span(ng-class='team.color.toLowerCase()').team-color
           | {{team.color}}
         p.lead
-          span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}} 
+          span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}}
           br
           small.text-muted {{team.womenTotal}} ladies, {{team.menTotal}} dudes
         table.table.table-striped.table-bordered

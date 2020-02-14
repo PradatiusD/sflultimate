@@ -2,9 +2,9 @@ extends ../layouts/default
 
 block head
   meta(property="og:title"        content="Local Broward/Dade Pickups")
-  meta(property="og:url"          content="http://www.sflultimate.com/pickup")
+  meta(property="og:url"          content="https://www.sflultimate.com/pickup")
   meta(property="og:description"  content="Learn about the local days, times, and locations for ultimate frisbee pickup near you!")
-  meta(property="og:image"        content="http://www.sflultimate.com/images/dave-catching-face.jpg")
+  meta(property="og:image"        content="https://www.sflultimate.com/images/dave-catching-face.jpg")
 
 block content
   .container(ng-app='CommunityApp')
@@ -20,7 +20,7 @@ block content
         .row
           div.col-sm-8
             h3
-              | {{game.title}} 
+              | {{game.title}}
               span.badge {{game.location.type}}
               br
               small {{game.day}} at {{game.time}}
@@ -31,7 +31,7 @@ block content
               strong {{game.location.name}}<br>
               | {{game.location.address.street}}<br>
               | {{game.location.address.city}}, {{game.location.address.state}}, {{game.location.address.zipCode}}<br>
-            
+
             .btn-group
               a.btn.btn-sm.btn-default(ng-if="game.contact.url" ng-href="{{game.contact.url}}" target="_blank") View Website
               a.btn.btn-sm.btn-default(ng-if="game.contact.email" ng-href="mailto:{{game.contact.email}}" target="_blank") Send Email

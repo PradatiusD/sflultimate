@@ -2,7 +2,7 @@ extends ../layouts/default
 
 block head
   meta(property="og:title"        content="League Stats")
-  meta(property="og:url"          content="http://www.sflultimate.com/stats")
+  meta(property="og:url"          content="https://www.sflultimate.com/stats")
   meta(property="og:description"  content="Find out who is making big plays for this year's Fall League.")
 
 block content
@@ -13,7 +13,7 @@ block content
       if (false)
         .alert.alert-info
           i.fa.fa-info-circle
-          strong  Incomplete Stats: 
+          strong  Incomplete Stats:
           span We still are missing stats from: All Teams on Week 2, and Blue on Week 3.
 
       h2 Leaderboard
@@ -32,7 +32,7 @@ block content
           tr(ng-repeat="player in leaderboard | orderBy:'-Overall'" ng-if="player['Player ID']")
             td {{$index + 1}}
             td
-              span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
+              span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;")
             td {{player["First Name"]}}
             td {{player["Last Name"]}}
             td.
@@ -66,7 +66,7 @@ block content
           tr(ng-repeat="player in contenders | orderBy:'-Overall'" ng-if="player['Player ID']")
             td {{$index + leaderboard.length + 1}}
             td
-              span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;") 
+              span.team-color(ng-class="player['Team Color'].toLowerCase()" style="opacity: 0.5; margin-left: 1em;")
             td {{player["First Name"]}}
             td {{player["Last Name"]}}
             td.

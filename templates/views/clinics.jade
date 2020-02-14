@@ -2,11 +2,11 @@ extends ../layouts/default
 
 block head
     meta(property="og:title"        content="Host a Frisbee Clinics")
-    meta(property="og:url"          content="http://www.sflultimate.com/clinics")
+    meta(property="og:url"          content="https://www.sflultimate.com/clinics")
     meta(property="og:description"  content="Discover a way to host a ultimate frisbee clinic at your organization!")
-    
+
     style.
-        
+
         img.parallax-image {
             max-width: 100%;
             width: 100%;
@@ -16,13 +16,13 @@ block head
         .simpleParallax {
             height: 500px;
         }
-        
+
         .ultimate-soul-logo-container {
             background: #f3f3f3;
             border-top: 23px solid #8cdefa;
             border-bottom: 23px solid #8cdefa;
         }
-        
+
         .ultimate-soul-logo {
             max-width: 300px;
             height: auto;
@@ -30,7 +30,7 @@ block head
             display: block;
             margin: 0 auto;
         }
-        
+
         .team-image {
             max-width: 100%;
             height: auto;
@@ -39,14 +39,14 @@ block head
         .site-footer {
             margin-top: 0;
         }
-        
+
         h1, .h1 {
             text-align: center;
             font-family: 'Roboto', sans-serif;
             font-weight: 200;
             color: #000172;
         }
-        
+
         .btn.btn-large {
             padding: 0.5em 1.25em;
             font-size: 20px;
@@ -55,11 +55,11 @@ block head
             margin: 0 auto;
             display: inline-block;
         }
-        
+
         .last-div {
             margin-bottom: 30px;
         }
-        
+
         .information {
             font-size: 20px;
             line-height: 1.618;
@@ -100,16 +100,16 @@ block head
             line-height: 1;
             font-family: 'Roboto Condensed', 'Roboto', sans-serif;
         }
-        
+
         .things-we-teach {
             color: #5872d2;
             border-left: #8092fa 10px solid;
             padding-left: 20px;
             margin-left: 40px;
         }
-        
+
 block content
-    
+
     img(class='parallax-image' src='/images/ultimate-soul/smiles.jpg')
 
     .container.text-center
@@ -117,13 +117,13 @@ block content
         img(src='/images/ultimate-soul/ultimate-soul-logo.png' class='ultimate-soul-logo')
 
         h1 Join the New Sports Academy
-        
+
         p.lead We are world-level Ultimate players with different professional backgrounds and one mission: to establish sports as an universal right that fosters positive values.
 
         a.btn.btn-primary.btn-large(href='https://ultimate-soul.com/indexENG.html#academy' target='_blank') Learn More
-        
+
         hr
-        
+
     .container-fluid
         .row
             .col-md-4
@@ -145,20 +145,20 @@ block content
                     h4 Communication
                     p We use the self-officiation as practice to resolve conflict
 
-    .information                
+    .information
         .container
             .row.about-ultimate
                 .col-md-7
-                    p As a USA nonprofit, we collaborate with South Florida Ultimate to promote the sport of Ultimate Frisbee and establishing atlethism programs, except we specifically focus on sports psychology. 
-                    p We are leading the first youth Ultimate program in South Florida that includes children with psychiatric diagnosis such as: 
+                    p As a USA nonprofit, we collaborate with South Florida Ultimate to promote the sport of Ultimate Frisbee and establishing atlethism programs, except we specifically focus on sports psychology.
+                    p We are leading the first youth Ultimate program in South Florida that includes children with psychiatric diagnosis such as:
                     ul
                         li Attention Deficit/Hyperactivity Disorder
                         li Oppositional Defiant Disorder
                         li Depression
-                    p As part of our Ultimate promotion projects, we have sponsored South Florida Ultimate tournaments and we have developed clinics for religious nonprofits in order to promote the sport and its values. 
+                    p As part of our Ultimate promotion projects, we have sponsored South Florida Ultimate tournaments and we have developed clinics for religious nonprofits in order to promote the sport and its values.
                     p Ultimate Soul, inc is also managing the organizational development of FIRE Ultimate Miami, a worldwide recognized team that was originated in Colombia and has now started its new team formation in Florida with our support.
                 .col-md-5
-                    h3.h1. 
+                    h3.h1.
                         About<br/>
                         Ultimate<br/>
                         Soul
@@ -168,12 +168,12 @@ block content
         p.lead We are currently taking in the next set of kids excited to play this new sport!
         a.btn.btn-primary.btn-large(href='https://ultimate-soul.com/indexENG.html#academy' target='_blank') Learn More
 
-    
+
     img(class='team-image' src='/images/ultimate-soul/team.jpg')
 
     script(src="https://cdn.jsdelivr.net/npm/simple-parallax-js@5.0.2/dist/simpleParallax.min.js")
     script.
         (function () {
             var image = document.getElementsByClassName('parallax-image');
-            new simpleParallax(image);            
+            new simpleParallax(image);
         })();

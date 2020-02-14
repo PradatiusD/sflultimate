@@ -2,15 +2,15 @@ extends ../layouts/default
 
 block head
     meta(property="og:title"        content="South Florida Club Teams")
-    meta(property="og:url"          content="http://www.sflultimate.com/club-teams")
+    meta(property="og:url"          content="https://www.sflultimate.com/club-teams")
     meta(property="og:description"  content="See what teams are local to the South Florida area!")
 
 block content
     .container
         h1 Club Teams
         p.lead South Florida has several local club teams that compete at a state and national level.
-        
-        
+
+
         for team in clubTeams
             .row
                 .col-sm-3.text-center
