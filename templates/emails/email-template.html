@@ -1,5 +1,5 @@
-<!-- Special Message & Beach Hatter Tomorrow: PLEASE READ -->
-
+<!-- Special Message & Beach Tourney Tomorrow: PLEASE READ & Share -->
+<!--file:///Users/dprada/GitHub/sflultimate/templates/emails/email-template.html -->
 <div>
   <img src="https://www.sflultimate.com/images/south-florida-2020-final-optimized.png" alt="" style="max-width: 300px; height: auto; display: block; margin: 0 auto;">
 
@@ -10,20 +10,65 @@
 
     <p>Hey Beach Players!</p>
 
-    <p>Thank you for registering for our Sunday beach hatter happening tomorrow. It's shaping up to look like a beautiful day with a high of 69, no precipitation, and 13 mph of wind. We are looking at 30+ people tomorrow!</p>
+    <p>Thank you for registering for our final tourney tomorrow. It's shaping up to look like a beautiful day with some clouds, no precipitation, and a welcoming 20 mph wind. 5 teams have signed up for tomorrow!</p>
 
     <p>Should you have any issues or questions feel free to call Daniel Prada (me) at 954-990-9846.</p>
 
-    <p>Here are some quick reminders for our hatter tomorrow:</p>
+    <p><strong>Locations</strong>: Note we are are <u>Crandon Park</u>, use the pins to get to the right spot.</p>
 
     <ul>
-      <li>Games start at 10am sharp tomorrow.  We will aim to finish on time so everyone has enough time to make Super Bowl plans.</li>
+      <li>Parking: <a href="https://maps.app.goo.gl/EnFWanpPdRNPt96V7" target="_blank">Crandon Parking lot # 3</a></li>
+      <li>Field: <a href="https://maps.app.goo.gl/JVmeHT5vz4ZuB5SV8" target="_blank">Crandon Beach Waterfront</a></li>
+      <li>After Party: <a href="https://goo.gl/maps/mk77eAcXC3BHopsr7" target="_blank">Whiskey Joe's - Miami</a></li>
+    </ul>
+
+    <p><strong>Schedule</strong>:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>10am</th>
+          <th>11am</th>
+          <th>12pm</th>
+          <th>1pm</th>
+          <th>2pm</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Field 1</td>
+        <td>Nova vs. Party Wave</td>
+        <td>Corona del Mar vs. Suns of a Beach</td>
+        <td>Nova vs. Corona del Mar</td>
+        <td>Nova vs Suns of a Beach</td>
+        <td>Party Wave vs Corona del Mar</td>
+      </tr>
+      <tr>
+        <td>Field 2</td>
+        <td>Suns of a Beach vs High Manateeance</td>
+        <td>High Manateeance vs. Party Wave</td>
+        <td>Pary Wave vs. Suns of a Beach</td>
+        <td>Corona del Mar vs. High Manateeance</td>
+        <td>Nova vs. High Manateeance</td>
+      </tr>
+      <tr>
+        <td>Bye</td>
+        <td>Corona del Mar</td>
+        <td>Nova</td>
+        <td>High Manateenence</td>
+        <td>Party Wave</td>
+        <td>Suns of a Beach</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <p>Here are some quick reminders for our tourney tomorrow:</p>
+
+    <ul>
+      <li><strong>There will be prizes for the winners among others</strong>, exciting!</li>
       <li>Bring a white and dark jersey.</li>
-      <li>We do not have any deals or sponsorship with Hugh Taylor Birch State Park. Please do not ask for free parking. We suggest parking there as it is the most affordable option. Support Florida State Parks!</li>
-      <li>Please do not ask Park and Ocean to fill your ice coolers or store your gear. We are grateful to have Park and Ocean host us, please respect their wishes so we can have more events here in the future. There is a 7-11 across the street from the park entrance on Sunrise Blvd that is a good option for ice before you arrive.</li>
-      <li>After party is at Park and Ocean. All players get a 10% discount on food and bev!</li>
-      <li>Plan on playing (3) 60 minute games with breaks in between.</li>
-      <li>If anyone has extra cones, I would appreciate it!</li>
+      <li>Plan on playing (4) 45 minute games with breaks in between.</li>
+      <li>There will be some sweet merchandise coming in hot, so be sure to check it out before all your friends take them.</li>
     </ul>
 
     <p>In addition, we highly recommend that you follow us on Instagram for photos & videos of tomorrow's games, as we are excited to play some ultimate.</p>
@@ -43,31 +88,50 @@
 
 <script>
 
-  var $p  = document.getElementsByTagName('p');
+  var $p = document.getElementsByTagName('p');
   var $li = document.getElementsByTagName('li');
+  var $td = document.getElementsByTagName('td');
 
-  console.log($li);
-
-  var styles = {
+  const globalStyles = {
     fontFamily:"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
     fontSize: "18px",
     lineHeight: "25px",
     color: "#333"
   };
 
-
-  for (var i = 0; i < $p.length; i++) {
-    for (var style in styles) {
-      $p[i].style[style] = styles[style];
+  const itemStyles = {
+    'th': {
+      border: '1px solid black',
+      'border-collapse': 'collapse'
+    },
+    'table': {
+      border: '1px solid black',
+      'border-collapse': 'collapse'
+    },
+    'td': {
+      border: '1px solid black',
+      'border-collapse': 'collapse',
+      padding: '10px'
     }
   }
 
-  for (var i = 0; i < $li.length; i++) {
-    for (var style in styles) {
-      $li[i].style[style] = styles[style];
+  function applyStyles (tag) {
+    var $elem = document.getElementsByTagName(tag)
+    for (var i = 0; i < $elem.length; i++) {
+      for (var style in globalStyles) {
+        $elem[i].style[style] = globalStyles[style];
+      }
+      if (itemStyles[tag]) {
+        for (var style in itemStyles[tag]) {
+          $elem[i].style[style] = itemStyles[tag][style];
+        }
+      }
     }
   }
 
+  for (const $elem of ['p', 'li','td', 'th', 'table','td']) {
+    applyStyles($elem)
+  }
 </script>
 
 
