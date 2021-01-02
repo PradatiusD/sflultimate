@@ -9,13 +9,13 @@ From a front-end perspective, this project utilizes Bootstrap 3 and SCSS as a CS
 ## Dependencies 
 
 You will need:
-- `git` : For collaborative software development
-- `node` : For running the application ([v6.10.3](https://nodejs.org/en/blog/release/v6.10.3/) recommended)
-- `mongo` : database
-- `grunt` : For task automation
-- `heroku toolbelt` : For Heroku deployment 
+- `git`: For collaborative software development
+- `node`: For running the application ([v6.10.3](https://nodejs.org/en/blog/release/v6.10.3/) recommended)
+- `mongo`: database
+- `grunt`: For task automation
+- `heroku toolbelt`: For Heroku deployment 
 
-Additionally you will require to install:
+Additionally, you will need to install:
 - [JSHint](http://jshint.com/install/): Javascript lint tool.
 - [Nodemon](https://github.com/remy/nodemon): Tool to restarting the application on a server side file change (while in development mode only)
 - [Sass](http://sass-lang.com/install): Tool to convert scss and sass files into css files.
@@ -35,6 +35,23 @@ On running `grunt serve` successfully the application will now be able to be use
 - [http://localhost:5000](http://localhost:5000)
 
 > **Note**: You will need a separate `.env` file to be placed inside the project root directory for it to run successfully.  Contact the administrator to receive its contents. Additionally, to populate your database you will need the player data.
+
+It will need to contain something like the following values:
+
+```
+BRAINTREE_ENV=
+BRAINTREE_MERCHANT_ID=
+BRAINTREE_PRIVATE_KEY=
+BRAINTREE_PUBLIC_KEY=
+CLOUDINARY_URL=
+COOKIE_SECRET=
+KEYSTONE_PASSWORD=
+MANDRILL_API_KEY=
+MONGOLAB_URI=
+DATABASE_DUMP_COMMAND=
+RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
+```
 
 
 ## Keystone Links
@@ -58,7 +75,7 @@ To view the example schemas view [here](./models/Example-Schemas.md).
 
 ```bash
 mongodump --host=127.0.0.1 --db sflultimate
-mongorestore -h ds039165.mongolab.com:39165 -d heroku_8xfcj7cs  -u <user> -p <password> dump/sflultimate
+mongorestore  --uri "mongodb+srv://cluster0.kdjru.mongodb.net/sflultimate"  -u <user> -p <password> dump/sflultimate
 ```
 
 ## Importing Remote DB
