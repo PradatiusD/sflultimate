@@ -20,7 +20,7 @@
     "request": "^2.88.0",
     "sass-mediaqueries": "^1.6.1",
     "superagent": "^4.0.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "eslint-config-standard": "^14.1.0",
