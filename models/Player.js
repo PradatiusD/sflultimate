@@ -1,23 +1,23 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
 /**
  * Player Model
  * ==============
  */
 
-var Player = new keystone.List('Player');
+var Player = new keystone.List('Player')
 
 var fields = {
-  name: { 
-    type: Types.Name, 
+  name: {
+    type: Types.Name,
     initial: true,
-    required: true, 
-    index: true 
+    required: true,
+    index: true
   },
   gender: {
     type: Types.Select,
-    options: ['Male','Female'],
+    options: ['Male', 'Female'],
     initial: true
   },
   email: {
@@ -38,19 +38,19 @@ var fields = {
   },
   skillLevel: {
     type: Types.Select,
-    options: [1,2,3,4,5,6,7,8,9],
+    options: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     initial: true,
     required: true
   },
   participation: {
     type: Types.Select,
-    options: [30,50,80],
+    options: [30, 50, 80],
     initial: true,
     required: true
   },
   ageGroup: {
     type: Types.Select,
-    options: ['Student','Adult'],
+    options: ['Student', 'Adult'],
     initial: true,
     required: true
   },
@@ -62,25 +62,24 @@ var fields = {
     type: Types.Relationship,
     ref: 'Player'
   }
-};
+}
 
 Player.add(fields, 'Permissions', {
-  isAdmin: { 
+  isAdmin: {
     type: Boolean,
     label: 'Can access Keystone',
     index: true
   }
-});
+})
 
 // Provide access to Keystone
-Player.schema.virtual('canAccessKeystone').get(function() {
-  return this.isAdmin;
-});
-
+Player.schema.virtual('canAccessKeystone').get(function () {
+  return this.isAdmin
+})
 
 /**
  * Registration
  */
 
-Player.defaultColumns = 'name, email, isAdmin, registered';
-Player.register();
+Player.defaultColumns = 'name, email, isAdmin, registered'
+Player.register()

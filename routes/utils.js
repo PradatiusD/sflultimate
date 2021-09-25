@@ -73,7 +73,7 @@ class PaymentUtils {
 
     locals.section = 'register'
     locals.formData = {}
-}
+  }
 }
 
 module.exports = new PaymentUtils()

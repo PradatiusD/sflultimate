@@ -7,7 +7,7 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt)
 
-  var options = {
+  const options = {
     config: {
       src: './grunt/*.js'
     },
@@ -29,9 +29,9 @@ module.exports = function (grunt) {
         ].join(' && ')
       }
     }
-  }
+  };
 
-  var configs = require('load-grunt-configs')(grunt, options)
+  const configs = require('load-grunt-configs')(grunt, options);
 
   // Project configuration.
   grunt.initConfig(configs)

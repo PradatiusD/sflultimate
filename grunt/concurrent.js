@@ -1,8 +1,8 @@
 module.exports = {
-	dev: {
-		tasks: ['nodemon', 'watch'],
-		options: {
-			logConcurrentOutput: true
-		}
-	}
-};
+  dev: {
+    tasks: ['nodemon', 'watch'],
+    options: {
+      logConcurrentOutput: true
+    }
+  }
+}

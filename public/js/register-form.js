@@ -11,10 +11,10 @@ braintree.setup(clientToken, 'dropin', {
 })(jQuery);
 
 (function ($) {
-  var registrationCheckboxes = $('#registration_dates input')
+  const registrationCheckboxes = $('#registration_dates input')
 
   registrationCheckboxes.change(function () {
-    var datesPicked = 0
+    let datesPicked = 0
 
     registrationCheckboxes.each(function () {
       if ($(this).is(':checked')) {
@@ -22,7 +22,7 @@ braintree.setup(clientToken, 'dropin', {
       }
     })
 
-    var $totalCost = $('#total_cost')
+    const $totalCost = $('#total_cost')
 
     switch (datesPicked) {
       case 0:

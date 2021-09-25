@@ -1,5 +1,5 @@
-var keystone = require('keystone');
-var Types = keystone.Field.Types;
+var keystone = require('keystone')
+var Types = keystone.Field.Types
 
 /**
  * League Model
@@ -7,23 +7,23 @@ var Types = keystone.Field.Types;
  */
 
 var League = new keystone.List('League', {
-	map:{
-		name: 'title'
-	}
-});
+  map: {
+    name: 'title'
+  }
+})
 
 League.add({
-  title: { 
-    type: String, 
-    initial:  true,
-    required: true, 
-    index:    true
+  title: {
+    type: String,
+    initial: true,
+    required: true,
+    index: true
   },
   isActive: {
     type: Types.Boolean,
     default: false
   }
-});
+})
 
-League.defaultColumns = 'title, isActive';
-League.register();
+League.defaultColumns = 'title, isActive'
+League.register()

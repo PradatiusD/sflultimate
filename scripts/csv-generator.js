@@ -1,7 +1,6 @@
 // mongo --quiet sflultimate scripts/csv-generator.js > scripts/players.csv
 
-db.players.find({registered: true}).forEach(function (p) {
-
+db.players.find({ registered: true }).forEach(function (p) {
   var row = [
     p._id.valueOf(),
     p.name.first,
@@ -9,20 +8,19 @@ db.players.find({registered: true}).forEach(function (p) {
     p.skillLevel,
     p.participation,
     p.gender,
-    p.partner ? p.partner.valueOf(): "",
-  ];
+    p.partner ? p.partner.valueOf() : ''
+  ]
 
   try {
-    row.push(p.partner ? db.players.find({_id: ObjectId( p.partner.valueOf()), partner: ObjectId(p._id.valueOf())}).next().name.first : "")
-    row.push(p.partner ? db.players.find({_id: ObjectId( p.partner.valueOf()), partner: ObjectId(p._id.valueOf())}).next().name.last  : "")
-  }
-  catch (e) {
-    row.push("")
-    row.push("")
+    row.push(p.partner ? db.players.find({ _id: ObjectId(p.partner.valueOf()), partner: ObjectId(p._id.valueOf()) }).next().name.first : '')
+    row.push(p.partner ? db.players.find({ _id: ObjectId(p.partner.valueOf()), partner: ObjectId(p._id.valueOf()) }).next().name.last : '')
+  } catch (e) {
+    row.push('')
+    row.push('')
   }
 
-  print(row.join(","));
-});
+  print(row.join(','))
+})
 
 // {
 //   "_id" : ObjectId("57f181cdea07fc03008b611d"),
