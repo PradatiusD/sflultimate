@@ -66,10 +66,12 @@ module.exports = function (app) {
     })
   })
 
-  if (keystone.get('isRegistrationPeriod')) {
-    app.all('/register', routes.views.register)
-    app.all('/register-team', routes.views.registerTeams)
-  }
+  // const regPeriod = keystone.get('isRegistrationPeriod').mode
+  // if (regPeriod === 'league') {
+  app.all('/register', routes.views.register)
+  // } else if (regPeriod === 'tournament') {
+  //   app.all('/register-team', routes.views.registerTeams)
+  // }
 
   // Redirect old pages to homepage
   const oldSitePages = [

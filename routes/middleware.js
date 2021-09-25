@@ -26,9 +26,9 @@ exports.initLocals = function (req, res, next) {
     { label: 'Home', key: 'home', href: '/' }
   ]
 
-  if (keystone.get('isRegistrationPeriod')) {
-    locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
-  }
+  // if (keystone.get('isRegistrationPeriod')) {
+  //   locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
+  // }
   // else {
   // locals.navLinks = locals.navLinks.concat([
   //   {label: 'Teams',     key: 'teams',     href: '/teams'},
@@ -60,7 +60,7 @@ exports.initLocals = function (req, res, next) {
  */
 
 exports.flashMessages = function (req, res, next) {
-  var flashMessages = {
+  const flashMessages = {
     info: req.flash('info'),
     success: req.flash('success'),
     warning: req.flash('warning'),
