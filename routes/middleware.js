@@ -27,7 +27,7 @@ exports.initLocals = function (req, res, next) {
   ]
 
   if (keystone.get('isRegistrationPeriod')) {
-    locals.navLinks.push({ label: 'Register for Beach Series Team Tourney', key: 'register-team', href: '/register-team' })
+    locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
   }
   // else {
   // locals.navLinks = locals.navLinks.concat([

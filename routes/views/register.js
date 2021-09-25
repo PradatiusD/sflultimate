@@ -1,27 +1,12 @@
 const keystone = require('keystone')
 const HatterPlayer = keystone.list('HatterPlayer')
 const _ = require('underscore')
-const { validateRecaptchaToken, generateGatewayClientToken, createSale } = require('./../utils')
+const { validateRecaptchaToken, setBaseRegistrationLocals, createSale} = require('./../utils')
 
 module.exports = function (req, res) {
   const view = new keystone.View(req, res)
   const locals = res.locals
-
-  /*
-   * Get Braintree Token
-   * ----------------------
-   */
-  view.on('init', async function (next) {
-    try {
-      locals.braintree_token = await generateGatewayClientToken()
-    } catch (err) {
-      locals.err = 'We are having issues connecting to our payment gateway, please wait and try again later.'
-    }
-    next()
-  })
-
-  locals.section = 'register'
-  locals.formData = {}
+  setBaseRegistrationLocals(view, res)
 
   view.on('post', async function (next) {
     const {

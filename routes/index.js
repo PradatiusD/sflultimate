@@ -72,7 +72,7 @@ module.exports = function (app) {
   }
 
   // Redirect old pages to homepage
-  app.get([
+  const oldSitePages = [
     '/sched.html',
     '/teams.html',
     '/about.html',
@@ -84,7 +84,8 @@ module.exports = function (app) {
     '/register.html',
     '/bio.asp',
     '/images/n-logo.png'
-  ], function (req, res) {
+  ]
+  app.get(oldSitePages, function (req, res) {
     res.redirect(301, '/')
   })
 

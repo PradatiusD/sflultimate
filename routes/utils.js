@@ -59,6 +59,21 @@ class PaymentUtils {
       })
     })
   }
+
+  setBaseRegistrationLocals (view, res) {
+    const locals = res.locals
+    view.on('init', async (next) => {
+      try {
+        locals.braintree_token = await this.generateGatewayClientToken()
+      } catch (err) {
+        locals.err = 'We are having issues connecting to our payment gateway, please wait and try again later.'
+      }
+      next()
+    })
+
+    locals.section = 'register'
+    locals.formData = {}
+}
 }
 
 module.exports = new PaymentUtils()
