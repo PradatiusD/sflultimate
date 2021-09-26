@@ -1,7 +1,7 @@
-var keystone = require('keystone')
-var Team = keystone.list('Team')
-var Player = keystone.list('Player')
-var League = keystone.list('League')
+const keystone = require('keystone')
+const Team = keystone.list('Team')
+const Player = keystone.list('Player')
+const League = keystone.list('League')
 
 module.exports = function (req, res) {
   // If not json render HTML page
@@ -9,11 +9,11 @@ module.exports = function (req, res) {
     return res.render('teams')
   }
 
-  var leagueQuery = League.model.findOne().where('isActive', true)
+  const leagueQuery = League.model.findOne().where('isActive', true)
 
   leagueQuery.exec(function (err, league) {
-    var playerQuery = Player.model.find().where('registered', true)
-    var teamQuery = Team.model.find().where('league', league._id)
+    const playerQuery = Player.model.find().where('registered', true)
+    const teamQuery = Team.model.find().where('league', league._id)
 
     teamQuery.exec(function (err, teams) {
       playerQuery.exec(function (err, players) {

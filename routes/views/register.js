@@ -1,5 +1,6 @@
 const keystone = require('keystone')
-const HatterPlayer = keystone.list('HatterPlayer')
+const Player = keystone.list('Player')
+const League = keystone.list('League')
 const _ = require('underscore')
 const { validateRecaptchaToken, setBaseRegistrationLocals, createSale } = require('./../utils')
 
@@ -8,8 +9,10 @@ module.exports = function (req, res) {
   const locals = res.locals
   setBaseRegistrationLocals(view, res)
 
-  view.on('get', function (next) {
+  view.on('get', async function (next) {
     if (req.query.preview === 'true') {
+      locals.league = await League.model.findOne({ isActive: true }).lean().exec()
+      console.log(locals)
       return next()
     }
     res.sendStatus(404)
@@ -84,7 +87,7 @@ module.exports = function (req, res) {
       }
 
       // eslint-disable-next-line new-cap
-      const player = new HatterPlayer.model({
+      const player = new Player.model({
         name: {
           first: first_name,
           last: last_name

@@ -24,14 +24,14 @@ module.exports = function (grunt) {
       mongorestore: {
         command: [
           process.env.DATABASE_DUMP_COMMAND,
-          'mongo sflultimate  -uroot -ppassword --authenticationDatabase=admin --eval \'printjson(db.dropDatabase())\'',
-          'mongorestore -uroot -ppassword --authenticationDatabase=admin --noIndexRestore -d sflultimate dump/heroku_8xfcj7cs/'
+          'mongo sflultimate --eval \'printjson(db.dropDatabase())\'',
+          'mongorestore --noIndexRestore -d sflultimate dump/sflultimate/'
         ].join(' && ')
       }
     }
-  };
+  }
 
-  const configs = require('load-grunt-configs')(grunt, options);
+  const configs = require('load-grunt-configs')(grunt, options)
 
   // Project configuration.
   grunt.initConfig(configs)
