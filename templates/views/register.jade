@@ -53,12 +53,14 @@ block content
             .form-group
                 label(for='email') Email Address
                 input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
+                p.help-block We send updates and league information through the email you provide here
 
             .form-group
                 label(for="gender") Gender
                 select#gender.input-lg.form-control(name="gender")
                     option(value='Female') Female
                     option(value='Male') Male
+                p.help-block We use this information to draft teams that have even gender distributions
             
             .form-group
                 label(for="skill_level") Skill Level
@@ -72,22 +74,39 @@ block content
                         option(value='7') 7 - Tourney experience. Several years of club
                         option(value='8') 8 - Club level, solid all around, not prone to errors
                         option(value='9') 9 - Rock star. spot on throws, awesome D
+                p.help-block Please express this accurately as it helps captains balance skill-level across teams
 
             .form-group
                 label(for='partner_name') Partner Name
                 input#partner_name.input-lg.form-control(type='text' name='partner_name' placeholder='')
+                p.help-block Type the name of the person you would like to partner with
 
 
             .form-group
                 label Comments
                 textarea(name="comments").form-control
+                p.help-block Type here any additional comments you may have
+            
+            .form-group
+                label(for="captain_preference") Would you like to be a captain?
+                select#captain_preference.input-lg.form-control(name="captain_preference")
+                    option(value='No') No
+                    option(value='Yes') Yes
+            
+            p.help-block Captains can draft their teams and are responsible for communicating benefits.
 
             h3 Waiver
-
             .checkbox
                 label
                     input(type='checkbox', name='terms_conditions' required)
                     | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
+                
+            h3 COVID-19
+            .checkbox
+                label
+                    input(type='checkbox', name='covid_19_no_risk' required)
+                    | If I have tested positive for COVID-19, am waiting for COVID-19 test results, or am showing COVID-19 symptoms, or had close contact with a person who has tested positive for or who has symptoms of COVID-19, <strong>I will not attend any games until I have received a negative COVID-19 test</strong>.
+
 
             h3 Payment Information
             input(id="recaptcha" name='recaptcha_token' type='hidden')
