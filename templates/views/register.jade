@@ -63,13 +63,9 @@ block content
                 p.help-block We use this information to draft teams that have even gender distributions
 
             .form-group
-                label(for="ageGroup") Age Group
-                select#ageGroup.input-lg.form-control(name="ageGroup")
-                    option(value='0-12') 12 and under
-                    option(value='13-15') 13-15
-                    option(value='16-19') 16-19
-                    option(value='20-100') 20+
-                p.help-block Our insurance policy requires us to know how many
+                label(for="age") Age (In Years)
+                input#age.input-lg.form-control(type='number' name='age' required)
+                p.help-block Our insurance policy requires us to let them how many people of certain ages exist in the league
                 
             .form-group
                 label(for="skillLevel") Skill Level
@@ -117,8 +113,8 @@ block content
                 p.help-block Type here any additional comments you may have
             
             .form-group
-                label(for="captainPreference") Would you like to be a captain?
-                select#captainPreference.input-lg.form-control(name="captainPreference")
+                label(for="wouldCaptain") Would you like to be a captain?
+                select#wouldCaptain.input-lg.form-control(name="wouldCaptain")
                     option(value='No') No
                     option(value='Yes') Yes
             

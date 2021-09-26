@@ -25,6 +25,9 @@ module.exports = async function (req, res) {
       gender,
       lastName,
       participation,
+      age,
+      ageGroup,
+      wouldCaptain,
       partnerName,
       registrationLevel,
       recaptchaToken,
@@ -79,6 +82,9 @@ module.exports = async function (req, res) {
       }
 
       const player = new PlayerModel({
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        age,
         name: {
           first: firstName,
           last: lastName
@@ -86,11 +92,16 @@ module.exports = async function (req, res) {
         email,
         partners: partnerName,
         password: uuid.v4(),
+        leagues: [
+          locals.league._id
+        ],
         gender,
         skillLevel,
         comments,
         shirtSize,
         participation,
+        partnerName,
+        wouldCaptain,
         registrationLevel
       })
 

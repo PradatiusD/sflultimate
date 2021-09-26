@@ -9,6 +9,16 @@ const Types = keystone.Field.Types
 const Player = new keystone.List('Player')
 
 const fields = {
+  createdAt: {
+    type: Types.Date,
+    initial: true,
+    required: true
+  },
+  updatedAt: {
+    type: Types.Date,
+    initial: true,
+    required: true
+  },
   name: {
     type: Types.Name,
     initial: true,
@@ -19,6 +29,11 @@ const fields = {
     type: Types.Select,
     options: ['Male', 'Female'],
     initial: true
+  },
+  age: {
+    type: Number,
+    initial: true,
+    required: true
   },
   email: {
     type: Types.Email,
@@ -54,13 +69,25 @@ const fields = {
     initial: true,
     required: true
   },
-  registered: {
-    type: Types.Boolean,
-    default: false
-  },
-  partner: {
+  leagues: {
     type: Types.Relationship,
-    ref: 'Player'
+    ref: 'League',
+    many: true
+  },
+  partnerName: {
+    type: String,
+    initial: true,
+    required: false
+  },
+  wouldCaptain: {
+    type: Boolean,
+    initial: true,
+    required: false
+  },
+  comments: {
+    type: String,
+    initial: true,
+    required: false
   }
 }
 
@@ -81,5 +108,5 @@ Player.schema.virtual('canAccessKeystone').get(function () {
  * Registration
  */
 
-Player.defaultColumns = 'name, email, isAdmin, registered'
+Player.defaultColumns = 'name, email, gender'
 Player.register()
