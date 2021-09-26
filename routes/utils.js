@@ -16,8 +16,6 @@ const braintreeAccount = {
   privateKey: BRAINTREE_PRIVATE_KEY
 }
 
-console.log({braintreeAccount})
-
 const gateway = braintree.connect(braintreeAccount)
 
 class PaymentUtils {

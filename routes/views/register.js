@@ -1,17 +1,17 @@
 const keystone = require('keystone')
-const Player = keystone.list('Player')
+const PlayerModel = keystone.list('Player').model
 const League = keystone.list('League')
-const _ = require('underscore')
 const PaymentUtils = require('../utils')
+const uuid = require('uuid')
 
-module.exports = function (req, res) {
+module.exports = async function (req, res) {
   const view = new keystone.View(req, res)
   const locals = res.locals
+  locals.league = await League.model.findOne({ isActive: true }).lean().exec()
   PaymentUtils.setBaseRegistrationLocals(view, res)
 
   view.on('get', async function (next) {
     if (req.query.preview === 'true') {
-      locals.league = await League.model.findOne({ isActive: true }).lean().exec()
       return next()
     }
     res.sendStatus(404)
@@ -19,17 +19,25 @@ module.exports = function (req, res) {
 
   view.on('post', async function (next) {
     const {
-      // eslint-disable-next-line camelcase
-      registration_dates, payment_method_nonce, first_name, last_name, partner_name, recaptcha_token,
+      comments,
       email,
+      firstName,
       gender,
+      lastName,
+      participation,
+      partnerName,
+      registrationLevel,
+      recaptchaToken,
       skillLevel,
-      comments
+      shirtSize,
+      streetAddress
     } = req.body
 
+    const paymentMethodNonce = req.body.payment_method_nonce
+
     try {
-      const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(recaptcha_token)
-      if (recaptchaResponse && recaptchaResponse.score <= 0.7) {
+      const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(recaptchaToken)
+      if (recaptchaResponse && recaptchaResponse.score <= 0.9) {
         locals.err = 'Unauthorized transaction'
         return next()
       }
@@ -38,31 +46,27 @@ module.exports = function (req, res) {
       return next()
     }
 
-    // eslint-disable-next-line camelcase
-    if (!registration_dates) {
-      locals.err = 'Please pick at least one registration date'
-      return next()
-    }
-
-    const amount = 10
+    const amount = registrationLevel === 'Student' ? 30 : 50
 
     const purchase = {
       amount: amount,
-      paymentMethodNonce: payment_method_nonce,
+      paymentMethodNonce,
       options: {
         submitForSettlement: true
       },
       customer: {
-        firstName: first_name,
-        lastName: last_name,
-        email: email
+        firstName,
+        lastName,
+        email
+      },
+      billing: {
+        streetAddress
       },
       customFields: {
-        // eslint-disable-next-line camelcase
-        partner: partner_name || '',
+        partner: partnerName,
         gender: gender,
-        skill_level: skillLevel,
-        participation: registration_dates
+        skillLevel,
+        participation
       }
     }
 
@@ -70,23 +74,24 @@ module.exports = function (req, res) {
       const result = await PaymentUtils.createSale(purchase)
       if (!result.success) {
         console.log(JSON.stringify(result, null, 2))
-        locals.err = JSON.stringify(result)
+        locals.err = JSON.stringify(result, null, 2)
         return next()
       }
 
-      // eslint-disable-next-line new-cap
-      const player = new Player.model({
+      const player = new PlayerModel({
         name: {
-          first: first_name,
-          last: last_name
+          first: firstName,
+          last: lastName
         },
-        email: email,
-        // eslint-disable-next-line camelcase
-        partners: partner_name || '',
-        gender: gender,
-        skillLevel: skillLevel,
-        dates_registered: registration_dates,
-        comments: comments || ''
+        email,
+        partners: partnerName,
+        password: uuid.v4(),
+        gender,
+        skillLevel,
+        comments,
+        shirtSize,
+        participation,
+        registrationLevel
       })
 
       await player.save()

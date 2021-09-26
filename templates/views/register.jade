@@ -43,12 +43,12 @@ block content
             .row
                 .col-md-6
                     .form-group
-                        label(for='first_name') First Name
-                        input#first_name.input-lg.form-control(type='text' name='first_name' placeholder='' required)
+                        label(for='firstName') First Name
+                        input#firstName.input-lg.form-control(type='text' name='firstName' placeholder='' required)
                 .col-md-6
                     .form-group
-                        label(for='last_name') Last Name
-                        input#last_name.input-lg.form-control(type='text' name='last_name' placeholder='' required)
+                        label(for='lastName') Last Name
+                        input#lastName.input-lg.form-control(type='text' name='lastName' placeholder='' required)
 
             .form-group
                 label(for='email') Email Address
@@ -61,10 +61,19 @@ block content
                     option(value='Female') Female
                     option(value='Male') Male
                 p.help-block We use this information to draft teams that have even gender distributions
-            
+
             .form-group
-                label(for="skill_level") Skill Level
-                    select#skill_level.input-lg.form-control(name="skill_level")
+                label(for="ageGroup") Age Group
+                select#ageGroup.input-lg.form-control(name="ageGroup")
+                    option(value='0-12') 12 and under
+                    option(value='13-15') 13-15
+                    option(value='16-19') 16-19
+                    option(value='20-100') 20+
+                p.help-block Our insurance policy requires us to know how many
+                
+            .form-group
+                label(for="skillLevel") Skill Level
+                    select#skillLevel.input-lg.form-control(name="skillLevel")
                         option(value='1') 1 - Absolute Beginner
                         option(value='2') 2 - Hey wait, what's a flick?
                         option(value='3') 3 - Working on throws, basic knowledge of game
@@ -75,21 +84,41 @@ block content
                         option(value='8') 8 - Club level, solid all around, not prone to errors
                         option(value='9') 9 - Rock star. spot on throws, awesome D
                 p.help-block Please express this accurately as it helps captains balance skill-level across teams
+                
+            .form-group
+                label(for="participation") Expected Attendance
+                select#participation.input-lg.form-control(name="participation")
+                    option(value="30") Less than 30%
+                    option(value="50") Around 50%
+                    option(value="80" selected="selected") Greater than 80%
+                br
+                p.help-blockKnowing how often you plan on being there helps captains pick well-rounded teams
 
             .form-group
-                label(for='partner_name') Partner Name
-                input#partner_name.input-lg.form-control(type='text' name='partner_name' placeholder='')
+
+                label(for="shirtSize") Shirt Size
+                select#shirtSize.input-lg.form-control(name="shirtSize")
+                    option(value="S") S
+                    option(value="M") M
+                    option(value="L") L
+                    option(value="XL") XL
+                    option(value="XXL") XXL
+                br
+
+            .form-group
+                label(for='partnerName') Partner Name
+                input#partnerName.input-lg.form-control(type='text' name='partnerName' placeholder='')
                 p.help-block Type the name of the person you would like to partner with
 
 
             .form-group
                 label Comments
-                textarea(name="comments").form-control
+                textarea#comments(name="comments").form-control
                 p.help-block Type here any additional comments you may have
             
             .form-group
-                label(for="captain_preference") Would you like to be a captain?
-                select#captain_preference.input-lg.form-control(name="captain_preference")
+                label(for="captainPreference") Would you like to be a captain?
+                select#captainPreference.input-lg.form-control(name="captainPreference")
                     option(value='No') No
                     option(value='Yes') Yes
             
@@ -98,28 +127,33 @@ block content
             h3 Waiver
             .checkbox
                 label
-                    input(type='checkbox', name='terms_conditions' required)
+                    input#termsConditions(type='checkbox' name='termsConditions' required)
                     | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
                 
             h3 COVID-19
             .checkbox
                 label
-                    input(type='checkbox', name='covid_19_no_risk' required)
+                    input#covid19NoRisk(type='checkbox' required)
                     | If I have tested positive for COVID-19, am waiting for COVID-19 test results, or am showing COVID-19 symptoms, or had close contact with a person who has tested positive for or who has symptoms of COVID-19, <strong>I will not attend any games until I have received a negative COVID-19 test</strong>.
 
 
             h3 Payment Information
-            input(id="recaptcha" name='recaptcha_token' type='hidden')
+            input(id="recaptcha" name='recaptchaToken' type='hidden')
             
             .form-group
-                label(for="registration_level") Registration Level
-                    select#registration_level.input-lg.form-control(name="registration_level")
-                        option(value='adult') Adult - $50
-                        option(value='student') Student - $30
+                label(for="registrationLevel") Registration Level
+                    select#registrationLevel.input-lg.form-control(name="registrationLevel")
+                        option(value='Adult') Adult - $50
+                        option(value='Student') Student - $30
 
+            
+            .form-group
+                label(for="streetAddress") Street Address
+                input#streetAddress.input-lg.form-control(type='text' name='streetAddress' placeholder='' required)
+            
             #payment-form
             .text-center
-                button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submit-button') Submit
+                button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submitButton') Submit
 
     .modal.fade(tabindex='-1', role='dialog' id='waiver')
         .modal-dialog.modal-lg

@@ -1,14 +1,14 @@
-var keystone = require('keystone')
-var Types = keystone.Field.Types
+const keystone = require('keystone')
+const Types = keystone.Field.Types
 
 /**
  * Player Model
  * ==============
  */
 
-var Player = new keystone.List('Player')
+const Player = new keystone.List('Player')
 
-var fields = {
+const fields = {
   name: {
     type: Types.Name,
     initial: true,
@@ -48,7 +48,7 @@ var fields = {
     initial: true,
     required: true
   },
-  ageGroup: {
+  registrationLevel: {
     type: Types.Select,
     options: ['Student', 'Adult'],
     initial: true,

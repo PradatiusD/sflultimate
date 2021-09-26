@@ -19,9 +19,11 @@
     "request": "^2.88.0",
     "sass-mediaqueries": "^1.6.1",
     "superagent": "^4.0.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "cypress": "^8.4.1",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.24.2",
@@ -42,7 +44,8 @@
   },
   "scripts": {
     "start": "node keystone.js",
-    "dev": "grunt serve"
+    "dev": "grunt serve",
+    "cypress": "npx cypress open"
   },
   "main": "keystone.js",
   "private": true
