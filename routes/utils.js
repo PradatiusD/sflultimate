@@ -16,9 +16,15 @@ const braintreeAccount = {
   privateKey: BRAINTREE_PRIVATE_KEY
 }
 
+console.log({braintreeAccount})
+
 const gateway = braintree.connect(braintreeAccount)
 
 class PaymentUtils {
+  /**
+   * Get Braintree Client Token
+   * @return {Promise<string>}
+   */
   generateGatewayClientToken () {
     return new Promise((resolve, reject) => {
       gateway.clientToken.generate({}, function (err, response) {
@@ -66,6 +72,7 @@ class PaymentUtils {
       try {
         locals.braintree_token = await this.generateGatewayClientToken()
       } catch (err) {
+        console.error(err)
         locals.err = 'We are having issues connecting to our payment gateway, please wait and try again later.'
       }
       next()

@@ -2,17 +2,16 @@ const keystone = require('keystone')
 const Player = keystone.list('Player')
 const League = keystone.list('League')
 const _ = require('underscore')
-const { validateRecaptchaToken, setBaseRegistrationLocals, createSale } = require('./../utils')
+const PaymentUtils = require('../utils')
 
 module.exports = function (req, res) {
   const view = new keystone.View(req, res)
   const locals = res.locals
-  setBaseRegistrationLocals(view, res)
+  PaymentUtils.setBaseRegistrationLocals(view, res)
 
   view.on('get', async function (next) {
     if (req.query.preview === 'true') {
       locals.league = await League.model.findOne({ isActive: true }).lean().exec()
-      console.log(locals)
       return next()
     }
     res.sendStatus(404)
@@ -29,7 +28,7 @@ module.exports = function (req, res) {
     } = req.body
 
     try {
-      const recaptchaResponse = await validateRecaptchaToken(recaptcha_token)
+      const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(recaptcha_token)
       if (recaptchaResponse && recaptchaResponse.score <= 0.7) {
         locals.err = 'Unauthorized transaction'
         return next()
@@ -45,18 +44,7 @@ module.exports = function (req, res) {
       return next()
     }
 
-    let amount
-
-    const datesForForm = _.isArray(registration_dates) ? registration_dates.length : registration_dates.split(',').length
-
-    switch (datesForForm) {
-      case 1:
-        amount = 20
-        break
-      case 2:
-        amount = 30
-        break
-    }
+    const amount = 10
 
     const purchase = {
       amount: amount,
@@ -79,7 +67,7 @@ module.exports = function (req, res) {
     }
 
     try {
-      const result = await createSale(purchase)
+      const result = await PaymentUtils.createSale(purchase)
       if (!result.success) {
         console.log(JSON.stringify(result, null, 2))
         locals.err = JSON.stringify(result)

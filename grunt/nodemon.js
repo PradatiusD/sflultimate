@@ -4,7 +4,7 @@ module.exports = {
     options: {
       nodeArgs: ['--debug'],
       env: {
-        port: 3000
+        port: 5000
       }
     }
   }

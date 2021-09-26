@@ -55,18 +55,14 @@ block content
                 input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
 
             .form-group
-                label(for='partner_name') Partner Name
-                input#partner_name.input-lg.form-control(type='text' name='partner_name' placeholder='')
-
-            .form-group
-                label(for="gender" name="gender") Gender
-                select#gender.input-lg.form-control(name="gender" value='')
+                label(for="gender") Gender
+                select#gender.input-lg.form-control(name="gender")
                     option(value='Female') Female
                     option(value='Male') Male
-
+            
             .form-group
-                label(for="skillLevel" name="skillLevel") Skill Level
-                    select#skillLevel.input-lg.form-control(name="skillLevel")
+                label(for="skill_level") Skill Level
+                    select#skill_level.input-lg.form-control(name="skill_level")
                         option(value='1') 1 - Absolute Beginner
                         option(value='2') 2 - Hey wait, what's a flick?
                         option(value='3') 3 - Working on throws, basic knowledge of game
@@ -76,6 +72,11 @@ block content
                         option(value='7') 7 - Tourney experience. Several years of club
                         option(value='8') 8 - Club level, solid all around, not prone to errors
                         option(value='9') 9 - Rock star. spot on throws, awesome D
+
+            .form-group
+                label(for='partner_name') Partner Name
+                input#partner_name.input-lg.form-control(type='text' name='partner_name' placeholder='')
+
 
             .form-group
                 label Comments
@@ -89,17 +90,15 @@ block content
                     | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
 
             h3 Payment Information
-
-            p You will be charged <strong id="total_cost">N/A, please pick a date</strong>.
-
-            .alert.alert-info
-                strong Please note:
-                | We will be allowing registrations the day of the event on-site but they will be $25.
-
             input(id="recaptcha" name='recaptcha_token' type='hidden')
+            
+            .form-group
+                label(for="registration_level") Registration Level
+                    select#registration_level.input-lg.form-control(name="registration_level")
+                        option(value='adult') Adult - $50
+                        option(value='student') Student - $30
 
             #payment-form
-
             .text-center
                 button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submit-button') Submit
 

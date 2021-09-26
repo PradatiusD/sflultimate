@@ -30,7 +30,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "grunt": "^1.0.4",
     "grunt-concurrent": "^2.3.1",
-    "grunt-contrib-jshint": "^2.0.0",
+    "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-nodemon": "^0.4.2",
     "grunt-sass": "^3.0.2",
@@ -42,7 +42,7 @@
   },
   "scripts": {
     "start": "node keystone.js",
-    "dev": "nodemon keystone.js"
+    "dev": "grunt serve"
   },
   "main": "keystone.js",
   "private": true

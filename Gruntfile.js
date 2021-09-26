@@ -47,7 +47,6 @@ module.exports = function (grunt) {
 
   // default option to connect server
   grunt.registerTask('serve', [
-    'jshint',
     'concurrent:dev'
   ])
 
