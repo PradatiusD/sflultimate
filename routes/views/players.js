@@ -1,17 +1,14 @@
 const keystone = require('keystone')
-const Player = keystone.list('HatterPlayer')
+const Player = keystone.list('Player')
+const League = keystone.list('League')
 
-module.exports = function (req, res) {
-  const query = Player.model.find({
-    dates_registered: {
-      $in: ['2020-01-11', '2020-02-02', '2020-02-11']
+module.exports = async function (req, res) {
+  const activeLeague = await League.model.findOne({ isActive: true }).lean().exec()
+  const query = {
+    leagues: {
+      $in: [activeLeague._id]
     }
-  })
-
-  query.exec(function (err, players) {
-    if (err) {
-      throw err
-    }
-    res.json(players)
-  })
+  }
+  const players = await Player.model.find(query)
+  res.json(players)
 }
