@@ -74,30 +74,6 @@ block content
         figure(style='background-image: url(/images/#{image});')
 
 
-    // Messenger Chat Plugin Code
-    #fb-root
-
-    // Your Chat Plugin code
-    #fb-customer-chat.fb-customerchat
-
 block js
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
   script(src="/js/schedule.js")
-  script.
-      var chatbox = document.getElementById('fb-customer-chat');
-      chatbox.setAttribute("page_id", "353781541319975");
-      chatbox.setAttribute("attribution", "biz_inbox");
-      window.fbAsyncInit = function () {
-        FB.init({
-          xfbml: true,
-          version: 'v12.0'
-        });
-      };
-      (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
