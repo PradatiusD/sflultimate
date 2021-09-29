@@ -33,8 +33,8 @@ module.exports = async function (req, res) {
 
     try {
       const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(recaptchaToken)
-      if (recaptchaResponse && recaptchaResponse.score <= 0.9) {
-        locals.err = 'Unauthorized transaction'
+      if (recaptchaResponse && recaptchaResponse.score <= 0.5) {
+        locals.err = 'Unauthorized transaction, we believe you are a bot.  Please contact sflultimate@gmail.com.'
         return next()
       }
     } catch (err) {
