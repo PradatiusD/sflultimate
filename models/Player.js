@@ -27,7 +27,7 @@ const fields = {
   },
   gender: {
     type: Types.Select,
-    options: ['Male', 'Female'],
+    options: ['Male', 'Female', 'Other'],
     initial: true
   },
   age: {

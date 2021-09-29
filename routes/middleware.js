@@ -26,16 +26,16 @@ exports.initLocals = function (req, res, next) {
     { label: 'Home', key: 'home', href: '/' }
   ]
 
-  // if (keystone.get('isRegistrationPeriod')) {
-  //   locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
-  // }
-  // else {
+  if (keystone.get('isRegistrationPeriod')) {
+    locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
+  }
+  else {
   // locals.navLinks = locals.navLinks.concat([
   //   {label: 'Teams',     key: 'teams',     href: '/teams'},
   //   {label: 'Schedule',  key: 'schedule',  href: '/schedule'},
   //   {label: 'Stats',     key: 'stats',     href: '/stats'}
   // ]);
-  // }
+  }
 
   locals.navLinks = locals.navLinks.concat([
     { label: 'Local Pickups', key: 'community', href: '/community' },

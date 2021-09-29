@@ -14,7 +14,6 @@ const keystone = require('keystone')
  */
 
 const keystoneConfig = {
-
   name: 'SFLUltimate',
   brand: 'SFLUltimate',
 

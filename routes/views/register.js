@@ -10,13 +10,6 @@ module.exports = async function (req, res) {
   locals.league = await League.model.findOne({ isActive: true }).lean().exec()
   PaymentUtils.setBaseRegistrationLocals(view, res)
 
-  view.on('get', async function (next) {
-    if (req.query.preview === 'true') {
-      return next()
-    }
-    res.sendStatus(404)
-  })
-
   view.on('post', async function (next) {
     const {
       comments,

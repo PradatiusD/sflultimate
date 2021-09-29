@@ -1,9 +1,11 @@
 const keystone = require('keystone')
 const url = require('url')
+const League = keystone.list('League')
 
-module.exports = function (req, res) {
+module.exports = async function (req, res) {
   const view = new keystone.View(req, res)
-
+  const locals = res.locals
+  locals.league = await League.model.findOne({ isActive: true }).lean().exec()
   const { referer } = req.headers
 
   if (!referer) {
