@@ -26,7 +26,7 @@ block content
                     th Attendance
                     th Partner
                     th Comments
-                    th Captain
+                    th Would Captain?
                 tbody
                     tr(ng-repeat='player in players | orderBy:"-skill"')
                         td {{$index + 1}}
@@ -38,7 +38,7 @@ block content
                         td {{player.participation}}
                         td {{player.partnerName}}
                         td {{player.comments}}
-                        td {{player.wouldCaptain}}
+                        td {{player.wouldCaptain ? 'Yes': ''}}
 
 block js
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
