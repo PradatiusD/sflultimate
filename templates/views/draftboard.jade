@@ -20,19 +20,25 @@ block content
                     th Number
                     th Name
                     th Gender
+                    th Age
+                    th Shirt Size
                     th Skill
                     th Attendance
                     th Partner
                     th Comments
+                    th Captain
                 tbody
                     tr(ng-repeat='player in players | orderBy:"-skill"')
                         td {{$index + 1}}
                         td {{player.name.first}} {{player.name.last}}
-                        td {{player.gender}}
+                        td {{player.gender.charAt(0)}}
+                        td {{player.age}}
+                        td {{player.shirtSize}}
                         td {{player.skillLevel}}
-                        td {{player.dates_registered.join(", ")}}
-                        td {{player.partners}}
+                        td {{player.participation}}
+                        td {{player.partnerName}}
                         td {{player.comments}}
+                        td {{player.wouldCaptain}}
 
 block js
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')

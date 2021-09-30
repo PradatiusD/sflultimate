@@ -9,6 +9,6 @@ module.exports = async function (req, res) {
       $in: [activeLeague._id]
     }
   }
-  const players = await Player.model.find(query)
+  const players = await Player.model.find(query, { password: 0, email: 0 })
   res.json(players)
 }

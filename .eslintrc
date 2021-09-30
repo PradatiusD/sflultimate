@@ -1,5 +1,8 @@
 {
   "extends": "standard",
+  "plugins": [
+    "cypress"
+  ],
   "env": {
     "browser": true,
     "node": true

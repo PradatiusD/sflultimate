@@ -31,7 +31,7 @@ describe('Registration', () => {
     cy.get('#skillLevel').select('4')
     cy.get('#partnerName').type('Test Friend')
     cy.get('#comments').type('A random comment')
-    cy.get('#wouldCaptain').select('Yes')
+    cy.get('#wouldCaptain').select('No')
     cy.get('#termsConditions').check()
     cy.get('#covid19NoRisk').check()
     cy.get('#age').type('25')

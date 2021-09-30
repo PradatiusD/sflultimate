@@ -11,6 +11,9 @@ module.exports = async function (req, res) {
   PaymentUtils.setBaseRegistrationLocals(view, res)
 
   view.on('post', async function (next) {
+    // Cast to boolean
+    req.body.wouldCaptain = req.body.wouldCaptain === 'Yes'
+
     const {
       comments,
       email,
