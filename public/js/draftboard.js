@@ -1,15 +1,29 @@
 (function () {
-  var app = window.angular.module('draftboardApp', [])
+  const app = window.angular.module('draftboardApp', [])
 
   app.controller('PlayerTableController', function ($http, $scope) {
-    var query = $http.get('/players?registered=true')
+    const query = $http.get('/players?registered=true')
 
     query.success(function (players) {
-      $scope.players = players.sort(function (a, b) {
-        var aGender = a.gender === 'Female' ? 1 : 0
-        var bGender = b.gender === 'Female' ? 1 : 0
+      $scope.totals = {}
+      $scope.keysForTotals = ['gender', 'shirtSize', 'participation']
+      players.forEach(function (player) {
+        $scope.keysForTotals.forEach(function (key) {
+          if (!$scope.totals[key]) {
+            $scope.totals[key] = {}
+          }
+          if (!$scope.totals[key][player[key]]) {
+            $scope.totals[key][player[key]] = 0
+          }
+          $scope.totals[key][player[key]]++
+        })
+      })
 
-        var genderDiff = bGender - aGender
+      $scope.players = players.sort(function (a, b) {
+        const aGender = a.gender === 'Female' ? 1 : 0
+        const bGender = b.gender === 'Female' ? 1 : 0
+
+        const genderDiff = bGender - aGender
 
         if (genderDiff === 0) {
           return b.skillLevel - a.skillLevel
