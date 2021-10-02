@@ -46,7 +46,8 @@
   "scripts": {
     "start": "node keystone.js",
     "dev": "grunt serve",
-    "cypress": "npx cypress open"
+    "cypress": "npx cypress open",
+    "restore": "grunt restore"
   },
   "main": "keystone.js",
   "private": true

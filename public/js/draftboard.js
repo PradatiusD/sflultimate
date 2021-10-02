@@ -6,16 +6,20 @@
 
     query.success(function (players) {
       $scope.totals = {}
-      $scope.keysForTotals = ['gender', 'shirtSize', 'participation']
+      $scope.keysForTotals = ['gender', 'shirtSize', 'shirtSizeWithGender', 'participation']
       players.forEach(function (player) {
         $scope.keysForTotals.forEach(function (key) {
           if (!$scope.totals[key]) {
             $scope.totals[key] = {}
           }
-          if (!$scope.totals[key][player[key]]) {
-            $scope.totals[key][player[key]] = 0
+          const totalKey = $scope.totals[key]
+          if (key === 'shirtSizeWithGender') {
+            player[key] = [player.shirtSize, player.gender].join('-')
           }
-          $scope.totals[key][player[key]]++
+          if (!totalKey[player[key]]) {
+            totalKey[player[key]] = 0
+          }
+          totalKey[player[key]]++
         })
       })
 
