@@ -14,7 +14,7 @@ block content
       h1 {{league.title}} Teams
       article.col-md-6.col-lg-4(ng-repeat='team in teams')
         h3
-          span(ng-style="{'background-color':team.color}").team-color
+          span(ng-style="{'background-color':team.color}" ng-if="team.color").team-color
           | {{team.name}}
         p.lead
           span(ng-repeat='captain in team.captains') Captain{{team.captains.length > 1 ?'s':''}}: {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}}
