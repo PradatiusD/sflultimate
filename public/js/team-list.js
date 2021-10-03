@@ -149,6 +149,7 @@
         })
 
         $scope.teams = teams
+        $scope.league = data.league
 
         // console.log(createShirtList(teams));
         // console.log(createEmailList(teams));

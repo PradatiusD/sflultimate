@@ -6,11 +6,7 @@ const Types = keystone.Field.Types
  * =============
  */
 
-const Team = new keystone.List('Team', {
-  map: {
-    name: 'name'
-  }
-})
+const Team = new keystone.List('Team')
 
 Team.add({
   name: {
@@ -20,25 +16,28 @@ Team.add({
     index: true
   },
   color: {
-    type: Types.Color
+    type: Types.Color,
+    initial: true
   },
   captains: {
     type: Types.Relationship,
-    initial: true,
     ref: 'Player',
+    initial: true,
     many: true
   },
   players: {
     type: Types.Relationship,
     ref: 'Player',
+    initial: true,
     many: true
   },
   league: {
     type: Types.Relationship,
-    ref: 'League'
+    ref: 'League',
+    initial: true
   }
 })
 
-Team.defaultColumns = 'color, name, captains, league'
+Team.defaultColumns = 'name, league, captains, color'
 
 Team.register()

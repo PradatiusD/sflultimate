@@ -3,36 +3,25 @@ const Team = keystone.list('Team')
 const Player = keystone.list('Player')
 const League = keystone.list('League')
 
-module.exports = function (req, res) {
+module.exports = async function (req, res) {
+  const league = await League.model.findOne().where('isActive', true)
+  res.locals.league = league
   // If not json render HTML page
   if (req.query.f !== 'json') {
     return res.render('teams')
   }
 
-  const leagueQuery = League.model.findOne().where('isActive', true)
+  const players = await Player.model.find({
+    leagues: {
+      $in: [league._id]
+    }
+  }, { password: 0, email: 0 })
 
-  leagueQuery.exec(function (err, league) {
-    const playerQuery = Player.model.find().where('registered', true)
-    const teamQuery = Team.model.find().where('league', league._id)
+  const teams = await Team.model.find().where('league', league._id)
 
-    teamQuery.exec(function (err, teams) {
-      playerQuery.exec(function (err, players) {
-        players = players.map(function (player) {
-          return {
-            _id: player._id,
-            name: player.name,
-            shirtSize: player.shirtSize,
-            skillLevel: player.skillLevel,
-            gender: player.gender
-            // email:      player.email,
-          }
-        })
-
-        res.json({
-          players: players,
-          teams: teams
-        })
-      })
-    })
+  res.json({
+    league,
+    players,
+    teams
   })
 }

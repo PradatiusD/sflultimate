@@ -3,20 +3,23 @@ extends ../layouts/default
 block head
   meta(property="og:title"        content="League Teams")
   meta(property="og:url"          content="https://www.sflultimate.com/teams")
-  meta(property="og:description"  content="Find out who is on your team for Spring League.")
+  meta(property="og:description"  content="Find out who is on your team for " + league.title)
+  meta(property="og:image"        content="https://www.sflultimate.com/images/open-graph/homepage.jpg")
+  meta(property="og:image:width"  content="1200")
+  meta(property="og:image:height" content="630")
 
 block content
   .container(ng-app='TeamApp')
-    h1 Spring League Teams
     section.team-list(ng-controller='TeamListController' ng-init='getTeamsAndPlayers()')
+      h1 {{league.title}} Teams
       article.col-md-6.col-lg-4(ng-repeat='team in teams')
         h3
-          span(ng-class='team.color.toLowerCase()').team-color
-          | {{team.color}}
+          span(ng-style="{'background-color':team.color}").team-color
+          | {{team.name}}
         p.lead
-          span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}}
+          span(ng-repeat='captain in team.captains') Captain{{team.captains.length > 1 ?'s':''}}: {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}}
           br
-          small.text-muted {{team.womenTotal}} ladies, {{team.menTotal}} dudes
+          small.text-muted {{team.womenTotal}} women, {{team.menTotal}} men
         table.table.table-striped.table-bordered
           tr(ng-repeat='player in team.players | orderBy :"-skillLevel"')
             td {{$index + 1}}. {{player.name.first}} {{player.name.last}}

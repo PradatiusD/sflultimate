@@ -108,5 +108,5 @@ Player.schema.virtual('canAccessKeystone').get(function () {
  * Registration
  */
 
-Player.defaultColumns = 'name, email, gender'
+Player.defaultColumns = 'name, email, gender, leagues'
 Player.register()
