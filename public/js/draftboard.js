@@ -5,17 +5,23 @@
     const query = $http.get('/players?registered=true')
 
     query.success(function (players) {
-      $scope.totals = {}
-      $scope.keysForTotals = ['gender', 'shirtSize', 'shirtSizeWithGender', 'participation', 'insuranceGroup']
+      const totals = {}
+      $scope.keysForTotals = [
+        'gender', 'shirtSize', 'shirtSizeWithGender', 'teamColorAndNameWithShirtSizeAndGender', 'participation', 'insuranceGroup']
       players.forEach(function (player) {
         $scope.keysForTotals.forEach(function (key) {
-          if (!$scope.totals[key]) {
-            $scope.totals[key] = {}
+          if (!totals[key]) {
+            totals[key] = {}
           }
-          const totalKey = $scope.totals[key]
+          const totalKey = totals[key]
           if (key === 'shirtSizeWithGender') {
             player[key] = [player.shirtSize, player.gender].join('-')
           }
+
+          if (key === 'teamColorAndNameWithShirtSizeAndGender') {
+            player[key] = [player.team.name, player.team.color, player.shirtSize, player.gender].join('-')
+          }
+
           if (key === 'insuranceGroup') {
             const age = player.age
             // <12 13-15 16-19 20+
@@ -36,6 +42,18 @@
           totalKey[player[key]]++
         })
       })
+
+      for (const key in totals) {
+        totals[key] = Object.keys(totals[key]).sort().reduce(
+          (obj, subKey) => {
+            obj[subKey] = totals[key][subKey]
+            return obj
+          },
+          {}
+        )
+      }
+
+      $scope.totals = totals
 
       $scope.players = players.sort(function (a, b) {
         const aGender = a.gender === 'Female' ? 1 : 0

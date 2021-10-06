@@ -12,16 +12,20 @@ module.exports = async function (req, res) {
   }
 
   const teams = await Team.model.find().where('league', activeLeague._id).lean().exec()
-  const map = {}
+  const playerMap = {}
   for (const team of teams) {
     for (const player of team.players) {
-      map[player.valueOf()] = team._id
+      playerMap[player.valueOf()] = {
+        _id: team._id,
+        color: team.color,
+        name: team.name
+      }
     }
   }
 
   const players = await Player.model.find(query, { password: 0, email: 0, isAdmin: 0 }).lean().exec()
   for (const player of players) {
-    player.team = map[player._id.valueOf()]
+    player.team = playerMap[player._id.valueOf()]
   }
 
   res.json(players)

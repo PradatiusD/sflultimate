@@ -37,7 +37,7 @@ block content
                         td {{player.skillLevel}}
                         td {{player.participation}}
                         td {{player.partnerName}}
-                        td <small class="badge">{{player.team ? "Rostered": "Unassigned"}}</small> {{player.comments}} 
+                        td <small class="badge" ng-style="{'background-color': player.team && player.team.color ? player.team.color : 'white', color: player && player.team.color === '#ffffff' ? 'black':'' }">{{player.team ? "Rostered": "Unassigned"}}</small> {{player.comments}} 
                         td {{player.wouldCaptain ? 'Yes': ''}}
                         
             h3 Breakdowns
