@@ -7,171 +7,178 @@ block head
     meta(property="og:image" content="https://www.sflultimate.com/images/open-graph/registration.jpg")
     script(src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w")
 block content
+    
+    if locals.isRegistrationPeriod
 
-    .container.register: .row: .col-md-12
-
-        if err
+        .container.register: .row: .col-md-12
+    
+            if err
+                br
+                .alert.alert-danger
+                    strong Error:
+                    span=err
             br
-            .alert.alert-danger
-                strong Error:
-                span=err
-        br
-        br
-        h1=league.title + " Sign Up" 
-
-        h3 Description
-        p We are excited to announce that ultimate is back at Amelia Earhart Park for South Florida Ultimate fall league!
-        iframe(src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14358.205887616712!2d-80.2784486!3d25.8842357!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x5fd60d3c7189a581!2sAmelia+Earhart+Park!5e0!3m2!1sen!2sus!4v1475028057840" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen)
-
-        p Regular season games will be <strong>Wednesday evenings at 8pm, starting October 6th</strong>. 
-        p We're planning on 8 weeks of play on Wednesdays, skipping the Wednesday of Thanksgiving week and ending on Wednesday, December 1st. <strong>Finals are planned for December 12th, and will be</strong> at Amelia Earhart Park.
-
-        p Registration is open <strong>as of September 28th and ends October 5th at midnight EST</strong> and the costs are:
-        ul
-            li $30 for students
-            li $50 for everyone else
-        p Player fees will be put toward fields, lights, insurance, and jerseys for the league.
+            br
+            h1=league.title + " Sign Up" 
+    
+            h3 Description
+            p We are excited to announce that ultimate is back at Amelia Earhart Park for South Florida Ultimate fall league!
+            iframe(src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14358.205887616712!2d-80.2784486!3d25.8842357!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x5fd60d3c7189a581!2sAmelia+Earhart+Park!5e0!3m2!1sen!2sus!4v1475028057840" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen)
+    
+            p Regular season games will be <strong>Wednesday evenings at 8pm, starting October 6th</strong>. 
+            p We're planning on 8 weeks of play on Wednesdays, skipping the Wednesday of Thanksgiving week and ending on Wednesday, December 1st. <strong>Finals are planned for December 12th, and will be</strong> at Amelia Earhart Park.
+    
+            p Registration is open <strong>as of September 28th and ends October 5th at midnight EST</strong> and the costs are:
+            ul
+                li $30 for students
+                li $50 for everyone else
+            p Player fees will be put toward fields, lights, insurance, and jerseys for the league.
+            
+            .alert.alert-info Late registration (at a $65 fee for everyone, as space permits) will continue until after the first week of play.
+    
+            hr
+    
+            h3 Registration
+    
+            form#registration(method="post" action="register" autocomplete="off")
+    
+                .row
+                    .col-md-6
+                        .form-group
+                            label(for='firstName') First Name
+                            input#firstName.input-lg.form-control(type='text' name='firstName' placeholder='' required)
+                    .col-md-6
+                        .form-group
+                            label(for='lastName') Last Name
+                            input#lastName.input-lg.form-control(type='text' name='lastName' placeholder='' required)
+    
+                .form-group
+                    label(for='email') Email Address
+                    input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
+                    p.help-block We send updates and league information through the email you provide here
+    
+                .form-group
+                    label(for="gender") Gender
+                    select#gender.input-lg.form-control(name="gender")
+                        option(value='Female') Female
+                        option(value='Male') Male
+                        option(value='Other') Other / I'd Prefer Not To
+                    p.help-block We use this information to draft teams that have even gender distributions
+    
+                .form-group
+                    label(for="age") Age (In Years)
+                    input#age.input-lg.form-control(type='number' name='age' required)
+                    p.help-block Our insurance policy requires us to let them how many people of certain ages exist in the league
+                    
+                .form-group
+                    label(for="skillLevel") Skill Level
+                        select#skillLevel.input-lg.form-control(name="skillLevel")
+                            option(value='1') 1 - Absolute Beginner
+                            option(value='2') 2 - Hey wait, what's a flick?
+                            option(value='3') 3 - Working on throws, basic knowledge of game
+                            option(value='4') 4 - Pickup player, okay throws
+                            option(value='5') 5 - Decent backhand & forehand. Little to no club experience
+                            option(value='6') 6 - Fairly solid backhand & forehand. Some club experience
+                            option(value='7') 7 - Tourney experience. Several years of club
+                            option(value='8') 8 - Club level, solid all around, not prone to errors
+                            option(value='9') 9 - Rock star. spot on throws, awesome D
+                    p.help-block Please express this accurately as it helps captains balance skill-level across teams
+                    
+                .form-group
+                    label(for="participation") Expected Attendance
+                    select#participation.input-lg.form-control(name="participation")
+                        option(value="30") Less than 30%
+                        option(value="50") Around 50%
+                        option(value="80" selected="selected") Greater than 80%
+                    br
+                    p.help-blockKnowing how often you plan on being there helps captains pick well-rounded teams
+    
+                .form-group
+    
+                    label(for="shirtSize") Shirt Size
+                    select#shirtSize.input-lg.form-control(name="shirtSize")
+                        option(value="S") S
+                        option(value="M") M
+                        option(value="L") L
+                        option(value="XL") XL
+                        option(value="XXL") XXL
+                    br
+    
+                .form-group
+                    label(for='partnerName') Partner Name
+                    input#partnerName.input-lg.form-control(type='text' name='partnerName' placeholder='')
+                    p.help-block Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can't guarantee this.
+    
+    
+                .form-group
+                    label Comments
+                    textarea#comments(name="comments").form-control
+                    p.help-block Type here any additional comments you may have
+                
+                .form-group
+                    label(for="wouldCaptain") Would you like to be a captain?
+                    select#wouldCaptain.input-lg.form-control(name="wouldCaptain")
+                        option(value='No') No
+                        option(value='Yes') Yes
+                
+                p.help-block Captains can draft their teams and are responsible for communicating benefits.
+    
+                h3 Waiver
+                .checkbox
+                    label
+                        input#termsConditions(type='checkbox' name='termsConditions' required)
+                        | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
+                    
+                h3 COVID-19
+                .checkbox
+                    label
+                        input#covid19NoRisk(type='checkbox' required)
+                        | If I have tested positive for COVID-19, am waiting for COVID-19 test results, or am showing COVID-19 symptoms, or had close contact with a person who has tested positive for or who has symptoms of COVID-19, <strong>I will not attend any games until I have received a negative COVID-19 test</strong>.
+    
+    
+                h3 Payment Information
+                input(id="recaptcha" name='recaptchaToken' type='hidden')
+                
+                .form-group
+                    label(for="registrationLevel") Registration Level
+                        select#registrationLevel.input-lg.form-control(name="registrationLevel")
+                            option(value='Adult') Adult - $50
+                            option(value='Student') Student - $30
+    
+                
+                .form-group
+                    label(for="streetAddress") Street Address
+                    input#streetAddress.input-lg.form-control(type='text' name='streetAddress' placeholder='' required)
+                
+                #payment-form
+                .text-center
+                    button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submitButton') Submit
+    
+        .modal.fade(tabindex='-1', role='dialog' id='waiver')
+            .modal-dialog.modal-lg
+                .modal-content
+                    .modal-header
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                        h4.modal-title Waiver
+                    .modal-body
+                        p
+                            | 1. In consideration for receiving permission to participate in the South Florida Ultimate Spring League I hereby <strong>release, waive, discharge, and convenant not to sue</strong> South Florida Ultimate, their officers, agents, or employees (hereinafter referred to as <strong>releasees</strong>) from any and all liability, claims, demands, actions, and causes of action whatsoever arising out of or related to any loss, damage, or injury, including death, that may be sustained by me, or to any property belonging to me, while participating in such activity, while in, on or upon the premises where the activities are being conducted, <strong>regardless of whether such loss is caused by the negligence of the releasees</strong>, or otherwise and regardless of whether such liability arises in tort, contract, strict liability, or otherwise, to the fullest extent allowed by law.
+                        p
+                            | 2. I am fully aware of the risks and hazards connected with the activities of Ultimate, and I am aware that such activities include the risk of injury and even death, and I hereby elect to voluntarily participate in said activities, knowing that the activities may be hazardous to my property and me. I understand that South Florida Ultimate does not require me to participate in this activity. I voluntarily assume full responsibility for any risks of loss, property damage, or personal injury, including death, that may be sustained by me, or any loss or damage to property owned by me, as a result of being engaged in such an activities, <strong>whether caused by the negligence of releasees</strong> or otherwise, to the fullest extent allowed by law.
+                        p
+                            | 3. I further hereby <strong>agree to indemnify and hold harmless the releasees</strong> from any loss, liability, damage, or costs, including court costs and attorneys' fees that Releases may incur due to my participation in said activities, <strong>whether caused by the negligence of releasees</strong> or otherwise, to the fullest extent allowed by law.
+                        p
+                            | 4. It is my express intent that this Waiver and Hold Harmless Agreement shall bind the members of my family and spouse, if I am alive, and my heirs, assigns and personal representative, if I am deceased, and shall be deemed as a <strong>release, waiver, discharge, and covenant not to sue</strong> the above-named RELEASEES. I hereby further agree that this Waiver of Liability and Hold Harmless Agreement shall be construed in accordance with the laws of the State of Florida and that any mediation, suit, or other proceeding must be filed or entered into only in Florid and the federal or state courts of Maryland. Any portion of this document deemed unlawful or unenforceable is severable and shall be stricken without any effect on the enforceability of the remaining provisions.
+                        p
+                            | <strong>In completing this registration, I acknowledge and represent that</strong> I have read the foregoing Wavier of Liability and Hold Harmless Agreement, understand it and sign it voluntarily as my own free act and deed; no oral representations, statements, or inducements, apart from the foregoing written agreement, have been made; I am at least eighteen (18) years of age and fully competent; and I execute this Agreement for full, adequate and complete consideration fully intending to be bound by same.
+                    .modal-footer
+                        button.btn.btn-primary(type='button', data-dismiss='modal') Close
         
-        .alert.alert-info Late registration (at a $65 fee for everyone, as space permits) will continue until after the first week of play.
-
-        hr
-
-        h3 Registration
-
-        form#registration(method="post" action="register" autocomplete="off")
-
-            .row
-                .col-md-6
-                    .form-group
-                        label(for='firstName') First Name
-                        input#firstName.input-lg.form-control(type='text' name='firstName' placeholder='' required)
-                .col-md-6
-                    .form-group
-                        label(for='lastName') Last Name
-                        input#lastName.input-lg.form-control(type='text' name='lastName' placeholder='' required)
-
-            .form-group
-                label(for='email') Email Address
-                input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
-                p.help-block We send updates and league information through the email you provide here
-
-            .form-group
-                label(for="gender") Gender
-                select#gender.input-lg.form-control(name="gender")
-                    option(value='Female') Female
-                    option(value='Male') Male
-                    option(value='Other') Other / I'd Prefer Not To
-                p.help-block We use this information to draft teams that have even gender distributions
-
-            .form-group
-                label(for="age") Age (In Years)
-                input#age.input-lg.form-control(type='number' name='age' required)
-                p.help-block Our insurance policy requires us to let them how many people of certain ages exist in the league
-                
-            .form-group
-                label(for="skillLevel") Skill Level
-                    select#skillLevel.input-lg.form-control(name="skillLevel")
-                        option(value='1') 1 - Absolute Beginner
-                        option(value='2') 2 - Hey wait, what's a flick?
-                        option(value='3') 3 - Working on throws, basic knowledge of game
-                        option(value='4') 4 - Pickup player, okay throws
-                        option(value='5') 5 - Decent backhand & forehand. Little to no club experience
-                        option(value='6') 6 - Fairly solid backhand & forehand. Some club experience
-                        option(value='7') 7 - Tourney experience. Several years of club
-                        option(value='8') 8 - Club level, solid all around, not prone to errors
-                        option(value='9') 9 - Rock star. spot on throws, awesome D
-                p.help-block Please express this accurately as it helps captains balance skill-level across teams
-                
-            .form-group
-                label(for="participation") Expected Attendance
-                select#participation.input-lg.form-control(name="participation")
-                    option(value="30") Less than 30%
-                    option(value="50") Around 50%
-                    option(value="80" selected="selected") Greater than 80%
-                br
-                p.help-blockKnowing how often you plan on being there helps captains pick well-rounded teams
-
-            .form-group
-
-                label(for="shirtSize") Shirt Size
-                select#shirtSize.input-lg.form-control(name="shirtSize")
-                    option(value="S") S
-                    option(value="M") M
-                    option(value="L") L
-                    option(value="XL") XL
-                    option(value="XXL") XXL
-                br
-
-            .form-group
-                label(for='partnerName') Partner Name
-                input#partnerName.input-lg.form-control(type='text' name='partnerName' placeholder='')
-                p.help-block Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can't guarantee this.
-
-
-            .form-group
-                label Comments
-                textarea#comments(name="comments").form-control
-                p.help-block Type here any additional comments you may have
-            
-            .form-group
-                label(for="wouldCaptain") Would you like to be a captain?
-                select#wouldCaptain.input-lg.form-control(name="wouldCaptain")
-                    option(value='No') No
-                    option(value='Yes') Yes
-            
-            p.help-block Captains can draft their teams and are responsible for communicating benefits.
-
-            h3 Waiver
-            .checkbox
-                label
-                    input#termsConditions(type='checkbox' name='termsConditions' required)
-                    | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
-                
-            h3 COVID-19
-            .checkbox
-                label
-                    input#covid19NoRisk(type='checkbox' required)
-                    | If I have tested positive for COVID-19, am waiting for COVID-19 test results, or am showing COVID-19 symptoms, or had close contact with a person who has tested positive for or who has symptoms of COVID-19, <strong>I will not attend any games until I have received a negative COVID-19 test</strong>.
-
-
-            h3 Payment Information
-            input(id="recaptcha" name='recaptchaToken' type='hidden')
-            
-            .form-group
-                label(for="registrationLevel") Registration Level
-                    select#registrationLevel.input-lg.form-control(name="registrationLevel")
-                        option(value='Adult') Adult - $50
-                        option(value='Student') Student - $30
-
-            
-            .form-group
-                label(for="streetAddress") Street Address
-                input#streetAddress.input-lg.form-control(type='text' name='streetAddress' placeholder='' required)
-            
-            #payment-form
-            .text-center
-                button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submitButton') Submit
-
-    .modal.fade(tabindex='-1', role='dialog' id='waiver')
-        .modal-dialog.modal-lg
-            .modal-content
-                .modal-header
-                    button.close(type='button', data-dismiss='modal', aria-label='Close')
-                        span(aria-hidden='true') ×
-                    h4.modal-title Waiver
-                .modal-body
-                    p
-                        | 1. In consideration for receiving permission to participate in the South Florida Ultimate Spring League I hereby <strong>release, waive, discharge, and convenant not to sue</strong> South Florida Ultimate, their officers, agents, or employees (hereinafter referred to as <strong>releasees</strong>) from any and all liability, claims, demands, actions, and causes of action whatsoever arising out of or related to any loss, damage, or injury, including death, that may be sustained by me, or to any property belonging to me, while participating in such activity, while in, on or upon the premises where the activities are being conducted, <strong>regardless of whether such loss is caused by the negligence of the releasees</strong>, or otherwise and regardless of whether such liability arises in tort, contract, strict liability, or otherwise, to the fullest extent allowed by law.
-                    p
-                        | 2. I am fully aware of the risks and hazards connected with the activities of Ultimate, and I am aware that such activities include the risk of injury and even death, and I hereby elect to voluntarily participate in said activities, knowing that the activities may be hazardous to my property and me. I understand that South Florida Ultimate does not require me to participate in this activity. I voluntarily assume full responsibility for any risks of loss, property damage, or personal injury, including death, that may be sustained by me, or any loss or damage to property owned by me, as a result of being engaged in such an activities, <strong>whether caused by the negligence of releasees</strong> or otherwise, to the fullest extent allowed by law.
-                    p
-                        | 3. I further hereby <strong>agree to indemnify and hold harmless the releasees</strong> from any loss, liability, damage, or costs, including court costs and attorneys' fees that Releases may incur due to my participation in said activities, <strong>whether caused by the negligence of releasees</strong> or otherwise, to the fullest extent allowed by law.
-                    p
-                        | 4. It is my express intent that this Waiver and Hold Harmless Agreement shall bind the members of my family and spouse, if I am alive, and my heirs, assigns and personal representative, if I am deceased, and shall be deemed as a <strong>release, waiver, discharge, and covenant not to sue</strong> the above-named RELEASEES. I hereby further agree that this Waiver of Liability and Hold Harmless Agreement shall be construed in accordance with the laws of the State of Florida and that any mediation, suit, or other proceeding must be filed or entered into only in Florid and the federal or state courts of Maryland. Any portion of this document deemed unlawful or unenforceable is severable and shall be stricken without any effect on the enforceability of the remaining provisions.
-                    p
-                        | <strong>In completing this registration, I acknowledge and represent that</strong> I have read the foregoing Wavier of Liability and Hold Harmless Agreement, understand it and sign it voluntarily as my own free act and deed; no oral representations, statements, or inducements, apart from the foregoing written agreement, have been made; I am at least eighteen (18) years of age and fully competent; and I execute this Agreement for full, adequate and complete consideration fully intending to be bound by same.
-                .modal-footer
-                    button.btn.btn-primary(type='button', data-dismiss='modal') Close
+    else
+        .container.register: .row: .col-md-12
+            h1 Open Registration for #{locals.league.title} has closed
+            p If you wish to be considered onto the late registration ($65), contact sflultimate@gmail.com. Late registration (at a $65 fee for everyone, as space permits) will continue until after the first week of play.
 
 block js
     script(src='https://js.braintreegateway.com/v2/braintree.js')

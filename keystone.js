@@ -49,9 +49,11 @@ keystone.set('locals', {
   editable: keystone.content.editable
 })
 
-keystone.set('isRegistrationPeriod', {
-  mode: 'league' // 'tournament
-})
+keystone.set('isRegistrationPeriod', false
+  // {
+  // mode: 'league' // 'tournament
+// }
+)
 
 // Load your project's Routes
 keystone.set('routes', require('./routes'))
