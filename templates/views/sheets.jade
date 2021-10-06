@@ -10,11 +10,18 @@ html
       }
 
       td, th, p {
-        font-size: 1.5em;
+        font-size: 0.8em;
+      }
+      
+      th {
+          font-weight: 800;
+          font-family: Helvetica, sans-serif;
+          text-transform: uppercase;
+          background: #e9e9e9;
       }
 
       .table-bordered, .table-bordered td, .table-bordered th {
-        border: 3px solid #4a4a4a !important;
+        border: 1px solid #4a4a4a !important;
       }
 
       .logo {
@@ -32,10 +39,8 @@ html
           .col-xs-7
             header.page-header
               h1 
-                | Team {{team.color}} 
-                small Stat Sheet
+                | Team: {{team.name}} 
 
-            h3 Game Date:
 
             table.table.table-bordered.table-striped
               thead
@@ -43,16 +48,14 @@ html
                 th Score
               tbody
                 tr
-                  td(style='width: 40%') {{team.color}}
+                  td(style='width: 40%') {{team.name}}
                   td
                 tr
-                  td(style='width: 40%') Opponent:
+                  td(style='width: 40%') Opponent
                   td
           .col-xs-5
-            img(src='/images/city-logo.png' class='img-responsive logo')
-
-        hr
-        br
+            h3 Game Date:
+            //img(src='/images/logo-skyline.png' class='img-responsive logo')
 
         table.table.table-bordered.table-striped
           thead
@@ -60,12 +63,14 @@ html
             th Assists
             th Scores
             th Defenses
+            th Points Played
           tbody
             tr(ng-repeat="player in team.players | orderBy: 'name.first'")
-              td(style='width: 25%') {{player.name.first}} {{player.name.last}}
-              td(style='width: 25%')
-              td(style='width: 25%')
-              td(style='width: 25%')
+              td(style='width: 20%') {{player.name.first}} {{player.name.last}}
+              td(style='width: 20%')
+              td(style='width: 20%')
+              td(style='width: 20%')
+              td(style='width: 20%')
 
         p.text-muted
           em Please fill out and return to SFL Ultimate staff.  Stats allow us to determine awards (MVP, assist, score, defensive leaders) for each gender as well as help us resolve seeding for the playoff tournament. Thank you!
