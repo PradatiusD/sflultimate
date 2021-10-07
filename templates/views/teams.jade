@@ -22,7 +22,10 @@ block content
           small.text-muted {{team.womenTotal}} women, {{team.menTotal}} men
         table.table.table-striped.table-bordered
           tr(ng-repeat='player in team.players | orderBy :"-skillLevel"')
-            td {{$index + 1}}. {{player.name.first}} {{player.name.last}}
+            td 
+             | {{$index + 1}}. 
+             | {{player.gender.charAt(0)}} - 
+             | {{player.name.first}} {{player.name.last}}
 
 block js
   script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
