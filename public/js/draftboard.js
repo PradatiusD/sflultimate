@@ -8,6 +8,14 @@
       const totals = {}
       $scope.keysForTotals = [
         'gender', 'shirtSize', 'shirtSizeWithGender', 'teamColorAndNameWithShirtSizeAndGender', 'participation', 'insuranceGroup']
+
+      $scope.getBadgeStyle = function (player) {
+        return {
+          'background-color': player.team && player.team.color ? player.team.color : 'white',
+          color: player && player.team.color === '#ffffff' ? 'black' : 'black'
+        }
+      }
+
       players.forEach(function (player) {
         $scope.keysForTotals.forEach(function (key) {
           if (!totals[key]) {
@@ -19,7 +27,11 @@
           }
 
           if (key === 'teamColorAndNameWithShirtSizeAndGender') {
-            player[key] = [player.team.name, player.team.color, player.shirtSize, player.gender].join('-')
+            if (player.team) {
+              player[key] = [player.team.name, player.team.color, player.shirtSize, player.gender].join('-')
+            } else {
+              player[key] = ['No Team', 'No Color', player.shirtSize, player.gender].join('-')
+            }
           }
 
           if (key === 'insuranceGroup') {
