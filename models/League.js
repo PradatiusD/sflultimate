@@ -22,6 +22,18 @@ League.add({
   isActive: {
     type: Types.Boolean,
     default: false
+  },
+  RegistrationStart: {
+    type: Types.Datetime
+  },
+  RegistrationEnd: {
+    type: Types.Datetime
+  },
+  lateRegistrationStart: {
+    type: Types.Datetime
+  },
+  lateRegistrationEnd: {
+    type: Types.Datetime
   }
 })
 
