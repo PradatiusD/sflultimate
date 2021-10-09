@@ -28,26 +28,24 @@ var games = [
   '04/09/2017, 6:00PM, Blue, Yellow',
   '04/30/2017, 4:00PM, White, Green',
   '04/30/2017, 4:00PM, Yellow, Purple',
-  '04/30/2017, 6:00PM, Blue, Crimson',
-];
+  '04/30/2017, 6:00PM, Blue, Crimson'
+]
 
 games = games.map(function (game) {
-
-  game = game.split(', ');
+  game = game.split(', ')
 
   game = {
   /* ['4/24/2016', '7:00PM'     , 'Black'      , 'White' ] */
     date: game[0], time: game[1], home: game[2], away: game[3]
-  };
-
-  return game;
-});
-
-module.exports = function(req, res) {
-
-  if (req.query.f === 'json') {
-    return res.json(games);
   }
 
-  res.render('schedule');
-};
+  return game
+})
+
+module.exports = function (req, res) {
+  if (req.query.f === 'json') {
+    return res.json(games)
+  }
+
+  res.render('schedule')
+}
