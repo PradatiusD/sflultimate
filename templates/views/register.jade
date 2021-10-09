@@ -40,7 +40,7 @@ block content
               | Late registration (at a $65 fee for everyone, as space permits) start 
               | on #{locals.league.lateRegistrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
               | until #{locals.league.lateRegistrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} at 
-              | #{locals.league.lateRegistrationEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              | #{locals.league.lateRegistrationEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', timeZone: 'America/New_York'})}
     
             hr
     
