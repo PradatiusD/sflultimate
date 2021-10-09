@@ -8,7 +8,7 @@ block head
     script(src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w")
 block content
     
-    if locals.isRegistrationPeriod
+    if locals.league.canRegister
 
         .container.register: .row: .col-md-12
     
@@ -26,15 +26,21 @@ block content
             iframe(src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14358.205887616712!2d-80.2784486!3d25.8842357!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x5fd60d3c7189a581!2sAmelia+Earhart+Park!5e0!3m2!1sen!2sus!4v1475028057840" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen)
     
             p Regular season games will be <strong>Wednesday evenings at 8pm, starting October 6th</strong>. 
-            p We're planning on 8 weeks of play on Wednesdays, skipping the Wednesday of Thanksgiving week and ending on Wednesday, December 1st. <strong>Finals are planned for December 12th, and will be</strong> at Amelia Earhart Park.
+            p We're planning on 8 weeks of play on Wednesdays, skipping the Wednesday of Thanksgiving week and ending on Wednesday, December 1st. <strong>Finals are planned for December 12th</strong>, and will be at <strong>Amelia Earhart Park</strong>.
     
-            p Registration is open <strong>as of September 28th and ends October 5th at midnight EST</strong> and the costs are:
+            p 
+            | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })} 
+            | and ends #{locals.league.registrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</strong> and the costs are:
             ul
                 li $30 for students
                 li $50 for everyone else
             p Player fees will be put toward fields, lights, insurance, and jerseys for the league.
             
-            .alert.alert-info Late registration (at a $65 fee for everyone, as space permits) will continue until after the first week of play.
+            .alert.alert-info 
+              | Late registration (at a $65 fee for everyone, as space permits) start 
+              | on #{locals.league.lateRegistrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })} 
+              | until #{locals.league.lateRegistrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })} at 
+              | #{locals.league.lateRegistrationEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
     
             hr
     
@@ -90,8 +96,7 @@ block content
                         option(value="30") Less than 30%
                         option(value="50") Around 50%
                         option(value="80" selected="selected") Greater than 80%
-                    br
-                    p.help-blockKnowing how often you plan on being there helps captains pick well-rounded teams
+                    p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams
     
                 .form-group
     
@@ -121,9 +126,9 @@ block content
                         option(value='No') No
                         option(value='Yes') Yes
                 
-                p.help-block Captains can draft their teams and are responsible for communicating benefits.
+                p.help-block Captains can draft their teams and are responsible for communicating to their teams on a weekly basis.
     
-                h3 Waiver
+                h3 General Waiver
                 .checkbox
                     label
                         input#termsConditions(type='checkbox' name='termsConditions' required)
@@ -135,16 +140,26 @@ block content
                         input#covid19NoRisk(type='checkbox' required)
                         | If I have tested positive for COVID-19, am waiting for COVID-19 test results, or am showing COVID-19 symptoms, or had close contact with a person who has tested positive for or who has symptoms of COVID-19, <strong>I will not attend any games until I have received a negative COVID-19 test</strong>.
     
-    
+                if locals.league.isLateRegistrationPeriod
+                    h3 Late Registration
+                    .checkbox
+                        label
+                            input#understandsLateFee(type='checkbox' required)
+                            | I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me. 
+
+
                 h3 Payment Information
                 input(id="recaptcha" name='recaptchaToken' type='hidden')
                 
                 .form-group
                     label(for="registrationLevel") Registration Level
                         select#registrationLevel.input-lg.form-control(name="registrationLevel")
-                            option(value='Adult') Adult - $50
-                            option(value='Student') Student - $30
-    
+                            if locals.league.isRegistrationPeriod
+                                option(value='Adult') Adult - $50
+                                option(value='Student') Student - $30
+                            if locals.league.isLateRegistrationPeriod
+                                option(value='Adult') Adult - $65
+                                option(value='Student') Student - $65
                 
                 .form-group
                     label(for="streetAddress") Street Address
@@ -177,8 +192,8 @@ block content
         
     else
         .container.register: .row: .col-md-12
-            h1 Open Registration for #{locals.league.title} has closed
-            p If you wish to be considered onto the late registration ($65), contact sflultimate@gmail.com. Late registration (at a $65 fee for everyone, as space permits) will continue until after the first week of play.
+            h1 The Registration for #{locals.league.title} has closed
+            p If you wish to be considered for late registration ($65), contact sflultimate@gmail.com. Late registration (at a $65 fee for everyone, as space permits) will be considered on a weekly basis.
 
 block js
     script(src='https://js.braintreegateway.com/v2/braintree.js')

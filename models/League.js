@@ -23,10 +23,10 @@ League.add({
     type: Types.Boolean,
     default: false
   },
-  RegistrationStart: {
+  registrationStart: {
     type: Types.Datetime
   },
-  RegistrationEnd: {
+  registrationEnd: {
     type: Types.Datetime
   },
   lateRegistrationStart: {

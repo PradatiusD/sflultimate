@@ -10,6 +10,21 @@
 
 const _ = require('underscore')
 const keystone = require('keystone')
+const League = keystone.list('League')
+
+/**
+ *
+ * @param regStart
+ * @param regEnd
+ * @return {boolean}
+ */
+function isValidRegPeriod (regStart, regEnd) {
+  const now = Date.now()
+  if (regStart && regEnd && regStart.getTime() < now && now < regEnd.getTime()) {
+    return true
+  }
+  return false
+}
 
 /**
  Initialises the standard view locals
@@ -19,14 +34,20 @@ const keystone = require('keystone')
  or replace it with your own templates / logic.
  */
 
-exports.initLocals = function (req, res, next) {
+exports.initLocals = async function (req, res, next) {
   const { locals } = res
+  const activeLeague = await League.model.findOne({ isActive: true }).lean().exec()
+  locals.league = activeLeague
 
   locals.navLinks = [
     { label: 'Home', key: 'home', href: '/' }
   ]
 
-  if (keystone.get('isRegistrationPeriod')) {
+  activeLeague.isRegistrationPeriod = isValidRegPeriod(activeLeague.registrationStart, activeLeague.registrationEnd)
+  activeLeague.isLateRegistrationPeriod = isValidRegPeriod(activeLeague.lateRegistrationStart, activeLeague.lateRegistrationEnd)
+  activeLeague.canRegister = activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod
+
+  if (activeLeague.canRegister) {
     locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
   } else {
     locals.navLinks = locals.navLinks.concat([

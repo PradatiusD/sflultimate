@@ -1,13 +1,11 @@
 const keystone = require('keystone')
 const PlayerModel = keystone.list('Player').model
-const League = keystone.list('League')
 const PaymentUtils = require('../utils')
 const uuid = require('uuid')
 
 module.exports = async function (req, res) {
   const view = new keystone.View(req, res)
   const locals = res.locals
-  locals.league = await League.model.findOne({ isActive: true }).lean().exec()
   PaymentUtils.setBaseRegistrationLocals(view, res)
 
   view.on('post', async function (next) {
@@ -45,7 +43,13 @@ module.exports = async function (req, res) {
       return next()
     }
 
-    const amount = registrationLevel === 'Student' ? 30 : 50
+    let amount
+
+    if (locals.league.isRegistrationPeriod) {
+      amount = registrationLevel === 'Student' ? 30 : 50
+    } else if (locals.league.isLateRegistrationPeriod) {
+      amount = 65
+    }
 
     const purchase = {
       amount: amount,
