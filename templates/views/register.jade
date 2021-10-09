@@ -29,8 +29,8 @@ block content
             p We're planning on 8 weeks of play on Wednesdays, skipping the Wednesday of Thanksgiving week and ending on Wednesday, December 1st. <strong>Finals are planned for December 12th</strong>, and will be at <strong>Amelia Earhart Park</strong>.
     
             p 
-            | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })} 
-            | and ends #{locals.league.registrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</strong> and the costs are:
+            | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
+            | and ends #{locals.league.registrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })}</strong> and the costs are:
             ul
                 li $30 for students
                 li $50 for everyone else
@@ -38,8 +38,8 @@ block content
             
             .alert.alert-info 
               | Late registration (at a $65 fee for everyone, as space permits) start 
-              | on #{locals.league.lateRegistrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })} 
-              | until #{locals.league.lateRegistrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })} at 
+              | on #{locals.league.lateRegistrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
+              | until #{locals.league.lateRegistrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} at 
               | #{locals.league.lateRegistrationEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
     
             hr
