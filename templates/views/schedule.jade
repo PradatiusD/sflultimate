@@ -16,24 +16,27 @@ block content
         h1 Schedule
         p.lead
           | Pick your color to filter schedule by your team.<br>
-          span.team-color(ng-repeat="color in teams" ng-class="color.toLowerCase()" ng-click="filterFor(color)")
+          span.team-color(ng-repeat="team in teams" ng-style="{'background-color': team.color}" ng-click="filterScheduleFor(team)")
       table.table.table-striped.table-bordered
         thead
           th Date
           th Time
-          th(col-span="2") Matchup
+          th Matchup
+          th Field
         tbody
-          tr(ng-repeat="game in games | filter:colorFilter" ng-class="(game.timestamp - $parent.today > 0) ? '':'text-muted' ")
-            td {{game.date | date: 'MMM d'}}
-            td {{game.time}}
+          tr(ng-repeat="game in games | filter:colorFilter" ng-class="(game.scheduledTimeEpoch < $parent.today) ?'text-muted': ''")
+            td {{game.scheduledTime | date: 'EEE. MMM d'}}
+            td {{game.scheduledTime | date: 'h:mma'}}
             td
-              span {{game.home}} vs. {{game.away}}
+              span {{game.homeTeam.name}} vs. {{game.awayTeam.name}}
               span(ng-if="game.homeScore && game.awayScore") ({{game.homeScore}}-{{game.awayScore}})
               //- span(ng-if="!game.homeScore && !game.awayScore && (1481518800000 - $parent.today) > 0") (Missing stats for game)
+            td TBD
           tr(ng-class="(1481518800000 - $parent.today > 0) ? '':'text-muted' ")
-            td May 6th
-            td 10:00AM-5:30PM
-            td League Finals (at Amelia Earhart Park)
+            td Dec 12th
+            td 11:00AM-3:00PM
+            td League Finals
+            td Amelia Earhart Park
 
 block js
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")

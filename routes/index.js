@@ -47,6 +47,7 @@ module.exports = function (app) {
   app.get('/schedule', routes.views.schedule)
   app.get('/teams', routes.views.teams)
   app.get('/club-teams', routes.views.clubTeams)
+  app.get('/stats', routes.views.stats)
 
   // Content Pages
   const contentRoutes = [

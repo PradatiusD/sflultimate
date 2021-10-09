@@ -5,8 +5,7 @@ var Types = keystone.Field.Types
  * League Model
  * =============
  */
-
-var League = new keystone.List('League', {
+const League = new keystone.List('League', {
   map: {
     name: 'title'
   }

@@ -35,7 +35,6 @@ const keystoneConfig = {
 keystone.init(keystoneConfig)
 
 // Load your project's Models
-
 keystone.import('models')
 
 // Setup common locals for your templates. The following are required for the
@@ -80,7 +79,7 @@ keystone.set('email locals', {
 
 keystone.set('nav', {
   Content: ['posts', 'post-categories'],
-  League: ['players', 'teams', 'leagues'],
+  League: ['players', 'teams', 'leagues', 'games'],
   Pickup: ['pickups']
 })
 
