@@ -51,8 +51,8 @@ exports.initLocals = async function (req, res, next) {
     locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
   } else {
     locals.navLinks = locals.navLinks.concat([
-      { label: 'Teams', key: 'teams', href: '/teams' }
-      // { label: 'Schedule', key: 'schedule', href: '/schedule' },
+      { label: 'Teams', key: 'teams', href: '/teams' },
+      { label: 'Schedule', key: 'schedule', href: '/schedule' }
       // { label: 'Stats', key: 'stats', href: '/stats' }
     ])
   }

@@ -1,6 +1,7 @@
 const keystone = require('keystone')
 const Game = keystone.list('Game')
 const Team = keystone.list('Team')
+const Location = keystone.list('Location')
 
 module.exports = async function (req, res) {
   if (req.query.f === 'json') {
@@ -19,7 +20,8 @@ module.exports = async function (req, res) {
       league: res.locals.league._id
     }).lean().exec()
 
-    return res.json({ games, teams })
+    const locations = await Location.model.find({}).lean().exec()
+    return res.json({ games, teams, locations })
   }
   res.render('schedule')
 }

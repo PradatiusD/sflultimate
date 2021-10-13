@@ -28,6 +28,10 @@
       for (const team of response.data.teams) {
         $scope.teams[team._id] = team
       }
+      $scope.locations = {}
+      for (const location of response.data.locations) {
+        $scope.locations[location._id] = location
+      }
 
       $scope.games = response.data.games.map(function (game) {
         game.homeTeam = $scope.teams[game.homeTeam]
