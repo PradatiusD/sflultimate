@@ -30,6 +30,11 @@ Game.add({
     ref: 'Team',
     index: true,
     initial: true
+  },
+  location: {
+    type: Types.Relationship,
+    ref: 'Location',
+    initial: true
   }
 })
 
