@@ -18,6 +18,10 @@ const fields = {
     index: true,
     label: 'Pickup Name'
   },
+  isActive: {
+    type: Types.Boolean,
+    default: false
+  },
   day: {
     type: String,
     initial: true,

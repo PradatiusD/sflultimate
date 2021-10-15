@@ -1,8 +1,10 @@
 const keystone = require('keystone')
 const Pickup = keystone.list('Pickup')
 
-module.exports = function (req, res) {
-  const query = Pickup.model.find()
+module.exports = async function (req, res) {
+  const query = Pickup.model.find({
+    isActive: true
+  })
 
   query.exec(function (err, Pickups) {
     if (err) {
