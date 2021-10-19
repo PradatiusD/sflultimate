@@ -48,7 +48,7 @@ module.exports = async function (req, res) {
     if (locals.league.isRegistrationPeriod) {
       amount = registrationLevel === 'Student' ? 30 : 50
     } else if (locals.league.isLateRegistrationPeriod) {
-      amount = 65
+      amount = 50
     }
 
     const purchase = {
