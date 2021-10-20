@@ -41,6 +41,7 @@
 
       return $http.get('/stats')
     }).then(function (response) {
+      return
       var stats = response.data
 
       stats = stats.split('\n')

@@ -28,9 +28,8 @@ block content
             td {{game.scheduledTime | date: 'EEE. MMM d'}}
             td {{game.scheduledTime | date: 'h:mma'}}
             td
-              span {{game.homeTeam.name}} vs. {{game.awayTeam.name}}
-              span(ng-if="game.homeScore && game.awayScore") ({{game.homeScore}}-{{game.awayScore}})
-              //- span(ng-if="!game.homeScore && !game.awayScore && (1481518800000 - $parent.today) > 0") (Missing stats for game)
+              span {{game.homeTeam.name}} vs. {{game.awayTeam.name}} 
+              span(ng-if="game.homeTeamScore && game.awayTeamScore") ({{game.homeTeamScore}}-{{game.awayTeamScore}})
             td {{locations[game.location] ? locations[game.location].name: 'TBD'}}
           tr(ng-class="(1481518800000 - $parent.today > 0) ? '':'text-muted' ")
             td Dec 12th
