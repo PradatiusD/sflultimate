@@ -31,6 +31,12 @@ Game.add({
     index: true,
     initial: true
   },
+  homeTeamScore: {
+    type: Types.Number
+  },
+  awayTeamScore: {
+    type: Types.Number
+  },
   location: {
     type: Types.Relationship,
     ref: 'Location',
