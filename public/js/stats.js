@@ -36,7 +36,7 @@
         Female: {}
       }
 
-      const keys = ['assists', 'scores', 'defenses', 'overall']
+      const keys = ['assists', 'scores', 'defenses', 'overall', 'pointsPlayed']
 
       keys.forEach(function (key) {
         awards.Female[key] = 0
@@ -45,8 +45,9 @@
 
       for (let i = 0; i < statEntries.length; i++) {
         const p = statEntries[i]
+        const gender = p.gender
 
-        if (p.Gender === 'Female') {
+        if (gender === 'Female') {
           for (let j = 0; j < keys.length; j++) {
             const key = keys[j]
             if (p[key] > awards.Female[key]) {
@@ -55,7 +56,7 @@
           }
         }
 
-        if (p.Gender === 'Male') {
+        if (gender === 'Male') {
           for (let j = 0; j < keys.length; j++) {
             const key = keys[j]
             if (p[key] > awards.Male[key]) {
@@ -68,6 +69,7 @@
       $scope.leaderboard = statEntries.splice(0, 10)
       $scope.contenders = statEntries
       $scope.awards = awards
+      console.log($scope.awards)
     }).catch(function (e) {
       console.log(e)
       alert('There was an error calculating stats.')
