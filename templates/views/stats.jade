@@ -37,19 +37,19 @@ block content
             td {{player.name.first}}
             td {{player.name.last}}
             td
-              span(class="badge" ng-if="awards[player.gender].assists === player.assists" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.assists}}
+              span(class="badge" ng-if="awards[player.gender].assists === player.assists" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.assists}}
               span(ng-if="awards[player.gender].assists !== player.assists") {{player.assists}}
             td
-              span(class="badge" ng-if="awards[player.gender].scores === player.scores" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.scores}}
+              span(class="badge" ng-if="awards[player.gender].scores === player.scores" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.scores}}
               span(ng-if="awards[player.gender].scores !== player.scores") {{player.scores}}
             td
-              span(class="badge" ng-if="awards[player.gender].defenses === player.defenses" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.defenses}}
+              span(class="badge" ng-if="awards[player.gender].defenses === player.defenses" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.defenses}}
               span(ng-if="awards[player.gender].defenses !== player.defenses") {{player.defenses}}
             td
-              span(class="badge" ng-if="awards[player.gender].pointsPlayed === player.pointsPlayed" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.pointsPlayed}}
+              span(class="badge" ng-if="awards[player.gender].pointsPlayed === player.pointsPlayed" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.pointsPlayed}}
               span(ng-if="awards[player.gender].pointsPlayed !== player.pointsPlayed") {{player.pointsPlayed}}
             td
-              span(class="badge" ng-if="awards[player.gender].overall === player.overall" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.overall}}
+              span(class="badge" ng-if="awards[player.gender].overall === player.overall" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.overall}}
               span(ng-if="awards[player.gender].overall !== player.overall") {{player.overall}}
 
       br
@@ -74,18 +74,18 @@ block content
             td {{player.name.first}}
             td {{player.name.last}}
             td
-              span(class="badge" ng-if="awards[player.gender].assists === player.assists" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.assists}}
+              span(class="badge" ng-if="awards[player.gender].assists === player.assists" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.assists}}
               span(ng-if="awards[player.gender].assists !== player.assists") {{player.assists}}
             td
-              span(class="badge" ng-if="awards[player.gender].scores === player.scores" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.scores}}span(ng-if="awards[player.gender].scores !== player.scores") {{player.scores}}
+              span(class="badge" ng-if="awards[player.gender].scores === player.scores" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.scores}}span(ng-if="awards[player.gender].scores !== player.scores") {{player.scores}}
             td
-              span(class="badge" ng-if="awards[player.gender].defenses === player.defenses" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.defenses}}
+              span(class="badge" ng-if="awards[player.gender].defenses === player.defenses" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.defenses}}
               span(ng-if="awards[player.gender].defenses !== player.defenses") {{player.defenses}}
             td
-              span(class="badge" ng-if="awards[player.gender].pointsPlayed === player.pointsPlayed" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.pointsPlayed}}
+              span(class="badge" ng-if="awards[player.gender].pointsPlayed === player.pointsPlayed" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.pointsPlayed}}
               span(ng-if="awards[player.gender].pointsPlayed !== player.pointsPlayed") {{player.pointsPlayed}}
             td
-              span(class="badge" ng-if="awards[player.gender].overall === player.overall" ng-style="{'background-color': player.Gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.overall}}
+              span(class="badge" ng-if="awards[player.gender].overall === player.overall" ng-style="{'background-color': player.gender === 'Female'? '#F25974':'#4A7CEC'}") {{player.overall}}
               span(ng-if="awards[player.gender].overall !== player.overall") {{player.overall}}
 
 block js
