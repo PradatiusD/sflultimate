@@ -79,7 +79,7 @@ keystone.set('email locals', {
 
 keystone.set('nav', {
   Content: ['posts', 'post-categories'],
-  League: ['players', 'teams', 'leagues', 'games'],
+  League: ['players', 'teams', 'leagues', 'games', 'player-game-stats'],
   Pickup: ['pickups']
 })
 

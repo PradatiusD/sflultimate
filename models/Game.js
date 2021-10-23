@@ -9,6 +9,9 @@ const Types = keystone.Field.Types
 const Game = new keystone.List('Game')
 
 Game.add({
+  name: {
+    type: String
+  },
   league: {
     type: Types.Relationship,
     ref: 'League',
@@ -42,6 +45,24 @@ Game.add({
     ref: 'Location',
     initial: true
   }
+})
+
+Game.schema.pre('save', async function (next) {
+  const Team = keystone.list('Team')
+  const [month, day, year] = this.scheduledTime.toLocaleDateString('en-US', { timeZone: 'America/New_York' }).split('/')
+  const results = await Team.model.find({
+    _id: {
+      $in: [this.homeTeam, this.awayTeam]
+    }
+  })
+
+  if (results.length === 2) {
+    const firstIsAwayTeam = this.awayTeam.equals(results[0]._id)
+    const awayTeam = firstIsAwayTeam ? results[0] : results[1]
+    const homeTeam = firstIsAwayTeam ? results[1] : results[0]
+    this.name = [year, month, day].join('') + '_' + awayTeam.name + '@' + homeTeam.name
+  }
+  next()
 })
 
 Game.defaultColumns = 'league, homeTeam, awayTeam, scheduledTime'

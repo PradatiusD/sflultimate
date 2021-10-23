@@ -54,5 +54,5 @@ PlayerGameStat.add(fields)
  * Registration
  */
 
-// PlayerGameStat.defaultColumns = 'name, email, gender, leagues'
+PlayerGameStat.defaultColumns = 'player, game, assists, scores, defenses, pointsPlayed'
 PlayerGameStat.register()
