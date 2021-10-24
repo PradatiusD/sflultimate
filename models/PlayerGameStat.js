@@ -21,12 +21,14 @@ const fields = {
   player: {
     type: Types.Relationship,
     ref: 'Player',
+    required: true,
     index: true,
     initial: true
   },
   game: {
     type: Types.Relationship,
     ref: 'Game',
+    required: true,
     index: true,
     initial: true
   },
