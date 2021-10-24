@@ -36,7 +36,8 @@
         Female: {}
       }
 
-      const keys = ['assists', 'scores', 'defenses', 'overall', 'pointsPlayed']
+      const keys = ['assists', 'scores', 'defenses', 'pointsPlayed', 'overall']
+      $scope.keysToCompare = keys
 
       keys.forEach(function (key) {
         awards.Female[key] = 0
