@@ -8,6 +8,8 @@
     "node": true
   },
   "globals": {
-    "cy": "readonly"
+    "cy": "readonly",
+    "db": "readonly",
+    "printjson": "readonly"
   }
 }
