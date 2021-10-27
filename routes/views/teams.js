@@ -11,11 +11,16 @@ module.exports = async function (req, res) {
     return res.render('teams')
   }
 
-  const players = await Player.model.find({
+  const $find = {
     leagues: {
       $in: [league._id]
     }
-  }, { password: 0, email: 0 })
+  }
+  const $project = {
+    password: 0,
+    email: 0
+  }
+  const players = await Player.model.find($find, $project)
 
   const teams = await Team.model.find().where('league', league._id)
 

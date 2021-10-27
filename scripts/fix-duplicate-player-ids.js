@@ -1,14 +1,13 @@
-// get all regular emails
 (function () {
   const emails = {}
   db.players.find({ leagues: { $exists: true } }).forEach(function (player) {
     const email = player.email.toLowerCase()
 
-    if (!emails[email]) {
-      emails[email] = player
-    } else {
+    if (emails[email]) {
       printjson(player)
-      throw Error('We have a duplicate email even in leagues')
+      throw Error('We have a duplicate email even in leagues due to email ' + email)
+    } else {
+      emails[email] = player
     }
   })
 
