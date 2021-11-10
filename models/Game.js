@@ -65,5 +65,5 @@ Game.schema.pre('save', async function (next) {
   next()
 })
 
-Game.defaultColumns = 'league, homeTeam, homeTeamScore, awayTeam, awayTeamScore, scheduledTime'
+Game.defaultColumns = 'league, homeTeam, homeTeamScore, awayTeam, awayTeamScore, scheduledTime, location'
 Game.register()
