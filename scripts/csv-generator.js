@@ -1,42 +1,74 @@
-// mongo --quiet sflultimate scripts/csv-generator.js > scripts/players.csv
-
-db.players.find({ registered: true }).forEach(function (p) {
-  var row = [
-    p._id.valueOf(),
-    p.name.first,
-    p.name.last,
-    p.skillLevel,
-    p.participation,
-    p.gender,
-    p.partner ? p.partner.valueOf() : ''
-  ]
-
-  try {
-    row.push(p.partner ? db.players.find({ _id: ObjectId(p.partner.valueOf()), partner: ObjectId(p._id.valueOf()) }).next().name.first : '')
-    row.push(p.partner ? db.players.find({ _id: ObjectId(p.partner.valueOf()), partner: ObjectId(p._id.valueOf()) }).next().name.last : '')
-  } catch (e) {
-    row.push('')
-    row.push('')
+const MongoClient = require('mongodb').MongoClient
+const url = 'mongodb://localhost:27017/sflultimate'
+MongoClient.connect(url, async function (err, db) {
+  if (err) {
+    throw err
   }
 
-  print(row.join(','))
-})
+  // for each team
+  // add header of games for team
+  const currentLeague = await db.collection('leagues').findOne({ isActive: true })
+  const teams = await db.collection('teams').find({ league: currentLeague._id }).toArray()
+  // each player is an array
+  for (const team of teams) {
+    // get list of games
+    console.log('\n\n')
+    const games = await db.collection('games').find({
+      $or: [
+        {
+          homeTeam: team._id
+        },
+        {
+          awayTeam: team._id
+        }
+      ]
+    }).toArray()
 
-// {
-//   "_id" : ObjectId("57f181cdea07fc03008b611d"),
-//   "partner" : ObjectId("56b02d2570b93aac39b410eb"),
-//   "email" : "ehj723@gmail.com",
-//   "password" : "$2a$10$mzqxM2vEswSeunJo9CjdeOJoFyFbn6DqLsSkNpfvpws1e7VXHe9lm",
-//   "shirtSize" : "S",
-//   "skillLevel" : "1",
-//   "participation" : "80",
-//   "ageGroup" : "Adult",
-//   "registered" : true,
-//   "name" : {
-//     "first" : "Elyse",
-//     "last" : "Jones"
-//   },
-//   "__v" : 0,
-//   "gender" : "Female",
-//   "isAdmin" : false
-// }
+    const sortedGames = games.sort((a, b) => a.name.localeCompare(b.name))
+    const gameColumns = ['assists', 'scores', 'defenses', 'pointsPlayed']
+    const headerGameAbbrRow = []
+    const headerStatRow = []
+    const headerGameIDs = []
+
+    for (const game of sortedGames) {
+      for (const column of gameColumns) {
+        headerGameAbbrRow.push(game.name)
+        headerStatRow.push(column)
+        headerGameIDs.push(game._id.toString())
+      }
+    }
+    console.log('\t\t' + headerGameAbbrRow.join('\t'))
+    console.log('\t\t' + headerGameIDs.join('\t'))
+    console.log('\t\t' + headerStatRow.join('\t'))
+
+    const allPlayerIDs = team.captains.concat(team.players)
+    const allPlayersData = await db.collection('players').find({ _id: { $in: allPlayerIDs } }).toArray()
+    const mappedPlayers = allPlayersData.map(function (player) {
+      return {
+        _id: player._id,
+        name: player.name.first + ' ' + player.name.last
+      }
+    }).sort((a, b) => a.name.localeCompare(b.name))
+    for (const player of mappedPlayers) {
+      const playerStats = await db.collection('playergamestats').find({ player: player._id }).toArray()
+      const gameMap = {}
+      for (const playerStat of playerStats) {
+        gameMap[playerStat.game.toString()] = playerStat
+      }
+
+      const playerRow = [player._id, player.name]
+
+      for (let i = 0; i < headerGameAbbrRow.length; i++) {
+        const currentGameID = headerGameIDs[i]
+        if (gameMap[currentGameID]) {
+          const currentColumn = headerStatRow[i]
+          playerRow.push(gameMap[currentGameID][currentColumn])
+        } else {
+          playerRow.push('')
+        }
+      }
+      console.log(playerRow.join('\t'))
+    }
+  }
+  db.close()
+})
