@@ -60,7 +60,7 @@ Game.schema.pre('save', async function (next) {
     const firstIsAwayTeam = this.awayTeam.equals(results[0]._id)
     const awayTeam = firstIsAwayTeam ? results[0] : results[1]
     const homeTeam = firstIsAwayTeam ? results[1] : results[0]
-    this.name = [year, month, day].join('') + '_' + awayTeam.name + '@' + homeTeam.name
+    this.name = [year, month.padStart(2, '0'), day.padStart(2, '0')].join('') + '_' + awayTeam.name + '@' + homeTeam.name
   }
   next()
 })
