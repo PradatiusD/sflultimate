@@ -79,7 +79,7 @@ keystone.set('email locals', {
 
 keystone.set('nav', {
   Content: ['posts', 'post-categories'],
-  League: ['players', 'teams', 'leagues', 'games', 'player-game-stats'],
+  League: ['leagues', 'teams', 'games', 'players', 'player-game-stats'],
   Pickup: ['pickups']
 })
 
@@ -87,5 +87,18 @@ keystone.set('nav', {
 keystone.set('port', process.env.PORT || 5000)
 
 // Start Keystone to connect to your database and initialise the web server
-
 keystone.start()
+
+async function updatePrimaryUserPassword () {
+  const Player = keystone.list('Player')
+  const player = await Player.model.findOne({
+    email: process.env.KEYSTONE_USERNAME
+  })
+  player.isAdmin = true
+  player.password = process.env.KEYSTONE_PASSWORD
+  return player.save()
+}
+
+updatePrimaryUserPassword()
+  .then(function () {})
+  .catch(console.error)

@@ -1,18 +1,31 @@
-(function () {
+const MongoClient = require('mongodb').MongoClient
+const url = 'mongodb://localhost:27017/sflultimate'
+MongoClient.connect(url, async function (err, db) {
+  if (err) {
+    throw err
+  }
   const emails = {}
-  db.players.find({ leagues: { $exists: true } }).forEach(function (player) {
-    const email = player.email.toLowerCase()
+  const primaryPlayerQuery = {
+    leagues: {
+      $exists: true
+    }
+  }
+  const playerCollection = db.collection('players')
+  const primaryPlayers = await playerCollection.find(primaryPlayerQuery).toArray()
+
+  primaryPlayers.forEach(function (primaryPlayer) {
+    const email = primaryPlayer.email.toLowerCase()
 
     if (emails[email]) {
-      printjson(player)
+      console.log(primaryPlayer)
       throw Error('We have a duplicate email even in leagues due to email ' + email)
     } else {
-      emails[email] = player
+      emails[email] = primaryPlayer
     }
   })
 
   // now find people with matching emails
-  const matchingPlayers = db.players.find({
+  const matchingPlayers = await playerCollection.find({
     leagues: {
       $exists: false
     },
@@ -21,37 +34,59 @@
     }
   }).toArray()
 
-  matchingPlayers.forEach(function (secondaryPlayer) {
+  const teamCollection = db.collection('teams')
+
+  for (const secondaryPlayer of matchingPlayers) {
     // find if they were in any other team
-    const teams = db.teams.find({
+    const secondaryPlayerID = secondaryPlayer._id
+    const teams = await teamCollection.find({
       $or: [
         {
-          players: secondaryPlayer._id
+          players: secondaryPlayerID
         },
         {
-          captains: secondaryPlayer._id
+          captains: secondaryPlayerID
         }
       ]
     }).toArray()
-    const log = {
-      player: secondaryPlayer,
-      teams: teams.map(function (d) {
-        return d.name
-      })
-    }
 
     // if no teams, just delete and modify parent record
-    if (teams.length === 0) {
-      printjson(log)
-      const primaryPlayer = emails[secondaryPlayer.email.toLowerCase()]
-      db.players.updateOne({
-        _id: primaryPlayer._id
-      }, {
-        $addToSet: {
-          archivedPlayerIDs: secondaryPlayer._id
-        }
-      })
-      db.players.remove(secondaryPlayer)
+    const primaryPlayer = emails[secondaryPlayer.email.toLowerCase()]
+    const $primaryFind = {
+      _id: primaryPlayer._id
     }
-  })
-})()
+
+    if (teams.length > 0) {
+      // for each team, point the player id now to the new person
+      const keys = ['players', 'captains']
+      for (const team of teams) {
+        for (const key of keys) {
+          const list = team[key]
+          for (let i = 0; i < list.length; i++) {
+            const hasOldPlayerID = list[i].equals(secondaryPlayerID)
+            if (hasOldPlayerID) {
+              console.log(team)
+              list[i] = primaryPlayer._id
+              await playerCollection.updateOne($primaryFind, {
+                $addToSet: {
+                  leagues: team.league
+                }
+              })
+            }
+          }
+
+          console.log('Switched to ' + primaryPlayer._id)
+          await teamCollection.save(team)
+        }
+      }
+    }
+    const $primaryArchiveUpdate = {
+      $addToSet: {
+        archivedPlayerIDs: secondaryPlayer._id
+      }
+    }
+    await playerCollection.updateOne($primaryFind, $primaryArchiveUpdate)
+    await playerCollection.remove(secondaryPlayer)
+  }
+  db.close()
+})
