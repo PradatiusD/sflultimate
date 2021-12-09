@@ -1,6 +1,8 @@
 const { MongoClient, ObjectId } = require('mongodb')
 const fs = require('fs')
-const url = 'mongodb://localhost:27017/sflultimate'
+const path = require('path')
+console.log(process.argv)
+const url = process.env.MONGO_URI
 MongoClient.connect(url, async function (err, db) {
   if (err) {
     throw err
@@ -12,6 +14,7 @@ MongoClient.connect(url, async function (err, db) {
    * @return {Promise<void>}
    */
   async function insertStatsFromFile (filePath) {
+    console.log('Reading ' + filePath)
     const data = fs.readFileSync(filePath, 'utf8')
     const rows = data.split('\r\n')
     const [gameAbbrevs, gameIDs, statColumns, ...playerRows] = rows
@@ -23,7 +26,7 @@ MongoClient.connect(url, async function (err, db) {
     const playerGameStats = db.collection('playergamestats')
     for (const player of players) {
       const [playerIDString, playerName, ...stats] = player
-
+      console.log({ playerName })
       for (let i = 0; i < gameAbbrevArr.length + 2; i++) {
         const j = i + 2
         const playerID = new ObjectId(playerIDString)
@@ -34,6 +37,11 @@ MongoClient.connect(url, async function (err, db) {
         const statValue = parseInt(stats[i] || 0)
 
         if (statEntry) {
+          const valueExistsAlready = statEntry[statColumn] === statValue
+          if (valueExistsAlready) {
+            // console.log(`Skipping since ${statColumn} for ${playerName} is already ${statValue}`)
+            continue
+          }
           statEntry[statColumn] = statValue
           const $update = {
             $set: {}
@@ -59,10 +67,13 @@ MongoClient.connect(url, async function (err, db) {
     console.log('Done with ' + filePath)
   }
 
-  await insertStatsFromFile('/Users/dprad1214/Downloads/vice-city.csv')
-  await insertStatsFromFile('/Users/dprad1214/Downloads/pichelo.csv')
-  await insertStatsFromFile('/Users/dprad1214/Downloads/florida-man.csv')
-  await insertStatsFromFile('/Users/dprad1214/Downloads/free-candy.csv')
+  const targetDirectory = process.argv[1]
+  const files = fs.readdirSync(targetDirectory)
+  for (const file of files) {
+    if (file.endsWith('.csv')) {
+      await insertStatsFromFile(path.join(targetDirectory, file))
+    }
+  }
 
   db.close()
 })

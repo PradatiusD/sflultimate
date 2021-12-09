@@ -13,11 +13,43 @@ module.exports = async function (req, res) {
       league: activeLeague._id
     }).lean().exec()
 
-    const stats = await PlayerGameStat.model.find({
-      game: {
-        $in: leagueGames
+    const stats = await PlayerGameStat.model.aggregate([
+      {
+        $match: {
+          game: {
+            $in: leagueGames.map(game => game._id)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            player: '$player'
+          },
+          assists: {
+            $sum: '$assists'
+          },
+          scores: {
+            $sum: '$scores'
+          },
+          defenses: {
+            $sum: '$defenses'
+          },
+          pointsPlayed: {
+            $sum: '$pointsPlayed'
+          }
+        }
+      },
+      {
+        $project: {
+          player: '$_id.player',
+          assists: '$assists',
+          scores: '$scores',
+          defenses: '$defenses',
+          pointsPlayed: '$pointsPlayed'
+        }
       }
-    }).sort({}).lean().exec()
+    ])
 
     const playerIDs = stats.map((playerGameStat) => {
       return playerGameStat.player

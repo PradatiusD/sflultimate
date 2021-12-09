@@ -46,7 +46,7 @@ MongoClient.connect(url, async function (err, db) {
     const mappedPlayers = allPlayersData.map(function (player) {
       return {
         _id: player._id,
-        name: player.name.first + ' ' + player.name.last
+        name: player.name.first.trim() + ' ' + player.name.last.trim()
       }
     }).sort((a, b) => a.name.localeCompare(b.name))
     for (const player of mappedPlayers) {
