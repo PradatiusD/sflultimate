@@ -97,7 +97,13 @@ exports = module.exports = async function (req, res) {
     return
   }
 
-  locals.standings = standings
+  locals.standings = standings.sort((a, b) => {
+    const winDifferential = b.wins - a.wins
+    if (winDifferential === 0) {
+      return b.pointDiff - a.pointDiff
+    }
+    return winDifferential
+  })
 
   // Render the view
   view.render('index')

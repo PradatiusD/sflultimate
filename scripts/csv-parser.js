@@ -67,7 +67,7 @@ MongoClient.connect(url, async function (err, db) {
     console.log('Done with ' + filePath)
   }
 
-  const targetDirectory = process.argv[1]
+  const targetDirectory = process.argv[2]
   const files = fs.readdirSync(targetDirectory)
   for (const file of files) {
     if (file.endsWith('.csv')) {
