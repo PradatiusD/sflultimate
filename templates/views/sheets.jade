@@ -50,16 +50,22 @@ html
         table.table.table-bordered.table-striped
           thead
             tr
-              th(style="width: 20%") Game Date
-              th Team
+              th(style="min-width: 90px") Game Date
+              th(style="min-width: 140px;") Team
+              th(style="min-width: 130px;") Time-Outs Used
               th(style="width: 60%") Score
+              th(style="min-width: 140px;") Score at Half
           tbody
             tr
               td(rowspan=2)
               td <strong>{{team.name}}</strong>
               td
+              td
+              td
             tr
               td Opponent
+              td 
+              td
               td
 
         table.table.table-bordered.table-striped
