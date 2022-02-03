@@ -80,6 +80,18 @@ module.exports = function (req, res) {
           label: 'Twitter Page'
         }
       ]
+    },
+    {
+      title: 'South Side',
+      category: 'Open',
+      description: 'The newly formed South Side men\'s ultimate team won the 2022 Janus XXVII Open Championship with a 6 - 0 record finishing finals 11 - 7.',
+      image: '/images/teams/southside.jpg',
+      links: [
+        {
+          url: 'https://www.instagram.com/davidap17/',
+          label: 'Instagram Page'
+        }
+      ]
     }
   ]
 
