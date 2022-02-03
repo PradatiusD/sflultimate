@@ -10,8 +10,10 @@ exports = module.exports = async function (req, res) {
   // item in the header navigation.
   locals.section = 'home'
 
+  const currentLeague = res.locals.league ? res.locals.league : null
+
   const games = await Game.model.find({
-    league: res.locals.league._id,
+    league: currentLeague,
     homeTeamScore: {
       $exists: true
     },
@@ -23,7 +25,7 @@ exports = module.exports = async function (req, res) {
   const standingsMap = {}
 
   const teams = await Team.model.find({
-    league: res.locals.league._id
+    league: currentLeague
   }).lean().exec()
 
   const teamsMap = {}
@@ -96,14 +98,6 @@ exports = module.exports = async function (req, res) {
     res.json(standings)
     return
   }
-
-  locals.standings = standings.sort((a, b) => {
-    const winDifferential = b.wins - a.wins
-    if (winDifferential === 0) {
-      return b.pointDiff - a.pointDiff
-    }
-    return winDifferential
-  })
 
   // Render the view
   view.render('index')

@@ -43,13 +43,15 @@ exports.initLocals = async function (req, res, next) {
     { label: 'Home', key: 'home', href: '/' }
   ]
 
-  activeLeague.isRegistrationPeriod = isValidRegPeriod(activeLeague.registrationStart, activeLeague.registrationEnd)
-  activeLeague.isLateRegistrationPeriod = isValidRegPeriod(activeLeague.lateRegistrationStart, activeLeague.lateRegistrationEnd)
-  activeLeague.canRegister = activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod
+  if (activeLeague) {
+    activeLeague.isRegistrationPeriod = isValidRegPeriod(activeLeague.registrationStart, activeLeague.registrationEnd)
+    activeLeague.isLateRegistrationPeriod = isValidRegPeriod(activeLeague.lateRegistrationStart, activeLeague.lateRegistrationEnd)
+    activeLeague.canRegister = activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod
 
-  if (activeLeague.canRegister) {
-    locals.navLinks.push({ label: 'Register for Fall League', key: 'register', href: '/register' })
-  } else {
+    if (activeLeague.canRegister) {
+      locals.navLinks.push({ label: 'Register for ' + activeLeague.title, key: 'register', href: '/register' })
+    }
+
     locals.navLinks = locals.navLinks.concat([
       { label: 'Teams', key: 'teams', href: '/teams' },
       { label: 'Schedule', key: 'schedule', href: '/schedule' },

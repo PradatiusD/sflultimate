@@ -19,10 +19,10 @@ block content
         .col-md-6
           h1 Welcome
           p Since 1999, players from Dade & Broward counties unite to grow the awesome sport of Ultimate Frisbee.
-          p Our fall league registration has closed, view teams now to see who is playing!
+          p We're working on our spring league, while we wait go check out your local pick ups!
       .row
         .col-md-12.text-center
-          a.btn.btn-lg.btn-primary(href="/teams") View Teams
+          a.btn.btn-lg.btn-primary(href="/community") View Pick Up
 
   .features
     .container
@@ -42,27 +42,28 @@ block content
           h3 Ladies Welcome
           p Our league is co-ed, and is always excited to invite new lady players!
 
-    .container
-      hr
-      .row
-        .col-md-4
-          h3 Current Standings
-          p Here you can see the current standings for the current league!
-        .col-md-8
-          div
-            table.table.table-striped.table-bordered.text-center(style="margin-top: 2em;")
-              thead
-                th.text-center Name
-                th.text-center Wins
-                th.text-center Losses
-                th.text-center Point Differential
-              tbody
-                each team in locals.standings
-                  tr
-                    td.text-left=team.name
-                    td=team.wins
-                    td=team.losses
-                    td=team.pointDiff
+    if locals.standings
+      .container
+        hr
+        .row
+          .col-md-4
+            h3 Current Standings
+            p Here you can see the current standings for the current league!
+          .col-md-8
+            div
+              table.table.table-striped.table-bordered.text-center(style="margin-top: 2em;")
+                thead
+                  th.text-center Name
+                  th.text-center Wins
+                  th.text-center Losses
+                  th.text-center Point Differential
+                tbody
+                  each team in locals.standings
+                    tr
+                      td.text-left=team.name
+                      td=team.wins
+                      td=team.losses
+                      td=team.pointDiff
 
 
   section.champions
