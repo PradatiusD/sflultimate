@@ -52,11 +52,13 @@ exports.initLocals = async function (req, res, next) {
       locals.navLinks.push({ label: 'Register for ' + activeLeague.title, key: 'register', href: '/register' })
     }
 
-    locals.navLinks = locals.navLinks.concat([
-      { label: 'Teams', key: 'teams', href: '/teams' },
-      { label: 'Schedule', key: 'schedule', href: '/schedule' },
-      { label: 'Stats', key: 'stats', href: '/stats' }
-    ])
+    if (!activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod) {
+      locals.navLinks = locals.navLinks.concat([
+        { label: 'Teams', key: 'teams', href: '/teams' },
+        { label: 'Schedule', key: 'schedule', href: '/schedule' },
+        { label: 'Stats', key: 'stats', href: '/stats' }
+      ])
+    }
   }
 
   locals.navLinks = locals.navLinks.concat([

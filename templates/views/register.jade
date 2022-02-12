@@ -26,7 +26,9 @@ block content
 
             p 
             | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
-            | and ends #{locals.league.registrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })}</strong> and the costs are:
+            | and ends #{locals.league.registrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })}</strong>.
+            
+            br
             
             .alert.alert-info 
               | Late registration (at a $50 fee for everyone, as space permits) start 
