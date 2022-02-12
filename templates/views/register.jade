@@ -20,21 +20,13 @@ block content
             br
             br
             h1=league.title + " Sign Up" 
-    
-            h3 Description
-            p We are excited to announce that ultimate is back at Amelia Earhart Park for South Florida Ultimate fall league!
-            iframe(src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14358.205887616712!2d-80.2784486!3d25.8842357!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x5fd60d3c7189a581!2sAmelia+Earhart+Park!5e0!3m2!1sen!2sus!4v1475028057840" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen)
-    
-            p Regular season games will be <strong>Wednesday evenings at 8pm, starting October 6th</strong>. 
-            p We're planning on 8 weeks of play on Wednesdays, skipping the Wednesday of Thanksgiving week and ending on Wednesday, December 1st. <strong>Finals are planned for December 12th</strong>, and will be at <strong>Amelia Earhart Park</strong>.
-    
+
+            if locals.league.description 
+                !{locals.league.description}
+
             p 
             | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
             | and ends #{locals.league.registrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })}</strong> and the costs are:
-            ul
-                li $30 for students
-                li $50 for everyone else
-            p Player fees will be put toward fields, lights, insurance, and jerseys for the league.
             
             .alert.alert-info 
               | Late registration (at a $50 fee for everyone, as space permits) start 

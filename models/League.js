@@ -18,6 +18,10 @@ League.add({
     required: true,
     index: true
   },
+  description: {
+    type: Types.Html,
+    wysiwyg: true
+  },
   isActive: {
     type: Types.Boolean,
     default: false
