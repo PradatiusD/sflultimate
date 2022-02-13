@@ -77,7 +77,11 @@ module.exports = async function (req, res) {
       const result = await PaymentUtils.createSale(purchase)
       if (!result.success) {
         console.log(JSON.stringify(result, null, 2))
-        locals.err = JSON.stringify(result, null, 2)
+        if (result.message) {
+          locals.err = 'We\'re sorry, the payment processor rejected this transaction for the following reason: ' + result.message
+        } else {
+          locals.err = JSON.stringify(result, null, 2)
+        }
         return next()
       }
 

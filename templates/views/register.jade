@@ -15,14 +15,14 @@ block content
             if err
                 br
                 .alert.alert-danger
-                    strong Error:
+                    strong Error: 
                     span=err
             br
             br
             h1=league.title + " Sign Up" 
 
             if locals.league.description 
-                !{locals.league.description}
+            !{locals.league.description}
 
             p 
             | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
