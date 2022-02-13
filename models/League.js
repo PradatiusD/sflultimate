@@ -13,10 +13,13 @@ const League = new keystone.List('League', {
 
 League.add({
   title: {
-    type: String,
+    type: Types.Text,
     initial: true,
     required: true,
     index: true
+  },
+  summary: {
+    type: Types.Text
   },
   description: {
     type: Types.Html,
