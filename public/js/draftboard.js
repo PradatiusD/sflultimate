@@ -4,17 +4,36 @@
   app.controller('PlayerTableController', function ($http, $scope) {
     const query = $http.get('/players?registered=true')
 
-    query.success(function (players) {
-      const totals = {}
-      $scope.keysForTotals = [
-        'gender', 'shirtSize', 'shirtSizeWithGender', 'teamColorAndNameWithShirtSizeAndGender', 'participation', 'insuranceGroup']
-
-      $scope.getBadgeStyle = function (player) {
-        return {
-          'background-color': player.team && player.team.color ? player.team.color : 'white',
-          color: player && player.team.color === '#ffffff' ? 'black' : 'black'
+    $scope.formatMapName = function (text) {
+      let finalString = ''
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i]
+        if (i === 0) {
+          finalString += char.toUpperCase()
+        } else if (char.toUpperCase() === char) {
+          finalString += ' ' + char.toLowerCase()
+        } else {
+          finalString += char
         }
       }
+      return finalString
+    }
+
+    $scope.getBadgeStyle = function (player) {
+      if (!player || !player.team) {
+        return {}
+      }
+
+      return {
+        'background-color': player.team && player.team.color ? player.team.color : 'white',
+        color: player && player.team.color === '#ffffff' ? 'black' : 'black'
+      }
+    }
+
+    $scope.keysForTotals = ['gender', 'shirtSize', 'shirtSizeWithGender', 'teamColorAndNameWithShirtSizeAndGender', 'participation', 'insuranceGroup']
+
+    query.success(function (players) {
+      const totals = {}
 
       players.forEach(function (player) {
         $scope.keysForTotals.forEach(function (key) {

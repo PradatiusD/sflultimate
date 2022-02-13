@@ -42,10 +42,10 @@ block content
                         td {{player.wouldCaptain ? 'Yes': ''}}
                         
             h3 Breakdowns
-            div(ng-repeat="table in keysForTotals")
-                h4 {{table}} 
+            div(ng-repeat="mapName in keysForTotals")
+                h4 {{formatMapName(mapName)}} 
                 ul
-                    li(ng-repeat="(key, entry) in totals[table]") <strong>{{key}}</strong>: {{entry}}
+                    li(ng-repeat="(key, entry) in totals[mapName]") <strong>{{key}}</strong>: {{entry}}
 
 block js
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
