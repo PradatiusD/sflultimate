@@ -10,8 +10,9 @@ block content
         #draftboard(ng-controller='PlayerTableController')
             p.lead There are {{players.length}} players registered.
 
-            //.button-group
-            //    .btn.btn-default(ng-click="filterPlayers()") All
+            .button-group
+                .btn.btn-default(ng-click="sortPlayersByRecency()") Sort By Recent
+                .btn.btn-default(ng-click="sortByGenderThenSkill()") Sort By Gender, Then Skill
             //    .btn.btn-default(ng-click="filterPlayers('2020-01-11')") Jan. 11th Event
             //    .btn.btn-default(ng-click="filterPlayers('2020-02-02')") Feb. 2nd
 
@@ -20,6 +21,7 @@ block content
                     th Number
                     th Name
                     th Gender
+                    th Date Registered
                     th Age
                     th Shirt Size
                     th Skill
@@ -32,6 +34,7 @@ block content
                         td {{$index + 1}}
                         td {{player.name.first}} {{player.name.last}}
                         td {{player.gender.charAt(0)}}
+                        td {{formatDate(player.createdAt)}}
                         td {{player.age}}
                         td {{player.shirtSize}}
                         td {{player.skillLevel}}

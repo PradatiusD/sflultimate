@@ -3,6 +3,32 @@
 
   app.controller('PlayerTableController', function ($http, $scope) {
     const query = $http.get('/players?registered=true')
+    $scope.players = []
+
+    $scope.sortByGenderThenSkill = function (players) {
+      $scope.players.sort(function (a, b) {
+        const aGender = a.gender === 'Female' ? 1 : 0
+        const bGender = b.gender === 'Female' ? 1 : 0
+
+        const genderDiff = bGender - aGender
+
+        if (genderDiff === 0) {
+          return b.skillLevel - a.skillLevel
+        }
+
+        return bGender - aGender
+      })
+    }
+
+    $scope.sortPlayersByRecency = function () {
+      $scope.players.sort(function (a, b) {
+        return b.createdAt.localeCompare(a.createdAt)
+      })
+    }
+
+    $scope.formatDate = function (date) {
+      return new Date(date).toLocaleString()
+    }
 
     $scope.formatMapName = function (text) {
       let finalString = ''
@@ -86,18 +112,8 @@
 
       $scope.totals = totals
 
-      $scope.players = players.sort(function (a, b) {
-        const aGender = a.gender === 'Female' ? 1 : 0
-        const bGender = b.gender === 'Female' ? 1 : 0
-
-        const genderDiff = bGender - aGender
-
-        if (genderDiff === 0) {
-          return b.skillLevel - a.skillLevel
-        }
-
-        return bGender - aGender
-      })
+      $scope.players = players
+      $scope.sortByGenderThenSkill()
     })
 
     query.error(function (err) {
