@@ -2,6 +2,10 @@ require('dotenv').config()
 const Mailchimp = require('mailchimp-api-v3')
 const MongoClient = require('mongodb').MongoClient
 
+/*
+ * node scripts/create-mailchimp-list.js
+ */
+
 const url = 'mongodb://localhost:27017/sflultimate'
 const API_KEY = process.env.MAILCHIMP_KEY
 const LIST_ID = '2fb82216db'

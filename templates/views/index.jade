@@ -19,10 +19,16 @@ block content
         .col-md-6
           h1 Welcome
           p Since 1999, players from Dade & Broward counties unite to grow the awesome sport of Ultimate Frisbee.
-          p We're working on our spring league, while we wait go check out your local pick ups!
+          if locals.league.isRegistrationPeriod
+            p Be sure to sign up for our #{locals.league.title}
+          else
+            p We're working on our next league, while we wait go check out your local pick ups!
       .row
         .col-md-12.text-center
-          a.btn.btn-lg.btn-primary(href="/community") View Pick Up
+          if locals.league
+            a.btn.btn-lg.btn-primary(href="/register") Register
+          else
+            a.btn.btn-lg.btn-primary(href="/community") Pick Ups
 
   .features
     .container

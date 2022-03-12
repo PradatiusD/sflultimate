@@ -55,7 +55,7 @@ block content
                 .form-group
                     label(for='email') Email Address
                     input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
-                    p.help-block We send updates and league information through the email you provide here
+                    p.help-block We use your e-mail to send you updates and league information through the email you provide here.
     
                 .form-group
                     label(for="gender") Gender
@@ -63,26 +63,26 @@ block content
                         option(value='Female') Female
                         option(value='Male') Male
                         option(value='Other') Other / I'd Prefer Not To
-                    p.help-block We use this information to draft teams that have even gender distributions
+                    p.help-block We use this information to draft teams that have even gender distributions.
     
                 .form-group
                     label(for="age") Age (In Years)
                     input#age.input-lg.form-control(type='number' name='age' required)
-                    p.help-block Our insurance policy requires us to report how many people within certain age-ranges exist in the league
+                    p.help-block Our insurance policy requires us to report how many people within certain age-ranges exist in the league.  We do not ask your birthdate to protect your privacy.
                     
                 .form-group
                     label(for="skillLevel") Skill Level
                         select#skillLevel.input-lg.form-control(name="skillLevel")
-                            option(value='1') 1 - Absolute Beginner
+                            option(value='1') 1 - Absolute Beginner - never played before
                             option(value='2') 2 - Hey wait, what's a flick?
-                            option(value='3') 3 - Working on throws, basic knowledge of game
-                            option(value='4') 4 - Pickup player, okay throws
+                            option(value='3') 3 - Working on throws, basic knowledge of the game
+                            option(value='4') 4 - Pick-up player, okay throws
                             option(value='5') 5 - Decent backhand & forehand. Little to no club experience
                             option(value='6') 6 - Fairly solid backhand & forehand. Some club experience
                             option(value='7') 7 - Tourney experience. Several years of club
                             option(value='8') 8 - Club level, solid all around, not prone to errors
                             option(value='9') 9 - Rock star. spot on throws, awesome D
-                    p.help-block Please express this accurately as it helps captains balance skill-level across teams
+                    p.help-block Please express this accurately as it helps captains balance skill-level across teams. 
                     
                 .form-group
                     label(for="participation") Expected Attendance
@@ -90,7 +90,7 @@ block content
                         option(value="30") Less than 30%
                         option(value="50") Around 50%
                         option(value="80" selected="selected") Greater than 80%
-                    p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams
+                    p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments
     
                 .form-group
     
@@ -112,15 +112,15 @@ block content
                 .form-group
                     label Comments
                     textarea#comments(name="comments").form-control
-                    p.help-block Type here any additional comments you may have
+                    p.help-block Type here any additional comments you may have.  The captains and organizers will see this for the draft.
                 
                 .form-group
-                    label(for="wouldCaptain") Would you like to be a captain?
+                    label(for="wouldCaptain") Would you like to be a captain or co-captain?
                     select#wouldCaptain.input-lg.form-control(name="wouldCaptain")
                         option(value='No') No
                         option(value='Yes') Yes
                 
-                p.help-block Captains can draft their teams and are responsible for communicating to their teams on a weekly basis.
+                p.help-block Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play.
     
                 h3 General Waiver
                 .checkbox
