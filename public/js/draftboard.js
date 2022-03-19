@@ -58,15 +58,17 @@
 
     $scope.columnsForTotals = {
       gender: ['Gender'],
-      shirtSize: ['Shirt Size'],
-      shirtSizeWithGender: ['Shirt Size', 'Gender'],
-      teamColorAndNameWithShirtSizeAndGender: ['Team Name', 'Team Color', 'Size', 'Gender'],
       participation: ['Participation %'],
-      insuranceGroup: ['Age Range'],
       playersPerTeam: ['Number of Teams'],
       playersPerTeamWithAttendance: ['Number of Teams'],
       genderPerTeam: ['Number of Teams', 'Gender'],
-      genderPerTeamWithAttendance: ['Number of Teams', 'Gender']
+      genderPerTeamWithAttendance: ['Number of Teams', 'Gender'],
+      insuranceGroup: ['Age Range'],
+      shirtSize: ['Shirt Size'],
+      shirtSizeWithGender: ['Shirt Size', 'Gender'],
+      teamColorAndNameWithShirtSizeAndGender: ['Team Name', 'Team Color', 'Size', 'Gender'],
+      registeredOnWeekday: ['Weekday'],
+      registeredAtHour: ['Hour']
     }
 
     $scope.keysForTotals = Object.keys($scope.columnsForTotals)
@@ -141,6 +143,14 @@
             }
           }
 
+          if (key === 'registeredOnWeekday') {
+            value = new Date(player.createdAt).toLocaleString('en-US', { weekday: 'long' })
+          }
+
+          if (key === 'registeredAtHour') {
+            value = new Date(player.createdAt).toLocaleTimeString(navigator.language, { hour: 'numeric', hour12: false })
+          }
+
           if (key === 'insuranceGroup') {
             const age = player.age
             // <12 13-15 16-19 20+
@@ -165,13 +175,10 @@
       })
 
       for (const key in totals) {
-        totals[key] = Object.keys(totals[key]).sort().reduce(
-          (obj, subKey) => {
-            obj[subKey] = totals[key][subKey]
-            return obj
-          },
-          {}
-        )
+        totals[key] = Object.keys(totals[key]).sort().reduce(function (obj, subKey) {
+          obj[subKey] = totals[key][subKey]
+          return obj
+        }, {})
       }
 
       $scope.totals = totals
