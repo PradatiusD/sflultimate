@@ -10,7 +10,7 @@ block content
         #draftboard(ng-controller='PlayerTableController')
             p.lead There are {{players.length}} players registered.
 
-            .button-group
+            .btn-group
                 .btn.btn-default(ng-click="sortPlayersByRecency()") Sort By Recent
                 .btn.btn-default(ng-click="sortByGenderThenSkill()") Sort By Gender, Then Skill
             //    .btn.btn-default(ng-click="filterPlayers('2020-01-11')") Jan. 11th Event
@@ -43,12 +43,21 @@ block content
                         td 
                          | <small class="badge" ng-style="getBadgeStyle(player)">{{player.team ? "Rostered": "Unassigned"}}</small> {{player.comments}} 
                         td {{player.wouldCaptain ? 'Yes': ''}}
-                        
-            h3 Breakdowns
-            div(ng-repeat="mapName in keysForTotals")
-                h4 {{formatMapName(mapName)}} 
-                ul
-                    li(ng-repeat="(key, entry) in totals[mapName]") <strong>{{key}}</strong>: {{entry}}
+
+            .row
+                .col-md-12
+                    h3 Breakdowns
+                div(ng-repeat="mapName in keysForTotals").col-md-6
+                    h4 {{formatMapName(mapName)}} 
+                    table.table.table-bordered.table-striped
+                        thead
+                            tr
+                                th(ng-repeat="column in columnsForTotals[mapName]") {{ column }}
+                                th Count
+                        tbody
+                            tr(ng-repeat="(key, count) in totals[mapName]")
+                                td(ng-repeat="column in key.split('|')") {{ column }}
+                                td {{count.toLocaleString()}}
 
 block js
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js')
