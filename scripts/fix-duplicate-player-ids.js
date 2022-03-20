@@ -1,5 +1,8 @@
 const MongoClient = require('mongodb').MongoClient
 const url = 'mongodb://localhost:27017/sflultimate'
+/**
+ * node scripts/fix-duplicate-player-ids.js
+ */
 MongoClient.connect(url, async function (err, db) {
   if (err) {
     throw err
@@ -17,8 +20,8 @@ MongoClient.connect(url, async function (err, db) {
     const email = primaryPlayer.email.toLowerCase()
 
     if (emails[email]) {
-      console.log(primaryPlayer)
-      throw Error('We have a duplicate email even in leagues due to email ' + email)
+      console.log(primaryPlayer, emails[email])
+      throw Error('We cannot have a duplicate player email in the same league' + email)
     } else {
       emails[email] = primaryPlayer
     }

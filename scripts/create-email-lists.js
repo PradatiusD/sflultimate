@@ -1,16 +1,20 @@
 
 /*
+ * To captain
+ * send email of people
  * mongo sflultimate scripts/create-email-lists.js
  */
 
-// To captain
-// send email of people
-var globalEmails = []
+const globalEmails = []
 
-db.teams.find({ league: ObjectId('589f1ea1e233f50400259325') }).forEach(function (team) {
-  var email = ''
+const data = db.leagues.find({ isActive: true }).toArray()
 
-  var playerEmails = ''
+db.teams.find({
+  league: data[0]._id
+}).forEach(function (team) {
+  let email = ''
+
+  let playerEmails = ''
 
   db.players.find({ _id: { $in: team.players } }).forEach(function (player) {
     if (player._id.valueOf() === team.captains[0].valueOf()) {
@@ -22,8 +26,8 @@ db.teams.find({ league: ObjectId('589f1ea1e233f50400259325') }).forEach(function
     globalEmails.push(player.email)
   })
 
-  // print(email);
-  // print(playerEmails);
+  print(email)
+  print(playerEmails)
 })
 
 print(globalEmails.sort().join(', '))
