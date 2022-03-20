@@ -57,14 +57,14 @@ html
               th(style="min-width: 140px;") Score at Half
           tbody
             tr
-              td(rowspan=2)
+              td {{team.game.scheduledTime.toLocaleDateString()}}
               td <strong>{{team.name}}</strong>
               td
               td
               td
             tr
-              td Opponent
-              td 
+              td {{team.game.scheduledTime.toLocaleTimeString()}}
+              td {{team._id === team.game.homeTeam ? teamMap[team.game.awayTeam] : teamMap[team.game.homeTeam] }}
               td
               td
 
