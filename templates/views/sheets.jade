@@ -53,8 +53,8 @@ html
               th(style="min-width: 90px") Game Date
               th(style="min-width: 140px;") Team
               th(style="min-width: 130px;") Time-Outs Used
-              th(style="width: 60%") Score
-              th(style="min-width: 140px;") Score at Half
+              th(style="width: 30%") Scores - 1st Half
+              th(style="width: 30%;") Score - 2nd Half
           tbody
             tr
               td {{team.game.scheduledTime.toLocaleDateString()}}
@@ -67,6 +67,7 @@ html
               td {{team._id === team.game.homeTeam ? teamMap[team.game.awayTeam] : teamMap[team.game.homeTeam] }}
               td
               td
+              td 
 
         table.table.table-bordered.table-striped
           thead
