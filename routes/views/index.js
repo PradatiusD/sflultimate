@@ -81,6 +81,14 @@ exports = module.exports = async function (req, res) {
     const teamEntry = standingsMap[team]
     standings.push(teamEntry)
   }
+  standings.sort(function (a, b) {
+    const winDiff = b.wins - a.wins
+    if (winDiff !== 0) {
+      return winDiff
+    }
+    return b.pointDiff - a.pointDiff
+  })
+  locals.standings = standings
 
   locals.hallOfFameImages = [
     'league-champions-2017-spring.jpg',
