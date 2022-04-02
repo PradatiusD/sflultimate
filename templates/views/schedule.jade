@@ -34,7 +34,7 @@ block content
           tr(ng-if="finalsTournament")
             td {{finalsTournament.startDate | date: 'EEE. MMM d'}}
             td {{finalsTournament.startDate | date: 'h:mma'}} - {{finalsTournament.endDate | date: 'h:mma'}}
-            td(ng-bind-html="finalsTournament.description")
+            td(ng-bind-html="finalsTournament.description" style="max-width: 529px;")
             td {{locations[finalsTournament.location].name}}
 
 block js
