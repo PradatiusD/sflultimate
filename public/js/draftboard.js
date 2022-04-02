@@ -66,6 +66,7 @@
       insuranceGroup: ['Age Range'],
       shirtSize: ['Shirt Size'],
       shirtSizeWithGender: ['Shirt Size', 'Gender'],
+      teamNameAndColorWithShirtSize: ['Team Name', 'Team Color', 'Size'],
       teamColorAndNameWithShirtSizeAndGender: ['Team Name', 'Team Color', 'Size', 'Gender'],
       registeredOnWeekday: ['Weekday'],
       registeredAtHour: ['Hour']
@@ -139,6 +140,22 @@
                 'No Color',
                 player.shirtSize,
                 player.gender
+              ].join(JOIN_CHAR)
+            }
+          }
+
+          if (key === 'teamNameAndColorWithShirtSize') {
+            if (player.team) {
+              value = [
+                player.team.name,
+                player.team.color,
+                player.shirtSize
+              ].join(JOIN_CHAR)
+            } else {
+              value = [
+                'No Team',
+                'No Color',
+                player.shirtSize
               ].join(JOIN_CHAR)
             }
           }
