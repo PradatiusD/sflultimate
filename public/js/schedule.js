@@ -1,11 +1,12 @@
 (function () {
-  var app = angular.module('scheduleApp', [])
+  var app = angular.module('scheduleApp', ['ngSanitize'])
 
-  app.controller('ScheduleViewController', function ($http, $scope, $filter) {
+  app.controller('ScheduleViewController', function ($sce, $http, $scope, $filter) {
     $scope.games = []
     $scope.teams = []
     $scope.standings = {}
     $scope.forfeits = {}
+    $scope.finalsTournament = {}
 
     // Today plus one day of separation
     var dayInMilliseconds = 1000 * 60 * 60 * 24
@@ -25,6 +26,8 @@
 
     $http.get('/schedule?f=json').then(function (response) {
       $scope.teams = {}
+      $sce.trustAsHtml(response.data.league.finalsTournament.description)
+      $scope.finalsTournament = response.data.league.finalsTournament
       for (const team of response.data.teams) {
         $scope.teams[team._id] = team
       }

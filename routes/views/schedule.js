@@ -21,7 +21,7 @@ module.exports = async function (req, res) {
     }).lean().exec()
 
     const locations = await Location.model.find({}).lean().exec()
-    return res.json({ games, teams, locations })
+    return res.json({ games, teams, locations, league: res.locals.league })
   }
   res.render('schedule')
 }

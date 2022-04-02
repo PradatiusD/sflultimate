@@ -40,8 +40,22 @@ League.add({
   },
   lateRegistrationEnd: {
     type: Types.Datetime
+  },
+  'finalsTournament.startDate': {
+    type: Types.Datetime
+  },
+  'finalsTournament.endDate': {
+    type: Types.Datetime
+  },
+  'finalsTournament.description': {
+    type: Types.Html,
+    wysiwyg: true
+  },
+  'finalsTournament.location': {
+    type: Types.Relationship,
+    ref: 'Location'
   }
 })
 
-League.defaultColumns = 'title, isActive'
+League.defaultColumns = 'title, isActive, registrationStart, registrationEnd'
 League.register()

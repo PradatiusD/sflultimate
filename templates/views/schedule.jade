@@ -31,12 +31,13 @@ block content
               span {{game.homeTeam.name}} vs. {{game.awayTeam.name}} 
               span(ng-if="game.homeTeamScore && game.awayTeamScore") ({{game.homeTeamScore}}-{{game.awayTeamScore}})
             td {{locations[game.location] ? locations[game.location].name: 'TBD'}}
-          tr(ng-class="(1481518800000 - $parent.today > 0) ? '':'text-muted' ")
-            td May 22nd
-            td 11:00AM-5:00PM
-            td League Finals
-            td Ives Estates Park
+          tr(ng-if="finalsTournament")
+            td {{finalsTournament.startDate | date: 'EEE. MMM d'}}
+            td {{finalsTournament.startDate | date: 'h:mma'}} - {{finalsTournament.endDate | date: 'h:mma'}}
+            td(ng-bind-html="finalsTournament.description")
+            td {{locations[finalsTournament.location].name}}
 
 block js
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js")
+  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-sanitize.min.js")
   script(src="/js/schedule.js")
