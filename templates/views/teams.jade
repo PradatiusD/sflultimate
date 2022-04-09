@@ -10,9 +10,9 @@ block head
 
 block content
   .container(ng-app='TeamApp')
-    section.team-list(ng-controller='TeamListController' ng-init='getTeamsAndPlayers()')
+    section.row.team-list(ng-controller='TeamListController' ng-init='getTeamsAndPlayers()')
       h1 {{league.title}} Teams
-      article.col-md-6.col-lg-3(ng-repeat='team in teams')
+      article.col-md-6.col-lg-4(ng-repeat='team in teams')
         h3
           span(ng-style="{'background-color':team.color}" ng-if="team.color").team-color
           | {{team.name}}
