@@ -6,7 +6,7 @@
     "npm": "7.24.0"
   },
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^3.2.2",
     "bower": "^1.8.8",
     "braintree": "^2.21.0",
     "browserify": "^16.2.3",
