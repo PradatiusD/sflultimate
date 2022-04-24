@@ -54,31 +54,38 @@ exports = module.exports = async function (req, res) {
       loser = homeTeam
     }
 
-    if (!standingsMap[winner.id]) {
-      standingsMap[winner.id] = {
-        name: teamsMap[winner.id],
-        wins: 0,
-        losses: 0,
-        pointDiff: 0
+    const createEntryIfMissing = function (teamId) {
+      if (!standingsMap[teamId]) {
+        standingsMap[teamId] = {
+          name: teamsMap[teamId],
+          wins: 0,
+          losses: 0,
+          pointDiff: 0,
+          pointsScored: 0,
+          pointsAllowed: 0
+        }
       }
     }
+
+    createEntryIfMissing(winner.id)
     standingsMap[winner.id].wins++
     standingsMap[winner.id].pointDiff += pointDiff
-    if (!standingsMap[loser.id]) {
-      standingsMap[loser.id] = {
-        name: teamsMap[loser.id],
-        wins: 0,
-        losses: 0,
-        pointDiff: 0
-      }
-    }
+    standingsMap[winner.id].pointsAllowed += loser.score
+    standingsMap[winner.id].pointsScored += winner.score
+
+    createEntryIfMissing(loser.id)
     standingsMap[loser.id].losses++
     standingsMap[loser.id].pointDiff -= pointDiff
+    standingsMap[loser.id].pointsAllowed += winner.score
+    standingsMap[loser.id].pointsScored += loser.score
   }
 
   const standings = []
   for (const team in standingsMap) {
     const teamEntry = standingsMap[team]
+    const totalGames = teamEntry.wins + teamEntry.losses
+    teamEntry.avgPointsScoredPerGame = (teamEntry.pointsScored / totalGames).toFixed(2)
+    teamEntry.avgPointsAllowedPerGame = (teamEntry.pointsAllowed / totalGames).toFixed(2)
     standings.push(teamEntry)
   }
   standings.sort(function (a, b) {

@@ -52,16 +52,21 @@ block content
       .container
         hr
         .row
-          .col-md-4
+          .col-md-12
             h3 Current Standings
             p Here you can see the current standings for the current league!
-          .col-md-8
+        .row
+          .col-md-12
             div
               table.table.table-striped.table-bordered.text-center(style="margin-top: 2em;")
                 thead
                   th.text-center Name
                   th.text-center Wins
                   th.text-center Losses
+                  th.text-center Points Scored
+                  th.text-center Points Allowed
+                  th.text-center Avg. Points Scored
+                  th.text-center Avg. Points Allowed
                   th.text-center Point Differential
                 tbody
                   each team in locals.standings
@@ -69,6 +74,10 @@ block content
                       td.text-left=team.name
                       td=team.wins
                       td=team.losses
+                      td=team.pointsScored
+                      td=team.pointsAllowed
+                      td=team.avgPointsScoredPerGame
+                      td=team.avgPointsAllowedPerGame
                       td=team.pointDiff
 
 
