@@ -51,6 +51,11 @@ const fields = {
     initial: true,
     label: 'Contact URL'
   },
+  'contact.whatsapp': {
+    type: Types.Url,
+    initial: true,
+    label: 'WhatsApp Group URL'
+  },
   'location.name': {
     type: String,
     initial: true,
