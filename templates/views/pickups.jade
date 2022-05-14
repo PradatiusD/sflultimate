@@ -2,12 +2,12 @@ extends ../layouts/default
 
 block head
   meta(property="og:title" content="Local Broward/Dade Pickups")
-  meta(property="og:url" content="https://www.sflultimate.com/community")
+  meta(property="og:url" content="https://www.sflultimate.com/pickups")
   meta(property="og:description" content="Learn about the local days, times, and locations for ultimate frisbee pickup near you!")
   meta(property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg")
 
 block content
-  .container(ng-app='CommunityApp')
+  .container.pickup-listing-page(ng-app='CommunityApp')
     section(ng-controller='PickupsController')
       h1 Our Ultimate Community
       p.lead Read below to find all the local pickups taking place in the Broward/Dade county area.
@@ -33,6 +33,7 @@ block content
               | {{game.location.address.city}}, {{game.location.address.state}}, {{game.location.address.zipCode}}<br>
 
             .btn-group
+              a.btn.btn-sm.btn-default(ng-if="game.contact.whatsapp" ng-href="{{game.contact.whatsapp}}" target="_blank") Join WhatsApp Group
               a.btn.btn-sm.btn-default(ng-if="game.contact.url" ng-href="{{game.contact.url}}" target="_blank") View Website
               a.btn.btn-sm.btn-default(ng-if="game.contact.email" ng-href="mailto:{{game.contact.email}}" target="_blank") Send Email
               a.btn.btn-sm.btn-default(ng-if="game.contact.phone" ng-href="tel:{{game.contanct.phone}}") Call Phone

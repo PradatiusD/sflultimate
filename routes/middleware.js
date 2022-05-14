@@ -61,18 +61,18 @@ exports.initLocals = async function (req, res, next) {
     }
   }
 
-  locals.navLinks = locals.navLinks.concat([
-    { label: 'Local Pickups', key: 'community', href: '/community' },
+  const evergreenLinks = [
+    { label: 'Local Pickups', key: 'community', href: '/pickups' },
     { label: 'Club Teams', key: 'club-teams', href: '/club-teams' },
     { label: 'Clinics/Camps', key: 'clinics', href: '/clinics' }
-  ])
+  ]
+
+  locals.navLinks = locals.navLinks.concat(evergreenLinks)
 
   locals.footerLinks = [
     { label: 'Terms & Conditions', key: 'terms', href: '/terms' },
-    { label: 'Privacy Policy', key: 'privacy', href: '/privacy' },
-    { label: 'Local Pickups', key: 'community', href: '/community' },
-    { label: 'Clinics/Camps', key: 'clinics', href: '/clinics' }
-  ]
+    { label: 'Privacy Policy', key: 'privacy', href: '/privacy' }
+  ].concat(evergreenLinks)
 
   locals.user = req.user
 

@@ -55,7 +55,6 @@ module.exports = function (app) {
     'privacy',
     'draftboard',
     'stats',
-    'community',
     'sheets',
     'clinics'
   ]
@@ -92,6 +91,9 @@ module.exports = function (app) {
     res.redirect(301, '/')
   })
 
+  app.get('/community', function (req, res) {
+    res.redirect(301, '/pickups')
+  })
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get("/protected", middleware.requireUser, routes.views.protected);
 }
