@@ -1,7 +1,9 @@
 (function () {
   var app = angular.module('StatSheetApp', [])
-
   app.controller('StatSheetController', function ($scope, $http) {
+    //http://localhost:5000/sheets?is_tournament=true
+    $scope.isTournament = window.location.href.indexOf('is_tournament=true') > -1
+    $scope.today = new Date()
     let teamsResponse
     let scheduleResponse
     $http.get('/teams?f=json')
@@ -16,7 +18,7 @@
 
         const scheduleMap = {}
         scheduleResponse.data.games.forEach(function (game) {
-          const isGameToday = new Date(game.scheduledTime).toDateString() === new Date().toDateString()
+          const isGameToday = new Date(game.scheduledTime).toDateString() === $scope.today.toDateString()
           if (!isGameToday) {
             return
           }
