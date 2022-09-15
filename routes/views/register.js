@@ -21,6 +21,7 @@ module.exports = async function (req, res) {
       participation,
       age,
       ageGroup,
+      usauNumber,
       wouldCaptain,
       partnerName,
       registrationLevel,
@@ -46,9 +47,9 @@ module.exports = async function (req, res) {
     let amount
 
     if (locals.league.isRegistrationPeriod) {
-      amount = registrationLevel === 'Student' ? 30 : 50
+      amount = registrationLevel === 'Student' ? locals.fees.regularStudent : locals.fees.regularAdult
     } else if (locals.league.isLateRegistrationPeriod) {
-      amount = 50
+      amount = registrationLevel === 'Student' ? locals.fees.lateStudent : locals.fees.lateAdult
     }
 
     const purchase = {
@@ -106,7 +107,8 @@ module.exports = async function (req, res) {
         participation,
         partnerName,
         wouldCaptain,
-        registrationLevel
+        registrationLevel,
+        usauNumber
       })
 
       await player.save()

@@ -88,6 +88,11 @@ const fields = {
     type: String,
     initial: true,
     required: false
+  },
+  usauNumber: {
+    type: String,
+    initial: true,
+    required: false
   }
 }
 

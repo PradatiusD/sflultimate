@@ -50,6 +50,14 @@ exports.initLocals = async function (req, res, next) {
   const { locals } = res
 
   const activeLeague = await exports.getActiveLeague(req)
+
+  locals.fees = {
+    regularStudent: 30,
+    regularAdult: 55,
+    lateStudent: 50,
+    lateAdult: 50
+  }
+
   locals.league = activeLeague
   locals.navLinks = [
     { label: 'Home', key: 'home', href: '/' }

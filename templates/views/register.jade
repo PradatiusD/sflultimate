@@ -107,12 +107,16 @@ block content
                     label(for='partnerName') Partner Name
                     input#partnerName.input-lg.form-control(type='text' name='partnerName' placeholder='')
                     p.help-block Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can't guarantee this.
-    
+
+                .form-group
+                    label(for='usauNumber') USAU Number
+                    input#usauNumber.input-lg.form-control(type='text' name='usauNumber' placeholder='')
+                    p.help-block We are trying to find out how many of our players are on USAU to see if we can use that insurance instead.
     
                 .form-group
                     label Comments
                     textarea#comments(name="comments").form-control
-                    p.help-block Type here any additional comments you may have.  The captains and organizers will see this for the draft.
+                    p.help-block Type here any additional comments you may have (if you can't attend certain weeks, really don't want to play with a specific person, or want to give captains some idea of who you are go ahead).  The captains and organizers will use this information during the player draft.
                 
                 .form-group
                     label(for="wouldCaptain") Would you like to be a captain or co-captain?
@@ -149,11 +153,11 @@ block content
                     label(for="registrationLevel") Registration Level
                         select#registrationLevel.input-lg.form-control(name="registrationLevel")
                             if locals.league.isRegistrationPeriod
-                                option(value='Adult') Adult - $50
-                                option(value='Student') Student - $30
+                                option(value='Adult')="Adult - $" + fees.regularAdult
+                                option(value='Student')="Student - $" + fees.regularStudent
                             if locals.league.isLateRegistrationPeriod
-                                option(value='Adult') Adult - $50
-                                option(value='Student') Student - $50
+                                option(value='Adult')="Adult - $" + fees.lateAdult
+                                option(value='Student') Student - $" + fees.lateStudent
                 
                 .form-group
                     label(for="streetAddress") Street Address
@@ -187,7 +191,7 @@ block content
     else
         .container.register: .row: .col-md-12
             h1 The Registration for #{locals.league.title} has closed
-            p If you wish to be considered for late registration ($50), contact sflultimate@gmail.com. Late registration (at a $50 fee for everyone, as space permits) will be considered on a weekly basis.
+            p="If you wish to be considered for late registration ($"+fees.lateAdult+"), contact sflultimate@gmail.com. Late registration (at a $"+ fees.lateAdult +" fee for everyone, as space permits) will be considered on a weekly basis."
             p Note that you will not get a jersey.
 
 block js
