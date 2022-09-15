@@ -31,8 +31,7 @@ block content
             br
             
             .alert.alert-info 
-              | Late registration (at a $50 fee for everyone, as space permits) start 
-              | on #{locals.league.lateRegistrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
+              | Late registration (at a $#{locals.fees.lateAdult} fee for everyone, as space permits) start on #{locals.league.lateRegistrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
               | until #{locals.league.lateRegistrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} at 
               | #{locals.league.lateRegistrationEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', timeZone: 'America/New_York'})}
     
