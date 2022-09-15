@@ -13,7 +13,7 @@ block content
   .container(ng-app="scheduleApp")
     .schedule(ng-controller="ScheduleViewController")
       section
-        h1 Schedule
+        h1=league.title + " Schedule"
         p.lead
           | Pick your color to filter schedule by your team.<br>
           span.team-color(ng-repeat="team in teams" ng-style="{'background-color': team.color}" ng-click="filterScheduleFor(team)")

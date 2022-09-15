@@ -1,11 +1,11 @@
 (function () {
-  var app = angular.module('TeamApp', [])
+  const app = angular.module('TeamApp', [])
 
   function createShirtList (teams) {
-    var jerseys = {}
+    const jerseys = {}
 
     teams.forEach(function (team) {
-      var color = team.color
+      const color = team.color
 
       if (!jerseys[color]) { jerseys[color] = {} }
 
@@ -16,12 +16,12 @@
       })
     })
 
-    var orders = []
+    let orders = []
 
-    for (var color in jerseys) {
-      var sizes = jerseys[color]
+    for (const color in jerseys) {
+      const sizes = jerseys[color]
 
-      var order = Object.keys(sizes).map(function (size) {
+      const order = Object.keys(sizes).map(function (size) {
         return {
           size: size,
           count: sizes[size],
@@ -36,12 +36,12 @@
   }
 
   function createEmailList (teams) {
-    var messages = []
+    const messages = []
 
     teams.forEach(function (team) {
-      var msg = 'To: '
+      let msg = 'To: '
 
-      var captainIds = []
+      const captainIds = []
 
       team.captains.forEach(function (captain) {
         msg += captain.email + ', '
@@ -63,12 +63,12 @@
   }
 
   function createStatsList (teams) {
-    var headers = ['Player ID', 'Team Color', 'First Name', 'Last Name', 'Gender']
-    var csv = headers.join('\t') + '\n'
+    const headers = ['Player ID', 'Team Color', 'First Name', 'Last Name', 'Gender']
+    let csv = headers.join('\t') + '\n'
 
     teams.forEach(function (team) {
       team.players.forEach(function (player) {
-        var row = [player._id, team.color, player.name.first, player.name.last, player.gender]
+        const row = [player._id, team.color, player.name.first, player.name.last, player.gender]
         csv += row.join('\t') + '\n'
       })
     })
@@ -77,9 +77,9 @@
   }
 
   function createShirtDistributionList (teams) {
-    var players = []
+    let players = []
     teams.forEach(function (team) {
-      var playersWithColor = team.players.map(function (player) {
+      const playersWithColor = team.players.map(function (player) {
         player.color = team.color
         return player
       })
@@ -95,8 +95,8 @@
         return 1
       }
 
-      var aName = a.name.first + '' + a.name.last
-      var bName = b.name.first + '' + b.name.last
+      const aName = a.name.first + '' + a.name.last
+      const bName = b.name.first + '' + b.name.last
 
       if (aName < bName) { return -1 }
       if (aName > bName) { return 1 }
@@ -117,22 +117,14 @@
 
   app.controller('TeamListController', function ($http, $scope) {
     $scope.getTeamsAndPlayers = function () {
-      let url = '/teams?f=json'
-      const queryParams = new URLSearchParams(window.location.search)
-      const forceKey = 'set_league_id'
-      const queryParamValue = queryParams.get(forceKey)
-      if (queryParamValue) {
-        url += '&' + forceKey + '=' + queryParamValue
-      }
-      var query = $http.get(url)
-
+      const query = $http.get(window.sflUtils.addLeagueOverride('/teams?f=json'))
       query.then(function (response) {
-        var data = response.data
-        var teams = data.teams
-        var players = data.players
+        const data = response.data
+        let teams = data.teams
+        const players = data.players
 
         function matchToPlayerById (playerId) {
-          for (var i = 0; i < players.length; i++) {
+          for (let i = 0; i < players.length; i++) {
             if (players[i]._id === playerId) {
               return players[i]
             }

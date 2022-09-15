@@ -24,10 +24,12 @@
       }
     }
 
-    $http.get('/schedule?f=json').then(function (response) {
+    $http.get(window.sflUtils.addLeagueOverride('/schedule?f=json')).then(function (response) {
       $scope.teams = {}
-      $sce.trustAsHtml(response.data.league.finalsTournament.description)
-      $scope.finalsTournament = response.data.league.finalsTournament
+      if (response.data.league.finalsTournament) {
+        $sce.trustAsHtml(response.data.league.finalsTournament.description)
+        $scope.finalsTournament = response.data.league.finalsTournament
+      }
       for (const team of response.data.teams) {
         $scope.teams[team._id] = team
       }

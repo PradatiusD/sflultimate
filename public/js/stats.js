@@ -2,7 +2,7 @@
   const app = angular.module('StatsApp', [])
 
   app.controller('StatsViewController', function ($http, $scope) {
-    const query = $http.get('/stats?f=json')
+    const query = $http.get(window.sflUtils.addLeagueOverride('/stats?f=json'))
 
     query.then(function (response) {
       let statEntries = response.data.stats

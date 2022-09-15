@@ -6,10 +6,10 @@
     $scope.today = new Date()
     let teamsResponse
     let scheduleResponse
-    $http.get('/teams?f=json')
+    $http.get(window.sflUtils.addLeagueOverride('/teams?f=json'))
       .then(function (response) {
         teamsResponse = response
-        return $http.get('/schedule?f=json')
+        return $http.get(window.sflUtils.addLeagueOverride('/schedule?f=json'))
       }).then(function (response) {
         scheduleResponse = response
         const teamsData = teamsResponse.data
