@@ -11,6 +11,7 @@
 const _ = require('underscore')
 const keystone = require('keystone')
 const League = keystone.list('League')
+const { ObjectID } = require('mongodb')
 
 /**
  *
@@ -26,6 +27,17 @@ function isValidRegPeriod (regStart, regEnd) {
   return false
 }
 
+exports.getActiveLeague = async function (req) {
+  const activeLeagueQuery = {}
+  const forceLeagueID = req.query.set_league_id
+  if (forceLeagueID && ObjectID.isValid(forceLeagueID)) {
+    activeLeagueQuery._id = new ObjectID(forceLeagueID)
+  } else {
+    activeLeagueQuery.isActive = true
+  }
+  return League.model.findOne(activeLeagueQuery).lean().exec()
+}
+
 /**
  Initialises the standard view locals
 
@@ -36,9 +48,9 @@ function isValidRegPeriod (regStart, regEnd) {
 
 exports.initLocals = async function (req, res, next) {
   const { locals } = res
-  const activeLeague = await League.model.findOne({ isActive: true }).lean().exec()
-  locals.league = activeLeague
 
+  const activeLeague = await exports.getActiveLeague(req)
+  locals.league = activeLeague
   locals.navLinks = [
     { label: 'Home', key: 'home', href: '/' }
   ]
@@ -75,7 +87,6 @@ exports.initLocals = async function (req, res, next) {
   ].concat(evergreenLinks)
 
   locals.user = req.user
-
   next()
 }
 

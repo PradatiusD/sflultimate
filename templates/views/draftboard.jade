@@ -6,7 +6,7 @@ block content
         if user
             #loggedin
 
-        h1 Draftboard
+        h1=league.title + " Draftboard"
         #draftboard(ng-controller='PlayerTableController')
             p.lead There are {{players.length}} players registered.
 

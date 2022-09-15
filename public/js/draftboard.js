@@ -1,8 +1,15 @@
 (function () {
   const app = window.angular.module('draftboardApp', [])
 
-  app.controller('PlayerTableController', function ($http, $scope) {
-    const query = $http.get('/players?registered=true')
+  app.controller('PlayerTableController', function ($http, $scope, $location) {
+    let url = '/players?registered=true'
+    const queryParams = new URLSearchParams(window.location.search)
+    const forceKey = 'set_league_id'
+    const queryParamValue = queryParams.get(forceKey)
+    if (queryParamValue) {
+      url += '&' + forceKey + '=' + queryParamValue
+    }
+    const query = $http.get(url)
     $scope.players = []
 
     $scope.sortByGenderThenSkill = function (players) {

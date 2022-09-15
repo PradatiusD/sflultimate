@@ -1,11 +1,9 @@
 const keystone = require('keystone')
 const Team = keystone.list('Team')
 const Player = keystone.list('Player')
-const League = keystone.list('League')
 
 module.exports = async function (req, res) {
-  const league = await League.model.findOne().where('isActive', true)
-  res.locals.league = league
+  const league = res.locals.league
   // If not json render HTML page
   if (req.query.f !== 'json') {
     return res.render('teams')

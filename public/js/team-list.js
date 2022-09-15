@@ -117,7 +117,13 @@
 
   app.controller('TeamListController', function ($http, $scope) {
     $scope.getTeamsAndPlayers = function () {
-      var url = '/teams?f=json'
+      let url = '/teams?f=json'
+      const queryParams = new URLSearchParams(window.location.search)
+      const forceKey = 'set_league_id'
+      const queryParamValue = queryParams.get(forceKey)
+      if (queryParamValue) {
+        url += '&' + forceKey + '=' + queryParamValue
+      }
       var query = $http.get(url)
 
       query.then(function (response) {
