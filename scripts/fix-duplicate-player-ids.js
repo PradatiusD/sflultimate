@@ -3,35 +3,39 @@ const url = 'mongodb://localhost:27017/sflultimate'
 /**
  * node scripts/fix-duplicate-player-ids.js
  */
-MongoClient.connect(url, async function (err, db) {
-  if (err) {
-    throw err
-  }
+
+async function removeDuplicatePlayerIds (db) {
+  // Get the active league
+  const leagues = db.collection('leagues')
+  const activeLeague = await leagues.findOne({ isActive: true })
+
   const emails = {}
   const primaryPlayerQuery = {
     leagues: {
-      $exists: true
+      $in: [activeLeague._id]
     }
   }
   const playerCollection = db.collection('players')
   const primaryPlayers = await playerCollection.find(primaryPlayerQuery).toArray()
 
+  const emailsToSkip = []
   primaryPlayers.forEach(function (primaryPlayer) {
     const email = primaryPlayer.email.toLowerCase()
 
     if (emails[email]) {
-      console.log(primaryPlayer, emails[email])
-      throw Error('We cannot have a duplicate player email in the same league' + email)
+      console.error('We cannot have a duplicate player email in the same league, skipping: ' + email)
+      emailsToSkip.push(email)
     } else {
       emails[email] = primaryPlayer
     }
   })
 
+  for (const email of emailsToSkip) {
+    delete emails[email]
+  }
+
   // now find people with matching emails
   const matchingPlayers = await playerCollection.find({
-    leagues: {
-      $exists: false
-    },
     email: {
       $in: Object.keys(emails)
     }
@@ -90,6 +94,18 @@ MongoClient.connect(url, async function (err, db) {
     }
     await playerCollection.updateOne($primaryFind, $primaryArchiveUpdate)
     await playerCollection.remove(secondaryPlayer)
+  }
+}
+
+MongoClient.connect(url, async function (err, db) {
+  if (err) {
+    throw err
+  }
+
+  try {
+    await removeDuplicatePlayerIds(db)
+  } catch (e) {
+    console.log(e)
   }
   db.close()
 })

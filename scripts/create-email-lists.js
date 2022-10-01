@@ -5,12 +5,16 @@
  * mongo sflultimate scripts/create-email-lists.js
  */
 
-const globalEmails = []
-
-const data = db.leagues.find({ isActive: true }).toArray()
+const leagues = db.leagues.find({ isActive: true }).toArray()
+const globalEmails = db.players.find({
+  leagues: {
+    $in: [leagues[0]._id]
+  }
+}, { email: 1 }).toArray().map(d => d.email).join(', ')
+printjson(globalEmails)
 
 db.teams.find({
-  league: data[0]._id
+  league: leagues[0]._id
 }).forEach(function (team) {
   let email = ''
 
@@ -23,11 +27,8 @@ db.teams.find({
     }
 
     playerEmails += '\n<' + player.name.first + ' ' + player.name.last + '> ' + player.email
-    globalEmails.push(player.email)
   })
 
   print(email)
   print(playerEmails)
 })
-
-print(globalEmails.sort().join(', '))
