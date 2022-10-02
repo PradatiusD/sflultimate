@@ -83,7 +83,8 @@ exports.initLocals = async function (req, res, next) {
 
   const evergreenLinks = [
     { label: 'Local Pickups', key: 'community', href: '/pickups' },
-    { label: 'Club Teams', key: 'club-teams', href: '/club-teams' },
+    { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
+    { label: 'Events', key: 'events', href: '/events' },
     { label: 'Clinics/Camps', key: 'clinics', href: '/clinics' }
   ]
 

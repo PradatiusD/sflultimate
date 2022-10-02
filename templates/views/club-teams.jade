@@ -10,18 +10,18 @@ block content
         h1 Club Teams
         p.lead South Florida has several local club teams that compete at a state and national level.
 
-
         for team in clubTeams
-            .row
-                .col-sm-3.text-center
-                    img(src=team.image class='img-responsive' style='margin: 0 auto;')
-                .col-sm-9
-                    h2=team.title
-                    p
-                        strong=team.category
-                    p=team.description
-                    ul.list-inline
-                        for link in team.links
-                            li
-                                a(href=link.url target="_blank")=link.label
-            hr
+            if team.active
+                .row
+                    .col-sm-3.text-center
+                        img(src=team.image class='img-responsive' style='margin: 0 auto;')
+                    .col-sm-9
+                        h2=team.title
+                        p
+                            strong=team.category
+                        p=team.description
+                        ul.list-inline
+                            for link in team.links
+                                li
+                                    a(href=link.url target="_blank")=link.label
+                hr
