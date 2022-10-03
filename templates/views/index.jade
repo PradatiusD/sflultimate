@@ -71,14 +71,14 @@ block content
                 tbody
                   each team in locals.standings
                     tr
-                      td.text-left=event.name
-                      td=event.wins
-                      td=event.losses
-                      td=event.pointsScored
-                      td=event.pointsAllowed
-                      td=event.avgPointsScoredPerGame
-                      td=event.avgPointsAllowedPerGame
-                      td=event.pointDiff
+                      td.text-left=team.name
+                      td=team.wins
+                      td=team.losses
+                      td=team.pointsScored
+                      td=team.pointsAllowed
+                      td=team.avgPointsScoredPerGame
+                      td=team.avgPointsAllowedPerGame
+                      td=team.pointDiff
 
 
   section.champions
