@@ -6,14 +6,31 @@ module.exports = function (req, res) {
   res.locals.events = [
     {
       title: 'UMiami Halloweekend Ultimate Hatter',
-      category: 'Hatter - October 29th - 10am-2pm - Intramural Fields at the University of Miami',
+      category: 'Hatter',
+      start_time: 'October 29th • 10am-2pm',
+      location: 'University of Miami Intramural Fields',
       active: true,
       description: 'We are sure you had a great time last spring and we cannot wait to see you on October 29th showing your support for the Women’s Ultimate Team here at UM. This fall, the hatter is going to be held on Halloweekend! So it will be Halloween themed :) Registration is $20, $15 dollars for UM Students, and will be collected on October 29th at the tournament. We will be taking Cash or Venmo.',
       image: null,
       links: [
         {
           url: 'https://docs.google.com/forms/d/e/1FAIpQLSeUGJtCYOO-mOx5lCen-w6gJC5tQN9v7bU6_UpbcUPN5cblUw/viewform',
-          label: 'Registration link'
+          label: 'Register'
+        }
+      ]
+    },
+    {
+      title: 'Salute Hatter',
+      category: 'Hatter',
+      start_time: 'November 13th • 10am-4pm',
+      location: 'Continental Park',
+      active: true,
+      description: '1.5 hour games. Coed teams. Quantity of teams and gender ratio will be determined by number of people who sign up. $20 per player.',
+      image: null,
+      links: [
+        {
+          url: 'https://docs.google.com/forms/d/e/1FAIpQLSc1ZYQ1HccZFzLTVh8YRoiiMGOMW5_FKVvo4zF8u_17H3tJ8Q/viewform',
+          label: 'Register'
         }
       ]
     }

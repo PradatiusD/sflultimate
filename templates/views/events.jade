@@ -8,7 +8,7 @@ block head
 block content
     .container
         h1 Events
-        p.lead Here are some upcoming events for you #{yay}.
+        p.lead Below you will find our list upcoming events.
         for event in events
             if event.active
                 .row
@@ -17,10 +17,12 @@ block content
                     .col-sm-12
                         h2=event.title
                         p
-                            strong=event.category
+                            strong=event.start_time
+                            |  <br/><em>#{event.location}</em>
+                            |  •  #{event.category}
                         p=event.description
                         ul.list-inline
                             for link in event.links
                                 li
-                                    a(href=link.url target="_blank")=link.label
+                                    a.btn.btn-default(href=link.url target="_blank")=link.label
                     hr

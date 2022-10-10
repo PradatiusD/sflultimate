@@ -53,12 +53,14 @@ html
               th(style="min-width: 90px") Game Date
               th(style="min-width: 140px;") Team
               th(style="min-width: 130px;") Time-Outs Used
-              th(style="width: 30%") Scores - 1st Half
-              th(style="width: 30%;") Score - 2nd Half
+              th 1st Half Points
+              th 2nd Half Points
+              th Most Spirited
           tbody
             tr
               td {{team.game.scheduledTime.toLocaleDateString()}}
               td <strong>{{team.name}}</strong>
+              td
               td
               td
               td
@@ -68,6 +70,10 @@ html
               td
               td
               td
+              td
+              
+        p
+          em <strong>What is Spirit of the Game?</strong> A truly unique and defining element of ultimate, Spirit of the Game places the responsibility of fair play solely on the athletes themselves by requiring each player to know the rules and make their own calls, without the help of a neutral official. These underlying principles (mutual respect, conflict resolution, knowledge of the rules, body control, communication, and the joy of play) reinforce mutual respect and trust between opponents; communication and conflict resolution skills; and self confidence – both on and off the field of play.
 
         table.table.table-bordered.table-striped
           thead
@@ -75,14 +81,14 @@ html
             th Assists
             th Scores
             th Defenses
-            th Points Played
+            th Attended
           tbody
             tr(ng-repeat="player in team.players | orderBy: 'name.first'")
               td(style='width: 20%') {{player.name.first}} {{player.name.last}}
-              td(style='width: 15%')
-              td(style='width: 15%')
-              td(style='width: 15%')
-              td(style='width: 40%')
+              td
+              td
+              td
+              td
 
       section(ng-repeat="team in teams" style='page-break-after: always; margin-top: 20px;' ng-if="isTournament")
         table.table.table-bordered.table-striped
