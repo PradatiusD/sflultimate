@@ -19,6 +19,9 @@ exports = module.exports = async function (req, res) {
     },
     awayTeamScore: {
       $exists: true
+    },
+    scheduledTime: {
+      $lte: new Date()
     }
   }).lean()
 
