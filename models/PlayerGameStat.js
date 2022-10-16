@@ -47,6 +47,10 @@ const fields = {
   pointsPlayed: {
     type: Types.Number,
     initial: true
+  },
+  attended: {
+    type: Types.Boolean,
+    initial: true
   }
 }
 

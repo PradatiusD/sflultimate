@@ -48,7 +48,7 @@ module.exports = function (app) {
   app.get('/teams', routes.views.teams)
   app.get('/club-teams', routes.views.clubTeams)
   app.get('/events', routes.views.events)
-  app.get('/stats', routes.views.stats)
+  app.all('/stats', routes.views.stats)
 
   // Content Pages
   const contentRoutes = [

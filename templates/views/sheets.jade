@@ -46,50 +46,56 @@ html
 
     .container-fluid(ng-controller='StatSheetController')
 
-      section(ng-repeat="team in teams" style='page-break-after: always; margin-top: 20px;' ng-if="!isTournament")
-        table.table.table-bordered.table-striped
-          thead
-            tr
-              th(style="min-width: 90px") Game Date
-              th(style="min-width: 140px;") Team
-              th(style="min-width: 130px;") Time-Outs Used
-              th 1st Half Points
-              th 2nd Half Points
-              th Most Spirited
-          tbody
-            tr
-              td {{team.game.scheduledTime.toLocaleDateString()}}
-              td <strong>{{team.name}}</strong>
-              td
-              td
-              td
-              td
-            tr
-              td {{team.game.scheduledTime.toLocaleTimeString()}}
-              td {{team._id === team.game.homeTeam ? teamMap[team.game.awayTeam] : teamMap[team.game.homeTeam] }}
-              td
-              td
-              td
-              td
-              
-        p
-          em <strong>What is Spirit of the Game?</strong> A truly unique and defining element of ultimate, Spirit of the Game places the responsibility of fair play solely on the athletes themselves by requiring each player to know the rules and make their own calls, without the help of a neutral official. These underlying principles (mutual respect, conflict resolution, knowledge of the rules, body control, communication, and the joy of play) reinforce mutual respect and trust between opponents; communication and conflict resolution skills; and self confidence – both on and off the field of play.
+      div(ng-repeat="game in games")
+        section(ng-repeat="team in game.teams" style='page-break-after: always; margin-top: 20px;' ng-if="!isTournament")
+          table.table.table-bordered.table-striped
+            thead
+              tr
+                th(style="min-width: 90px") Game Date
+                th(style="min-width: 140px;") Team
+                th(style="min-width: 130px;") Time-Outs Used
+                th 1st Half Points
+                th 2nd Half Points
+                th Most Spirited
+            tbody
+              tr
+                td {{game.scheduledTime.toLocaleDateString()}}
+                td <strong>{{team.currentTeam.name}}</strong>
+                td
+                td
+                td
+                td
+              tr
+                td {{game.scheduledTime.toLocaleTimeString()}}
+                td {{team.opponent.name}}
+                td
+                td
+                td
+                td
+            p
+              em <strong>What is Spirit of the Game?</strong> A truly unique and defining element of ultimate, Spirit of the Game places the responsibility of fair play solely on the athletes themselves by requiring each player to know the rules and make their own calls, without the help of a neutral official. These underlying principles (mutual respect, conflict resolution, knowledge of the rules, body control, communication, and the joy of play) reinforce mutual respect and trust between opponents; communication and conflict resolution skills; and self confidence – both on and off the field of play.
 
-        table.table.table-bordered.table-striped
-          thead
-            th Player Name
-            th Assists
-            th Scores
-            th Defenses
-            th Attended
-          tbody
-            tr(ng-repeat="player in team.players | orderBy: 'name.first'")
-              td(style='width: 20%') {{player.name.first}} {{player.name.last}}
-              td
-              td
-              td
-              td
+          table.table.table-bordered.table-striped
+            thead
+              th Player Name
+              th Assists
+              th Scores
+              th Defenses
+              th Attended
+            tbody
+              tr(ng-repeat="player in team.currentTeam.players | orderBy: 'name.first'")
+                td(style='width: 20%') {{player.name.first}} {{player.name.last}}
+                td
+                  input(ng-model="player.stats.assists" ng-if="editor" type="number" step="1")
+                td
+                  input(ng-model="player.stats.scores" ng-if="editor" type="number" step="1")
+                td
+                  input(ng-model="player.stats.defenses" ng-if="editor" type="number" step="1")
+                td
+                  input(ng-model="player.stats.attended" ng-if="editor" type="checkbox")
 
+
+          button.btn.btn-primary(ng-if="editor" ng-click="handleSave(game, team.currentTeam)") Save {{team.currentTeam.name}}'s stats for {{game.scheduledTime.toLocaleDateString()}}
       section(ng-repeat="team in teams" style='page-break-after: always; margin-top: 20px;' ng-if="isTournament")
         table.table.table-bordered.table-striped
           thead
