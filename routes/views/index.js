@@ -15,10 +15,12 @@ exports = module.exports = async function (req, res) {
   const games = await Game.model.find({
     league: currentLeague,
     homeTeamScore: {
-      $exists: true
+      $exists: true,
+      $ne: 0
     },
     awayTeamScore: {
-      $exists: true
+      $exists: true,
+      $ne: 0
     },
     scheduledTime: {
       $lte: new Date()
