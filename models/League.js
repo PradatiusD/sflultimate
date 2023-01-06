@@ -41,6 +41,18 @@ League.add({
   lateRegistrationEnd: {
     type: Types.Datetime
   },
+  'pricing.regularStudent': {
+    type: Types.Number
+  },
+  'pricing.regularAdult': {
+    type: Types.Number
+  },
+  'pricing.lateAdult': {
+    type: Types.Number
+  },
+  'pricing.lateStudent': {
+    type: Types.Number
+  },
   'finalsTournament.startDate': {
     type: Types.Datetime
   },
