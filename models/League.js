@@ -43,19 +43,27 @@ League.add({
   },
   'pricing.regularStudent': {
     type: Types.Number,
-    required: true
+    initial: true,
+    required: true,
+    default: 30
   },
   'pricing.regularAdult': {
     type: Types.Number,
-    required: true
+    initial: true,
+    required: true,
+    default: 55
   },
   'pricing.lateAdult': {
     type: Types.Number,
-    required: true
+    initial: true,
+    required: true,
+    default: 55
   },
   'pricing.lateStudent': {
     type: Types.Number,
-    required: true
+    initial: true,
+    required: true,
+    default: 55
   },
   'finalsTournament.startDate': {
     type: Types.Datetime
