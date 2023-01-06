@@ -42,16 +42,20 @@ League.add({
     type: Types.Datetime
   },
   'pricing.regularStudent': {
-    type: Types.Number
+    type: Types.Number,
+    required: true
   },
   'pricing.regularAdult': {
-    type: Types.Number
+    type: Types.Number,
+    required: true
   },
   'pricing.lateAdult': {
-    type: Types.Number
+    type: Types.Number,
+    required: true
   },
   'pricing.lateStudent': {
-    type: Types.Number
+    type: Types.Number,
+    required: true
   },
   'finalsTournament.startDate': {
     type: Types.Datetime
