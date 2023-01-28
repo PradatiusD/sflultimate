@@ -1,17 +1,21 @@
 extends ../layouts/default
 
 block head
-  meta(property="og:title" content="Local Broward/Dade Pickups")
+  meta(property="og:title" content="Local Broward, Palm Beach, & Miami-Dade County Pickups")
   meta(property="og:url" content="https://www.sflultimate.com/pickups")
-  meta(property="og:description" content="Learn about the local days, times, and locations for ultimate frisbee pickup near you!")
+  meta(property="og:description" content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!")
   meta(property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg")
 
 block content
   .container.pickup-listing-page(ng-app='CommunityApp')
     section(ng-controller='PickupsController')
       h1 Our Ultimate Community
-      p.lead Read below to find all the local pickups taking place in the Broward/Dade county area.
-
+      p.lead Read below to find all the local pickups taking place in the Broward, Palm Beach, & Miami-Dade County areas.
+      
+      .alert.alert-info(role="alert") <strong>How is this pickup list generated/updated?</strong><br/> We try our best to keep an accurate, up-to-date list, but as pickups grow and fade out we do sometimes not reflect the most up to date data. Have a suggestion or correction? Email <a href="mailto:sflultimate@gmail.com">sflultimate@gmail.com</a> with your suggestion and we'll take care of updating it.  
+      
+      .alert.alert-warning(role="alert") <strong>Reach Out Before You Play</strong><br/>Please reach out to the pickup before heading there to play.  Due to weather, turnout, or competing local events/tournaments, sometimes pickups do not happen, so it's best to get confirmation from the pickup organizer before heading there to play.
+        
       h2 Local Map
       #pickup-listing-map
 

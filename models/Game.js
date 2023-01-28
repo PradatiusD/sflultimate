@@ -16,7 +16,8 @@ Game.add({
     type: Types.Relationship,
     ref: 'League',
     index: true,
-    initial: true
+    initial: true,
+    required: true
   },
   scheduledTime: {
     type: Types.Datetime,
