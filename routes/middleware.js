@@ -51,6 +51,13 @@ exports.initLocals = async function (req, res, next) {
 
   const activeLeague = await exports.getActiveLeague(req)
 
+  activeLeague.pricing = activeLeague.pricing || {
+    regularStudent: 30,
+    regularAdult: 55,
+    lateStudent: 55,
+    lateAdult: 55
+  }
+
   locals.fees = {
     regularStudent: activeLeague.pricing.regularStudent,
     regularAdult: activeLeague.pricing.regularAdult,
