@@ -22,7 +22,7 @@ block content
             h1=league.title + " Sign Up" 
 
             if locals.league.description 
-            !{locals.league.description}
+                !{locals.league.description}
 
             p 
             | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
@@ -56,7 +56,12 @@ block content
                     label(for='email') Email Address
                     input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
                     p.help-block We use your e-mail to send you updates and league information through the email you provide here.
-    
+
+                .form-group
+                    label(for='phoneNumber') Phone Number
+                    input#phoneNumber.input-lg.form-control(type='tel' name='phoneNumber' placeholder='')
+                    p.help-block Not required, but often our captains find reaching out via SMS/GroupMe/WhatsApp is much better than email.  Your number would be shared with your team.                   
+
                 .form-group
                     label(for="gender") Gender
                     select#gender.input-lg.form-control(name="gender")
@@ -87,28 +92,31 @@ block content
                 .form-group
                     label(for="participation") Expected Attendance
                     select#participation.input-lg.form-control(name="participation")
-                        option(value="30") Less than 30%
-                        option(value="50") Around 50%
-                        option(value="80" selected="selected") Greater than 80%
-                    p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments
+                        option(value="30") Less than 30% (miss 6+ weeks of play)
+                        option(value="50") Around 50% (miss 4 weeks of play)
+                        option(value="80" selected="selected") Greater than 80% (miss 1 week of play)
+                    p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments.
     
                 .form-group
     
                     label(for="shirtSize") Shirt Size
                     select#shirtSize.input-lg.form-control(name="shirtSize")
+                        option(value="XS") XS
                         option(value="S") S
                         option(value="M") M
                         option(value="L") L
                         option(value="XL") XL
                         option(value="XXL") XXL
-                    br
+                        option(value="NA") I do not want a jersey
+
+                  br
     
                 .form-group
                     label(for='partnerName') Partner Name
                     input#partnerName.input-lg.form-control(type='text' name='partnerName' placeholder='')
                     p.help-block Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can't guarantee this.
 
-                .form-group
+                .form-group.hide
                     label(for='usauNumber') USAU Number
                     input#usauNumber.input-lg.form-control(type='text' name='usauNumber' placeholder='')
                     p.help-block We are trying to find out how many of our players are on USAU to see if we can use that insurance instead.
@@ -124,7 +132,7 @@ block content
                         option(value='No') No
                         option(value='Yes') Yes
                 
-                p.help-block Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play.
+                p.help-block If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play.
     
                 h3 General Waiver
                 .checkbox

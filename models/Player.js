@@ -48,7 +48,7 @@ const fields = {
   },
   shirtSize: {
     type: Types.Select,
-    options: 'S, M, L, XL, XXL, XXXL',
+    options: 'NA, XS, S, M, L, XL, XXL, XXXL',
     initial: true
   },
   skillLevel: {
@@ -92,6 +92,11 @@ const fields = {
   usauNumber: {
     type: String,
     initial: true,
+    required: false
+  },
+  phoneNumber: {
+    type: String,
+    initial: false,
     required: false
   }
 }

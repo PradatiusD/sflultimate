@@ -2,6 +2,15 @@ const keystone = require('keystone')
 const PlayerModel = keystone.list('Player').model
 const PaymentUtils = require('../utils')
 const uuid = require('uuid')
+const nodemailer = require('nodemailer')
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD
+  }
+})
 
 module.exports = async function (req, res) {
   const view = new keystone.View(req, res)
@@ -21,6 +30,7 @@ module.exports = async function (req, res) {
       participation,
       age,
       ageGroup,
+      phoneNumber,
       usauNumber,
       wouldCaptain,
       partnerName,
@@ -86,7 +96,7 @@ module.exports = async function (req, res) {
         return next()
       }
 
-      const player = new PlayerModel({
+      const newPlayerRecord = {
         createdAt: new Date(),
         updatedAt: new Date(),
         age,
@@ -108,10 +118,56 @@ module.exports = async function (req, res) {
         partnerName,
         wouldCaptain,
         registrationLevel,
-        usauNumber
-      })
+        usauNumber,
+        phoneNumber
+      }
+
+      const player = new PlayerModel(newPlayerRecord)
 
       await player.save()
+
+      try {
+        const emailSendParams = {
+          from: 'South Florida Ultimate" <sflultimate@gmail.com>',
+          to: email,
+          subject: 'Registration Confirmation for ' + locals.league.title,
+          html: `
+            <p>Thank you for your payment!</p>
+            <p>Below you can find a receipt for your registration for ${locals.league.title}.</p>
+            <table style="border: 1px solid #dadada; padding: 4px;">
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Your Submission</th> 
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>First Name</td><td>${firstName}</td></tr>
+                <tr><td>Last Name</td><td>${lastName}</td></tr>
+                <tr><td>Registration Level</td><td>${registrationLevel}</td></tr>
+                <tr><td>Amount Paid</td><td>$${amount}</td></tr>
+                <tr><td>Gender</td><td>${gender}</td></tr>
+                <tr><td>Participation</td><td>${participation}</td></tr>
+                <tr><td>Comments</td><td>${comments}</td></tr>
+                <tr><td>Email</td><td>${email}</td></tr>
+                <tr><td>Phone Number</td><td>${phoneNumber}</td></tr>
+                <tr><td>Age</td><td>${age}</td></tr>
+                <tr><td>Wanted to Captain</td><td>${wouldCaptain ? 'Yes' : 'No'}</td></tr>
+                <tr><td>Partner's Name</td><td>${partnerName}</td></tr>
+                <tr><td>Self-described skill level</td><td>${skillLevel}</td></tr>
+                <tr><td>Shirt Size</td><td>${shirtSize}</td></tr>          
+              </tbody>
+            </table>
+            <p><em>Organized by South Florida Ultimate Inc., a local non-for-profit and social recreational club organized for the exclusive purposes of <strong>playing</strong>, <strong>promoting</strong>, and <strong>enjoying</strong> the sport known as Ultimate or Ultimate Frisbee.</em></p>
+          `
+        }
+
+        await transporter.sendMail(emailSendParams)
+      } catch (e) {
+        console.error('Cound not send email for ' + email)
+        console.error(e)
+      }
+
       res.redirect('/confirmation')
     } catch (err) {
       locals.err = err
