@@ -56,6 +56,23 @@ module.exports = function (req, res) {
       ]
     },
     {
+      title: 'Rocket',
+      category: 'Mixed',
+      active: true,
+      description: 'Mixed Ultimate Team based out of South Florida 🥏🏝️.  Feel the Boom 🚀',
+      image: '/images/teams/rocket.jpg',
+      links: [
+        {
+          url: 'https://www.instagram.com/rocket.booom/',
+          label: 'Instagram Page'
+        },
+        {
+          url: 'https://docs.google.com/forms/d/e/1FAIpQLSf7K2lCNCNtHQszBOrXHQDzVM2Stkwl9unMt-as9-IsWc1x1g/viewform',
+          label: 'Interest Form'
+        }
+      ]
+    },
+    {
       title: 'Fire Miami Ultimate',
       category: 'Mixed',
       active: false,
