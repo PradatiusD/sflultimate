@@ -69,6 +69,10 @@ module.exports = function (req, res) {
         {
           url: 'https://docs.google.com/forms/d/e/1FAIpQLSf7K2lCNCNtHQszBOrXHQDzVM2Stkwl9unMt-as9-IsWc1x1g/viewform',
           label: 'Interest Form'
+        },
+        {
+          url: 'https://www.facebook.com/profile.php?id=100090472785740',
+          label: 'Facebook Page'
         }
       ]
     },
