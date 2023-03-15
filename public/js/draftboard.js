@@ -68,6 +68,7 @@
       shirtSizeWithGender: ['Shirt Size', 'Gender'],
       teamNameAndColorWithShirtSize: ['Team Name', 'Team Color', 'Size'],
       teamColorAndNameWithShirtSizeAndGender: ['Team Name', 'Team Color', 'Size', 'Gender'],
+      registeredOnDate: ['Date'],
       registeredOnWeekday: ['Weekday'],
       registeredAtHour: ['Hour']
     }
@@ -158,6 +159,14 @@
                 player.shirtSize
               ].join(JOIN_CHAR)
             }
+          }
+
+          if (key === 'registeredOnDate') {
+            value = new Date(player.createdAt).toLocaleDateString('en-CA', {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric'
+            })
           }
 
           if (key === 'registeredOnWeekday') {
