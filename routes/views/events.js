@@ -50,8 +50,19 @@ module.exports = function (req, res) {
     }
   ].map(function (event) {
     event.active = new Date().toISOString() < event.start_time
-    return event
+    event.start_time_formatted = new Date(event.start_time).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      weekday: 'long',
+      hour: '2-digit',
+      minute: '2-digit',
+      day: 'numeric',
+      timeZone: 'America/New_York'
+    })
+
+      return event
   })
+
 
   view.render('events')
 }
