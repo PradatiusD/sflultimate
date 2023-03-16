@@ -7,17 +7,15 @@ block head
 
 block content
     .container
-        h1 Events
+        h1 Upcoming Events
         p.lead Below you will find our list upcoming events.
         for event in events
             if event.active
                 .row
-                    //.col-sm-3.text-center
-                    //    img(src=event.image class='img-responsive' style='margin: 0 auto;')
                     .col-sm-12
                         h2=event.title
                         p
-                            strong=event.start_time
+                            strong=new Date(event.start_time).toLocaleString('en-US', {month: 'long', hour: 'numeric', day: 'numeric'})
                             |  <br/><em>#{event.location}</em>
                             |  •  #{event.category}
                         p=event.description
@@ -25,4 +23,22 @@ block content
                             for link in event.links
                                 li
                                     a.btn.btn-default(href=link.url target="_blank")=link.label
-                    hr
+
+        hr
+        h1 Past Events
+        for event in events
+            if !event.active
+                .row.text-muted
+                    .col-sm-12
+                      h3=event.title
+                  p
+                      strong=new Date(event.start_time).toLocaleString('en-US', {month: 'long', year: 'numeric'})
+                        |  <br/><em>#{event.location}</em>
+                        |  •  #{event.category}
+                  p=event.description
+                  ul.list-inline
+                      for link in event.links
+                        li
+                          a.btn.btn-default(href=link.url target="_blank")=link.label
+                hr
+                
