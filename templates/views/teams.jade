@@ -17,7 +17,8 @@ block content
           span(ng-style="{'background-color':team.color}" ng-if="team.color").team-color
           | {{team.name}}
         p.lead
-          span(ng-repeat='captain in team.captains') Captain{{team.captains.length > 1 ?'s':''}}: {{captain.name.first}} {{captain.name.last}} {{!$last ? "&":""}}
+          span Captain{{team.captains.length > 1 ?'s':''}}: 
+          span(ng-repeat='captain in team.captains') {{captain.name.first}} {{captain.name.last}} {{!$last ?  "& ":""}}
           br
           small.text-muted {{team.womenTotal}} women, {{team.menTotal}} men
         table.table.table-striped.table-bordered

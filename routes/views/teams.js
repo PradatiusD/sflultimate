@@ -20,7 +20,7 @@ module.exports = async function (req, res) {
   }
   const players = await Player.model.find($find, $project)
 
-  const teams = await Team.model.find().where('league', league._id)
+  const teams = await Team.model.find().where('league', league._id).sort({name: 1})
 
   res.json({
     league,
