@@ -1,9 +1,30 @@
 const keystone = require('keystone')
 const Player = keystone.list('Player')
 const Team = keystone.list('Team')
+const { ObjectID } = require('mongodb')
 
 module.exports = async function (req, res) {
   const activeLeague = res.locals.league
+  if (req.method === 'PUT') {
+    if (!req.user) {
+      return res.status(401).json({
+        code: 401,
+        message: 'Not Authorized'
+      })
+    }
+
+    const $findTeam = {
+      _id: ObjectID(req.body.team_id)
+    }
+    const $updateTeam = {
+      players: req.body.players.map(function (playerID) {
+        return ObjectID(playerID)
+      })
+    }
+
+    await Team.model.updateOne($findTeam, $updateTeam)
+  }
+
   const query = {
     leagues: {
       $in: [activeLeague._id]
@@ -27,5 +48,8 @@ module.exports = async function (req, res) {
     player.team = playerMap[player._id.valueOf()]
   }
 
-  res.json(players)
+  res.json({
+    teams,
+    players
+  })
 }

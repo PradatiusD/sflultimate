@@ -41,7 +41,7 @@ module.exports = function (app) {
   app.all('/contact', routes.views.contact)
   app.get('/signature', routes.views.signature)
   app.get('/confirmation', routes.views.confirmation)
-  app.get('/players', routes.views.players)
+  app.all('/players', routes.views.players)
   app.get('/pickups', routes.views.pickups)
   app.get('/captains', routes.views.captains)
   app.get('/schedule', routes.views.schedule)

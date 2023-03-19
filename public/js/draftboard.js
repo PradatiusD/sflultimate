@@ -1,11 +1,38 @@
 (function () {
   const app = window.angular.module('draftboardApp', [])
 
-  app.controller('PlayerTableController', function ($http, $scope, $location) {
-    const query = $http.get(window.sflUtils.addLeagueOverride('/players?registered=true'))
+  app.controller('PlayerTableController', function ($http, $scope) {
+    const query = $http.get(window.sflUtils.addLeagueOverride('/players'))
+    $scope.user = document.querySelector('#logged-in')
+    console.log($scope.user)
     $scope.players = []
+    $scope.teams = []
+    $scope.playerMap = {}
 
-    $scope.sortByGenderThenSkill = function (players) {
+    $scope.modifyRoster = function (team, player, action) {
+      const teamPlayers = team.players
+      const foundIndex = teamPlayers.indexOf(player._id)
+      if (action === 'add' && foundIndex === -1) {
+        teamPlayers.push(player._id)
+      } else if (action === 'remove' && foundIndex > -1) {
+        teamPlayers.splice(foundIndex, 1)
+      }
+
+      const payload = {
+        team_id: team._id,
+        players: teamPlayers
+      }
+      $http.put(window.sflUtils.addLeagueOverride('/players'), payload).then(function (response) {
+        $scope.players = response.data.players
+        $scope.teams = response.data.teams
+        $scope.players.forEach(function (player) {
+          $scope.playerMap[player._id] = player
+        })
+        $scope.sortByGenderThenSkill()
+      })
+    }
+
+    $scope.sortByGenderThenSkill = function () {
       $scope.players.sort(function (a, b) {
         const aGender = a.gender === 'Female' ? 1 : 0
         const bGender = b.gender === 'Female' ? 1 : 0
@@ -75,7 +102,9 @@
 
     $scope.keysForTotals = Object.keys($scope.columnsForTotals)
 
-    query.success(function (players) {
+    query.success(function (response) {
+      const players = response.players
+      $scope.teams = response.teams
       const totals = {
         playersPerTeam: {},
         playersPerTeamWithAttendance: {},
@@ -210,6 +239,9 @@
       $scope.totals = totals
 
       $scope.players = players
+      $scope.players.forEach(function (player) {
+        $scope.playerMap[player._id] = player
+      })
       $scope.sortByGenderThenSkill()
     })
 

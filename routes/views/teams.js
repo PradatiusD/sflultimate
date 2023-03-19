@@ -8,7 +8,7 @@ module.exports = async function (req, res) {
   if (req.query.f !== 'json') {
     return res.render('teams')
   }
-
+  
   const $find = {
     leagues: {
       $in: [league._id]
