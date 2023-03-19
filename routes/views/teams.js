@@ -8,7 +8,7 @@ module.exports = async function (req, res) {
   if (req.query.f !== 'json') {
     return res.render('teams')
   }
-  
+
   const $find = {
     leagues: {
       $in: [league._id]
@@ -20,7 +20,7 @@ module.exports = async function (req, res) {
   }
   const players = await Player.model.find($find, $project)
 
-  const teams = await Team.model.find().where('league', league._id).sort({name: 1})
+  const teams = await Team.model.find().where('league', league._id).sort({ name: 1 })
 
   res.json({
     league,

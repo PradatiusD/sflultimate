@@ -277,9 +277,15 @@
 /* Teams List */
 
 .team-list {
-
+  column-count: 3;
   article {
-    min-height: 877px;
+    break-inside: avoid-column;
+  }
+  @media screen and (max-width: 786px) {
+    column-count: 2;
+  }
+  @media screen and (max-width: 480px) {
+    column-count: 1;
   }
 }
 
