@@ -32,9 +32,20 @@ exports = module.exports = async function (req, res) {
     return playerMap[stat.player._id.toString()] === 'awayTeam'
   })
 
+  function totalContributionDescending (a, b) {
+    const diff = (b.assists + b.scores + b.defenses) - (a.assists + a.scores + a.defenses)
+    if (diff !== 0) {
+      return diff
+    }
+    return a.player.name.first.localeCompare(b.player.name.first)
+  }
+
   const homeTeamStats = stats.filter(function (stat) {
     return playerMap[stat.player._id.toString()] === 'homeTeam'
   })
+
+  awayTeamStats.sort(totalContributionDescending)
+  homeTeamStats.sort(totalContributionDescending)
 
   locals.teams = [
     {
@@ -46,7 +57,7 @@ exports = module.exports = async function (req, res) {
       score: locals.game.homeTeamScore,
       name: locals.game.homeTeam.name,
       stats: homeTeamStats
-    },
+    }
   ]
 
   // Render the view
