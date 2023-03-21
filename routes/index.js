@@ -45,6 +45,7 @@ module.exports = function (app) {
   app.get('/pickups', routes.views.pickups)
   app.get('/captains', routes.views.captains)
   app.get('/schedule', routes.views.schedule)
+  app.get('/game/:gameID', routes.views.game)
   app.get('/teams', routes.views.teams)
   app.get('/club-teams', routes.views.clubTeams)
   app.get('/events', routes.views.events)

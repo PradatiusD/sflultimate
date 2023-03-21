@@ -23,6 +23,7 @@ block content
           th Time
           th Matchup
           th Field
+          th Preview/Recap
         tbody
           tr(ng-repeat="game in games | filter:colorFilter" ng-class="(game.scheduledTimeEpoch < $parent.today) ?'text-muted': ''")
             td {{game.scheduledTime | date: 'EEE. MMM d'}}
@@ -31,6 +32,8 @@ block content
               span {{game.homeTeam.name}} vs. {{game.awayTeam.name}} 
               span(ng-if="game.homeTeamScore && game.awayTeamScore") ({{game.homeTeamScore}}-{{game.awayTeamScore}})
             td {{locations[game.location] ? locations[game.location].name: 'TBD'}}
+            td 
+                a(ng-href="/game/{{game._id}}") Game
           tr(ng-if="finalsTournament")
             td {{finalsTournament.startDate | date: 'EEE. MMM d'}}
             td {{finalsTournament.startDate | date: 'h:mma'}} - {{finalsTournament.endDate | date: 'h:mma'}}

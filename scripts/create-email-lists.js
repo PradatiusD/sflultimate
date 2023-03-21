@@ -26,7 +26,7 @@ db.teams.find({
       email += '\nSubject: ' + team.color + ' Team'
     }
 
-    playerEmails += '\n<' + player.name.first + ' ' + player.name.last + '> ' + player.email
+    playerEmails += '\n<' + player.name.first + ' ' + player.name.last + '> ' + player.email + ' • ' + player.phoneNumber
   })
 
   print(email)
