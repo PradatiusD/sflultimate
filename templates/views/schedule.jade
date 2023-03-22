@@ -33,7 +33,7 @@ block content
               span(ng-if="game.homeTeamScore && game.awayTeamScore") ({{game.homeTeamScore}}-{{game.awayTeamScore}})
             td {{locations[game.location] ? locations[game.location].name: 'TBD'}}
             td 
-                a(ng-href="/game/{{game._id}}") Game
+                a(ng-href="/game/{{game._id}}") {{game.scheduledTimeEpoch < $parent.today ? 'Recap': 'Preview'}}
           tr(ng-if="finalsTournament")
             td {{finalsTournament.startDate | date: 'EEE. MMM d'}}
             td {{finalsTournament.startDate | date: 'h:mma'}} - {{finalsTournament.endDate | date: 'h:mma'}}

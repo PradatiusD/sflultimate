@@ -44,7 +44,7 @@ function attemptToBuildSchedule () {
   }, null, 2))
 }
 
-function insertSchedule () {
+function insertSchedule (options) {
   const teamScheduleForSix = {
     0: {
       matchups: [
@@ -95,7 +95,7 @@ function insertSchedule () {
         const team1 = teams[parseInt(matchup.split('vs')[0]) - 1]
         const team2 = teams[parseInt(matchup.split('vs')[1]) - 1]
         const data = {
-          location: ObjectId('61829b0cc4b6e2000457897f'),
+          location: ObjectId('6236877d28f3fe0004fc5f95'),
           homeTeam: team1._id,
           awayTeam: team2._id,
           scheduledTime: gameDate,
@@ -105,12 +105,17 @@ function insertSchedule () {
           homeTeamScore: 0
         }
         printjson(data)
-        db.games.insert(data)
+        if (options.write) {
+          db.games.insert(data)
+        }
       })
     }
   }
-  buildScheduleLoopSince('2022-10-05T00:00:00Z')
-  buildScheduleLoopSince('2022-11-09T00:00:00Z', '2022-11-27T00:00:00Z')
+  buildScheduleLoopSince(options.startDate, options.endDate)
 }
 
-insertSchedule()
+insertSchedule({
+  startDate: '2023-04-23T20:00:00Z',
+  endDate: '2023-05-13T00:00:00Z',
+  write: true
+})

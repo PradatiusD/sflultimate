@@ -3,43 +3,62 @@ extends ../layouts/default
 block head
     meta(property="og:title"        content="South Florida Events")
     meta(property="og:url"          content="https://www.sflultimate.com/game/" + game._id)
-    meta(property="og:description"  content="Game Recap")
+    meta(property="og:description"  content="Game Summary: " + teams[0].name  + " vs " + teams[1].name)
 
 block content
     .container
-        br
         p.lead.text-center
-            | #{game.scheduledTime.toLocaleDateString()} <br/> <strong>#{game.league.title}</strong> <br/> #{game.location.name}
+            | <br/> <strong>#{game.league.title}</strong>
+            | <br/> #{game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'})} - #{game.scheduledTime.toLocaleTimeString('en-US', { timeZone: 'America/New_York', minute: 'numeric', hour: 'numeric' })}
+            | <br/> #{game.location.name}
         .row
             for team in teams
                 .col-sm-6
                     .text-center
-                        p.h1=team.score
+                        if !preview
+                            p.h1=team.score
                         h2=team.name
-                    
-                    h3 Present
-                    table.table.table-striped
-                        thead
-                            tr
-                                th Name
-                                th Assists
-                                th Scores
-                                th Defenses    
-                        tbody
-                            for stat in team.stats
-                                if stat.attended
+
+                    if preview
+                        table.table.table-striped
+                            thead
+                                tr
+                                    th Name
+                                    th Assists
+                                    th Scores
+                                    th Defenses    
+                            tbody
+                                for stat in team.stats
                                     tr
                                         td=stat.player.name.first + ' ' + stat.player.name.last
                                         td=stat.assists
                                         td=stat.scores
                                         td=stat.defenses
-                    h3 Missing
-                    table.table.table-striped
-                        thead
-                            tr
-                                th Name    
-                        tbody
-                            for stat in team.stats
-                                if !stat.attended
-                                    tr
-                                        td=stat.player.name.first + ' ' + stat.player.name.last
+
+                    if !preview
+                        h3 Present
+                        table.table.table-striped
+                            thead
+                                tr
+                                    th Name
+                                    th Assists
+                                    th Scores
+                                    th Defenses    
+                            tbody
+                                for stat in team.stats
+                                    if stat.attended
+                                        tr
+                                            td=stat.player.name.first + ' ' + stat.player.name.last
+                                            td=stat.assists
+                                            td=stat.scores
+                                            td=stat.defenses
+                        h3 Missing
+                        table.table.table-striped
+                            thead
+                                tr
+                                    th Name    
+                            tbody
+                                for stat in team.stats
+                                    if !stat.attended
+                                        tr
+                                            td=stat.player.name.first + ' ' + stat.player.name.last

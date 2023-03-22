@@ -15,7 +15,7 @@ exports = module.exports = async function (req, res) {
     .populate('homeTeam')
     .populate('awayTeam')
     .populate('location')
-    .populate('league').lean().exec()
+    .populate('league', '-description -pricing -finalsTournament').lean().exec()
 
   const playerMap = {}
   for (const key of ['homeTeam', 'awayTeam']) {
@@ -24,9 +24,33 @@ exports = module.exports = async function (req, res) {
     }
   }
 
-  const stats = await PlayerGameStat.model.find({
+  let stats = await PlayerGameStat.model.find({
     game: $find._id
-  }).populate('player').lean().exec()
+  }).populate('player', 'name').lean().exec()
+
+  // If no stats, show preview state of all stats
+  if (stats.length === 0) {
+    locals.preview = true
+    const playerFind = {
+      player: {
+        $in: locals.game.homeTeam.players.concat(locals.game.awayTeam.players)
+      }
+    }
+    stats = await PlayerGameStat.model.find(playerFind).populate('player', 'name').lean().exec()
+    // Now I need to reduce to season records
+    const statMap = {}
+    for (const stat of stats) {
+      const id = stat.player._id.toString()
+      if (!statMap[id]) {
+        statMap[id] = stat
+      } else {
+        statMap[id].assists += stat.assists
+        statMap[id].scores += stat.scores
+        statMap[id].defenses += stat.defenses
+      }
+    }
+    stats = Object.values(statMap)
+  }
 
   const awayTeamStats = stats.filter(function (stat) {
     return playerMap[stat.player._id.toString()] === 'awayTeam'
