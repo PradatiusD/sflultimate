@@ -44,6 +44,14 @@ const fields = {
     type: Types.Number,
     initial: true
   },
+  throwaways: {
+    type: Types.Number,
+    initial: true
+  },
+  drops: {
+    type: Types.Number,
+    initial: true
+  },
   pointsPlayed: {
     type: Types.Number,
     initial: true
