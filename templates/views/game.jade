@@ -7,8 +7,12 @@ block head
 
 block content
     .container
+        if preview
+            p.h1.text-center Preview
+        else
+            p.h1.text-center Recap
         p.lead.text-center
-            | <br/> <strong>#{game.league.title}</strong>
+            | <strong>#{game.league.title}</strong>
             | <br/> #{game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'})} - #{game.scheduledTime.toLocaleTimeString('en-US', { timeZone: 'America/New_York', minute: 'numeric', hour: 'numeric' })}
             | <br/> #{game.location.name}
         .row
@@ -27,6 +31,8 @@ block content
                                     th Assists
                                     th Scores
                                     th Defenses    
+                                    th Throwaways
+                                    th Drops
                             tbody
                                 for stat in team.stats
                                     tr
@@ -34,6 +40,8 @@ block content
                                         td=stat.assists
                                         td=stat.scores
                                         td=stat.defenses
+                                        td=stat.throwaways
+                                        td=stat.drops
 
                     if !preview
                         h3 Present
@@ -43,7 +51,9 @@ block content
                                     th Name
                                     th Assists
                                     th Scores
-                                    th Defenses    
+                                    th Defenses
+                                    th Throwaways
+                                    th Drops
                             tbody
                                 for stat in team.stats
                                     if stat.attended
@@ -52,6 +62,8 @@ block content
                                             td=stat.assists
                                             td=stat.scores
                                             td=stat.defenses
+                                            td=stat.throwaways
+                                            td=stat.drops
                         h3 Missing
                         table.table.table-striped
                             thead

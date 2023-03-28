@@ -28,6 +28,12 @@ exports = module.exports = async function (req, res) {
     game: $find._id
   }).populate('player', 'name').lean().exec()
 
+  stats = stats.map((stat) => {
+    stat.throwaways = stat.throwaways || 0
+    stat.drops = stat.drops || 0
+    return stat
+  })
+
   // If no stats, show preview state of all stats
   if (stats.length === 0) {
     locals.preview = true
@@ -41,12 +47,16 @@ exports = module.exports = async function (req, res) {
     const statMap = {}
     for (const stat of stats) {
       const id = stat.player._id.toString()
+      stat.throwaways = stat.throwaways || 0
+      stat.drops = stat.drops || 0
       if (!statMap[id]) {
         statMap[id] = stat
       } else {
-        statMap[id].assists += stat.assists
-        statMap[id].scores += stat.scores
-        statMap[id].defenses += stat.defenses
+        statMap[id].assists += stat.assists || 0
+        statMap[id].scores += stat.scores || 0
+        statMap[id].defenses += stat.defenses || 0
+        statMap[id].throwaways += stat.throwaways || 0
+        statMap[id].drops += stat.drops || 0
       }
     }
     stats = Object.values(statMap)
