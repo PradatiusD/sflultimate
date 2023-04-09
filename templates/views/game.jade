@@ -16,14 +16,41 @@ block content
             | <br/> #{game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'})} - #{game.scheduledTime.toLocaleTimeString('en-US', { timeZone: 'America/New_York', minute: 'numeric', hour: 'numeric' })}
             | <br/> #{game.location.name}
         .row
+
+            p.h3.text-center Season Standings
+            table.table.table-striped.table-bordered
+                thead
+                    tr
+                        th Team Name
+                        th Wins
+                        th Losses
+                        th Point Diff
+                        th Points Scored
+                        th Points Allowed
+                        th Avg Points Scored
+                        th Avg Points Allowed
+                tbody
+                    for team in teams
+                        tr
+                            td=team.standing.name
+                            td=team.standing.wins
+                            td=team.standing.losses
+                            td=team.standing.pointDiff
+                            td=team.standing.pointsScored
+                            td=team.standing.pointsAllowed
+                            td=team.standing.avgPointsScoredPerGame
+                            td=team.standing.avgPointsAllowedPerGame
+                
+            
             for team in teams
                 .col-sm-6
                     .text-center
                         if !preview
                             p.h1=team.score
-                        h2=team.name
+                        h2=team.name                        
 
                     if preview
+                        p <em>Note: Below are season-wide stats.</em>
                         table.table.table-striped
                             thead
                                 tr
@@ -44,7 +71,7 @@ block content
                                         td=stat.drops
 
                     if !preview
-                        h3 Present
+                        h3 Attended
                         table.table.table-striped
                             thead
                                 tr

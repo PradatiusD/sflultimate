@@ -2,6 +2,7 @@ const keystone = require('keystone')
 const Game = keystone.list('Game')
 const { ObjectID } = require('mongodb')
 const PlayerGameStat = keystone.list('PlayerGameStat')
+const { getStandings } = require('./../stat-utils')
 
 exports = module.exports = async function (req, res) {
   const view = new keystone.View(req, res)
@@ -17,13 +18,25 @@ exports = module.exports = async function (req, res) {
     .populate('location')
     .populate('league', '-description -pricing -finalsTournament').lean().exec()
 
+  locals.standings = await getStandings({
+    currentLeague: locals.game.league._id
+  })
+
+  for (const standing of locals.standings) {
+    if (standing.teamId === locals.game.homeTeam._id.toString()) {
+      locals.game.homeTeam.standing = standing
+    } else if (standing.teamId === locals.game.awayTeam._id.toString()) {
+      locals.game.awayTeam.standing = standing
+    }
+  }
+
   const playerMap = {}
   for (const key of ['homeTeam', 'awayTeam']) {
     for (const player of locals.game[key].players) {
       playerMap[player.toString()] = key
     }
   }
-
+  
   let stats = await PlayerGameStat.model.find({
     game: $find._id
   }).populate('player', 'name').lean().exec()
@@ -85,11 +98,13 @@ exports = module.exports = async function (req, res) {
     {
       score: locals.game.awayTeamScore,
       name: locals.game.awayTeam.name,
+      standing: locals.game.awayTeam.standing,
       stats: awayTeamStats
     },
     {
       score: locals.game.homeTeamScore,
       name: locals.game.homeTeam.name,
+      standing: locals.game.homeTeam.standing,
       stats: homeTeamStats
     }
   ]
