@@ -1,6 +1,6 @@
 const keystone = require('keystone')
 const { Types } = keystone.Field
-const { Schema } = require('mongoose')
+const { Schema } = keystone.mongoose
 
 /**
  * Tournament Team Model
