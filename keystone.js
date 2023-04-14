@@ -26,7 +26,7 @@ const keystoneConfig = {
   emails: 'templates/emails',
   mongo: process.env.MONGOLAB_URI,
 
-  'auto update': true,
+  'auto update': false,
   session: true,
   auth: true,
   'user model': 'Player'
