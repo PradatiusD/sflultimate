@@ -1,7 +1,7 @@
 const keystone = require('keystone')
 const Player = keystone.list('Player')
 const Team = keystone.list('Team')
-const { ObjectID } = require('mongodb')
+const ObjectID = keystone.mongoose.mongo.ObjectID
 
 module.exports = async function (req, res) {
   const activeLeague = res.locals.league
