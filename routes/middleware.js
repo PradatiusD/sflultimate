@@ -11,7 +11,7 @@
 const _ = require('underscore')
 const keystone = require('keystone')
 const League = keystone.list('League')
-const { ObjectID } = require('mongodb')
+const ObjectID = keystone.mongoose.mongo.ObjectID
 
 /**
  *
