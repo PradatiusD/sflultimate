@@ -1,6 +1,6 @@
 const keystone = require('keystone')
 const Game = keystone.list('Game')
-const { ObjectID } = require('mongodb')
+const ObjectID = keystone.mongoose.mongo.ObjectID
 const PlayerGameStat = keystone.list('PlayerGameStat')
 const { getStandings } = require('./../stat-utils')
 

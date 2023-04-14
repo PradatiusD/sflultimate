@@ -3,7 +3,7 @@ const PlayerGameStat = keystone.list('PlayerGameStat')
 const Player = keystone.list('Player')
 const Game = keystone.list('Game')
 const Team = keystone.list('Team')
-const { ObjectId } = require('mongodb')
+const ObjectID = keystone.mongoose.mongo.ObjectID
 
 module.exports = async function (req, res) {
   const activeLeague = res.locals.league
@@ -11,7 +11,7 @@ module.exports = async function (req, res) {
   if (req.method === 'POST') {
     const records = req.body.items.map((item) => {
       if (!item._id) {
-        item._id = new ObjectId()
+        item._id = new ObjectID()
         item.createdAt = new Date()
       } else {
         item.createdAt = new Date(item.createdAt)
