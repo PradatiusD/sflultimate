@@ -12,14 +12,20 @@ module.exports.getStandings = async function (options) {
   const { currentLeague } = options
   const games = await Game.model.find({
     league: currentLeague,
-    homeTeamScore: {
-      $exists: true,
-      $ne: 0
-    },
-    awayTeamScore: {
-      $exists: true,
-      $ne: 0
-    },
+    $or: [
+      {
+        homeTeamScore: {
+          $exists: true,
+          $ne: 0
+        }
+      },
+      {
+        awayTeamScore: {
+          $exists: true,
+          $ne: 0
+        }
+      }
+    ],
     scheduledTime: {
       $lte: new Date()
     }
