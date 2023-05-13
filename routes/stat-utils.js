@@ -97,11 +97,13 @@ module.exports.getStandings = async function (options) {
           standingsMap[homeTeam.id].pointDiff -= 13
           standingsMap[homeTeam.id].pointsAllowed += 13
           standingsMap[homeTeam.id].pointsScored += 0
+          standingsMap[awayTeam.id].wins++
         } else if (awayTeam.forfeit) {
           standingsMap[awayTeam.id].losses++
           standingsMap[awayTeam.id].pointDiff -= 13
           standingsMap[awayTeam.id].pointsAllowed += 13
           standingsMap[awayTeam.id].pointsScored += 0
+          standingsMap[homeTeam.id].wins++
         }
       }
     } else {
