@@ -24,6 +24,12 @@ module.exports.getStandings = async function (options) {
           $exists: true,
           $ne: 0
         }
+      },
+      {
+        homeTeamForfeit: true
+      },
+      {
+        awayTeamForfeit: true
       }
     ],
     scheduledTime: {
@@ -44,23 +50,14 @@ module.exports.getStandings = async function (options) {
   for (const game of games) {
     const homeTeam = {
       id: game.homeTeam.valueOf(),
-      score: game.homeTeamScore
+      score: game.homeTeamScore,
+      forfeit: game.homeTeamForfeit
     }
 
     const awayTeam = {
       id: game.awayTeam.valueOf(),
-      score: game.awayTeamScore
-    }
-
-    let winner
-    let loser
-    const pointDiff = Math.abs(homeTeam.score - awayTeam.score)
-    if (homeTeam.score > awayTeam.score) {
-      winner = homeTeam
-      loser = awayTeam
-    } else {
-      winner = awayTeam
-      loser = homeTeam
+      score: game.awayTeamScore,
+      forfeit: game.awayTeamForfeit
     }
 
     const createEntryIfMissing = function (teamId) {
@@ -71,22 +68,64 @@ module.exports.getStandings = async function (options) {
           losses: 0,
           pointDiff: 0,
           pointsScored: 0,
-          pointsAllowed: 0
+          pointsAllowed: 0,
+          forfeits: 0
         }
       }
     }
 
-    createEntryIfMissing(winner.id)
-    standingsMap[winner.id].wins++
-    standingsMap[winner.id].pointDiff += pointDiff
-    standingsMap[winner.id].pointsAllowed += loser.score
-    standingsMap[winner.id].pointsScored += winner.score
+    createEntryIfMissing(awayTeam.id)
+    createEntryIfMissing(homeTeam.id)
+    if (homeTeam.forfeit || awayTeam.forfeit) {
+      if (homeTeam.forfeit) {
+        standingsMap[homeTeam.id].forfeits++
+      }
+      if (awayTeam.forfeit) {
+        standingsMap[awayTeam.id].forfeits++
+      }
 
-    createEntryIfMissing(loser.id)
-    standingsMap[loser.id].losses++
-    standingsMap[loser.id].pointDiff -= pointDiff
-    standingsMap[loser.id].pointsAllowed += winner.score
-    standingsMap[loser.id].pointsScored += loser.score
+      if (homeTeam.forfeit || awayTeam.forfeit) {
+        // both teams take 13 point loss
+        standingsMap[homeTeam.id].pointDiff -= 13
+        standingsMap[homeTeam.id].losses++
+
+        standingsMap[awayTeam.id].pointDiff -= 13
+        standingsMap[awayTeam.id].losses++
+      } else {
+        if (homeTeam.forfeit) {
+          standingsMap[homeTeam.id].losses++
+          standingsMap[homeTeam.id].pointDiff -= 13
+          standingsMap[homeTeam.id].pointsAllowed += 13
+          standingsMap[homeTeam.id].pointsScored += 0
+        } else if (awayTeam.forfeit) {
+          standingsMap[awayTeam.id].losses++
+          standingsMap[awayTeam.id].pointDiff -= 13
+          standingsMap[awayTeam.id].pointsAllowed += 13
+          standingsMap[awayTeam.id].pointsScored += 0
+        }
+      }
+    } else {
+      const pointDiff = Math.abs(homeTeam.score - awayTeam.score)
+      let winner
+      let loser
+      if (homeTeam.score > awayTeam.score) {
+        winner = homeTeam
+        loser = awayTeam
+      } else {
+        winner = awayTeam
+        loser = homeTeam
+      }
+
+      standingsMap[winner.id].wins++
+      standingsMap[winner.id].pointDiff += pointDiff
+      standingsMap[winner.id].pointsAllowed += loser.score
+      standingsMap[winner.id].pointsScored += winner.score
+
+      standingsMap[loser.id].losses++
+      standingsMap[loser.id].pointDiff -= pointDiff
+      standingsMap[loser.id].pointsAllowed += winner.score
+      standingsMap[loser.id].pointsScored += loser.score
+    }
   }
 
   const standings = []

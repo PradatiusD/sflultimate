@@ -30,7 +30,9 @@ block content
             td {{game.scheduledTime | date: 'h:mma'}}
             td
               span {{game.homeTeam.name}} vs. {{game.awayTeam.name}} 
-              span(ng-if="game.homeTeamScore && game.awayTeamScore") ({{game.homeTeamScore}}-{{game.awayTeamScore}})
+              span(ng-if="game.homeTeamScore && game.awayTeamScore && (!game.homeTeamForfeit && !game.homeTeamForfeit)") ({{game.homeTeamScore}}-{{game.awayTeamScore}})
+              span(ng-if="game.homeTeamForfeit") <br> {{game.homeTeam.name}} forfeited
+              span(ng-if="game.awayTeamForfeit") <br> {{game.awayTeam.name}} forfeited
             td {{locations[game.location] ? locations[game.location].name: 'TBD'}}
             td 
                 a(ng-href="/game/{{game._id}}") {{game.scheduledTimeEpoch < $parent.today ? 'Recap': 'Preview'}}

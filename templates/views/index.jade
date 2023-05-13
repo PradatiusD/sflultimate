@@ -63,6 +63,7 @@ block content
                   th.text-center Name
                   th.text-center Wins
                   th.text-center Losses
+                  th.text-center Forfeits
                   th.text-center Points Scored
                   th.text-center Points Allowed
                   th.text-center Avg. Points Scored
@@ -74,12 +75,14 @@ block content
                       td.text-left=team.name
                       td=team.wins
                       td=team.losses
+                      td=team.forfeits
                       td=team.pointsScored
                       td=team.pointsAllowed
                       td=team.avgPointsScoredPerGame
                       td=team.avgPointsAllowedPerGame
                       td=team.pointDiff
-
+        p
+          em Note: If one team forfeits, the opponent gets the equivalent of 13-0 game.  If two teams playing each other forfeit, each takes a loss and a -13 hit to point differential.
 
   section.champions
     aside.text-center

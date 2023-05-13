@@ -38,8 +38,16 @@ Game.add({
   homeTeamScore: {
     type: Types.Number
   },
+  homeTeamForfeit: {
+    type: Types.Boolean,
+    default: false
+  },
   awayTeamScore: {
     type: Types.Number
+  },
+  awayTeamForfeit: {
+    type: Types.Boolean,
+    default: false
   },
   location: {
     type: Types.Relationship,
