@@ -84,7 +84,7 @@ module.exports.getStandings = async function (options) {
         standingsMap[awayTeam.id].forfeits++
       }
 
-      if (homeTeam.forfeit || awayTeam.forfeit) {
+      if (homeTeam.forfeit && awayTeam.forfeit) {
         // both teams take 13 point loss
         standingsMap[homeTeam.id].pointDiff -= 13
         standingsMap[homeTeam.id].losses++
