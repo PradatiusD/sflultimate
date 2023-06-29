@@ -48,6 +48,7 @@ module.exports = function (app) {
   app.get('/game/:gameID', routes.views.game)
   app.get('/teams', routes.views.teams)
   app.get('/club-teams', routes.views.clubTeams)
+  app.get('/board', routes.views.boardMembers)
   app.get('/events', routes.views.events)
   app.all('/stats', routes.views.stats)
 

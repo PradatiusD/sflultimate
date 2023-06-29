@@ -1,0 +1,41 @@
+extends ../layouts/default
+
+block head
+    meta(property="og:title"        content="South Florida Club Teams")
+    meta(property="og:url"          content="https://www.sflultimate.com/club-teams")
+    meta(property="og:description"  content="See what teams are local to the South Florida area!")
+
+block content
+    .container
+        h1 Board
+        h2 What We Need
+        p.lead It takes a community to grow one.  Here's the roles needed to make this happen.
+        for position in positions
+            if position.active
+                .row
+                    .col-sm-3.text-center
+                        img(src=position.image class='img-responsive' style='margin: 0 auto;')
+                    .col-sm-9
+                        h2=position.title
+                        p
+                            strong="Currently held by " + position.assigned.map(p => p.title).join(' & ')
+                        p=position.description
+                        ul.list-inline
+                            for link in position.links
+                                li
+                                    a(href=link.url target="_blank")=link.label
+        hr
+        h2.text-center Our Team
+        .row
+            for member in boardMembers
+                if member.active
+                    .col-sm-4
+                        h4.text-center=member.title
+                        p
+                            strong=member.category
+                        p=member.description
+                            ul.list-inline
+                                for link in member.links
+                                    li
+                                        a(href=link.url target="_blank")=link.label
+        hr
