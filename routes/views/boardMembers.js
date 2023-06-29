@@ -50,7 +50,7 @@ module.exports = function (req, res) {
       active: true,
       description: 'Books fields, estimates costs, reconciles registrations, orders jerseys and stickers.',
       commitment: 'Year-round',
-      assigned: [sofia, prada],
+      assigned: [sofia, prahasi],
       links: [
         {
           url: '',
