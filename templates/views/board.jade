@@ -1,9 +1,9 @@
 extends ../layouts/default
 
 block head
-    meta(property="og:title"        content="South Florida Club Teams")
-    meta(property="og:url"          content="https://www.sflultimate.com/club-teams")
-    meta(property="og:description"  content="See what teams are local to the South Florida area!")
+    meta(property="og:title"        content="South Florida Board")
+    meta(property="og:url"          content="https://www.sflultimate.com/board")
+    meta(property="og:description"  content="Learn how to become involved in your South Florida Ultimate board!")
 
 block content
     .container
@@ -13,12 +13,10 @@ block content
         for position in positions
             if position.active
                 .row
-                    .col-sm-3.text-center
-                        img(src=position.image class='img-responsive' style='margin: 0 auto;')
-                    .col-sm-9
+                    .col-sm-12
                         h2=position.title
                         p
-                            strong="Currently held by " + position.assigned.map(p => p.title).join(' & ')
+                            strong="Currently held by " + position.assigned.map(p => [p.name.first, p.name.last].join(' ')).join(' & ')
                         p=position.description
                         ul.list-inline
                             for link in position.links
@@ -30,7 +28,9 @@ block content
             for member in boardMembers
                 if member.active
                     .col-sm-4
-                        h4.text-center=member.title
+                        if member.image
+                            img(src=member.image.url class='img-responsive img-rounded' style='margin: 0 auto;')
+                        h4.text-center=member.name.first + " " + member.name.last
                         p
                             strong=member.category
                         p=member.description

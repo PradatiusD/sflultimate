@@ -36,7 +36,7 @@ exports = module.exports = async function (req, res) {
       playerMap[player.toString()] = key
     }
   }
-  
+
   let stats = await PlayerGameStat.model.find({
     game: $find._id
   }).populate('player', 'name').lean().exec()
