@@ -1,5 +1,5 @@
 const keystone = require('keystone')
-const storage = require("./file-storage-adapter");
+const storage = require('./file-storage-adapter')
 const Types = keystone.Field.Types
 
 /**
@@ -30,6 +30,17 @@ League.add({
     type: Types.Boolean,
     default: false
   },
+  numberOfWeeksOfPlay: {
+    type: Types.Number,
+    initial: false,
+    required: false
+  },
+  earlyRegistrationStart: {
+    type: Types.Datetime
+  },
+  earlyRegistrationEnd: {
+    type: Types.Datetime
+  },
   registrationStart: {
     type: Types.Datetime
   },
@@ -41,6 +52,18 @@ League.add({
   },
   lateRegistrationEnd: {
     type: Types.Datetime
+  },
+  'pricing.earlyStudent': {
+    type: Types.Number,
+    initial: true,
+    required: true,
+    default: 30
+  },
+  'pricing.earlyAdult': {
+    type: Types.Number,
+    initial: true,
+    required: true,
+    default: 55
   },
   'pricing.regularStudent': {
     type: Types.Number,

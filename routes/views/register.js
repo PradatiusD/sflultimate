@@ -57,7 +57,9 @@ module.exports = async function (req, res) {
 
     let amount
 
-    if (locals.league.isRegistrationPeriod) {
+    if (locals.league.isEarlyRegistrationPeriod) {
+      amount = registrationLevel === 'Student' ? locals.fees.earlyStudent : locals.fees.earlyAdult
+    } else if (locals.league.isRegistrationPeriod) {
       amount = registrationLevel === 'Student' ? locals.fees.regularStudent : locals.fees.regularAdult
     } else if (locals.league.isLateRegistrationPeriod) {
       amount = registrationLevel === 'Student' ? locals.fees.lateStudent : locals.fees.lateAdult

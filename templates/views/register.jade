@@ -163,10 +163,13 @@ block content
                 .form-group
                     label(for="registrationLevel") Registration Level
                         select#registrationLevel.input-lg.form-control(name="registrationLevel")
-                            if locals.league.isRegistrationPeriod
+                            if locals.league.isEarlyRegistrationPeriod
+                                option(value='Adult')="Adult - $" + fees.earlyAdult
+                                option(value='Student')="Student - $" + fees.earlyStudent
+                            else if locals.league.isRegistrationPeriod
                                 option(value='Adult')="Adult - $" + fees.regularAdult
                                 option(value='Student')="Student - $" + fees.regularStudent
-                            if locals.league.isLateRegistrationPeriod
+                            else if locals.league.isLateRegistrationPeriod
                                 option(value='Adult')="Adult - $" + fees.lateAdult
                                 option(value='Student')="Student - $" + fees.lateStudent
                 

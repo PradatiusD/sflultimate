@@ -59,6 +59,8 @@ exports.initLocals = async function (req, res, next) {
   }
 
   locals.fees = {
+    earlyStudent: activeLeague.pricing.earlyAdult,
+    earlyAdult: activeLeague.pricing.earlyAdult,
     regularStudent: activeLeague.pricing.regularStudent,
     regularAdult: activeLeague.pricing.regularAdult,
     lateStudent: activeLeague.pricing.lateStudent,
@@ -71,6 +73,7 @@ exports.initLocals = async function (req, res, next) {
   ]
 
   if (activeLeague) {
+    activeLeague.isEarlyRegistrationPeriod = isValidRegPeriod(activeLeague.earlyRegistrationStart, activeLeague.earlyRegistrationEnd)
     activeLeague.isRegistrationPeriod = isValidRegPeriod(activeLeague.registrationStart, activeLeague.registrationEnd)
     activeLeague.isLateRegistrationPeriod = isValidRegPeriod(activeLeague.lateRegistrationStart, activeLeague.lateRegistrationEnd)
     activeLeague.canRegister = activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod || (req.query.force_form === 'true')
