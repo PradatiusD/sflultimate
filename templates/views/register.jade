@@ -96,10 +96,11 @@ block content
                         option(value="50") Around 50% (miss 4 weeks of play)
                         option(value="80" selected="selected") Greater than 80% (miss 1 week of play)
                     p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments.
-    
+                    
                 .form-group
-    
                     label(for="shirtSize") Shirt Size
+                    if locals.league.jerseyDesign
+                        img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px")
                     select#shirtSize.input-lg.form-control(name="shirtSize")
                         option(value="XS") XS
                         option(value="S") S
@@ -108,6 +109,8 @@ block content
                         option(value="XL") XL
                         option(value="XXL") XXL
                         option(value="NA") I do not want a jersey
+                    if locals.league.jerseyDesign
+                        p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 
                   br
     

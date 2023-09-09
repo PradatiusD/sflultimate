@@ -1,4 +1,5 @@
 const keystone = require('keystone')
+const storage = require("./file-storage-adapter");
 const Types = keystone.Field.Types
 
 /**
@@ -78,6 +79,10 @@ League.add({
   'finalsTournament.location': {
     type: Types.Relationship,
     ref: 'Location'
+  },
+  jerseyDesign: {
+    type: Types.File,
+    storage: storage
   }
 })
 
