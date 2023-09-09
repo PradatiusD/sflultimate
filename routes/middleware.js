@@ -92,8 +92,7 @@ exports.initLocals = async function (req, res, next) {
     { label: 'Local Pickups', key: 'community', href: '/pickups' },
     { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
     { label: 'Our Board', key: 'board', href: '/board' },
-    { label: 'Events', key: 'events', href: '/events' },
-    { label: 'Clinics/Camps', key: 'clinics', href: '/clinics' }
+    { label: 'Events', key: 'events', href: '/events' }
   ]
 
   locals.navLinks = locals.navLinks.concat(evergreenLinks)
