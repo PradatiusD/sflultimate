@@ -92,9 +92,9 @@ block content
                 .form-group
                     label(for="participation") Expected Attendance
                     select#participation.input-lg.form-control(name="participation")
-                        option(value="30") Less than 30% (miss 6+ weeks of play)
-                        option(value="50") Around 50% (miss 4 weeks of play)
-                        option(value="80" selected="selected") Greater than 80% (miss 1 week of play)
+                        option(value="30") Less than 30% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.7)}+ weeks of play)
+                        option(value="50") Around 50% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.5)} weeks of play)
+                        option(value="80" selected="selected") Greater than 80% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.2)} week of play)
                     p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments.
                     
                 .form-group
