@@ -139,12 +139,12 @@ block content
                     label
                         input#termsConditions(type='checkbox' name='termsConditions' required)
                         | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
-                    
-                h3 COVID-19
+
+                h3 Sponsorship
                 .checkbox
                     label
-                        input#covid19NoRisk(type='checkbox' required)
-                        | If I have tested positive for COVID-19, am waiting for COVID-19 test results, or am showing COVID-19 symptoms, or had close contact with a person who has tested positive for or who has symptoms of COVID-19, <strong>I will not attend any games until I have received a negative COVID-19 test</strong>.
+                        input#wouldSponsor(type='checkbox' name='wouldSponsor' required)
+                        | I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.
     
                 if locals.league.isLateRegistrationPeriod
                     h3 Late Registration

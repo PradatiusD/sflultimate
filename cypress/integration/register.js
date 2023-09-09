@@ -22,10 +22,9 @@ function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#partnerName').type('Test Friend')
   cy.get('#comments').type('A random comment about me when registering for the draft')
   cy.get('#phoneNumber').type('9543055611')
-  // cy.get('#usauNumber').type('12345')
   cy.get('#wouldCaptain').select('No')
   cy.get('#termsConditions').check()
-  cy.get('#covid19NoRisk').check()
+  cy.get('#wouldSponsor').check()
 
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')

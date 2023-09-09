@@ -38,7 +38,8 @@ module.exports = async function (req, res) {
       recaptchaToken,
       skillLevel,
       shirtSize,
-      streetAddress
+      streetAddress,
+      wouldSponsor
     } = req.body
 
     const paymentMethodNonce = req.body.payment_method_nonce
@@ -119,7 +120,8 @@ module.exports = async function (req, res) {
         wouldCaptain,
         registrationLevel,
         usauNumber,
-        phoneNumber
+        phoneNumber,
+        wouldSponsor
       }
 
       const player = new PlayerModel(newPlayerRecord)

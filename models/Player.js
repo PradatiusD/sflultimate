@@ -98,6 +98,11 @@ const fields = {
     type: String,
     initial: false,
     required: false
+  },
+  wouldSponsor: {
+    type: Boolean,
+    initial: true,
+    required: false
   }
 }
 
