@@ -25,16 +25,16 @@ block content
                 !{locals.league.description}
 
             p 
-            | Regular registration is open <strong>as of #{locals.league.registrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
-            | and ends #{locals.league.registrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })}</strong>.
+            | Regular registration is open <strong>as of #{locals.formatDate(locals.league.registrationStart)} 
+            | and ends #{locals.formatDate(locals.league.registrationEnd)}</strong>.
             
             br
             
-            if locals.league.lateRegistrationStart || locals.league.lateRegistrationEnd
-              .alert.alert-info
-                | Late registration (at a $#{locals.fees.lateAdult} fee for everyone, as space permits) start on #{locals.league.lateRegistrationStart.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} 
-                | until #{locals.league.lateRegistrationEnd.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })} at 
-                | #{locals.league.lateRegistrationEnd.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', timeZone: 'America/New_York'})}
+            if locals.league.lateRegistrationStart && locals.league.lateRegistrationEnd
+              .alert.alert-info 
+               | Late registration (at a $#{locals.fees.lateAdult} fee for adults, $#{locals.fees.lateStudent} for students, as space permits) starts
+               | #{formatDate(locals.league.lateRegistrationStart)} until #{formatDate(locals.league.lateRegistrationEnd)} at #{formatTime(locals.league.lateRegistrationEnd)}. This will not include a jersey.
+                
     
             hr
     
@@ -206,7 +206,7 @@ block content
     else
         .container.register: .row: .col-md-12
             h1 The Registration for #{locals.league.title} has closed
-            p="If you wish to be considered for late registration ($"+fees.lateAdult+"), contact sflultimate@gmail.com. Late registration (at a $"+ fees.lateAdult +" fee for everyone, as space permits) will be considered on a weekly basis."
+            p="If you wish to be considered for late registration ($"+fees.lateAdult+" for adults, $"+fees.lateStudent+" for students), contact sflultimate@gmail.com. Late registration will be considered on a weekly basis as space permits."
             p Note that you will not get a jersey.
 
 block js

@@ -15,6 +15,15 @@ const transporter = nodemailer.createTransport({
 module.exports = async function (req, res) {
   const view = new keystone.View(req, res)
   const locals = res.locals
+
+  locals.formatDate = function (date) {
+    return date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })
+  }
+
+  locals.formatTime = function (date) {
+    return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })
+  }
+
   PaymentUtils.setBaseRegistrationLocals(view, res)
 
   view.on('post', async function (next) {
