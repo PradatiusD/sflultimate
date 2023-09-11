@@ -59,8 +59,8 @@ exports.initLocals = async function (req, res, next) {
   }
 
   locals.fees = {
-    earlyStudent: activeLeague.pricing.earlyAdult,
-    earlyAdult: activeLeague.pricing.earlyStudent,
+    earlyStudent: activeLeague.pricing.earlyStudent,
+    earlyAdult: activeLeague.pricing.earlyAdult,
     regularStudent: activeLeague.pricing.regularStudent,
     regularAdult: activeLeague.pricing.regularAdult,
     lateStudent: activeLeague.pricing.lateStudent,
