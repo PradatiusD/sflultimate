@@ -101,7 +101,12 @@ const fields = {
   },
   wouldSponsor: {
     type: Boolean,
-    initial: true,
+    initial: false,
+    required: false
+  },
+  willAttendFinals: {
+    type: Boolean,
+    initial: false,
     required: false
   }
 }

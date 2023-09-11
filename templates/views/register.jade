@@ -96,7 +96,12 @@ block content
                         option(value="50") Around 50% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.5)} weeks of play)
                         option(value="80" selected="selected") Greater than 80% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.2)} week of play)
                     p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments.
-                    
+
+                .checkbox
+                    label
+                        input#willAttendFinals(type='checkbox' name='willAttendFinals')
+                        | I expect to be able to attend finals.
+
                 .form-group
                     label(for="shirtSize") Shirt Size
                     if locals.league.jerseyDesign
@@ -113,12 +118,6 @@ block content
                         p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 
                   br
-                  
-                h3 General Waiver
-                .checkbox
-                    label
-                        input#willAttendFianls(type='checkbox' name='willAttendFinals' required)
-                        | I expect to be able to attend finals.
 
                 .form-group
                     label(for='partnerName') Partner Name
