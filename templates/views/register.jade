@@ -113,7 +113,13 @@ block content
                         p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 
                   br
-    
+                  
+                h3 General Waiver
+                .checkbox
+                    label
+                        input#willAttendFianls(type='checkbox' name='willAttendFinals' required)
+                        | I expect to be able to attend finals.
+
                 .form-group
                     label(for='partnerName') Partner Name
                     input#partnerName.input-lg.form-control(type='text' name='partnerName' placeholder='')
@@ -146,7 +152,7 @@ block content
                 h3 Sponsorship
                 .checkbox
                     label
-                        input#wouldSponsor(type='checkbox' name='wouldSponsor' required)
+                        input#wouldSponsor(type='checkbox' name='wouldSponsor')
                         | I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.
     
                 if locals.league.isLateRegistrationPeriod
