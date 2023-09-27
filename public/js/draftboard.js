@@ -4,7 +4,7 @@
   app.controller('PlayerTableController', function ($http, $scope) {
     const query = $http.get(window.sflUtils.addLeagueOverride('/players'))
     $scope.user = document.querySelector('#logged-in')
-    console.log($scope.user)
+    let players = []
     $scope.players = []
     $scope.teams = []
     $scope.playerMap = {}
@@ -29,6 +29,18 @@
           $scope.playerMap[player._id] = player
         })
         $scope.sortByGenderThenSkill()
+      })
+    }
+
+    $scope.showOnlyCaptains = function () {
+      $scope.players = players.filter(function (player) {
+        return player.wouldCaptain
+      })
+    }
+
+    $scope.showOnlySponsors = function () {
+      $scope.players = players.filter(function (player) {
+        return player.wouldSponsor
       })
     }
 
@@ -103,7 +115,7 @@
     $scope.keysForTotals = Object.keys($scope.columnsForTotals)
 
     query.success(function (response) {
-      const players = response.players
+      players = response.players
       $scope.teams = response.teams
       const totals = {
         playersPerTeam: {},
