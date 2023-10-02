@@ -23,7 +23,7 @@ block content
                         br
                         small.text-muted {{team.womenTotal}} women, {{team.menTotal}} men
                     table.table.table-striped.table-bordered
-                        tr(ng-repeat='player in team.players | orderBy :"-skillLevel"')
+                        tr(ng-repeat='player in team.players')
                             td
                                 | {{$index + 1}}. 
                                 | {{player.gender.charAt(0)}} - 

@@ -22,6 +22,7 @@
         team_id: team._id,
         players: teamPlayers
       }
+
       $http.put(window.sflUtils.addLeagueOverride('/players'), payload).then(function (response) {
         $scope.players = response.data.players
         $scope.teams = response.data.teams
@@ -30,6 +31,7 @@
         })
         $scope.sortByGenderThenSkill()
       })
+
     }
 
     $scope.showOnlyCaptains = function () {

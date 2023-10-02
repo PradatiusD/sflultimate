@@ -134,6 +134,13 @@
         teams = teams.map(function (team) {
           team.captains = team.captains.map(matchToPlayerById)
           team.players = team.players.map(matchToPlayerById)
+          team.players.sort((a, b) => {
+            const compareGender = a.gender.localeCompare(b.gender)
+            if (compareGender !== 0) {
+              return compareGender
+            }
+            return (a.name.first + ' ' + a.name.last).localeCompare(b.name.first + ' ' + b.name.last)
+          })
 
           team.menTotal = 0
           team.womenTotal = 0
