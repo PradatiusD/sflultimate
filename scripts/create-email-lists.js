@@ -1,7 +1,7 @@
 
 /*
- * To captain
- * send email of people
+ * This script builds lists of email/phone numbers per team.
+ * To run this, have a copy of the database and run:
  * mongo sflultimate scripts/create-email-lists.js
  */
 
@@ -16,19 +16,34 @@ printjson(globalEmails)
 db.teams.find({
   league: leagues[0]._id
 }).forEach(function (team) {
-  let email = ''
-
-  let playerEmails = ''
-
-  db.players.find({ _id: { $in: team.players } }).forEach(function (player) {
-    if (player._id.valueOf() === team.captains[0].valueOf()) {
-      email += '\nTo: ' + player.email
-      email += '\nSubject: ' + team.color + ' Team'
+  const playerIDs = {
+    _id: {
+      $in: team.players
     }
+  }
 
-    playerEmails += '\n<' + player.name.first + ' ' + player.name.last + '> ' + player.email + ' • ' + player.phoneNumber
+  const toField = []
+  let playerEmails = ''
+  const captainIDs = team.captains.map(function (id) {
+    return id.valueOf()
   })
 
-  print(email)
+  db.players.find(playerIDs).forEach(function (player) {
+    const isCaptain = captainIDs.indexOf(player._id.valueOf()) > -1
+    if (isCaptain) {
+      toField.push(player.email)
+    }
+
+    const rowValues = [
+      '<' + player.name.first + ' ' + player.name.last + '> ' + player.email,
+    ]
+    if (player.phoneNumber) {
+      rowValues.push(player.phoneNumber)
+    }
+    playerEmails += '\n ' + rowValues.join(' • ')
+  })
+
+  print('\n\nTo: ' + toField.join(','))
+  print('Subject: ' + team.color + ' Team')
   print(playerEmails)
 })
