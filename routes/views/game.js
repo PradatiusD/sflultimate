@@ -50,7 +50,14 @@ exports = module.exports = async function (req, res) {
   // If no stats, show preview state of all stats
   if (stats.length === 0) {
     locals.preview = true
+    const currentSeasonGames = await Game.model.find({
+      league: locals.game.league._id
+    }, { _id: 1 }).lean()
+
     const playerFind = {
+      game: {
+        $in: currentSeasonGames.map(game => game._id)
+      },
       player: {
         $in: locals.game.homeTeam.players.concat(locals.game.awayTeam.players)
       }

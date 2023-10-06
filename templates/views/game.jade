@@ -31,15 +31,16 @@ block content
                         th Avg Points Allowed
                 tbody
                     for team in teams
-                        tr
-                            td=team.standing.name
-                            td=team.standing.wins
-                            td=team.standing.losses
-                            td=team.standing.pointDiff
-                            td=team.standing.pointsScored
-                            td=team.standing.pointsAllowed
-                            td=team.standing.avgPointsScoredPerGame
-                            td=team.standing.avgPointsAllowedPerGame
+                        if team.standing
+                            tr
+                                td=team.standing.name
+                                td=team.standing.wins
+                                td=team.standing.losses
+                                td=team.standing.pointDiff
+                                td=team.standing.pointsScored
+                                td=team.standing.pointsAllowed
+                                td=team.standing.avgPointsScoredPerGame
+                                td=team.standing.avgPointsAllowedPerGame
                 
             
             for team in teams

@@ -1,3 +1,7 @@
+/**
+ * mongo sflultimate scripts/create-schedule.js
+ */
+
 function attemptToBuildSchedule () {
   const teams = []
   const teamCount = 6
@@ -86,36 +90,50 @@ function insertSchedule (options) {
   const teams = db.teams.find({ league: league })
   const ONE_WEEK = 7 * 24 * 60 * 60 * 1000
   function buildScheduleLoopSince (startDate, endDate) {
-    for (const key in teamScheduleForSix) {
-      const gameDate = new Date(new Date(startDate).getTime() + key * ONE_WEEK)
+    const teamScheduleKeys = Object.keys(teamScheduleForSix)
+    let i = 0
+    while (i < 100) {
+      const key = teamScheduleKeys[i % teamScheduleKeys.length]
+      let gameDate = new Date(new Date(startDate).getTime() + i * ONE_WEEK)
       if (endDate && gameDate > new Date(endDate).getTime()) {
         return
+      }
+
+      // if Daylight savings
+      if (gameDate.getTimezoneOffset() > 240) {
+        gameDate = new Date(gameDate.getTime() + 60 * 60 * 1000)
       }
       teamScheduleForSix[key].matchups.forEach(function (matchup) {
         const team1 = teams[parseInt(matchup.split('vs')[0]) - 1]
         const team2 = teams[parseInt(matchup.split('vs')[1]) - 1]
         const data = {
-          location: ObjectId('6236877d28f3fe0004fc5f95'),
+          location: options.location,
           homeTeam: team1._id,
           awayTeam: team2._id,
           scheduledTime: gameDate,
           league: league,
           name: gameDate.toLocaleDateString('en-CA').replace(/-/g, '') + '_' + team1.name + '@' + team2.name,
           awayTeamScore: 0,
-          homeTeamScore: 0
+          homeTeamScore: 0,
+          homeTeamForfeit: false,
+          awayTeamForfeit: false
         }
         printjson(data)
         if (options.write) {
           db.games.insert(data)
         }
       })
+      i++
     }
   }
   buildScheduleLoopSince(options.startDate, options.endDate)
 }
 
+const amelia = '61829b0cc4b6e2000457897f'
+const ives = '6236877d28f3fe0004fc5f95'
 insertSchedule({
-  startDate: '2023-04-23T20:00:00Z',
-  endDate: '2023-05-13T00:00:00Z',
+  location: ObjectId(amelia),
+  startDate: '2023-10-12T00:00:00Z',
+  endDate: '2023-11-16T00:00:00Z',
   write: true
 })
