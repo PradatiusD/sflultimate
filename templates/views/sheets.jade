@@ -1,6 +1,6 @@
 html
   head
-    title South Florida Spring League 2022 Stat Sheet
+    title South Florida Fall League 2023 Stat Sheet
     link(rel='stylesheet' href='/styles/site.css' media='all')
     link(rel="preconnect" href="https://fonts.googleapis.com")
     link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
@@ -11,7 +11,7 @@ html
         margin: 1em;
       }
 
-      td, th, p {
+      td, th, p, label {
         font-size: 0.8em;
       }
 
@@ -41,13 +41,22 @@ html
         letter-spacing: 2px;
         text-transform: uppercase;
       }
+        
+      .stat-page-container {
+          page-break-after: always; 
+          margin-top: 20px;
+      }
+        
+      .stat-page-container.last {
+          page-break-after: initial;
+      }
 
   body(ng-app='StatSheetApp')
 
     .container-fluid(ng-controller='StatSheetController')
 
       div(ng-repeat="game in games")
-        section(ng-repeat="team in game.teams" style='page-break-after: always; margin-top: 20px;' ng-if="!isTournament")
+        section(ng-repeat="team in game.teams"  class="stat-page-container" ng-class="$last ? 'last': ''" ng-if="!isTournament")
           table.table.table-bordered.table-striped
             thead
               tr
@@ -72,8 +81,6 @@ html
                 td
                 td
                 td
-            p
-              em <strong>What is Spirit of the Game?</strong> A truly unique and defining element of ultimate, Spirit of the Game places the responsibility of fair play solely on the athletes themselves by requiring each player to know the rules and make their own calls, without the help of a neutral official. These underlying principles (mutual respect, conflict resolution, knowledge of the rules, body control, communication, and the joy of play) reinforce mutual respect and trust between opponents; communication and conflict resolution skills; and self confidence – both on and off the field of play.
 
           table.table.table-bordered.table-striped
             thead
@@ -81,8 +88,8 @@ html
               th Assists
               th Scores
               th Defenses
-              th Throwaways
-              th Drops
+              th.hidden Throwaways
+              th.hidden Drops
               th Attended
             tbody
               tr(ng-repeat="player in team.currentTeam.players | orderBy: 'name.first'")
@@ -93,16 +100,21 @@ html
                   input(ng-model="player.stats.scores" ng-if="editor" min="0" type="number" step="1")
                 td
                   input(ng-model="player.stats.defenses" ng-if="editor" min="0" type="number" step="1")
-                td
+                td.hidden
                   input(ng-model="player.stats.throwaways" ng-if="editor" min="0" type="number" step="1")
-                td
+                td.hidden
                   input(ng-model="player.stats.drops" ng-if="editor" min="0" type="number" step="1")
                 td
                   input(ng-model="player.stats.attended" ng-if="editor" type="checkbox")
+          
 
-
-          button.btn.btn-primary(ng-if="editor" ng-click="handleSave(game, team.currentTeam)") Save {{team.currentTeam.name}}'s stats for {{game.scheduledTime.toLocaleDateString()}}
-      section(ng-repeat="team in teams" style='page-break-after: always; margin-top: 20px;' ng-if="isTournament")
+          .form-group
+            label(style="font-weight: normal") Please write here any spirit feedback you would like the organizers to note:
+            textarea.form-control(placeholder="" style="margin-bottom: 10px;" rows=3)
+          p
+            em <strong>What is Spirit of the Game?</strong> A truly unique and defining element of ultimate, Spirit of the Game places the responsibility of fair play solely on the athletes themselves by requiring each player to know the rules and make their own calls, without the help of a neutral official. These underlying principles (mutual respect, conflict resolution, knowledge of the rules, body control, communication, and the joy of play) reinforce mutual respect and trust between opponents; communication and conflict resolution skills; and self confidence – both on and off the field of play.
+              button.btn.btn-primary(ng-if="editor" ng-click="handleSave(game, team.currentTeam)") Save {{team.currentTeam.name}}'s stats for {{game.scheduledTime.toLocaleDateString()}}
+      section(ng-repeat="team in teams" class="stat-page-container" ng-if="isTournament")
         table.table.table-bordered.table-striped
           thead
             tr

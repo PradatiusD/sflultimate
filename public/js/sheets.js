@@ -7,7 +7,8 @@
 
     const urlParams = new URLSearchParams(window.location.search)
     $scope.isTournament = urlParams.get('is_tournament')
-    $scope.today = urlParams.get('date') ? new Date(urlParams.get('date') + 'T12:00:00.000Z') : new Date()
+    const forcedDate = urlParams.get('date')
+    $scope.today = forcedDate ? new Date(urlParams.get('date') + 'T12:00:00.000Z') : new Date()
     $scope.editor = urlParams.get('editor')
 
     let teamsResponse
@@ -23,14 +24,19 @@
         const teamsData = teamsResponse.data
         const teams = teamsData.teams
         const validGameIDs = []
+        const oneWeekFromNow = $scope.today.getTime() + (6 * 24 * 60 * 60 * 1000)
         const games = response.data.games.filter(function (game) {
           game.scheduledTime = new Date(game.scheduledTime)
-          const canBeShown = new Date(game.scheduledTime).toDateString() === $scope.today.toDateString()
-          if (canBeShown) {
-            validGameIDs.push(game._id)
+          const gameIsToday = game.scheduledTime.toDateString() === $scope.today.toDateString()
+          if (forcedDate) {
+            if (gameIsToday) {
+              validGameIDs.push(game._id)
+            }
+            return gameIsToday
           }
-          return canBeShown
+          return game.scheduledTimeEpoch <= oneWeekFromNow
         })
+
         const playerMap = {}
 
         const statsMap = {}
