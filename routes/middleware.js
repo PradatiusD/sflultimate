@@ -69,7 +69,6 @@ exports.initLocals = async function (req, res, next) {
 
   locals.league = activeLeague
   locals.navLinks = [
-    { label: 'Home', key: 'home', href: '/' }
   ]
 
   if (activeLeague) {
@@ -95,7 +94,8 @@ exports.initLocals = async function (req, res, next) {
     { label: 'Local Pickups', key: 'community', href: '/pickups' },
     { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
     { label: 'Our Board', key: 'board', href: '/board' },
-    { label: 'Events', key: 'events', href: '/events' }
+    { label: 'Events', key: 'events', href: '/events' },
+    { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
   ]
 
   locals.navLinks = locals.navLinks.concat(evergreenLinks)
