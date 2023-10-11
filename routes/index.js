@@ -59,7 +59,8 @@ module.exports = function (app) {
     'draftboard',
     'stats',
     'sheets',
-    'clinics'
+    'clinics',
+    'beach-bash-tournament'
   ]
 
   contentRoutes.forEach((url) => {
