@@ -4,16 +4,20 @@ block head
     meta(property="og:title"        content="South Florida Ultimate Beach Bash 2023")
     meta(property="og:url"          content="https://www.sflultimate.com/beach-bash-tournament")
     meta(property="og:description"  content="Come down to sunny Ft. Lauderdale for a winter beach tourney on December 12-13th")
-
+    style
+        
 block content
-    .container-fluid
+    div(style="position: relative")
+        video(autoplay=true muted=true, loop=true style="position: absolute; top: 0px;")
+            source(src="https://d137pw2ndt5u9c.cloudfront.net/sfl-beach-bash-tournament.mp4" type="video/mp4")
+    .container-fluid(style="position: relative; padding-top: 3em;")
         br
-        .jumbotron
-            h1 Beach Bash
-            p Come down to sunny Ft. Lauderdale for a winter beach tourney on December 16-17th!
+        .jumbotron.text-center(style="background: none; color: white;")
+            h1 Beach Bash 2023
+            p(style="background: #0000003b;padding: 1em; margin: 1em auto; max-width: 700px;") Come down to sunny Ft. Lauderdale for a winter beach ultimate frisbee tourney on December 16-17th!
             p
                 a.btn.btn-primary.btn-lg(target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSffQliLEhIRV28WWFQM3A0HCaQ2XcWjPiJ5a98h5jlRdU8XFQ/viewform") Submit a Bid!
-
+    div(style="background: white; position: relative; z-index: 1; padding-top: 3em;")
         .row
             .col-md-2.col-md-offset-1
                 h2 Tournament Overview
