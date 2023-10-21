@@ -15,4 +15,14 @@
   z-index: 1;
   padding-top: 3em; }
 
-/*# sourceMappingURL=beach-bash-tournament.css.map */
+.beach-bash-hero-container {
+  position: relative;
+  padding-top: 3em; }
+  .beach-bash-hero-container .jumbotron {
+    background: none;
+    color: white; }
+  .beach-bash-hero-container .tagline {
+    background: #0000003b;
+    padding: 1em;
+    margin: 1em auto;
+    max-width: 700px; }
