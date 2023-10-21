@@ -1,0 +1,19 @@
+.bash-video-background {
+  position: relative;
+  video {
+    position: absolute;
+    top: 0;
+    left: -50%;
+    @media screen and (min-width: 855px) {
+      left: 0;
+      width: 100%;
+    }
+  }
+}
+
+.beach-bash-content-container {
+  background: white;
+  position: relative;
+  z-index: 1;
+  padding-top: 3em;
+}

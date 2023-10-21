@@ -1,0 +1,18 @@
+.bash-video-background {
+  position: relative; }
+  .bash-video-background video {
+    position: absolute;
+    top: 0;
+    left: -50%; }
+    @media screen and (min-width: 855px) {
+      .bash-video-background video {
+        left: 0;
+        width: 100%; } }
+
+.beach-bash-content-container {
+  background: white;
+  position: relative;
+  z-index: 1;
+  padding-top: 3em; }
+
+/*# sourceMappingURL=beach-bash-tournament.css.map */

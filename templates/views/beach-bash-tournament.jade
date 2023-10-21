@@ -4,12 +4,11 @@ block head
     meta(property="og:title"        content="South Florida Ultimate Beach Bash 2023")
     meta(property="og:url"          content="https://www.sflultimate.com/beach-bash-tournament")
     meta(property="og:image"        content="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg")
-    meta(property="og:description"  content="Come down to sunny Ft. Lauderdale for our inaugural ultimate frisbee beach tourney on December 12-13th")
-    style
-        
+    meta(property="og:description"  content="Come down to sunny Ft. Lauderdale for our inaugural ultimate frisbee beach championship December 16-17th!")
+    link(rel="stylesheet" href="/styles/beach-bash-tournament.css")
 block content
-    div(style="position: relative")
-        video(autoplay=true muted=true, loop=true style="position: absolute; top: 0px;")
+    div.bash-video-background
+        video(autoplay=true muted=true, loop=true)
             source(src="https://d137pw2ndt5u9c.cloudfront.net/sfl-beach-bash-tournament.mp4" type="video/mp4")
     .container-fluid(style="position: relative; padding-top: 3em;")
         br
@@ -18,7 +17,7 @@ block content
             p(style="background: #0000003b;padding: 1em; margin: 1em auto; max-width: 700px;") Come down to sunny Ft. Lauderdale for a winter beach ultimate frisbee tourney on December 16-17th!
             p
                 a.btn.btn-primary.btn-lg(target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSffQliLEhIRV28WWFQM3A0HCaQ2XcWjPiJ5a98h5jlRdU8XFQ/viewform") Submit a Bid!
-    div(style="background: white; position: relative; z-index: 1; padding-top: 3em;")
+    div.beach-bash-content-container.container-fluid
         .row
             .col-md-2.col-md-offset-1
                 h2 Tournament Overview

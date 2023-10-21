@@ -8,7 +8,8 @@ module.exports = {
       sourceMap: true
     },
     files: {
-      'public/styles/site.css': 'public/styles/site.scss'
+      'public/styles/site.css': 'public/styles/site.scss',
+      'public/styles/beach-bash-tournament.css': 'public/styles/beach-bash-tournament.scss'
     }
   }
 }
