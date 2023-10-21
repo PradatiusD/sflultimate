@@ -59,7 +59,7 @@ html(lang='en')
   body(class="page-"+ section)
 
     //- HEADER
-    #header
+    #header.site-header
 
       block header
 
@@ -112,7 +112,7 @@ html(lang='en')
             a(href='mailto:sflultimate@gmail.com' target='blank')
               i.fa.fa-envelope
           br
-          span Organized by South Florida Ultimate Inc., a local non-for-profit.
+          span 
           br
         .col-sm-4
           h4 Links
@@ -121,7 +121,7 @@ html(lang='en')
               li(class=(section === link.key ? 'active' : null)): a(href=link.href)= link.label
 
       div.text-right.credits
-        .container Site built by <a href="http://danielprada.co" target="_blank">Daniel Prada</a>
+        .container Organized by South Florida Ultimate Inc., a local non-for-profit.
 
 
       // Messenger Chat Plugin Code
