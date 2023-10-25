@@ -12,7 +12,8 @@ const getIframeBody = (selector) => {
 
 function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.viewport('iphone-x')
-  cy.visit('http://localhost:5000/register')
+  const testUrl = 'http://localhost:5000/register' 
+  cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
   const testEmailAddress = 'danielprada2012+sflultimate-test-' + Math.floor(Math.random() * 10000).toString() + '@gmail.com'
@@ -21,6 +22,7 @@ function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#skillLevel').select('4')
   cy.get('#partnerName').type('Test Friend')
   cy.get('#willAttendFinals').check()
+  cy.get('#understandsLateFee').check()
   cy.get('#comments').type('A random comment about me when registering for the draft')
   cy.get('#phoneNumber').type('9543055611')
   cy.get('#wouldCaptain').select('No')

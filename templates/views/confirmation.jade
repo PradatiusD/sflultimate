@@ -5,13 +5,16 @@ block head
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/jsSocials/1.5.0/jssocials-theme-flat.css")
 
 block content
-  .container: .jumbotron(style="margin-top: 1em")
-    h1 Thank you!
-    p We've successfully received your payment!
-    p 
-      span Feel free to share the joy of having signed up to play 
-      strong=league.title
-    div#share.text-center
+  .container
+    .row
+      .col-md-12
+        .jumbotron(style="margin-top: 1em; text-align: center;")
+          h1 Thank you!
+          p We've successfully received your payment!
+          p 
+            span Feel free to share the joy of having signed up to play 
+            strong=league.title
+          div#share.text-center
   br
   .container
     h2 Frequently Asked Questions

@@ -68,14 +68,13 @@ exports.initLocals = async function (req, res, next) {
   }
 
   locals.league = activeLeague
-  locals.navLinks = [
-  ]
+  locals.navLinks = []
 
   if (activeLeague) {
     activeLeague.isEarlyRegistrationPeriod = isValidRegPeriod(activeLeague.earlyRegistrationStart, activeLeague.earlyRegistrationEnd)
     activeLeague.isRegistrationPeriod = isValidRegPeriod(activeLeague.registrationStart, activeLeague.registrationEnd)
-    activeLeague.isLateRegistrationPeriod = isValidRegPeriod(activeLeague.lateRegistrationStart, activeLeague.lateRegistrationEnd)
-    activeLeague.canRegister = activeLeague.isEarlyRegistrationPeriod || activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod || (req.query.force_form === 'true')
+    activeLeague.isLateRegistrationPeriod = isValidRegPeriod(activeLeague.lateRegistrationStart, activeLeague.lateRegistrationEnd) || (req.query.force_form === 'true')
+    activeLeague.canRegister = activeLeague.isEarlyRegistrationPeriod || activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod
 
     if (activeLeague.canRegister) {
       locals.navLinks.push({ label: 'Register for ' + activeLeague.title, key: 'register', href: '/register' })
