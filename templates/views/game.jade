@@ -3,7 +3,10 @@ extends ../layouts/default
 block head
     meta(property="og:title"        content="South Florida Events")
     meta(property="og:url"          content="https://www.sflultimate.com/game/" + game._id)
-    meta(property="og:description"  content="Game Summary: " + teams[0].name  + " vs " + teams[1].name)
+    if preview
+        meta(property="og:description"  content="Game Preview: " + teams[0].name  + " vs " + teams[1].name + " - " + game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'}))
+    else
+        meta(property="og:description"  content="Game Recap: " + teams[0].name  + " vs " + teams[1].name + " - " + game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'}))
 
 block content
     .container
