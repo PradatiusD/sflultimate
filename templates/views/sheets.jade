@@ -6,11 +6,6 @@ html
     link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
     link(href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet")
     style.
-      @page {
-        size: auto;
-        margin: 1em;
-      }
-
       td, th, p, label {
         font-size: 0.8em;
       }
@@ -41,22 +36,34 @@ html
         letter-spacing: 2px;
         text-transform: uppercase;
       }
-        
-      .stat-page-container {
-          page-break-after: always; 
+      
+      @media all {
+        @page {  
+          size: auto;
+          margin: 1em;
+        }  
+        .game-container:first-child .stat-page-container:first-child {
+            page-break-before: initial;  
+        }
+
+        .stat-page-container {
+          page-break-before: always;
+          page-break-after: always;
           margin-top: 20px;
+        }
+        
+        .game-container:last-child .stat-page-container:last-child {
+          page-break-after: initial;
+        }
       }
         
-      .stat-page-container.last {
-          page-break-after: initial;
-      }
 
   body(ng-app='StatSheetApp')
 
     .container-fluid(ng-controller='StatSheetController')
 
-      div(ng-repeat="game in games")
-        section(ng-repeat="team in game.teams"  class="stat-page-container" ng-class="$last ? 'last': ''" ng-if="!isTournament")
+      div.game-container(ng-repeat="game in games")
+        section(ng-repeat="team in game.teams" class="stat-page-container" ng-if="!isTournament")
           table.table.table-bordered.table-striped
             thead
               tr
