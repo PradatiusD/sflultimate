@@ -34,7 +34,7 @@
             }
             return gameIsToday
           }
-          return game.scheduledTimeEpoch <= oneWeekFromNow
+          return Date.now() <= game.scheduledTimeEpoch && game.scheduledTimeEpoch <= oneWeekFromNow
         })
 
         const playerMap = {}
