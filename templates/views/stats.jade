@@ -14,7 +14,11 @@ block content
       .badge.Male {
         background-color: #4A7CEC;
       }
-
+      
+      tbody a {
+          color: #333333;
+          text-decoration: underline;
+      }
   .container(ng-app='StatsApp')
     h1 #{locals.league.title} Stats
     section(ng-controller='StatsViewController')
@@ -42,8 +46,8 @@ block content
             td {{$index + 1}}
             td
                 span.team-color(ng-style="{'background-color': player.teamColor}")
-            td {{player.name.first}}
-            td {{player.name.last}}
+            td <a target="_blank" ng-href="{{player.url}}">{{player.name.first}}</a>
+            td <a target="_blank" ng-href="{{player.url}}">{{player.name.last}}</a>
             td(ng-repeat="key in keysToCompare")
               span(ng-class="awards[player.gender][key] === player[key] ? 'badge ' + player.gender: ''") {{player[key]}}
     
@@ -66,8 +70,8 @@ block content
             td {{$index + 1}}
             td
               span.team-color(ng-style="{'background-color': player.teamColor}")
-            td {{player.name.first}}
-            td {{player.name.last}}
+            td <a target="_blank" ng-href="{{player.url}}">{{player.name.first}}</a>
+            td <a target="_blank" ng-href="{{player.url}}">{{player.name.last}}</a>
             td(ng-repeat="key in keysToCompare")
               span(ng-class="awards[player.gender][key] === player[key] ? 'badge ' + player.gender: ''") {{player[key]}}
 

@@ -1,0 +1,45 @@
+extends ../layouts/default
+
+block head
+    meta(property="og:title"        content="Player Stats for "+ player.name.first + " " + player.name.last)
+    meta(property="og:url"          content="https://www.sflultimate.com/player/" + player.name.first.toLowerCase() + '-' + player.name.last.toLowerCase())
+    meta(property="og:description"  content="Click here to learn more about this player's stats!")
+block content
+    .container
+        h1=player.name.first + ' ' + player.name.last + ' Profile'
+        .alert.alert-info <strong>Note:</strong> This project is in progress.  If you register with different names your entries will not be connected. Not all player data has been captured here, so far we've been able to load post 2021 data.
+        for league in leagueGameStatHistory
+            h2=league.title
+            p.lead=league.team.name
+            table.table.table-bordered.table-striped
+                thead
+                    tr
+                        th Game Date
+                        th Opponent
+                        th Team Score
+                        th Opponent Score
+                        th Outcome
+                        th Assists
+                        th Scores
+                        th Defenses
+                tbody
+                    for game in league.games
+                        tr
+                            td=game.scheduledTime.toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', weekday: "short"})
+                            td=game.opponentTeamName
+                            td=game.playerTeamScore
+                            td=game.opponentTeamScore
+                            td=game.outcome
+                            td=game.stats.assists
+                            td=game.stats.scores
+                            td=game.stats.defenses
+                tfoot
+                    tr
+                        td(colspan=2) Total
+                        td=league.totals.playerTeamScore
+                        td=league.totals.opponentTeamScore
+                        td=league.totals.outcomes
+                        td=league.totals.assists
+                        td=league.totals.scores
+                        td=league.totals.defenses
+         // pre=JSON.stringify(leagueGameStatHistory, null, 2)

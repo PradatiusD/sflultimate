@@ -9,6 +9,7 @@
 
       const playerIDMap = {}
       for (const player of response.data.players) {
+        player.url = window.sflUtils.buildPlayerUrl(player)
         playerIDMap[player._id] = player
       }
 

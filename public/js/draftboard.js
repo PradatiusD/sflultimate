@@ -27,6 +27,7 @@
         $scope.players = response.data.players
         $scope.teams = response.data.teams
         $scope.players.forEach(function (player) {
+          player.url = window.sflUtils.buildPlayerUrl(player)
           $scope.playerMap[player._id] = player
         })
         $scope.sortByGenderThenSkill()
@@ -137,6 +138,7 @@
 
       const JOIN_CHAR = '|'
       players.forEach(function (player) {
+        player.url = window.sflUtils.buildPlayerUrl(player)
         teamSizes.forEach(function (teamsAmount) {
           const perTeamScore = 1 / teamsAmount
           const perTeamScoreWeightedWithParticipation = (perTeamScore * parseInt(player.participation) / 100)

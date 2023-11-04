@@ -1,6 +1,6 @@
 window.sflUtils = {
   /**
-   * 
+   *
    * @param {string} url
    * @return {string}
    */
@@ -12,5 +12,8 @@ window.sflUtils = {
       url += '&' + forceKey + '=' + queryParamValue
     }
     return url
+  },
+  buildPlayerUrl (player) {
+    return ('/players/' + player.name.first + ' ' + player.name.last).trim().replace(/\s/g, '-').toLowerCase()
   }
 }

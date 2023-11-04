@@ -1,7 +1,10 @@
 extends ../layouts/default
-
 block content
-
+    style.
+        table a {
+            text-decoration: underline;
+            color: #333;
+        }
     .container-fluid(ng-app='draftboardApp')
 
         h1=league.title + " Draftboard"
@@ -50,7 +53,7 @@ block content
                 tbody
                     tr(ng-repeat='player in players | orderBy:"-skill"')
                         td {{$index + 1}}
-                        td {{player.name.first}} {{player.name.last}}
+                        td <a ng-href="{{player.url}}" target="_blank">{{player.name.first}} {{player.name.last}}</a>
                         td {{player.gender.charAt(0)}}
                         td {{formatDate(player.createdAt)}}
                         td {{player.age}}
