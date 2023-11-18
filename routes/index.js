@@ -52,6 +52,7 @@ module.exports = function (app) {
   app.get('/board', routes.views.boardMembers)
   app.get('/events', routes.views.events)
   app.all('/stats', routes.views.stats)
+  app.all('/beach-bash-tournament', routes.views.beachBashTournament)
 
   // Content Pages
   const contentRoutes = [
@@ -60,8 +61,7 @@ module.exports = function (app) {
     'draftboard',
     'stats',
     'sheets',
-    'clinics',
-    'beach-bash-tournament'
+    'clinics'
   ]
 
   contentRoutes.forEach((url) => {

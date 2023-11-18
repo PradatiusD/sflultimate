@@ -31,6 +31,25 @@ block content
                 p We will be having a Friday night registration party in Ft Lauderdale and a Saturday night tournament party location tbd.
                 p Come join the hottest beach ultimate community in Florida! See you in December!
                 iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1690.3133871864395!2d-80.10470750573026!3d26.110114190972915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d90184490da219%3A0x1a08e5d36463b739!2sOcean%20Rescue%20Tower%20%231!5e1!3m2!1sen!2sus!4v1696989472039!5m2!1sen!2sus" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade")
+        hr
+        h2.text-center Signed Up Teams
+        p.text-center.lead Use the below to get a sense of the competition coming to join us in Fort. Lauderdale! 
+        .row
+            for team in teams
+                .col-md-3.col-sm-4.col-xs-6
+                    .panel.panel-default.text-center
+                        .panel-heading
+                            h3.panel-title
+                            | #{team["Team Name"]} 
+                            if !team.in_state
+                                <span class="badge" style="background: #217f92;font-weight: 400;padding: 5px 10px;">Out of State</span>
+                        .panel-body
+                            | Level: #{team["Competitive Level"]} <br />
+                            | From: #{team["Team Hometown"]}
+                            | <br/>
+                            | Captain: #{team["Captain Name"]}
+
+        
         hr 
         .row
             .col-md-2.col-md-offset-1

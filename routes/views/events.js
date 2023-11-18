@@ -60,9 +60,8 @@ module.exports = function (req, res) {
       timeZone: 'America/New_York'
     })
 
-      return event
+    return event
   })
-
 
   view.render('events')
 }
