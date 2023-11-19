@@ -6,6 +6,10 @@ html
     link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
     link(href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet")
     style.
+      .spirit-of-the-game-text {
+        font-size: 0.7em;
+      }
+
       td, th, p, label {
         font-size: 0.8em;
       }
@@ -118,32 +122,44 @@ html
           .form-group
             label(style="font-weight: normal") Please write here any spirit feedback you would like the organizers to note:
             textarea.form-control(placeholder="" style="margin-bottom: 10px;" rows=3)
-          p
+          p.spirit-of-the-game-text
             em <strong>What is Spirit of the Game?</strong> A truly unique and defining element of ultimate, Spirit of the Game places the responsibility of fair play solely on the athletes themselves by requiring each player to know the rules and make their own calls, without the help of a neutral official. These underlying principles (mutual respect, conflict resolution, knowledge of the rules, body control, communication, and the joy of play) reinforce mutual respect and trust between opponents; communication and conflict resolution skills; and self confidence – both on and off the field of play.
               button.btn.btn-primary(ng-if="editor" ng-click="handleSave(game, team.currentTeam)") Save {{team.currentTeam.name}}'s stats for {{game.scheduledTime.toLocaleDateString()}}
       section(ng-repeat="team in teams" class="stat-page-container" ng-if="isTournament")
         table.table.table-bordered.table-striped
           thead
             tr
-              th(style="min-width: 90px") Game Date
+              th Game Date
               th Team
-              th Scores Game 1
-              th Scores Game 2
-              th Scores Game 3
+              th.text-center Game 1
+              th.text-center Game 2
+              th.text-center Game 3
           tbody
             tr
               td {{today.toLocaleDateString()}}
-              td <strong>{{team.name}}</strong>
-              td
-              td
-              td
-              tr
+              td <strong>{{team.name}}</strong> Scores
+              td(style="min-width: 175px")
+              td(style="min-width: 175px")
+              td(style="min-width: 175px")
+            tr
               td {{team.game.scheduledTime.toLocaleTimeString()}}
-              td Opponent
+              td Opponent Scores
               td
               td
               td
-  
+            tr
+              td
+              td Timeouts Used
+              td
+              td
+              td
+            tr
+              td 
+              td Spirit Scores (1-5, 1 bad, 5 great)
+              td
+              td
+              td
+              
           table.table.table-bordered.table-striped
             thead
               th Player Name
@@ -168,11 +184,13 @@ html
                 td
                 td
                 td
+        p.spirit-of-the-game-text
+          em <strong>What is Spirit of the Game?</strong> A truly unique and defining element of ultimate, Spirit of the Game places the responsibility of fair play solely on the athletes themselves by requiring each player to know the rules and make their own calls, without the help of a neutral official. These underlying principles (mutual respect, conflict resolution, knowledge of the rules, body control, communication, and the joy of play) reinforce mutual respect and trust between opponents; communication and conflict resolution skills; and self confidence – both on and off the field of play.
 
-        p.text-muted(ng-if="isTournament")
+        p.spirit-of-the-game-text.text-muted(ng-if="isTournament")
           em Please fill out and return to SFL Ultimate staff.  Please keep accurate track of point differential and timeouts as this might prove important in determining the two teams that advance to finals.
 
-        p.text-muted(ng-if="!isTournament")
+        p.spirit-of-the-game-text.text-muted(ng-if="!isTournament")
           em Please fill out and return to SFL Ultimate staff.  Stats allow us to determine awards (MVP, assist, score, defensive leaders) for each gender as well as help us resolve seeding for the playoff tournament. Thank you!
 
     script(src='/js/utils.js')
