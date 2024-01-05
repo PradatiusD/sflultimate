@@ -106,6 +106,10 @@ League.add({
   jerseyDesign: {
     type: Types.File,
     storage: storage
+  },
+  registrationShareImage: {
+    type: Types.File,
+    storage: storage
   }
 })
 
