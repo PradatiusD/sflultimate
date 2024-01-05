@@ -61,7 +61,7 @@ const fields = {
     type: Types.Select,
     options: [30, 50, 80],
     initial: true,
-    required: true
+    required: false
   },
   registrationLevel: {
     type: Types.Select,

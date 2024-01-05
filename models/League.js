@@ -110,6 +110,15 @@ League.add({
   registrationShareImage: {
     type: Types.File,
     storage: storage
+  },
+  requestAttendance: {
+    type: Types.Boolean
+  },
+  requestShirtSize: {
+    type: Types.Boolean
+  },
+  requestSponsorship: {
+    type: Types.Boolean
   }
 })
 

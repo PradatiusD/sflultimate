@@ -89,34 +89,40 @@ block content
                             option(value='8') 8 - Club level, solid all around, not prone to errors
                             option(value='9') 9 - Rock star. spot on throws, awesome D
                     p.help-block Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team. 
-                    
-                .form-group
-                    label(for="participation") Expected Attendance
-                    select#participation.input-lg.form-control(name="participation")
-                        option(value="30") Less than 30% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.7)}+ weeks of play)
-                        option(value="50") Around 50% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.5)} weeks of play)
-                        option(value="80" selected="selected") Greater than 80% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.2)} week of play)
-                    p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments.
+
+                if locals.league.requestAttendance
+                    .form-group
+                        label(for="participation") Expected Attendance
+                        select#participation.input-lg.form-control(name="participation")
+                            option(value="30") Less than 30% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.7)}+ weeks of play)
+                            option(value="50") Around 50% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.5)} weeks of play)
+                            option(value="80" selected="selected") Greater than 80% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.2)} week of play)
+                        p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments.
+                else
+                    #no-requestAttendance
 
                 .checkbox
                     label
                         input#willAttendFinals(type='checkbox' name='willAttendFinals')
                         | I expect to be able to attend finals.
 
-                .form-group
-                    label(for="shirtSize") Shirt Size
-                    if locals.league.jerseyDesign
-                        img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px")
-                    select#shirtSize.input-lg.form-control(name="shirtSize")
-                        option(value="XS") XS
-                        option(value="S") S
-                        option(value="M") M
-                        option(value="L") L
-                        option(value="XL") XL
-                        option(value="XXL") XXL
-                        option(value="NA") I do not want a jersey
-                    if locals.league.jerseyDesign
-                        p.help-block The above is the current design for this league, which will in color depending on what team you are on.
+                if locals.league.requestShirtSize
+                    .form-group
+                        label(for="shirtSize") Shirt Size
+                        if locals.league.jerseyDesign
+                            img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px")
+                        select#shirtSize.input-lg.form-control(name="shirtSize")
+                            option(value="XS") XS
+                            option(value="S") S
+                            option(value="M") M
+                            option(value="L") L
+                            option(value="XL") XL
+                            option(value="XXL") XXL
+                            option(value="NA") I do not want a jersey
+                        if locals.league.jerseyDesign
+                            p.help-block The above is the current design for this league, which will in color depending on what team you are on.
+                else
+                    #no-requestShirtSize
 
                   br
 
@@ -149,18 +155,23 @@ block content
                         input#termsConditions(type='checkbox' name='termsConditions' required)
                         | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
 
-                h3 Sponsorship
-                .checkbox
-                    label
-                        input#wouldSponsor(type='checkbox' name='wouldSponsor')
-                        | I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.
+                if locals.league.requestSponsorship
+                    h3 Sponsorship
+                    .checkbox
+                        label
+                            input#wouldSponsor(type='checkbox' name='wouldSponsor')
+                            | I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.
+                else
+                    #no-requestSponsorship
     
                 if locals.league.isLateRegistrationPeriod
                     h3 Late Registration
                     .checkbox
                         label
                             input#understandsLateFee(type='checkbox' required)
-                            | I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me. 
+                            | I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me.
+                else
+                    #no-understandsLateFee
 
 
                 h3 Payment Information

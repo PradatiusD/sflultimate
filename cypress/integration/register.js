@@ -12,7 +12,7 @@ const getIframeBody = (selector) => {
 
 function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.viewport('iphone-x')
-  const testUrl = 'http://localhost:5000/register' 
+  const testUrl = 'http://localhost:5000/register'
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
@@ -22,12 +22,16 @@ function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#skillLevel').select('4')
   cy.get('#partnerName').type('Test Friend')
   cy.get('#willAttendFinals').check()
-  cy.get('#understandsLateFee').check()
+  if (!cy.get('body').find('#no-understandsLateFee')) {
+    cy.get('#understandsLateFee').check()
+  }
   cy.get('#comments').type('A random comment about me when registering for the draft')
   cy.get('#phoneNumber').type('9543055611')
   cy.get('#wouldCaptain').select('No')
   cy.get('#termsConditions').check()
-  cy.get('#wouldSponsor').check()
+  if (!cy.get('body').find('#no-requestSponsorship')) {
+    cy.get('#wouldSponsor').check()
+  }
 
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')
