@@ -154,7 +154,24 @@ block content
                     label
                         input#termsConditions(type='checkbox' name='termsConditions' required)
                         | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
-
+                    
+                h3 SFLUltimate Player Code of Conduct
+                .checkbox
+                    label
+                        input#codeOfConduct1(type='checkbox' required)
+                        | I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment.
+                .checkbox
+                    label
+                        input#codeOfConduct2(type='checkbox' required)
+                        | I will facilitate the growth of the sport through mentorship and coaching of novice players.
+                .checkbox
+                    label
+                        input#codeOfConduct3(type='checkbox' required)
+                        | I will improve my skills in a safe and supportive environment.
+                .checkbox
+                    label
+                        input#codeOfConduct4(type='checkbox' required)
+                        | I will take this as an opportunity to make new friends and to get inspired to join club teams.
                 if locals.league.requestSponsorship
                     h3 Sponsorship
                     .checkbox

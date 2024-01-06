@@ -33,6 +33,11 @@ function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
     cy.get('#wouldSponsor').check()
   }
 
+  cy.get('#codeOfConduct1').check()
+  cy.get('#codeOfConduct2').check()
+  cy.get('#codeOfConduct3').check()
+  cy.get('#codeOfConduct4').check()
+
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')
 
