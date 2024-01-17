@@ -88,7 +88,27 @@ block content
                             option(value='7') 7 - Tourney experience. Several years of club
                             option(value='8') 8 - Club level, solid all around, not prone to errors
                             option(value='9') 9 - Rock star. spot on throws, awesome D
-                    p.help-block Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team. 
+                    p.help-block Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team.
+                
+                div
+                    label(for="skillLevel") Preferred Player Positions
+                    p.help-block This is to help captains draft, especially in cases where we captains might not know you.  Check all that apply.
+                .checkbox(style="margin-top: 0")
+                    label
+                        input#playerPositionHandler(type='checkbox' name="preferredPositions" value="handler")
+                        | <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around the field in the wind or against the zone.
+                .checkbox
+                    label
+                        input#playerPositionCutter(type='checkbox' name="preferredPositions" value="cutter")
+                        | <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or cutting deep for a big throw.
+                .checkbox
+                    label
+                        input#playerPositionHybrid(type='checkbox' name="preferredPositions" value="hybrid")
+                        | <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on either depending on what the team needs. 
+                .checkbox
+                    label
+                        input#playerPositionDefense(type='checkbox' name="preferredPositions" value="defense")
+                        | <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great cutters/handlers.
 
                 if locals.league.requestAttendance
                     .form-group
@@ -101,7 +121,9 @@ block content
                 else
                     #no-requestAttendance
 
-                .checkbox
+                div
+                    label(for="skillLevel") Finals attendance
+                .checkbox(style="margin-top: 0")
                     label
                         input#willAttendFinals(type='checkbox' name='willAttendFinals')
                         | I expect to be able to attend finals.

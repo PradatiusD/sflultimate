@@ -42,6 +42,7 @@ block content
                     th Date Registered
                     th Age
                     th Shirt Size
+                    th Positions
                     th Skill
                     th Attendance
                     th Will Attend Finals?
@@ -58,6 +59,7 @@ block content
                         td {{formatDate(player.createdAt)}}
                         td {{player.age}}
                         td {{player.shirtSize}}
+                        td {{player.preferredPositions.join(", ")}}
                         td {{player.skillLevel}}
                         td {{player.participation}}
                         td {{player.willAttendFinals ? 'Yes': 'No'}}

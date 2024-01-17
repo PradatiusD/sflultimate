@@ -108,6 +108,9 @@ const fields = {
     type: Boolean,
     initial: false,
     required: false
+  },
+  preferredPositions: {
+    type: Types.TextArray
   }
 }
 

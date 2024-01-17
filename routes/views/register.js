@@ -49,7 +49,8 @@ module.exports = async function (req, res) {
       shirtSize,
       streetAddress,
       wouldSponsor,
-      willAttendFinals
+      willAttendFinals,
+      preferredPositions
     } = req.body
 
     const paymentMethodNonce = req.body.payment_method_nonce
@@ -108,7 +109,6 @@ module.exports = async function (req, res) {
         }
         return next()
       }
-
       const newPlayerRecord = {
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -134,8 +134,10 @@ module.exports = async function (req, res) {
         usauNumber,
         phoneNumber,
         wouldSponsor,
-        willAttendFinals
+        willAttendFinals,
+        preferredPositions: Array.isArray(preferredPositions) ? preferredPositions : []
       }
+      console.log(newPlayerRecord)
 
       const player = new PlayerModel(newPlayerRecord)
 
