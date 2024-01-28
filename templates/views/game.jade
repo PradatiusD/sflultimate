@@ -17,7 +17,7 @@ block content
         p.lead.text-center
             | <strong>#{game.league.title}</strong>
             | <br/> #{game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'})} - #{game.scheduledTime.toLocaleTimeString('en-US', { timeZone: 'America/New_York', minute: 'numeric', hour: 'numeric' })}
-            | <br/> #{game.location.name}
+            | <br/> #{game.location ? game.location.name : ''}
         .row
 
             p.h3.text-center Season Standings
