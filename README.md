@@ -6,12 +6,12 @@
 
 From a front-end perspective, this project utilizes Bootstrap 3 and SCSS as a CSS preprocessor, Jade as a templating engine, and a small amount of jQuery and AngularJs.
 
-## Dependencies 
+## Download This First 
 
 You will need:
 - `git`: For collaborative software development
-- `node`: For running the application ([v6.10.3](https://nodejs.org/en/blog/release/v6.10.3/) recommended)
-- `mongo`: database
+- `node`: For running the application (check package.json for supported version), recommend using [`n`](https://github.com/tj/n) to switch between versions
+- `mongo`: The database
 - `grunt`: For task automation
 - `heroku toolbelt`: For Heroku deployment 
 
@@ -20,12 +20,12 @@ Additionally, you will need to install:
 - [Nodemon](https://github.com/remy/nodemon): Tool to restarting the application on a server side file change (while in development mode only)
 - [Sass](http://sass-lang.com/install): Tool to convert scss and sass files into css files.
 
-## Installation process
+## To Install
 
 This assumes you already have the project downloaded from git.
 
 ```bash
-npm install # to install all Node.js modules required by the project package.json
+npm i # to install all Node.js modules required by the project package.json
 brew services start mongod # to start mongodb deamon via Homebrew
 grunt serve # to run application on port 5000 (or 3000 if you have an older version).
 ```
@@ -45,12 +45,18 @@ BRAINTREE_PRIVATE_KEY=
 BRAINTREE_PUBLIC_KEY=
 CLOUDINARY_URL=
 COOKIE_SECRET=
+KEYSTONE_USERNAME=
 KEYSTONE_PASSWORD=
-MANDRILL_API_KEY=
 MONGOLAB_URI=
 DATABASE_DUMP_COMMAND=
 RECAPTCHA_SITE_KEY=
 RECAPTCHA_SECRET_KEY=
+S3_BUCKET=
+S3_KEY=
+S3_REGION=
+S3_SECRET=
+SMTP_PASSWORD=
+SMTP_USER=
 ```
 
 
