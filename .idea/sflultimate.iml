@@ -11,5 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="simpleParallax" level="application" />
     <orderEntry type="library" name="braintree" level="application" />
+    <orderEntry type="library" name="braintree-2.32.1" level="application" />
   </component>
 </module>

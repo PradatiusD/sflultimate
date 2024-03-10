@@ -10,7 +10,7 @@ const getIframeBody = (selector) => {
     .then(cy.wrap)
 }
 
-function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
+async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.viewport('iphone-x')
   const testUrl = 'http://localhost:5000/register'
   cy.visit(testUrl)
@@ -22,14 +22,17 @@ function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#skillLevel').select('4')
   cy.get('#partnerName').type('Test Friend')
   cy.get('#willAttendFinals').check()
-  if (!cy.get('body').find('#no-understandsLateFee')) {
+  const $body = await cy.get('body')
+  const $noUnderstandsLateFeeElement = $body.find('#no-understandsLateFee')
+  if (!$noUnderstandsLateFeeElement.length) {
     cy.get('#understandsLateFee').check()
   }
   cy.get('#comments').type('A random comment about me when registering for the draft')
   cy.get('#phoneNumber').type('9543055611')
   cy.get('#wouldCaptain').select('No')
   cy.get('#termsConditions').check()
-  if (!cy.get('body').find('#no-requestSponsorship')) {
+  const $noSponsorElement = await $body.find('#no-requestSponsorship')
+  if (!$noSponsorElement.length) {
     cy.get('#wouldSponsor').check()
   }
 
@@ -46,10 +49,10 @@ function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')
 
-  // const lateFeeCheckbox = cy.get('#understandsLateFee')
-  // if (lateFeeCheckbox) {
-  //   lateFeeCheckbox.check()
-  // }
+  const $lateFeeCheckbox = await $body.find('#understandsLateFee')
+  if ($lateFeeCheckbox.length) {
+    cy.get('#understandsLateFee').check()
+  }
 
   cy.get('#streetAddress').type('123 Test Way')
   getIframeBody('#braintree-dropin-frame').find('#credit-card-number').type(cardNumber || '4111 1111 1111 1111')

@@ -134,9 +134,17 @@ module.exports = async function (req, res) {
         usauNumber,
         phoneNumber,
         wouldSponsor,
-        willAttendFinals,
-        preferredPositions: Array.isArray(preferredPositions) ? preferredPositions : []
+        willAttendFinals
       }
+
+      if (Array.isArray(preferredPositions)) {
+        newPlayerRecord.preferredPositions = preferredPositions
+      } else if (typeof preferredPositions === 'string') {
+        newPlayerRecord.preferredPositions = [preferredPositions]
+      } else {
+        newPlayerRecord.preferredPositions = []
+      }
+
       console.log(newPlayerRecord)
 
       const player = new PlayerModel(newPlayerRecord)

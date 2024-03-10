@@ -36,13 +36,9 @@ block content
                | Late registration (at a $#{locals.fees.lateAdult} fee for adults, $#{locals.fees.lateStudent} for students, as space permits) starts
                | #{formatDate(locals.league.lateRegistrationStart)} until #{formatDate(locals.league.lateRegistrationEnd)} at #{formatTime(locals.league.lateRegistrationEnd)}. This will not include a jersey.
                 
-    
             hr
-    
             h3 Registration
-    
             form#registration(method="post" autocomplete="off")
-    
                 .row
                     .col-md-6
                         .form-group
@@ -90,9 +86,9 @@ block content
                             option(value='9') 9 - Rock star. spot on throws, awesome D
                     p.help-block Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team.
                 
-                div
+                div#playerPositions
                     label(for="skillLevel") Preferred Player Positions
-                    p.help-block This is to help captains draft, especially in cases where we captains might not know you.  Check all that apply.
+                    p.help-block This is to help captains draft, especially in cases where we captains might not know you.  Check all that apply.  You must pick one.
                 .checkbox(style="margin-top: 0")
                     label
                         input#playerPositionHandler(type='checkbox' name="preferredPositions" value="handler")
@@ -109,6 +105,8 @@ block content
                     label
                         input#playerPositionDefense(type='checkbox' name="preferredPositions" value="defense")
                         | <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great cutters/handlers.
+
+                .alert.alert-danger#playerPositionError Please pick <strong>at least one</strong> of the above.
 
                 if locals.league.requestAttendance
                     .form-group
