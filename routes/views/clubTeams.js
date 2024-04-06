@@ -9,7 +9,8 @@ module.exports = async function (req, res) {
   locals.clubTeams = locals.clubTeams.map(function (team) {
     team.links = []
     for (const key in team) {
-      if (key.includes('Url')) {
+      const url = team[key]
+      if (key.includes('Url') && url) {
         const label = key
           .replace('Url', '')
           .replace('Page', '')
@@ -18,10 +19,12 @@ module.exports = async function (req, res) {
             return str.toUpperCase()
           })
 
-        team.links.push({
+        const link = {
           label,
-          url: team[key]
-        })
+          url
+        }
+
+        team.links.push(link)
       }
     }
     return team
