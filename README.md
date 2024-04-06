@@ -25,8 +25,9 @@ Additionally, you will need to install:
 This assumes you already have the project downloaded from git.
 
 ```bash
+n v14
 npm i # to install all Node.js modules required by the project package.json
-brew services start mongod # to start mongodb deamon via Homebrew
+brew services start mongod # to start mongodb daemon via Homebrew
 grunt serve # to run application on port 5000 (or 3000 if you have an older version).
 ```
 
