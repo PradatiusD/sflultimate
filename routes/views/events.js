@@ -12,7 +12,8 @@ module.exports = async function (req, res) {
         url: event.moreInformationUrl
       })
     }
-    event.active = new Date().toISOString() < event.startTime
+    const now = Date.now()
+    event.active = now < new Date(event.endTime).getTime()
     event.startTimeFormatted = new Date(event.startTime).toLocaleString('en-US', {
       year: 'numeric',
       month: 'long',

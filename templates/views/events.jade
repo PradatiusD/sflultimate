@@ -16,9 +16,9 @@ block content
             if event.active
                 .row
                     .col-sm-12
-                        h2=event.title
+                        h2=event.name
                         p
-                            strong=event.start_time_formatted
+                            strong=event.startTimeFormatted
                             |  <br/><em>#{event.location}</em>
                             |  •  #{event.category}
                         p=event.description
