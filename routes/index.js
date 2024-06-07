@@ -61,7 +61,8 @@ module.exports = function (app) {
     'draftboard',
     'stats',
     'sheets',
-    'clinics'
+    'clinics',
+    'youth'
   ]
 
   contentRoutes.forEach((url) => {
