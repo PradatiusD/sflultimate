@@ -36,6 +36,9 @@ const fields = {
 
 module.exports = {
   fields,
+  adminConfig: {
+    defaultColumns: 'title, description, commitment, assigned',
+  },
   labelResolver: async (item) => {
     const itemResponse = await keystone.executeGraphQL({
       query: `query {
@@ -62,8 +65,4 @@ module.exports = {
 
     return `${data.BoardMember.firstName} ${data.BoardMember.lastName}`
   }
-
-  // }
 }
-
-// BoardPosition.defaultColumns = 'title, description, commitment, assigned'

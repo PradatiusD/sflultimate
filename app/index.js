@@ -3,12 +3,17 @@ const { GraphQLApp } = require('@keystonejs/app-graphql')
 const { AdminUIApp } = require('@keystonejs/app-admin-ui')
 const PROJECT_NAME = 'SFLUltimate'
 const keystone = require('./keystone')
-// Import lists
-const BoardMemberSchema = require('./lists/BoardMember')
-keystone.createList('BoardMember', BoardMemberSchema)
 
-const BoardPositionSchema = require('./lists/BoardPosition')
-keystone.createList('BoardPosition', BoardPositionSchema)
+const migratedLists = [
+  'BoardMember',
+  'BoardPosition',
+  'ClubTeam'
+]
+
+for (const listName of migratedLists) {
+  const BoardMemberSchema = require('./lists/' + listName)
+  keystone.createList(listName, BoardMemberSchema)
+}
 
 module.exports = {
   keystone,

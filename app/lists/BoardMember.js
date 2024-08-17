@@ -34,5 +34,8 @@ const fields = {
 
 module.exports = {
   fields,
+  adminConfig: {
+    defaultColumns: 'name, order, active, description, image'
+  },
   labelResolver: member => member.firstName + ' ' + member.lastName
 }

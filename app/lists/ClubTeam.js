@@ -1,61 +1,60 @@
-const keystone = require('keystone')
-const Types = keystone.Field.Types
 const storage = require('./file-storage-adapter')
-
-const ClubTeamModel = new keystone.List('ClubTeam')
+const { Text, Url, Select, Integer, Checkbox, File } = require('@keystonejs/fields')
 
 const fields = {
   name: {
-    type: Types.Text,
-    initial: true,
-    required: true
+    type: Text,
+    isRequired: true
   },
   category: {
-    type: Types.Select,
-    options: ['Mixed', 'Open', 'Women', 'College - Women', 'College - Mixed', 'College - Open'],
-    initial: true
+    type: Select,
+    options: [
+      'Mixed',
+      'Open',
+      'Women',
+      'College - Women',
+      'College - Mixed',
+      'College - Open'
+    ],
+    dataType: 'string'
   },
   order: {
-    type: Types.Number,
-    initial: true,
-    required: true
+    type: Integer,
+    isRequired: true
   },
   active: {
-    type: Types.Boolean,
-    required: true,
-    initial: true
+    type: Checkbox,
+    isRequired: true
   },
   description: {
-    type: String,
-    initial: true,
-    required: true
+    type: Text,
+    isRequired: true
   },
   image: {
-    type: Types.File,
-    storage: storage
+    type: File,
+    adapter: storage
   },
   instagramPageUrl: {
-    type: Types.Url
+    type: Url
   },
   facebookPageUrl: {
-    type: Types.Url
+    type: Url
   },
   websiteUrl: {
-    type: Types.Url
+    type: Url
   },
   twitterPageUrl: {
-    type: Types.Url
+    type: Url
   },
   interestFormPageUrl: {
-    type: Types.Url
+    type: Url
   }
 }
 
-ClubTeamModel.add(fields)
+module.exports = {
+  fields,
+  adminConfig: {
+    defaultColumns: 'name, order, active, description, image'
+  }
 
-/**
- * Registration
- */
-
-ClubTeamModel.defaultColumns = 'name, order, active, description, image'
-ClubTeamModel.register()
+}
