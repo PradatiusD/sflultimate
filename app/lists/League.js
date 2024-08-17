@@ -1,5 +1,5 @@
 const { Text, DateTime, Checkbox, Integer, Relationship, File } = require('@keystonejs/fields')
-const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
+const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
 const storage = require('./file-storage-adapter')
 
 const fields = {
@@ -43,52 +43,52 @@ const fields = {
   lateRegistrationEnd: {
     type: DateTime
   },
-  // 'pricing.earlyStudent': {
-  //   type: Integer,
-  //   initial: true,
-  //   required: true,
-  //   default: 30
-  // },
-  // 'pricing.earlyAdult': {
-  //   type: Integer,
-  //   initial: true,
-  //   required: true,
-  //   default: 55
-  // },
-  // 'pricing.regularStudent': {
-  //   type: Integer,
-  //   initial: true,
-  //   required: true,
-  //   default: 30
-  // },
-  // 'pricing.regularAdult': {
-  //   type: Integer,
-  //   initial: true,
-  //   required: true,
-  //   default: 55
-  // },
-  // 'pricing.lateAdult': {
-  //   type: Integer,
-  //   initial: true,
-  //   required: true,
-  //   default: 55
-  // },
-  // 'pricing.lateStudent': {
-  //   type: Integer,
-  //   initial: true,
-  //   required: true,
-  //   default: 55
-  // },
-  // 'finalsTournament.startDate': {
-  //   type: DateTime
-  // },
-  // 'finalsTournament.endDate': {
-  //   type: DateTime
-  // },
-  // 'finalsTournament.description': {
-  //   type: Wysiwyg,
-  //   wysiwyg: true
-  // },
+  pricingEarlyStudent: {
+    type: Integer,
+    initial: true,
+    required: true,
+    default: 30
+  },
+  pricingEarlyAdult: {
+    type: Integer,
+    initial: true,
+    required: true,
+    default: 55
+  },
+  pricingRegularStudent: {
+    type: Integer,
+    initial: true,
+    required: true,
+    default: 30
+  },
+  pricingRegularAdult: {
+    type: Integer,
+    initial: true,
+    required: true,
+    default: 55
+  },
+  pricingLateAdult: {
+    type: Integer,
+    initial: true,
+    required: true,
+    default: 55
+  },
+  pricingLateStudent: {
+    type: Integer,
+    initial: true,
+    required: true,
+    default: 55
+  },
+  finalsTournamentStartDate: {
+    type: DateTime
+  },
+  finalsTournamentEndDate: {
+    type: DateTime
+  },
+  finalsTournamentDescription: {
+    type: Wysiwyg,
+    wysiwyg: true
+  },
   // 'finalsTournament.location': {
   //   type: Relationship,
   //   ref: 'Location'

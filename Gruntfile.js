@@ -7,6 +7,7 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt)
 
+  const dbName = 'sflultimateV5'
   const options = {
     config: {
       src: './grunt/*.js'
@@ -24,8 +25,8 @@ module.exports = function (grunt) {
       mongorestore: {
         command: [
           process.env.DATABASE_DUMP_COMMAND,
-          'mongo sflultimate --eval \'printjson(db.dropDatabase())\'',
-          'mongorestore --noIndexRestore -d sflultimate dump/sflultimate/'
+          'mongo ' + dbName + ' --eval \'printjson(db.dropDatabase())\'',
+          'mongorestore --noIndexRestore -d ' + dbName + ' dump/sflultimate/'
         ].join(' && ')
       }
     }
