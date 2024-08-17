@@ -1,135 +1,116 @@
-const keystone = require('keystone')
-const Types = keystone.Field.Types
-
-/**
- * Player Model
- * ==============
- */
-
-const Player = new keystone.List('Player')
+const { Text, Relationship, DateTime, Integer, Checkbox, Select, Password } = require('@keystonejs/fields')
 
 const fields = {
   createdAt: {
-    type: Types.Date,
-    initial: true,
-    required: true
+    type: DateTime,
+    isRequired: true
   },
   updatedAt: {
-    type: Types.Date,
-    initial: true,
-    required: true
+    type: DateTime,
+    isRequired: true
   },
-  name: {
-    type: Types.Name,
-    initial: true,
-    required: true,
-    index: true
+  firstName: {
+    type: Text,
+    isRequired: true
+  },
+  lastName: {
+    type: Text,
+    isRequired: true
   },
   gender: {
-    type: Types.Select,
+    type: Select,
     options: ['Male', 'Female', 'Other'],
     initial: true
   },
   age: {
-    type: Number,
-    initial: true,
-    required: true
+    type: Integer,
+    isRequired: true
   },
   email: {
-    type: Types.Email,
-    initial: true,
-    required: true,
-    index: true
+    type: Text,
+    isRequired: true
   },
-  password: {
-    type: Types.Password,
-    initial: true,
-    required: true
-  },
+  // password: {
+  //   type: Password,
+  //   isRequired: true
+  // },
   shirtSize: {
-    type: Types.Select,
+    type: Select,
     options: 'NA, XS, S, M, L, XL, XXL, XXXL',
     initial: true
   },
   skillLevel: {
-    type: Types.Select,
-    options: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    initial: true,
-    required: true
+    type: Select,
+    options: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => { return { value: i, label: i.toString() } }),
+    isRequired: true,
+    dataType: 'integer'
   },
   participation: {
-    type: Types.Select,
-    options: [30, 50, 80],
-    initial: true,
-    required: false
+    type: Select,
+    options: [30, 50, 80].map(i => { return { value: i, label: i.toString() } }),
+    isRequired: false,
+    dataType: 'integer'
   },
   registrationLevel: {
-    type: Types.Select,
+    type: Select,
     options: ['Student', 'Adult'],
-    initial: true,
-    required: true
+    isRequired: true
   },
-  leagues: {
-    type: Types.Relationship,
-    ref: 'League',
-    many: true
-  },
+  // leagues: {
+  //   type: Relationship,
+  //   ref: 'League',
+  //   many: true
+  // },
   partnerName: {
-    type: String,
-    initial: true,
-    required: false
+    type: Text,
+    isRequired: false
   },
   wouldCaptain: {
-    type: Boolean,
-    initial: true,
-    required: false
+    type: Checkbox,
+    isRequired: false
   },
   comments: {
-    type: String,
-    initial: true,
-    required: false
+    type: Text,
+    isRequired: false
   },
   usauNumber: {
-    type: String,
-    initial: true,
-    required: false
+    type: Text,
+    isRequired: false
   },
   phoneNumber: {
-    type: String,
-    initial: false,
-    required: false
+    type: Text,
+    isRequired: false
   },
   wouldSponsor: {
-    type: Boolean,
-    initial: false,
-    required: false
+    type: Checkbox,
+    isRequired: false
   },
   willAttendFinals: {
-    type: Boolean,
-    initial: false,
-    required: false
+    type: Checkbox,
+    isRequired: false
   },
   preferredPositions: {
-    type: Types.TextArray
+    type: Text
   }
 }
 
-Player.add(fields, 'Permissions', {
-  isAdmin: {
-    type: Boolean,
-    label: 'Can access Keystone',
-    index: true
+// Player.add(fields, 'Permissions', {
+//   isAdmin: {
+//     type: Checkbox,
+//     label: 'Can access Keystone',
+//     index: true
+//   }
+// })
+//
+// // Provide access to Keystone
+// Player.schema.virtual('canAccessKeystone').get(function () {
+//   return this.isAdmin
+// })
+
+module.exports = {
+  fields,
+  labelResolver: member => member.firstName + ' ' + member.lastName,
+  adminConfig: {
+    defaultColumns: 'name, email, gender, leagues'
   }
-})
-
-// Provide access to Keystone
-Player.schema.virtual('canAccessKeystone').get(function () {
-  return this.isAdmin
-})
-
-/**
- * Registration
- */
-
-Player.defaultColumns = 'name, email, gender, leagues'
-Player.register()
+}

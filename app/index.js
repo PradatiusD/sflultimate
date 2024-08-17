@@ -8,7 +8,8 @@ const migratedLists = [
   'BoardMember',
   'BoardPosition',
   'ClubTeam',
-  'Event'
+  'Event',
+  'Player'
 ]
 
 for (const listName of migratedLists) {
