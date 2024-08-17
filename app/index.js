@@ -7,7 +7,8 @@ const keystone = require('./keystone')
 const migratedLists = [
   'BoardMember',
   'BoardPosition',
-  'ClubTeam'
+  'ClubTeam',
+  'Event'
 ]
 
 for (const listName of migratedLists) {
