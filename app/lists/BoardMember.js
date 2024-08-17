@@ -5,16 +5,15 @@ const { Text, Integer, Checkbox, File } = require('@keystonejs/fields')
  * Board Position Model
  * ==============
  */
-// TODO: Migrate boardMember name
 const fields = {
-  // 'name.first': {
-  //   type: Text,
-  //   isRequired: true
-  // },
-  // 'name.last': {
-  //   type: Text,
-  //   isRequired: true
-  // },
+  firstName: {
+    type: Text,
+    isRequired: true
+  },
+  lastName: {
+    type: Text,
+    isRequired: true
+  },
   order: {
     type: Integer,
     isRequired: true
@@ -35,7 +34,5 @@ const fields = {
 
 module.exports = {
   fields,
-  labelResolver: item => `${item.name.first} ${item.name.last}`
+  labelResolver: member => member.firstName + ' ' + member.lastName
 }
-
-// BoardMember.defaultColumns = 'name, order, active, description, image'

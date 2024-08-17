@@ -1,56 +1,69 @@
-const keystone = require('keystone')
-const Types = keystone.Field.Types
+const { Text, Integer, Checkbox, Relationship } = require('@keystonejs/fields')
+const keystone = require('./../keystone')
 
 /**
  * Board Position Model
  * ==============
  */
 
-const BoardPosition = new keystone.List('BoardPosition', {
-  map: {
-    name: 'title'
-  }
-})
-
 const fields = {
   title: {
-    type: String,
-    required: true,
-    initial: true
+    type: Text,
+    required: true
   },
   order: {
-    type: Types.Number,
-    initial: true,
+    type: Integer,
     required: true
   },
   active: {
-    type: Types.Boolean,
-    required: true,
-    initial: true
+    type: Checkbox,
+    required: true
   },
   description: {
-    type: String,
-    required: true,
-    initial: true
+    type: Text,
+    required: true
   },
   commitment: {
-    type: String,
-    required: true,
-    initial: true
+    type: Text,
+    required: true
   },
   assigned: {
-    type: Types.Relationship,
+    type: Relationship,
     ref: 'BoardMember',
-    initial: true,
     many: true
   }
 }
 
-BoardPosition.add(fields)
+module.exports = {
+  fields,
+  labelResolver: async (item) => {
+    const itemResponse = await keystone.executeGraphQL({
+      query: `query {
+          BoardPosition(where: {id: "${item.id}" }) {
+            assigned {
+              id
+            }
+          }
+        }`
+    })
 
-/**
- * Registration
- */
+    if (itemResponse.data.BoardPosition.assigned.length === 0) {
+      return 'Vacant'
+    }
 
-BoardPosition.defaultColumns = 'title, description, commitment, assigned'
-BoardPosition.register()
+    const { data } = await keystone.executeGraphQL({
+      query: `query {
+          BoardMember(where: {id: "${itemResponse.data.BoardPosition.assigned[0].id}" }) {
+            firstName,
+            lastName
+          }
+        }`
+    })
+
+    return `${data.BoardMember.firstName} ${data.BoardMember.lastName}`
+  }
+
+  // }
+}
+
+// BoardPosition.defaultColumns = 'title, description, commitment, assigned'
