@@ -1,126 +1,121 @@
-const keystone = require('keystone')
+const { Text, DateTime, Checkbox, Integer, Relationship, File } = require('@keystonejs/fields')
+const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce');
 const storage = require('./file-storage-adapter')
-const Types = keystone.Field.Types
 
-/**
- * League Model
- * =============
- */
-const League = new keystone.List('League', {
-  map: {
-    name: 'title'
-  }
-})
-
-League.add({
+const fields = {
   title: {
-    type: Types.Text,
+    type: Text,
     initial: true,
     required: true,
     index: true
   },
   summary: {
-    type: Types.Text
+    type: Text
   },
   description: {
-    type: Types.Html,
+    type: Wysiwyg,
     wysiwyg: true
   },
   isActive: {
-    type: Types.Boolean,
+    type: Checkbox,
     default: false
   },
   numberOfWeeksOfPlay: {
-    type: Types.Number,
+    type: Integer,
     initial: false,
     required: false
   },
   earlyRegistrationStart: {
-    type: Types.Datetime
+    type: DateTime
   },
   earlyRegistrationEnd: {
-    type: Types.Datetime
+    type: DateTime
   },
   registrationStart: {
-    type: Types.Datetime
+    type: DateTime
   },
   registrationEnd: {
-    type: Types.Datetime
+    type: DateTime
   },
   lateRegistrationStart: {
-    type: Types.Datetime
+    type: DateTime
   },
   lateRegistrationEnd: {
-    type: Types.Datetime
+    type: DateTime
   },
-  'pricing.earlyStudent': {
-    type: Types.Number,
-    initial: true,
-    required: true,
-    default: 30
-  },
-  'pricing.earlyAdult': {
-    type: Types.Number,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  'pricing.regularStudent': {
-    type: Types.Number,
-    initial: true,
-    required: true,
-    default: 30
-  },
-  'pricing.regularAdult': {
-    type: Types.Number,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  'pricing.lateAdult': {
-    type: Types.Number,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  'pricing.lateStudent': {
-    type: Types.Number,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  'finalsTournament.startDate': {
-    type: Types.Datetime
-  },
-  'finalsTournament.endDate': {
-    type: Types.Datetime
-  },
-  'finalsTournament.description': {
-    type: Types.Html,
-    wysiwyg: true
-  },
-  'finalsTournament.location': {
-    type: Types.Relationship,
-    ref: 'Location'
-  },
+  // 'pricing.earlyStudent': {
+  //   type: Integer,
+  //   initial: true,
+  //   required: true,
+  //   default: 30
+  // },
+  // 'pricing.earlyAdult': {
+  //   type: Integer,
+  //   initial: true,
+  //   required: true,
+  //   default: 55
+  // },
+  // 'pricing.regularStudent': {
+  //   type: Integer,
+  //   initial: true,
+  //   required: true,
+  //   default: 30
+  // },
+  // 'pricing.regularAdult': {
+  //   type: Integer,
+  //   initial: true,
+  //   required: true,
+  //   default: 55
+  // },
+  // 'pricing.lateAdult': {
+  //   type: Integer,
+  //   initial: true,
+  //   required: true,
+  //   default: 55
+  // },
+  // 'pricing.lateStudent': {
+  //   type: Integer,
+  //   initial: true,
+  //   required: true,
+  //   default: 55
+  // },
+  // 'finalsTournament.startDate': {
+  //   type: DateTime
+  // },
+  // 'finalsTournament.endDate': {
+  //   type: DateTime
+  // },
+  // 'finalsTournament.description': {
+  //   type: Wysiwyg,
+  //   wysiwyg: true
+  // },
+  // 'finalsTournament.location': {
+  //   type: Relationship,
+  //   ref: 'Location'
+  // },
   jerseyDesign: {
-    type: Types.File,
-    storage: storage
+    type: File,
+    adapter: storage
   },
   registrationShareImage: {
-    type: Types.File,
-    storage: storage
+    type: File,
+    adapter: storage
   },
   requestAttendance: {
-    type: Types.Boolean
+    type: Checkbox
   },
   requestShirtSize: {
-    type: Types.Boolean
+    type: Checkbox
   },
   requestSponsorship: {
-    type: Types.Boolean
+    type: Checkbox
   }
-})
+}
 
-League.defaultColumns = 'title, isActive, registrationStart, registrationEnd'
-League.register()
+module.exports = {
+  fields,
+  labelResolver: item => item.title,
+  adminConfig: {
+    defaultColumns: 'title, isActive, registrationStart, registrationEnd'
+  }
+}

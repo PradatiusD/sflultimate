@@ -19,8 +19,7 @@ const fields = {
   },
   gender: {
     type: Select,
-    options: ['Male', 'Female', 'Other'],
-    initial: true
+    options: ['Male', 'Female', 'Other']
   },
   age: {
     type: Integer,
@@ -30,14 +29,13 @@ const fields = {
     type: Text,
     isRequired: true
   },
-  // password: {
-  //   type: Password,
-  //   isRequired: true
-  // },
+  password: {
+    type: Password,
+    isRequired: true
+  },
   shirtSize: {
     type: Select,
-    options: 'NA, XS, S, M, L, XL, XXL, XXXL',
-    initial: true
+    options: ['NA', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map(s => { return { value: s, label: s } })
   },
   skillLevel: {
     type: Select,
@@ -56,11 +54,11 @@ const fields = {
     options: ['Student', 'Adult'],
     isRequired: true
   },
-  // leagues: {
-  //   type: Relationship,
-  //   ref: 'League',
-  //   many: true
-  // },
+  leagues: {
+    type: Relationship,
+    ref: 'League',
+    many: true
+  },
   partnerName: {
     type: Text,
     isRequired: false

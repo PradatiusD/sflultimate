@@ -1,43 +1,35 @@
-const keystone = require('keystone')
-const Types = keystone.Field.Types
+const { Text, Relationship } = require('@keystonejs/fields')
+const { Color } = require('@keystonejs/fields-color')
 
-/**
- * Team Model
- * =============
- */
-
-const Team = new keystone.List('Team')
-
-Team.add({
+const fields = {
   name: {
-    type: String,
-    initial: true,
-    required: true,
+    type: Text,
+    isRequired: true,
     index: true
   },
   color: {
-    type: Types.Color,
-    initial: true
+    type: Color
   },
   captains: {
-    type: Types.Relationship,
+    type: Relationship,
     ref: 'Player',
-    initial: true,
     many: true
   },
   players: {
-    type: Types.Relationship,
+    type: Relationship,
     ref: 'Player',
-    initial: true,
     many: true
   },
   league: {
-    type: Types.Relationship,
+    type: Relationship,
     ref: 'League',
     initial: true
   }
-})
+}
 
-Team.defaultColumns = 'name, league, captains, color'
-
-Team.register()
+module.exports = {
+  fields,
+  adminConfig: {
+    defaultColumns: 'name, league, captains, color'
+  }
+}
