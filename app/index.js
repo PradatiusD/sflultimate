@@ -23,10 +23,13 @@ for (const listName of migratedLists) {
 module.exports = {
   keystone,
   apps: [
-    new GraphQLApp(),
+    new GraphQLApp({
+      schemaName: 'public'
+    }),
     new AdminUIApp({
       name: PROJECT_NAME,
-      enableDefaultRoute: false
+      enableDefaultRoute: false,
+      schemaName: 'public',
     }),
     new NextApp({ dir: 'next' })
   ]
