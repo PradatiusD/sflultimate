@@ -1,6 +1,7 @@
 require('dotenv').config({ path: './../.env' })
 const { GraphQLApp } = require('@keystonejs/app-graphql')
 const { AdminUIApp } = require('@keystonejs/app-admin-ui')
+const { NextApp } = require('@keystonejs/app-next')
 const PROJECT_NAME = 'SFLUltimate'
 const keystone = require('./keystone')
 
@@ -23,5 +24,10 @@ module.exports = {
   keystone,
   apps: [
     new GraphQLApp(),
-    new AdminUIApp({ name: PROJECT_NAME, enableDefaultRoute: true })]
+    new AdminUIApp({
+      name: PROJECT_NAME,
+      enableDefaultRoute: false
+    }),
+    new NextApp({ dir: 'next' })
+  ]
 }
