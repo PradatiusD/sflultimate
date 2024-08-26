@@ -104,6 +104,11 @@ const fields = {
     initial: false,
     required: false
   },
+  donationAmount: {
+    type: Number,
+    initial: false,
+    required: false
+  },
   willAttendFinals: {
     type: Boolean,
     initial: false,

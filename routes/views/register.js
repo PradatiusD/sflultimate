@@ -49,6 +49,7 @@ module.exports = async function (req, res) {
       shirtSize,
       streetAddress,
       wouldSponsor,
+      donationLevel,
       willAttendFinals,
       preferredPositions
     } = req.body
@@ -76,6 +77,16 @@ module.exports = async function (req, res) {
       amount = registrationLevel === 'Student' ? locals.fees.lateStudent : locals.fees.lateAdult
     }
 
+    const donationTiers = {
+      tier_0: 0,
+      tier_1: 5,
+      tier_2: 10,
+      tier_3: 25
+    }
+
+    const donationAmount = donationTiers[donationLevel]
+    amount += (donationAmount || 0)
+
     const purchase = {
       amount: amount,
       paymentMethodNonce,
@@ -94,7 +105,8 @@ module.exports = async function (req, res) {
         partner: partnerName,
         gender: gender,
         skillLevel,
-        participation
+        participation,
+        donationAmount
       }
     }
 
@@ -134,6 +146,7 @@ module.exports = async function (req, res) {
         usauNumber,
         phoneNumber,
         wouldSponsor,
+        donationAmount,
         willAttendFinals
       }
 
@@ -157,8 +170,8 @@ module.exports = async function (req, res) {
           to: email,
           subject: 'Registration Confirmation for ' + locals.league.title,
           html: `
-            <p>Thank you for your payment!</p>
-            <p>Below you can find a receipt for your registration for ${locals.league.title}.</p>
+            <p>Hi ${firstName}, thank you for your payment!</p>
+            <p>Below you can find a receipt for your ${locals.league.title} registration.</p>
             <table style="border: 1px solid #dadada; padding: 4px;">
               <thead>
                 <tr>
@@ -171,6 +184,7 @@ module.exports = async function (req, res) {
                 <tr><td>Last Name</td><td>${lastName}</td></tr>
                 <tr><td>Registration Level</td><td>${registrationLevel}</td></tr>
                 <tr><td>Amount Paid</td><td>$${amount}</td></tr>
+                <tr><td>Amount Donated</td><td>$${donationAmount}</td></tr>
                 <tr><td>Gender</td><td>${gender}</td></tr>
                 <tr><td>Participation</td><td>${participation}</td></tr>
                 <tr><td>Comments</td><td>${comments}</td></tr>

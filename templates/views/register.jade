@@ -216,16 +216,25 @@ block content
                 
                 .form-group
                     label(for="registrationLevel") Registration Level
-                        select#registrationLevel.input-lg.form-control(name="registrationLevel")
-                            if locals.league.isEarlyRegistrationPeriod
-                                option(value='Adult')="Adult - $" + fees.earlyAdult
-                                option(value='Student')="Student - $" + fees.earlyStudent
-                            else if locals.league.isRegistrationPeriod
-                                option(value='Adult')="Adult - $" + fees.regularAdult
-                                option(value='Student')="Student - $" + fees.regularStudent
-                            else if locals.league.isLateRegistrationPeriod
-                                option(value='Adult')="Adult - $" + fees.lateAdult
-                                option(value='Student')="Student - $" + fees.lateStudent
+                    select#registrationLevel.input-lg.form-control(name="registrationLevel")
+                        if locals.league.isEarlyRegistrationPeriod
+                            option(value='Adult')="Adult - $" + fees.earlyAdult
+                            option(value='Student')="Student - $" + fees.earlyStudent
+                        else if locals.league.isRegistrationPeriod
+                            option(value='Adult')="Adult - $" + fees.regularAdult
+                            option(value='Student')="Student - $" + fees.regularStudent
+                        else if locals.league.isLateRegistrationPeriod
+                            option(value='Adult')="Adult - $" + fees.lateAdult
+                            option(value='Student')="Student - $" + fees.lateStudent
+                                
+                .form-group
+                    label(for="donationLevel") Donation
+                    select#donationLevel.input-lg.form-control(name="donationLevel")
+                        option(value="tier_0") $0
+                        option(value="tier_1") $5
+                        option(value="tier_2") $10
+                        option(value="tier_3") $25
+                    p.help-block SFLUltimate runs as cheaply as possible, and any leftover funds are focused on funding youth outreach, beginner pickup programs, and as seed capital to host larger tournaments like Beach Bash.  Donations like the following help us.
                 
                 .form-group
                     label(for="streetAddress") Street Address

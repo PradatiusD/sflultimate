@@ -50,6 +50,7 @@ block content
                     th Comments
                     th Would Captain?
                     th Would Sponsor?
+                    th Donated
                     th(ng-if="user") Actions
                 tbody
                     tr(ng-repeat='player in players | orderBy:"-skill"')
@@ -68,6 +69,7 @@ block content
                          | <small class="badge" ng-style="getBadgeStyle(player)">{{player.team ? "Rostered": "Unassigned"}}</small> {{player.comments}} 
                         td {{player.wouldCaptain ? 'Yes': ''}}
                         td {{player.wouldSponsor ? 'Yes': ''}}
+                        td ${{player.donationAmount}}
                         td(ng-if="user") 
                             button(ng-repeat="team in teams" ng-click="modifyRoster(team, player, 'add')" ng-if="!player.team").btn.btn-default Add To {{team.name}}
                             
