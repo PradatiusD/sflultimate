@@ -16,11 +16,27 @@ module.exports = async function (req, res) {
   const view = new keystone.View(req, res)
   const locals = res.locals
 
+  /**
+   * Format Date
+   * @param {Date} date
+   * @return {string}
+   */
   locals.formatDate = function (date) {
+    if (!date) {
+      return ''
+    }
     return date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })
   }
 
+  /**
+   * Format Time
+   * @param {Date} date
+   * @return {string}
+   */
   locals.formatTime = function (date) {
+    if (!date) {
+      return ''
+    }
     return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })
   }
 
