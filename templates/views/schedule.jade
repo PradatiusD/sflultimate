@@ -21,25 +21,25 @@ block content
         thead
           th Date
           th Time
-          th Matchup
+          th(ng-if="games[0].homeTeam && games[0].awayTeam") Matchup
           th Field
-          th Preview/Recap
+          th(ng-if="games[0].homeTeam && games[0].awayTeam") Preview/Recap
         tbody
           tr(ng-repeat="game in games | filter:colorFilter" ng-class="(game.scheduledTimeEpoch < $parent.today) ?'text-muted': ''")
             td {{game.scheduledTime | date: 'EEE. MMM d'}}
             td {{game.scheduledTime | date: 'h:mma'}}
-            td
+            td(ng-if="game.homeTeam && game.awayTeam")
               span {{game.homeTeam.name}} vs. {{game.awayTeam.name}} 
               span(ng-if="game.homeTeamScore && game.awayTeamScore && (!game.homeTeamForfeit && !game.homeTeamForfeit)") ({{game.homeTeamScore}}-{{game.awayTeamScore}})
               span(ng-if="game.homeTeamForfeit") <br> {{game.homeTeam.name}} forfeited
               span(ng-if="game.awayTeamForfeit") <br> {{game.awayTeam.name}} forfeited
             td {{locations[game.location] ? locations[game.location].name: 'TBD'}}
-            td 
+            td(ng-if="games[0].homeTeam && games[0].awayTeam") 
                 a(ng-href="/game/{{game._id}}") {{game.scheduledTimeEpoch < $parent.today ? 'Recap': 'Preview'}}
           tr(ng-if="finalsTournament")
             td {{finalsTournament.startDate | date: 'EEE. MMM d'}}
             td {{finalsTournament.startDate | date: 'h:mma'}} - {{finalsTournament.endDate | date: 'h:mma'}}
-            td(ng-bind-html="finalsTournament.description" style="max-width: 529px;")
+            td(ng-if="games[0].homeTeam && games[0].awayTeam" ng-bind-html="finalsTournament.description" style="max-width: 529px;")
             td {{locations[finalsTournament.location].name}}
 
 block js
