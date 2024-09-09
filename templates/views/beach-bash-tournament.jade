@@ -1,10 +1,10 @@
 extends ../layouts/default
 
 block head
-    meta(property="og:title"        content="South Florida Ultimate Beach Bash 2023")
+    meta(property="og:title"        content="South Florida Ultimate Beach Bash 2024")
     meta(property="og:url"          content="https://www.sflultimate.com/beach-bash-tournament")
     meta(property="og:image"        content="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg")
-    meta(property="og:description"  content="Come down to sunny Ft. Lauderdale for our inaugural ultimate frisbee beach championship December 16-17th!")
+    meta(property="og:description"  content="Come down to sunny Ft. Lauderdale for the 2024 Beach Beach championship December 14-15th!")
     link(rel="stylesheet"           href="/styles/beach-bash-tournament.css")
 block content
     div.bash-video-background
@@ -14,7 +14,7 @@ block content
         br
         .jumbotron.text-center
             img(src="/images/beach-bash-logo.png")
-            p.tagline Come down to sunny Ft. Lauderdale for our beach ultimate championship on <strong>December 16 & 17th</strong>!
+            p.tagline Come down to sunny Ft. Lauderdale for our beach ultimate championship on <strong>December 14 & 15th</strong>!
             p
                 a.btn.btn-primary.btn-lg(target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSffQliLEhIRV28WWFQM3A0HCaQ2XcWjPiJ5a98h5jlRdU8XFQ/viewform") Submit a Bid
                 a.btn.btn-primary.btn-lg.free-agent-btn(target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSdUOlXM7J7iG102OCFgXAyvz2MYW5qNgJt8r65nyUqgOu7fkg/viewform?usp=sf_link") Free Agent Sign Up
@@ -25,29 +25,30 @@ block content
             .col-md-8
                 h3 Time to soak some sun in Florida
                 p Welcome to the Beach Bash Ultimate Tournament. Florida’s newest and highest level beach ultimate frisbee tournament.
-                p We are playing in the heart of the pristine Ft Lauderdale Beach the weekend of December 16-17, 2023. The format is 4v4 USA Ultimate rules with a 2:2 gender ratio. We will have lined fields for a guaranteed 4 games of Saturday pool play and at least 3 games of Sunday bracket play.
+                p We are playing in the heart of the pristine Ft Lauderdale Beach the weekend of December 14-15, 2024. The format is 4v4 USA Ultimate rules with a 2:2 gender ratio. We will have lined fields for a guaranteed 4 games of Saturday pool play and at least 3 games of Sunday bracket play.
                 p Cost is $400 per 10 person team (~$40 per player). Up to 4 additional players can be added for $40 per player with a maximum 14 players.
-                p Showers, restrooms, bars, restaurants, and convenient stores all within walking distance of the beach!
+                p Showers, restrooms, bars, restaurants, and convenience stores all within walking distance of the beach!
                 p We will be having a Friday night registration party in Ft Lauderdale and a Saturday night tournament party location tbd.
                 p Come join the hottest beach ultimate community in Florida! See you in December!
                 iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1690.3133871864395!2d-80.10470750573026!3d26.110114190972915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d90184490da219%3A0x1a08e5d36463b739!2sOcean%20Rescue%20Tower%20%231!5e1!3m2!1sen!2sus!4v1696989472039!5m2!1sen!2sus" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade")
         hr
-        h2.text-center Signed Up Teams
-        p.text-center.lead Use the below to get a sense of the competition coming to join us in Fort. Lauderdale! 
-        .row
-            for team in teams
-                .col-md-3.col-sm-4.col-xs-6
-                    .panel.panel-default.text-center
-                        .panel-heading
-                            h3.panel-title
-                            | #{team["Team Name"]} 
-                            if !team.in_state
-                                <span class="badge" style="background: #217f92;font-weight: 400;padding: 5px 10px;">Out of State</span>
-                        .panel-body
-                            | Level: #{team["Competitive Level"]} <br />
-                            | From: #{team["Team Hometown"]}
-                            | <br/>
-                            | Captain: #{team["Captain Name"]}
+        .hidden
+            h2.text-center Signed Up Teams
+            p.text-center.lead Use the below to get a sense of the competition coming to join us in Fort. Lauderdale! 
+            .row
+                for team in teams
+                    .col-md-3.col-sm-4.col-xs-6
+                        .panel.panel-default.text-center
+                            .panel-heading
+                                h3.panel-title
+                                | #{team["Team Name"]} 
+                                if !team.in_state
+                                    <span class="badge" style="background: #217f92;font-weight: 400;padding: 5px 10px;">Out of State</span>
+                            .panel-body
+                                | Level: #{team["Competitive Level"]} <br />
+                                | From: #{team["Team Hometown"]}
+                                | <br/>
+                                | Captain: #{team["Captain Name"]}
 
         
         hr 
