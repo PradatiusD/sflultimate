@@ -56,7 +56,6 @@ export default function Homepage (props) {
     'league-champions-2013-spring.jpg'
   ]
   
-
   return (
     <div>
       <Head>

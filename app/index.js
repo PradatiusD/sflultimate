@@ -12,7 +12,8 @@ const migratedLists = [
   'Event',
   'League',
   'Player',
-  'Team'
+  'Team',
+  'Pickup'
 ]
 
 for (const listName of migratedLists) {

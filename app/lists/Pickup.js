@@ -1,117 +1,110 @@
-const keystone = require('keystone')
-const Types = keystone.Field.Types
-
-/**
- * League Model
- * =============
- */
-
-const Pickup = new keystone.List('Pickup', {
-  map: { name: 'title' }
-})
+const { Text, Integer, Float, Select, Checkbox, Relationship, File } = require('@keystonejs/fields')
 
 const fields = {
   title: {
-    type: String,
+    type: Text,
     initial: true,
     required: true,
     index: true,
     label: 'Pickup Name'
   },
   isActive: {
-    type: Types.Boolean,
+    type: Checkbox,
     default: false
   },
   day: {
-    type: String,
+    type: Text,
     initial: true,
     required: true,
     label: 'Day(s) Played'
   },
   time: {
-    type: String,
+    type: Text,
     initial: true,
     required: true,
     label: 'Start Time'
   },
-  'contact.name': {
-    type: String,
+  contactName: {
+    type: Text,
     initial: true
   },
-  'contact.email': {
-    type: Types.Email,
+  contactEmail: {
+    type: Text,
     initial: true
   },
-  'contact.phone': {
-    type: String,
+  contactPhone: {
+    type: Text,
     initial: true
   },
-  'contact.url': {
-    type: Types.Url,
+  contactUrl: {
+    type: Text,
     initial: true,
     label: 'Contact URL'
   },
-  'contact.whatsapp': {
-    type: Types.Url,
+  contactWhatsapp: {
+    type: Text,
     initial: true,
     label: 'WhatsApp Group URL'
   },
-  'location.name': {
-    type: String,
+  locationName: {
+    type: Text,
     initial: true,
     required: true
   },
-  'location.type': {
-    type: Types.Select,
+  locationType: {
+    type: Select,
     options: ['grass', 'turf', 'beach', 'indoor'],
     initial: true,
     required: true,
     label: 'Field Type'
   },
-  'location.address.street': {
-    type: String,
+  locationAddressStreet: {
+    type: Text,
     initial: true,
     required: true,
     label: 'Street Address'
   },
-  'location.address.city': {
-    type: String,
+  locationAddressCity: {
+    type: Text,
     initial: true,
     required: true,
     label: 'City'
   },
-  'location.address.state': {
-    type: String,
+  locationAddressState: {
+    type: Text,
     initial: true,
     required: true,
     label: 'State'
   },
-  'location.address.zipCode': {
-    type: Number,
+  locationAddressZipCode: {
+    type: Integer,
     initial: true,
     required: true,
     label: 'Zip Code'
   },
-  'location.latitude': {
-    type: Number,
+  locationLatitude: {
+    type: Float,
     initial: false,
     required: false,
     label: 'Latitude'
   },
-  'location.longitude': {
-    type: Number,
+  locationLongitude: {
+    type: Float,
     initial: false,
     required: false,
     label: 'Longitude'
   },
   description: {
-    type: Types.Textarea,
+    type: Text,
     initial: true,
     required: true
   }
 }
 
-Pickup.add(fields)
-
-Pickup.defaultColumns = 'title, location.name, day, time, location.type'
-Pickup.register()
+module.exports = {
+  fields,
+  labelResolver: item => item.title,
+  adminConfig: {
+    defaultColumns: 'title, locationName, day, time, locationType'
+  }
+}
