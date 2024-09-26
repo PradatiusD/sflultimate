@@ -2,7 +2,23 @@
   function isObject (o) {
     return o && typeof o === 'object' && o.constructor.name === 'Object' && !Array.isArray(o) && !o.mimetype
   }
-  
+
+  function relationship (ref1, prop, ref2, record) {
+    record[prop].forEach(function (p) {
+      const o = {}
+      o[ref1 + '_left_id'] = record._id
+      o[ref2 + '_right_id'] = p
+
+      // db.team_captains_manies.insert({
+      //   Team_left_id: record._id,
+      //   Player_right_id: p
+      // })
+
+      const key = [ref1.toLowerCase() + '_' + prop + '_manies']
+      db[key].insert(o)
+    })
+  }
+
   const keysEdited = []
 
   function traverse (o, prefix, collectionStr, b) {
@@ -27,31 +43,37 @@
     'pickups',
     'players',
     'boardmembers',
-    'leagues'
+    'leagues',
+    'teams'
   ]
   collections.forEach(function (collectionStr) {
     const collection = db[collectionStr]
     print(collectionStr)
-    collection.find({}).toArray().forEach(function (b) {
-      Object.keys(b).forEach(function (key) {
+    collection.find({}).toArray().forEach(function (record) {
+      Object.keys(record).forEach(function (key) {
         if (key === '_id') {
           return
         }
 
-        if (key === 'name') {
-          b.firstName = b.name.first
-          b.lastName = b.name.last
-          delete b.name
+        const val = record[key]
+        if (key === 'name' && isObject(val)) {
+          record.firstName = record.name.first
+          record.lastName = record.name.last
+          delete record.name
         }
 
-        const val = b[key]
 
         if (isObject(val)) {
-          traverse(val, key, collectionStr, b)
-          delete b[key]
+          traverse(val, key, collectionStr, record)
+          delete record[key]
         }
       })
-      collection.save(b)
+      collection.save(record)
+
+      if (collectionStr === 'teams') {
+        relationship('Team', 'captains', 'Player', record)
+        relationship('Team', 'players', 'Player', record)
+      }
     })
   })
   printjson(keysEdited)
