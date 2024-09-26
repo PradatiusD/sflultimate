@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import { gql } from '@apollo/client'
+import GraphqlClient from "../lib/graphql-client";
 
 // const { getStandings } = require('./../stat-utils')
 //
@@ -22,12 +23,7 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 // }
 
 export const getServerSideProps = (async () => {
-  const client = new ApolloClient({
-    uri: 'http://localhost:3000/admin/api',
-    cache: new InMemoryCache()
-  });
-
-  const results = await client.query({
+  const results = await GraphqlClient.query({
     query: gql`
           query {
           allLeagues(where: {isActive: true}) {
