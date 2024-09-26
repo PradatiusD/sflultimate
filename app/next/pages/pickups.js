@@ -34,7 +34,6 @@ export const getServerSideProps = (async () => {
 })
 export default function PickupsPage (props) {
   const {pickups} = props
-  console.log(pickups)
   return (
     <>
       <Head>

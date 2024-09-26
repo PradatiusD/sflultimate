@@ -49,7 +49,7 @@
   },
   "scripts": {
     "start": "node keystone.js",
-    "dev": "grunt serve",
+    "dev": "cd app && npm run dev",
     "cypress": "npx cypress open",
     "restore": "grunt restore"
   },

@@ -8,7 +8,6 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 //   const view = new keystone.View(req, res)
 //   const locals = res.locals
 //
-//
 //   const currentLeague = res.locals.league ? res.locals.league : null
 //
 //   locals.standings = await getStandings({
@@ -20,7 +19,6 @@ import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 //     res.json(locals.standings)
 //     return
 //   }
-
 // }
 
 export const getServerSideProps = (async () => {
