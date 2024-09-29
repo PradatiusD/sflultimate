@@ -12,6 +12,7 @@ export async function getServerSideProps (context) {
         }
         allTeams(where: {league: {isActive: true}}) {
           id,
+          name,
           players {
             id,
             firstName,
@@ -180,7 +181,6 @@ export default function Draftboard (props) {
       }
     })
 
-
     teamSizes.forEach(function (teamsAmount) {
       const perTeamScore = 1 / teamsAmount
       const perTeamScoreWeightedWithParticipation = (perTeamScore * parseInt(player.participation) / 100)
@@ -209,9 +209,43 @@ export default function Draftboard (props) {
     }, {})
   }
 
-
-
-  const modifyRoster = () => {}
+  const modifyRoster = (team, player, action) => {
+    const mutation = gql`
+      mutation update($id: ID!, $data: TeamUpdateInput) {
+        updateTeam(id: $id, data: $data) {
+          id
+          __typename
+          players {
+            id,
+            firstName,
+            lastName
+          }
+        }
+      }
+    `
+    const params = {
+      mutation: mutation,
+      variables: {
+        id: team.id,
+        data: {
+          players: {
+          }
+        }
+      }
+    }
+    if (action === 'add') {
+      params.variables.data.players.connect = { id: player.id }
+    } else if (action === 'remove') {
+      params.variables.data.players.disconnect = { id: player.id }
+    } else {
+      throw new Error('Invalid action')
+    }
+    GraphqlClient.mutate(params).then(function (b) {
+      console.log(b)
+    }).catch(function (e) {
+      console.error(e)
+    })
+  }
   const sortPlayersByRecency = () => {
     const arrCopy = props.players.map(p => p)
     arrCopy.sort(function (a, b) {
@@ -272,7 +306,7 @@ export default function Draftboard (props) {
           {
             user && (
               <div className="drafted-teams row">
-                {teams && teams.filter(() => user).map((team, index) => (
+                {teams.map((team, index) => (
                   <div className="col-md-4" key={index}>
                     <table className="table">
                       <thead>
@@ -288,7 +322,7 @@ export default function Draftboard (props) {
                               <tr key={index}>
                                 <td>{player.firstName} {player.lastName} ({player.gender.charAt(0)})</td>
                                 <td>
-                                  <button className="btn btn-default btn-sm" onClick={() => modifyRoster(team, { _id: player }, 'remove')}>Remove
+                                  <button className="btn btn-default btn-sm" onClick={() => modifyRoster(team, player, 'remove')}>Remove
                                   </button>
                                 </td>
                               </tr>
@@ -402,31 +436,6 @@ export default function Draftboard (props) {
   )
 }
 
-//         $scope.modifyRoster = function (team, player, action) {
-//           const teamPlayers = team.players
-//           const foundIndex = teamPlayers.indexOf(player._id)
-//           if (action === 'add' && foundIndex === -1) {
-//             teamPlayers.push(player._id)
-//           } else if (action === 'remove' && foundIndex > -1) {
-//             teamPlayers.splice(foundIndex, 1)
-//           }
-//
-//           const payload = {
-//             team_id: team._id,
-//             players: teamPlayers
-//           }
-//
-//           $http.put(window.sflUtils.addLeagueOverride('/players'), payload).then(function (response) {
-//             $scope.players = response.data.players
-//             $scope.teams = response.data.teams
-//             $scope.players.forEach(function (player) {
-//               player.url = window.sflUtils.buildPlayerUrl(player)
-//               $scope.playerMap[player._id] = player
-//             })
-//             $scope.sortByGenderThenSkill()
-//           })
-//
-//         }
 //         $scope.formatMapName = function (text) {
 //           let finalString = ''
 //           for (let i = 0; i < text.length; i++) {
