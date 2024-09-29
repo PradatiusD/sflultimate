@@ -4,6 +4,9 @@
   }
 
   function relationship (ref1, prop, ref2, record) {
+    if (!record[prop]) {
+      return
+    }
     record[prop].forEach(function (p) {
       const o = {}
       o[ref1 + '_left_id'] = record._id
@@ -62,19 +65,32 @@
           delete record.name
         }
 
-
         if (isObject(val)) {
           traverse(val, key, collectionStr, record)
           delete record[key]
         }
       })
-      collection.save(record)
 
       if (collectionStr === 'teams') {
         relationship('Team', 'captains', 'Player', record)
         relationship('Team', 'players', 'Player', record)
+      } else if (collectionStr === 'players') {
+        relationship('Player', 'leagues', 'League', record)
+        if (record.preferredPositions) {
+          record.preferredPositions = record.preferredPositions.join(', ')
+        }
       }
+
+      collection.save(record)
     })
   })
   printjson(keysEdited)
+
+  db.users.insert({
+    // i5JI97£Klip]
+    email: 'sflultimate@gmail.com',
+    password: '$2a$10$zTMYxl/4pd7DCrC5WDy.PuXSW1Jwkhb9xXLvNwg46J6fn1JY1SyqS',
+    firstName: 'Test',
+    lastName: 'User'
+  })
 })()

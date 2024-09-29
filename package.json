@@ -6,6 +6,7 @@
     "npm": "9.2.0"
   },
   "dependencies": {
+    "@keystonejs/auth-password": "^6.1.2",
     "async": "^2.6.1",
     "bower": "^1.8.8",
     "braintree": "^2.21.0",
