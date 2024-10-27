@@ -1,5 +1,5 @@
 (function () {
-  var app = angular.module('StatSheetApp', [])
+  const app = angular.module('StatSheetApp', [])
   app.controller('StatSheetController', function ($scope, $http) {
     // http://localhost:5000/sheets?is_tournament=true
     // http://localhost:5000/sheets?date=2022-10-11
@@ -38,24 +38,46 @@
         })
 
         const playerMap = {}
+        teamsData.players.forEach(function (player) {
+          playerMap[player._id] = player
+        })
 
         const statsMap = {}
         statsResponse.data.items.forEach(function (statEntry) {
           if (validGameIDs.indexOf(statEntry.game) > -1) {
-            statsMap[statEntry.player] = statEntry
+            if (!statsMap[statEntry.game]) {
+              statsMap[statEntry.game] = {}
+            }
+            statsMap[statEntry.game][statEntry.player] = statEntry
           }
         })
 
-        teamsData.players.forEach(function (player) {
-          player.stats = statsMap[player._id] || {
-            pointsPlayed: 0,
-            defenses: 0,
-            scores: 0,
-            assists: 0,
-            attended: false
+        // Now for each game find all the players and their stats
+        games.forEach(function (game) {
+          if (!statsMap[game._id]) {
+            statsMap[game._id] = {}
           }
-          playerMap[player._id] = player
+          // find all the players in the game
+          ['awayTeam', 'homeTeam'].forEach(function (teamKey) {
+            const teamId = game[teamKey]
+            const team = teamsData.teams.find(function (t) {
+              return t._id === teamId
+            })
+            team.players.forEach(function (playerId) {
+              if (!statsMap[game._id][playerId]) {
+                statsMap[game._id][playerId] = {
+                  pointsPlayed: 0,
+                  defenses: 0,
+                  scores: 0,
+                  assists: 0,
+                  attended: false
+                }
+              }
+            })
+          })
         })
+
+        $scope.statsMap = statsMap
 
         const teamMap = {}
         teams.forEach(function (team) {
@@ -80,22 +102,24 @@
           return game
         })
 
+        console.log($scope.games)
+
         $scope.handleSave = function (game, team) {
-          $http.post('/stats', {
+          const payload = {
             items: team.players.map(function (player) {
-              const stats = player.stats
+              const stats = Object.assign({}, statsMap[game._id][player._id])
               stats.game = game._id
               stats.player = player._id
               return stats
             })
-          }).then(function () {
+          }
+          $http.post('/stats', payload).then(function () {
             alert('Your data was saved for ' + team.name)
           }).catch(function () {
             alert('There was an error saving for ' + team.name)
           })
         }
 
-        console.log(teams)
         $scope.teams = teams
       })
   })

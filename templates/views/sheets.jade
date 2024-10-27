@@ -106,17 +106,17 @@ html
               tr(ng-repeat="player in team.currentTeam.players | orderBy: 'name.first'")
                 td(style='width: 20%') {{player.name.first}} {{player.name.last}}
                 td
-                  input(ng-model="player.stats.assists" ng-if="editor" min="0" type="number" step="1")
+                  input(ng-model="statsMap[game._id][player._id].assists" ng-if="editor" min="0" type="number" step="1")
                 td
-                  input(ng-model="player.stats.scores" ng-if="editor" min="0" type="number" step="1")
+                  input(ng-model="statsMap[game._id][player._id].scores" ng-if="editor" min="0" type="number" step="1")
                 td
-                  input(ng-model="player.stats.defenses" ng-if="editor" min="0" type="number" step="1")
+                  input(ng-model="statsMap[game._id][player._id].defenses" ng-if="editor" min="0" type="number" step="1")
                 td.hidden
-                  input(ng-model="player.stats.throwaways" ng-if="editor" min="0" type="number" step="1")
+                  input(ng-model="statsMap[game._id][player._id].throwaways" ng-if="editor" min="0" type="number" step="1")
                 td.hidden
-                  input(ng-model="player.stats.drops" ng-if="editor" min="0" type="number" step="1")
+                  input(ng-model="statsMap[game._id][player._id].drops" ng-if="editor" min="0" type="number" step="1")
                 td
-                  input(ng-model="player.stats.attended" ng-if="editor" type="checkbox")
+                  input(ng-model="statsMap[game._id][player._id].attended" ng-if="editor" type="checkbox")
           
 
           .form-group
