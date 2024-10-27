@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { useState } from 'react'
+import PlayerLink from '../components/PlayerLink'
 
 export async function getServerSideProps (context) {
   const results = await GraphqlClient.query({
@@ -370,7 +371,7 @@ export default function Draftboard (props) {
               {players.sort((a, b) => b.skillLevel - a.skillLevel).map((player, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td><a href={player.url} target="_blank" rel="noopener noreferrer">{player.firstName} {player.lastName}</a></td>
+                  <td><PlayerLink player={player} /></td>
                   <td>{player.gender.charAt(0)}</td>
                   <td>{formatDate(player.createdAt)}</td>
                   <td>{player.age}</td>
@@ -454,7 +455,3 @@ export default function Draftboard (props) {
 //
 
 //             player.url = window.sflUtils.buildPlayerUrl(player)
-//           $scope.players.forEach(function (player) {
-//             $scope.playerMap[player._id] = player
-//           })
-//     })()

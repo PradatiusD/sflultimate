@@ -89,10 +89,10 @@ const fields = {
     type: Wysiwyg,
     wysiwyg: true
   },
-  // 'finalsTournament.location': {
-  //   type: Relationship,
-  //   ref: 'Location'
-  // },
+  finalsTournamentLocation: {
+    type: Relationship,
+    ref: 'Location'
+  },
   jerseyDesign: {
     type: File,
     adapter: storage

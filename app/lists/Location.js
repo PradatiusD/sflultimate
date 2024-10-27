@@ -1,20 +1,17 @@
-const keystone = require('keystone')
-
-/**
- * Location Model
- * =============
- */
-
-const Location = new keystone.List('Location')
-
-Location.add({
+const { Text } = require('@keystonejs/fields')
+const fields = {
   name: {
-    type: String,
+    type: Text,
     initial: true,
     required: true,
     index: true
   }
-})
+}
 
-Location.defaultColumns = 'name'
-Location.register()
+module.exports = {
+  fields,
+  labelResolver: item => item.title,
+  adminConfig: {
+    defaultColumns: 'name'
+  }
+}

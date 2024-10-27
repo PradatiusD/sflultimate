@@ -33,7 +33,7 @@ class MyDocument extends NextDocument {
           }}/>
           <noscript>
             <img src="https://www.facebook.com/tr?id=2012250958870227&ev=PageView&noscript=1" height="1" width="1"
-              style={{ display: 'none;' }}/>
+              style={{ display: 'none' }}/>
           </noscript>
         </Head>
         <body>
