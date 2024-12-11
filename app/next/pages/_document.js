@@ -1,9 +1,54 @@
 import NextDocument, { Html, Head, Main, NextScript } from 'next/document'
 
+/**
+ *
+ * @param {Date} regStart
+ * @param {Date} regEnd
+ * @return {boolean}
+ */
+function isValidRegPeriod (regStart, regEnd) {
+  const now = Date.now()
+  return !!(regStart && regEnd && regStart.getTime() < now && now < regEnd.getTime())
+}
+
 class MyDocument extends NextDocument {
-  render () {
-    const navlinks = []
-    const footerLinks = []
+  render (props) {
+    let navLinks = []
+    const league = {}
+    if (league.tmp) {
+      league.isEarlyRegistrationPeriod = isValidRegPeriod(league.earlyRegistrationStart, league.earlyRegistrationEnd)
+      league.isRegistrationPeriod = isValidRegPeriod(league.registrationStart, league.registrationEnd)
+      league.isLateRegistrationPeriod = isValidRegPeriod(league.lateRegistrationStart, league.lateRegistrationEnd) // || (req.query.force_form === 'true'
+      league.canRegister = league.isEarlyRegistrationPeriod || league.isRegistrationPeriod || league.isLateRegistrationPeriod
+
+      if (league.canRegister) {
+        navLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })
+      }
+
+      if (!league.isRegistrationPeriod || league.isLateRegistrationPeriod) {
+        navLinks = navLinks.concat([
+          { label: 'Teams', key: 'teams', href: '/teams' },
+          { label: 'Schedule', key: 'schedule', href: '/schedule' },
+          { label: 'Stats', key: 'stats', href: '/stats' }
+        ])
+      }
+    }
+
+    const evergreenLinks = [
+      { label: 'Local Pickups', key: 'community', href: '/pickups' },
+      { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
+      { label: 'Our Board', key: 'board', href: '/board' },
+      { label: 'Events', key: 'events', href: '/events' },
+      { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
+    ]
+
+    navLinks = navLinks.concat(evergreenLinks)
+
+    const footerLinks = [
+      { label: 'Terms & Conditions', key: 'terms', href: '/terms' },
+      { label: 'Privacy Policy', key: 'privacy', href: '/privacy' }
+    ].concat(evergreenLinks)
+
     const section = ''
     return (
       <Html lang="en">
@@ -54,7 +99,7 @@ class MyDocument extends NextDocument {
                   <span className="icon-bar"></span>
                   <div className="collapse navbar-collapse">
                     <ul className="nav navbar-nav navbar-left">
-                      {navlinks.map((link) => {
+                      {navLinks.map((link) => {
                         return (
                           <li key={link.key} className={section === link.key ? 'active' : null}>
                             <a href={link.href}>{link.label}</a>

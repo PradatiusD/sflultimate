@@ -31,7 +31,7 @@ export const getServerSideProps = (async () => {
           }
         }`,
   });
-  const league = results.data.allLeagues[0]
+  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   return { props: {league}}
 })
 
@@ -49,7 +49,7 @@ export default function Homepage (props) {
     'league-champions-2014-spring.jpg',
     'league-champions-2013-spring.jpg'
   ]
-  
+
   return (
     <div>
       <Head>
