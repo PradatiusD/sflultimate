@@ -14,10 +14,38 @@ export const getServerSideProps = async () => {
           image {
             publicUrl
           }
+          instagramPageUrl
+          interestFormPageUrl
+          facebookPageUrl
+          twitterPageUrl
+          websiteUrl
         }
       }`
   })
-  const clubTeams = results.data.allClubTeams
+  const clubTeams = JSON.parse(JSON.stringify(results.data.allClubTeams)).map(function (team) {
+    team.links = []
+    for (const key in team) {
+      const url = team[key]
+      if (key.includes('Url') && url) {
+        const label = key
+          .replace('Url', '')
+          .replace('Page', '')
+          .replace(/([A-Z])/g, ' $1')
+          .replace(/^./, function (str) {
+            return str.toUpperCase()
+          })
+
+        const link = {
+          label,
+          url
+        }
+
+        team.links.push(link)
+      }
+    }
+    return team
+  })
+  
   return { props: { clubTeams } }
 }
 
