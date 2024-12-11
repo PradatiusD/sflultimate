@@ -86,6 +86,11 @@ export const getServerSideProps = async () => {
       }
     }
   }
+  for (const team of results.data.allTeams) {
+    for (const player of team.players) {
+      statsGroupedByPlayer[player.id].teamColor = team.color
+    }
+  }
   const players = JSON.parse(JSON.stringify(results.data.allPlayers)).map(function (player) {
     Object.assign(player, statsGroupedByPlayer[player.id])
     player.url = buildPlayerUrl(player)
@@ -115,13 +120,12 @@ function StatTable (props) {
       <tbody>
       {
         players.map((player, index) => {
-          const teamColor = 'red'
 
           return (
             <tr key={player.id}>
               <td>{startRowNumber + index}</td>
               <td>
-                <span className="team-color" style={{'background-color': teamColor}}></span>
+                <span className="team-color" style={{'background-color': player.teamColor}}></span>
               </td>
               <td>
                 <a href={player.url}>{player.firstName}</a>
