@@ -1,72 +1,69 @@
-const keystone = require('keystone')
-const Types = keystone.Field.Types
+const { Relationship, DateTime, Integer, Checkbox } = require('@keystonejs/fields')
 
 /**
  * PlayerGameStat Model
  * ==============
  */
 
-const PlayerGameStat = new keystone.List('PlayerGameStat')
 const fields = {
   createdAt: {
-    type: Types.Date,
+    type: DateTime,
     initial: true,
     required: true
   },
   updatedAt: {
-    type: Types.Date,
+    type: DateTime,
     initial: true,
     required: true
   },
   player: {
-    type: Types.Relationship,
+    type: Relationship,
     ref: 'Player',
     required: true,
     index: true,
     initial: true
   },
   game: {
-    type: Types.Relationship,
+    type: Relationship,
     ref: 'Game',
     required: true,
     index: true,
     initial: true
   },
   assists: {
-    type: Types.Number,
+    type: Integer,
     initial: true
   },
   scores: {
-    type: Types.Number,
+    type: Integer,
     initial: true
   },
   defenses: {
-    type: Types.Number,
+    type: Integer,
     initial: true
   },
   throwaways: {
-    type: Types.Number,
+    type: Integer,
     initial: true
   },
   drops: {
-    type: Types.Number,
+    type: Integer,
     initial: true
   },
   pointsPlayed: {
-    type: Types.Number,
+    type: Integer,
     initial: true
   },
   attended: {
-    type: Types.Boolean,
+    type: Checkbox,
     initial: true
   }
 }
 
-PlayerGameStat.add(fields)
-
-/**
- * Registration
- */
-
-PlayerGameStat.defaultColumns = 'player, game, assists, scores, defenses, pointsPlayed'
-PlayerGameStat.register()
+module.exports = {
+  fields,
+  labelResolver: member => member.firstName + ' ' + member.lastName,
+  adminConfig: {
+    defaultColumns: 'player, game, assists, scores, defenses, pointsPlayed'
+  }
+}

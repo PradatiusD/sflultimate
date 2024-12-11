@@ -181,6 +181,15 @@ type _QueryMeta {
   count: Int
 }
 
+type authenticateUserOutput {
+  """ Used to make subsequent authenticated requests by setting this token in a header: 'Authorization: Bearer <token>'. 
+  """
+  token: String
+
+  """ Retrieve information on the newly authenticated User here. """
+  item: User
+}
+
 """ A keystone list """
 type BoardMember {
   """
@@ -859,6 +868,138 @@ type File {
   publicUrl: String
 }
 
+""" A keystone list """
+type Game {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the Game List config, or
+   2. As an alias to the field set on 'labelField' in the Game List config, or
+   3. As an alias to a 'name' field on the Game List (if one exists), or
+   4. As an alias to the 'id' field on the Game List.
+  """
+  _label_: String
+  id: ID!
+  name: String
+  league: League
+  scheduledTime: DateTime
+  homeTeam: Team
+  awayTeam: Team
+  homeTeamScore: Int
+  homeTeamForfeit: Boolean
+  awayTeamScore: Int
+  awayTeamForfeit: Boolean
+  location: Location
+}
+
+input GameCreateInput {
+  name: String
+  league: LeagueRelateToOneInput
+  scheduledTime: DateTime
+  homeTeam: TeamRelateToOneInput
+  awayTeam: TeamRelateToOneInput
+  homeTeamScore: Int
+  homeTeamForfeit: Boolean
+  awayTeamScore: Int
+  awayTeamForfeit: Boolean
+  location: LocationRelateToOneInput
+}
+
+input GameRelateToOneInput {
+  create: GameCreateInput
+  connect: GameWhereUniqueInput
+  disconnect: GameWhereUniqueInput
+  disconnectAll: Boolean
+}
+
+input GamesCreateInput {
+  data: GameCreateInput
+}
+
+input GamesUpdateInput {
+  id: ID!
+  data: GameUpdateInput
+}
+
+input GameUpdateInput {
+  name: String
+  league: LeagueRelateToOneInput
+  scheduledTime: DateTime
+  homeTeam: TeamRelateToOneInput
+  awayTeam: TeamRelateToOneInput
+  homeTeamScore: Int
+  homeTeamForfeit: Boolean
+  awayTeamScore: Int
+  awayTeamForfeit: Boolean
+  location: LocationRelateToOneInput
+}
+
+input GameWhereInput {
+  AND: [GameWhereInput]
+  OR: [GameWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  name: String
+  name_not: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  name_i: String
+  name_not_i: String
+  name_contains_i: String
+  name_not_contains_i: String
+  name_starts_with_i: String
+  name_not_starts_with_i: String
+  name_ends_with_i: String
+  name_not_ends_with_i: String
+  name_in: [String]
+  name_not_in: [String]
+  league: LeagueWhereInput
+  league_is_null: Boolean
+  scheduledTime: DateTime
+  scheduledTime_not: DateTime
+  scheduledTime_lt: DateTime
+  scheduledTime_lte: DateTime
+  scheduledTime_gt: DateTime
+  scheduledTime_gte: DateTime
+  scheduledTime_in: [DateTime]
+  scheduledTime_not_in: [DateTime]
+  homeTeam: TeamWhereInput
+  homeTeam_is_null: Boolean
+  awayTeam: TeamWhereInput
+  awayTeam_is_null: Boolean
+  homeTeamScore: Int
+  homeTeamScore_not: Int
+  homeTeamScore_lt: Int
+  homeTeamScore_lte: Int
+  homeTeamScore_gt: Int
+  homeTeamScore_gte: Int
+  homeTeamScore_in: [Int]
+  homeTeamScore_not_in: [Int]
+  homeTeamForfeit: Boolean
+  homeTeamForfeit_not: Boolean
+  awayTeamScore: Int
+  awayTeamScore_not: Int
+  awayTeamScore_lt: Int
+  awayTeamScore_lte: Int
+  awayTeamScore_gt: Int
+  awayTeamScore_gte: Int
+  awayTeamScore_in: [Int]
+  awayTeamScore_not_in: [Int]
+  awayTeamForfeit: Boolean
+  awayTeamForfeit_not: Boolean
+  location: LocationWhereInput
+  location_is_null: Boolean
+}
+
+input GameWhereUniqueInput {
+  id: ID!
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -895,6 +1036,7 @@ type League {
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
   finalsTournamentDescription: String
+  finalsTournamentLocation: Location
   jerseyDesign: File
   registrationShareImage: File
   requestAttendance: Boolean
@@ -923,6 +1065,7 @@ input LeagueCreateInput {
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
   finalsTournamentDescription: String
+  finalsTournamentLocation: LocationRelateToOneInput
   jerseyDesign: Upload
   registrationShareImage: Upload
   requestAttendance: Boolean
@@ -974,6 +1117,7 @@ input LeagueUpdateInput {
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
   finalsTournamentDescription: String
+  finalsTournamentLocation: LocationRelateToOneInput
   jerseyDesign: Upload
   registrationShareImage: Upload
   requestAttendance: Boolean
@@ -1182,6 +1326,8 @@ input LeagueWhereInput {
   finalsTournamentDescription_not_ends_with_i: String
   finalsTournamentDescription_in: [String]
   finalsTournamentDescription_not_in: [String]
+  finalsTournamentLocation: LocationWhereInput
+  finalsTournamentLocation_is_null: Boolean
   jerseyDesign: String
   jerseyDesign_not: String
   jerseyDesign_in: [String]
@@ -1199,6 +1345,75 @@ input LeagueWhereInput {
 }
 
 input LeagueWhereUniqueInput {
+  id: ID!
+}
+
+""" A keystone list """
+type Location {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the Location List config, or
+   2. As an alias to the field set on 'labelField' in the Location List config, or
+   3. As an alias to a 'name' field on the Location List (if one exists), or
+   4. As an alias to the 'id' field on the Location List.
+  """
+  _label_: String
+  id: ID!
+  name: String
+}
+
+input LocationCreateInput {
+  name: String
+}
+
+input LocationRelateToOneInput {
+  create: LocationCreateInput
+  connect: LocationWhereUniqueInput
+  disconnect: LocationWhereUniqueInput
+  disconnectAll: Boolean
+}
+
+input LocationsCreateInput {
+  data: LocationCreateInput
+}
+
+input LocationsUpdateInput {
+  id: ID!
+  data: LocationUpdateInput
+}
+
+input LocationUpdateInput {
+  name: String
+}
+
+input LocationWhereInput {
+  AND: [LocationWhereInput]
+  OR: [LocationWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  name: String
+  name_not: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  name_i: String
+  name_not_i: String
+  name_contains_i: String
+  name_not_contains_i: String
+  name_starts_with_i: String
+  name_not_starts_with_i: String
+  name_ends_with_i: String
+  name_not_ends_with_i: String
+  name_in: [String]
+  name_not_in: [String]
+}
+
+input LocationWhereUniqueInput {
   id: ID!
 }
 
@@ -1275,6 +1490,24 @@ type Mutation {
   """ Delete multiple Event items by ID. """
   deleteEvents(ids: [ID!]): [Event]
 
+  """ Create a single Game item. """
+  createGame(data: GameCreateInput): Game
+
+  """ Create multiple Game items. """
+  createGames(data: [GamesCreateInput]): [Game]
+
+  """ Update a single Game item by ID. """
+  updateGame(id: ID!, data: GameUpdateInput): Game
+
+  """ Update multiple Game items by ID. """
+  updateGames(data: [GamesUpdateInput]): [Game]
+
+  """ Delete a single Game item by ID. """
+  deleteGame(id: ID!): Game
+
+  """ Delete multiple Game items by ID. """
+  deleteGames(ids: [ID!]): [Game]
+
   """ Create a single League item. """
   createLeague(data: LeagueCreateInput): League
 
@@ -1293,6 +1526,24 @@ type Mutation {
   """ Delete multiple League items by ID. """
   deleteLeagues(ids: [ID!]): [League]
 
+  """ Create a single Location item. """
+  createLocation(data: LocationCreateInput): Location
+
+  """ Create multiple Location items. """
+  createLocations(data: [LocationsCreateInput]): [Location]
+
+  """ Update a single Location item by ID. """
+  updateLocation(id: ID!, data: LocationUpdateInput): Location
+
+  """ Update multiple Location items by ID. """
+  updateLocations(data: [LocationsUpdateInput]): [Location]
+
+  """ Delete a single Location item by ID. """
+  deleteLocation(id: ID!): Location
+
+  """ Delete multiple Location items by ID. """
+  deleteLocations(ids: [ID!]): [Location]
+
   """ Create a single Player item. """
   createPlayer(data: PlayerCreateInput): Player
 
@@ -1310,6 +1561,24 @@ type Mutation {
 
   """ Delete multiple Player items by ID. """
   deletePlayers(ids: [ID!]): [Player]
+
+  """ Create a single PlayerGameStat item. """
+  createPlayerGameStat(data: PlayerGameStatCreateInput): PlayerGameStat
+
+  """ Create multiple PlayerGameStat items. """
+  createPlayerGameStats(data: [PlayerGameStatsCreateInput]): [PlayerGameStat]
+
+  """ Update a single PlayerGameStat item by ID. """
+  updatePlayerGameStat(id: ID!, data: PlayerGameStatUpdateInput): PlayerGameStat
+
+  """ Update multiple PlayerGameStat items by ID. """
+  updatePlayerGameStats(data: [PlayerGameStatsUpdateInput]): [PlayerGameStat]
+
+  """ Delete a single PlayerGameStat item by ID. """
+  deletePlayerGameStat(id: ID!): PlayerGameStat
+
+  """ Delete multiple PlayerGameStat items by ID. """
+  deletePlayerGameStats(ids: [ID!]): [PlayerGameStat]
 
   """ Create a single Team item. """
   createTeam(data: TeamCreateInput): Team
@@ -1346,6 +1615,30 @@ type Mutation {
 
   """ Delete multiple Pickup items by ID. """
   deletePickups(ids: [ID!]): [Pickup]
+
+  """ Create a single User item. """
+  createUser(data: UserCreateInput): User
+
+  """ Create multiple User items. """
+  createUsers(data: [UsersCreateInput]): [User]
+
+  """ Update a single User item by ID. """
+  updateUser(id: ID!, data: UserUpdateInput): User
+
+  """ Update multiple User items by ID. """
+  updateUsers(data: [UsersUpdateInput]): [User]
+
+  """ Delete a single User item by ID. """
+  deleteUser(id: ID!): User
+
+  """ Delete multiple User items by ID. """
+  deleteUsers(ids: [ID!]): [User]
+
+  """ Authenticate and generate a token for a User with the Password Authentication Strategy. 
+  """
+  authenticateUserWithPassword(email: String, password: String): authenticateUserOutput
+  unauthenticateUser: unauthenticateUserOutput
+  updateAuthenticatedUser(data: UserUpdateInput): User
 }
 
 """ A keystone list """
@@ -1773,6 +2066,150 @@ input PlayerCreateInput {
   preferredPositions: String
 }
 
+""" A keystone list """
+type PlayerGameStat {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the PlayerGameStat List config, or
+   2. As an alias to the field set on 'labelField' in the PlayerGameStat List config, or
+   3. As an alias to a 'name' field on the PlayerGameStat List (if one exists), or
+   4. As an alias to the 'id' field on the PlayerGameStat List.
+  """
+  _label_: String
+  id: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  player: Player
+  game: Game
+  assists: Int
+  scores: Int
+  defenses: Int
+  throwaways: Int
+  drops: Int
+  pointsPlayed: Int
+  attended: Boolean
+}
+
+input PlayerGameStatCreateInput {
+  createdAt: DateTime
+  updatedAt: DateTime
+  player: PlayerRelateToOneInput
+  game: GameRelateToOneInput
+  assists: Int
+  scores: Int
+  defenses: Int
+  throwaways: Int
+  drops: Int
+  pointsPlayed: Int
+  attended: Boolean
+}
+
+input PlayerGameStatsCreateInput {
+  data: PlayerGameStatCreateInput
+}
+
+input PlayerGameStatsUpdateInput {
+  id: ID!
+  data: PlayerGameStatUpdateInput
+}
+
+input PlayerGameStatUpdateInput {
+  createdAt: DateTime
+  updatedAt: DateTime
+  player: PlayerRelateToOneInput
+  game: GameRelateToOneInput
+  assists: Int
+  scores: Int
+  defenses: Int
+  throwaways: Int
+  drops: Int
+  pointsPlayed: Int
+  attended: Boolean
+}
+
+input PlayerGameStatWhereInput {
+  AND: [PlayerGameStatWhereInput]
+  OR: [PlayerGameStatWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  createdAt_in: [DateTime]
+  createdAt_not_in: [DateTime]
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  updatedAt_in: [DateTime]
+  updatedAt_not_in: [DateTime]
+  player: PlayerWhereInput
+  player_is_null: Boolean
+  game: GameWhereInput
+  game_is_null: Boolean
+  assists: Int
+  assists_not: Int
+  assists_lt: Int
+  assists_lte: Int
+  assists_gt: Int
+  assists_gte: Int
+  assists_in: [Int]
+  assists_not_in: [Int]
+  scores: Int
+  scores_not: Int
+  scores_lt: Int
+  scores_lte: Int
+  scores_gt: Int
+  scores_gte: Int
+  scores_in: [Int]
+  scores_not_in: [Int]
+  defenses: Int
+  defenses_not: Int
+  defenses_lt: Int
+  defenses_lte: Int
+  defenses_gt: Int
+  defenses_gte: Int
+  defenses_in: [Int]
+  defenses_not_in: [Int]
+  throwaways: Int
+  throwaways_not: Int
+  throwaways_lt: Int
+  throwaways_lte: Int
+  throwaways_gt: Int
+  throwaways_gte: Int
+  throwaways_in: [Int]
+  throwaways_not_in: [Int]
+  drops: Int
+  drops_not: Int
+  drops_lt: Int
+  drops_lte: Int
+  drops_gt: Int
+  drops_gte: Int
+  drops_in: [Int]
+  drops_not_in: [Int]
+  pointsPlayed: Int
+  pointsPlayed_not: Int
+  pointsPlayed_lt: Int
+  pointsPlayed_lte: Int
+  pointsPlayed_gt: Int
+  pointsPlayed_gte: Int
+  pointsPlayed_in: [Int]
+  pointsPlayed_not_in: [Int]
+  attended: Boolean
+  attended_not: Boolean
+}
+
+input PlayerGameStatWhereUniqueInput {
+  id: ID!
+}
+
 enum PlayerGenderType {
   Male
   Female
@@ -1788,6 +2225,13 @@ input PlayerRelateToManyInput {
   create: [PlayerCreateInput]
   connect: [PlayerWhereUniqueInput]
   disconnect: [PlayerWhereUniqueInput]
+  disconnectAll: Boolean
+}
+
+input PlayerRelateToOneInput {
+  create: PlayerCreateInput
+  connect: PlayerWhereUniqueInput
+  disconnect: PlayerWhereUniqueInput
   disconnectAll: Boolean
 }
 
@@ -2105,6 +2549,18 @@ type Query {
   """ Retrieve the meta-data for the Event list. """
   _EventsMeta: _ListMeta
 
+  """ Search for all Game items which match the where clause. """
+  allGames(where: GameWhereInput, search: String, sortBy: [SortGamesBy!], orderBy: String, first: Int, skip: Int): [Game]
+
+  """ Search for the Game item with the matching ID. """
+  Game(where: GameWhereUniqueInput!): Game
+
+  """ Perform a meta-query on all Game items which match the where clause. """
+  _allGamesMeta(where: GameWhereInput, search: String, sortBy: [SortGamesBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the Game list. """
+  _GamesMeta: _ListMeta
+
   """ Search for all League items which match the where clause. """
   allLeagues(where: LeagueWhereInput, search: String, sortBy: [SortLeaguesBy!], orderBy: String, first: Int, skip: Int): [League]
 
@@ -2118,6 +2574,19 @@ type Query {
   """ Retrieve the meta-data for the League list. """
   _LeaguesMeta: _ListMeta
 
+  """ Search for all Location items which match the where clause. """
+  allLocations(where: LocationWhereInput, search: String, sortBy: [SortLocationsBy!], orderBy: String, first: Int, skip: Int): [Location]
+
+  """ Search for the Location item with the matching ID. """
+  Location(where: LocationWhereUniqueInput!): Location
+
+  """ Perform a meta-query on all Location items which match the where clause. 
+  """
+  _allLocationsMeta(where: LocationWhereInput, search: String, sortBy: [SortLocationsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the Location list. """
+  _LocationsMeta: _ListMeta
+
   """ Search for all Player items which match the where clause. """
   allPlayers(where: PlayerWhereInput, search: String, sortBy: [SortPlayersBy!], orderBy: String, first: Int, skip: Int): [Player]
 
@@ -2130,6 +2599,19 @@ type Query {
 
   """ Retrieve the meta-data for the Player list. """
   _PlayersMeta: _ListMeta
+
+  """ Search for all PlayerGameStat items which match the where clause. """
+  allPlayerGameStats(where: PlayerGameStatWhereInput, search: String, sortBy: [SortPlayerGameStatsBy!], orderBy: String, first: Int, skip: Int): [PlayerGameStat]
+
+  """ Search for the PlayerGameStat item with the matching ID. """
+  PlayerGameStat(where: PlayerGameStatWhereUniqueInput!): PlayerGameStat
+
+  """ Perform a meta-query on all PlayerGameStat items which match the where clause. 
+  """
+  _allPlayerGameStatsMeta(where: PlayerGameStatWhereInput, search: String, sortBy: [SortPlayerGameStatsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the PlayerGameStat list. """
+  _PlayerGameStatsMeta: _ListMeta
 
   """ Search for all Team items which match the where clause. """
   allTeams(where: TeamWhereInput, search: String, sortBy: [SortTeamsBy!], orderBy: String, first: Int, skip: Int): [Team]
@@ -2156,11 +2638,24 @@ type Query {
   """ Retrieve the meta-data for the Pickup list. """
   _PickupsMeta: _ListMeta
 
+  """ Search for all User items which match the where clause. """
+  allUsers(where: UserWhereInput, search: String, sortBy: [SortUsersBy!], orderBy: String, first: Int, skip: Int): [User]
+
+  """ Search for the User item with the matching ID. """
+  User(where: UserWhereUniqueInput!): User
+
+  """ Perform a meta-query on all User items which match the where clause. """
+  _allUsersMeta(where: UserWhereInput, search: String, sortBy: [SortUsersBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the User list. """
+  _UsersMeta: _ListMeta
+
   """ Retrieve the meta-data for all lists. """
   _ksListsMeta(where: _ksListsMetaInput): [_ListMeta]
 
   """The version of the Keystone application serving this API."""
   appVersion: String
+  authenticatedUser: User
 }
 
 enum SortBoardMembersBy {
@@ -2239,6 +2734,31 @@ enum SortEventsBy {
   moreInformationUrl_DESC
 }
 
+enum SortGamesBy {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  league_ASC
+  league_DESC
+  scheduledTime_ASC
+  scheduledTime_DESC
+  homeTeam_ASC
+  homeTeam_DESC
+  awayTeam_ASC
+  awayTeam_DESC
+  homeTeamScore_ASC
+  homeTeamScore_DESC
+  homeTeamForfeit_ASC
+  homeTeamForfeit_DESC
+  awayTeamScore_ASC
+  awayTeamScore_DESC
+  awayTeamForfeit_ASC
+  awayTeamForfeit_DESC
+  location_ASC
+  location_DESC
+}
+
 enum SortLeaguesBy {
   id_ASC
   id_DESC
@@ -2282,12 +2802,21 @@ enum SortLeaguesBy {
   finalsTournamentEndDate_DESC
   finalsTournamentDescription_ASC
   finalsTournamentDescription_DESC
+  finalsTournamentLocation_ASC
+  finalsTournamentLocation_DESC
   requestAttendance_ASC
   requestAttendance_DESC
   requestShirtSize_ASC
   requestShirtSize_DESC
   requestSponsorship_ASC
   requestSponsorship_DESC
+}
+
+enum SortLocationsBy {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
 }
 
 enum SortPickupsBy {
@@ -2329,6 +2858,33 @@ enum SortPickupsBy {
   locationLongitude_DESC
   description_ASC
   description_DESC
+}
+
+enum SortPlayerGameStatsBy {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  player_ASC
+  player_DESC
+  game_ASC
+  game_DESC
+  assists_ASC
+  assists_DESC
+  scores_ASC
+  scores_DESC
+  defenses_ASC
+  defenses_DESC
+  throwaways_ASC
+  throwaways_DESC
+  drops_ASC
+  drops_DESC
+  pointsPlayed_ASC
+  pointsPlayed_DESC
+  attended_ASC
+  attended_DESC
 }
 
 enum SortPlayersBy {
@@ -2391,6 +2947,17 @@ enum SortTeamsBy {
   league_DESC
 }
 
+enum SortUsersBy {
+  id_ASC
+  id_DESC
+  firstName_ASC
+  firstName_DESC
+  lastName_ASC
+  lastName_DESC
+  email_ASC
+  email_DESC
+}
+
 """ A keystone list """
 type Team {
   """
@@ -2417,6 +2984,13 @@ input TeamCreateInput {
   captains: PlayerRelateToManyInput
   players: PlayerRelateToManyInput
   league: LeagueRelateToOneInput
+}
+
+input TeamRelateToOneInput {
+  create: TeamCreateInput
+  connect: TeamWhereUniqueInput
+  disconnect: TeamWhereUniqueInput
+  disconnectAll: Boolean
 }
 
 input TeamsCreateInput {
@@ -2505,6 +3079,122 @@ input TeamWhereUniqueInput {
   id: ID!
 }
 
+type unauthenticateUserOutput {
+  """
+  `true` when unauthentication succeeds.
+  NOTE: unauthentication always succeeds when the request has an invalid or missing authentication token.
+  """
+  success: Boolean
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
+
+""" A keystone list """
+type User {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the User List config, or
+   2. As an alias to the field set on 'labelField' in the User List config, or
+   3. As an alias to a 'name' field on the User List (if one exists), or
+   4. As an alias to the 'id' field on the User List.
+  """
+  _label_: String
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  password_is_set: Boolean
+}
+
+input UserCreateInput {
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+}
+
+input UsersCreateInput {
+  data: UserCreateInput
+}
+
+input UsersUpdateInput {
+  id: ID!
+  data: UserUpdateInput
+}
+
+input UserUpdateInput {
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput]
+  OR: [UserWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  firstName: String
+  firstName_not: String
+  firstName_contains: String
+  firstName_not_contains: String
+  firstName_starts_with: String
+  firstName_not_starts_with: String
+  firstName_ends_with: String
+  firstName_not_ends_with: String
+  firstName_i: String
+  firstName_not_i: String
+  firstName_contains_i: String
+  firstName_not_contains_i: String
+  firstName_starts_with_i: String
+  firstName_not_starts_with_i: String
+  firstName_ends_with_i: String
+  firstName_not_ends_with_i: String
+  firstName_in: [String]
+  firstName_not_in: [String]
+  lastName: String
+  lastName_not: String
+  lastName_contains: String
+  lastName_not_contains: String
+  lastName_starts_with: String
+  lastName_not_starts_with: String
+  lastName_ends_with: String
+  lastName_not_ends_with: String
+  lastName_i: String
+  lastName_not_i: String
+  lastName_contains_i: String
+  lastName_not_contains_i: String
+  lastName_starts_with_i: String
+  lastName_not_starts_with_i: String
+  lastName_ends_with_i: String
+  lastName_not_ends_with_i: String
+  lastName_in: [String]
+  lastName_not_in: [String]
+  email: String
+  email_not: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  email_i: String
+  email_not_i: String
+  email_contains_i: String
+  email_not_contains_i: String
+  email_starts_with_i: String
+  email_not_starts_with_i: String
+  email_ends_with_i: String
+  email_not_ends_with_i: String
+  email_in: [String]
+  email_not_in: [String]
+  password_is_set: Boolean
+}
+
+input UserWhereUniqueInput {
+  id: ID!
+}
 

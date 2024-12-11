@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { useState } from 'react'
-import PlayerLink from '../components/PlayerLink'
+import {PlayerLink} from '../components/PlayerLink'
 
 export async function getServerSideProps (context) {
   const results = await GraphqlClient.query({

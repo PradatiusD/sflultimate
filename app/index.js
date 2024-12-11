@@ -15,13 +15,15 @@ const migratedLists = [
   'League',
   'Location',
   'Player',
+  'PlayerGameStat',
   'Team',
   'Pickup',
   'User'
 ]
 
 for (const listName of migratedLists) {
-  const BoardMemberSchema = require('./lists/' + listName)
+  const filePath = './lists/' + listName
+  const BoardMemberSchema = require(filePath)
   keystone.createList(listName, BoardMemberSchema)
 }
 
