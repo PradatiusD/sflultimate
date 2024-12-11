@@ -29,11 +29,28 @@ export const getServerSideProps = async () => {
         }`
   })
   
-  return { props: { boardMembers: results.data.allBoardMembers, positions: results.data.allBoardPositions } }
+  return { 
+    props: { 
+      boardMembers: results.data.allBoardMembers,
+      positions: JSON.parse(JSON.stringify(results.data.allBoardPositions))
+    }
+  }
 }
 
 export default function BoardPage (props) {
   const {positions, boardMembers} = props
+
+  const links = [
+    {
+      url: 'https://forms.gle/L9yK9o8p9gG2Cue66',
+      label: 'Apply'
+    }
+  ]
+
+  positions.forEach((item) => {
+    item.links = links
+  })
+  
   return (
     <>
       <Head>
