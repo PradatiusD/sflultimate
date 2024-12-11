@@ -1,4 +1,6 @@
 import NextDocument, { Html, Head, Main, NextScript } from 'next/document'
+import GraphqlClient from '../lib/graphql-client'
+import { gql } from '@apollo/client'
 
 /**
  *
@@ -12,6 +14,19 @@ function isValidRegPeriod (regStart, regEnd) {
 }
 
 class MyDocument extends NextDocument {
+  static async getServerSideProps (context) {
+    const results = await GraphqlClient.query({
+      query: gql`
+        query {
+          allLeagues(where: {isActive: true}) {
+            title
+          }
+        }`
+    })
+    const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+    return { props: { league } }
+  }
+
   render (props) {
     let navLinks = []
     const league = {}
