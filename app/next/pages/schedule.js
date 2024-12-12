@@ -2,12 +2,6 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 
-// const keystone = require('keystone')
-// const Game = keystone.list('Game')
-// const Team = keystone.list('Team')
-// const Location = keystone.list('Location')
-//
-
 //   let games = await Game.model.find({
 //     league: res.locals.league._id
 //   }).sort({
@@ -63,7 +57,6 @@ export const getServerSideProps = (async () => {
   const games = Array.from(results.data.allGames).sort((a, b) => {
     return new Date(a.scheduledTime).getTime() < new Date(b.scheduledTime).getTime()
   })
-  console.log(games)
   return { props: {league, games}}
 })
 
@@ -129,7 +122,7 @@ export default function Schedule (props) {
                         </td>
                         <td>{game?.location?.name}</td>
                         <td>
-                          <a href={"/game/" + game.id}>{new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}</a>
+                          <a href={"/games/" + game.id}>{new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}</a>
                         </td>
                       </tr>
                     )
@@ -325,8 +318,3 @@ export default function Schedule (props) {
 //       if (a.pointDiff < b.pointDiff) return 1
 //       return 0
 //     })
-//     }).catch(function (err) {
-//       console.log(err)
-//     })
-//     })
-//     })()
