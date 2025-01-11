@@ -45,6 +45,8 @@ module.exports = async function (req, res) {
   view.on('post', async function (next) {
     // Cast to boolean
     req.body.wouldCaptain = req.body.wouldCaptain === 'Yes'
+    req.body.willAttendFinals = req.body.willAttendFinals === 'on'
+    req.body.termsConditions = req.body.termsConditions === 'on'
 
     const {
       comments,
