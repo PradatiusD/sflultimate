@@ -13,7 +13,12 @@ function isValidRegPeriod (regStart, regEnd) {
   return !!(regStart && regEnd && regStart.getTime() < now && now < regEnd.getTime())
 }
 
-class MyDocument extends NextDocument {
+class SFLUltimateDocument extends NextDocument {
+  static async getInitialProps (context) {
+    const initialProps = await NextDocument.getInitialProps(context)
+    return { ...initialProps, pathname: context.pathname }
+  }
+
   static async getServerSideProps (context) {
     const results = await GraphqlClient.query({
       query: gql`
@@ -28,6 +33,16 @@ class MyDocument extends NextDocument {
   }
 
   render (props) {
+    if (this.props.pathname === '/sheets') {
+      return <>
+        <Html lang="en">
+          <Head />
+          <Main/>
+          <NextScript/>
+        </Html>
+      </>
+    }
+
     let navLinks = []
     const league = {}
     if (league.tmp) {
@@ -212,4 +227,4 @@ class MyDocument extends NextDocument {
   }
 }
 
-export default MyDocument
+export default SFLUltimateDocument

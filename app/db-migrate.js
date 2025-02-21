@@ -86,11 +86,13 @@
   })
   printjson(keysEdited)
 
-  db.users.insert({
+  const user = {
     // i5JI97£Klip]
     email: 'sflultimate@gmail.com',
     password: '$2a$10$zTMYxl/4pd7DCrC5WDy.PuXSW1Jwkhb9xXLvNwg46J6fn1JY1SyqS',
     firstName: 'Test',
     lastName: 'User'
-  })
+  }
+  db.users.insert(user)
+  printjson(user)
 })()
