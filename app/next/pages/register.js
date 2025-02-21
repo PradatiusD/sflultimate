@@ -1,4 +1,9 @@
-// extends ../layouts/default
+export default function RegisterPage () {
+  return <>
+    <div>register</div>
+  </>
+}
+
 //
 // block head
 //     meta(property="og:title" content="Register now for the SFL Ultimate " + locals.league.title)

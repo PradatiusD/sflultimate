@@ -74,7 +74,6 @@ function SpiritOfTheGameText () {
 
 function Sheets (props) {
   const { teams, games } = props
-  console.log(games)
   const editor = false
   const isTournament = false
   const today = new Date()

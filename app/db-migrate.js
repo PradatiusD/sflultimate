@@ -27,14 +27,13 @@
   function traverse (o, prefix, collectionStr, b) {
     for (const k in o) {
       const v = o[k]
-      const suffix = prefix + k.charAt(0).toUpperCase() + k.slice(1, k.length)
+      const keyName = prefix + k.charAt(0).toUpperCase() + k.slice(1, k.length)
       if (isObject(v)) {
-        traverse(v, suffix, collectionStr, b)
+        traverse(v, keyName, collectionStr, b)
       } else {
-        const newKey = prefix + suffix
-        b[newKey] = v
-        print(collectionStr + '-> migrated ' + newKey)
-        const logKey = collectionStr + '->' + newKey
+        b[keyName] = v
+        print(collectionStr + '-> migrated ' + keyName)
+        const logKey = collectionStr + '->' + keyName
         if (keysEdited.indexOf(logKey) === -1) {
           keysEdited.push(logKey)
         }
@@ -46,6 +45,7 @@
     'pickups',
     'players',
     'boardmembers',
+    'boardpositions',
     'leagues',
     'teams'
   ]
@@ -74,6 +74,8 @@
       if (collectionStr === 'teams') {
         relationship('Team', 'captains', 'Player', record)
         relationship('Team', 'players', 'Player', record)
+      } if (collectionStr === 'boardpositions') {
+        relationship('BoardPosition', 'assigned', 'BoardMember', record)
       } else if (collectionStr === 'players') {
         relationship('Player', 'leagues', 'League', record)
         if (record.preferredPositions) {
