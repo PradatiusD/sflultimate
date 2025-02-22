@@ -1,5 +1,6 @@
 const { gql } = require('@apollo/client')
 const GraphQlClient = require('./../../lib/graphql-client')
+const PaymentUtils = require('./../../lib/payment-utils')
 
 const CREATE_PLAYER_MUTATION = gql`
   mutation CreatePlayer($data: PlayerCreateInput!) {
@@ -17,7 +18,30 @@ export default async function handler (req, res) {
   }
 
   try {
-    console.log(req.body)
+    const purchase = {
+      amount: 10,
+      paymentMethodNonce: req.body.paymentMethodNonce,
+      options: {
+        submitForSettlement: true
+      },
+      customer: {
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email
+      },
+      billing: {
+        streetAddress: req.body.streetAddress
+      },
+      customFields: {
+        partner: req.body.partnerName,
+        gender: req.body.gender,
+        skillLevel: req.body.skillLevel,
+        participation: req.body.participation
+      }
+    }
+
+    const paymentResult = await PaymentUtils.createSale(purchase)
+    console.log(paymentResult)
     const results = await GraphQlClient.mutate({
       mutation: CREATE_PLAYER_MUTATION,
       variables: {

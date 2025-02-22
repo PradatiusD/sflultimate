@@ -503,40 +503,6 @@ export default function RegisterPage (props) {
 //     } else if (locals.league.isLateRegistrationPeriod) {
 //       amount = registrationLevel === 'Student' ? locals.fees.lateStudent : locals.fees.lateAdult
 //     }
-//
-//     const purchase = {
-//       amount: amount,
-//       paymentMethodNonce,
-//       options: {
-//         submitForSettlement: true
-//       },
-//       customer: {
-//         firstName,
-//         lastName,
-//         email
-//       },
-//       billing: {
-//         streetAddress
-//       },
-//       customFields: {
-//         partner: partnerName,
-//         gender: gender,
-//         skillLevel,
-//         participation
-//       }
-//     }
-//
-//     try {
-//       const result = await PaymentUtils.createSale(purchase)
-//       if (!result.success) {
-//         console.log(JSON.stringify(result, null, 2))
-//         if (result.message) {
-//           locals.err = 'We\'re sorry, the payment processor rejected this transaction for the following reason: ' + result.message
-//         } else {
-//           locals.err = JSON.stringify(result, null, 2)
-//         }
-//         return next()
-//       }
 //       const newPlayerRecord = {
 //         leagues: [
 //           locals.league._id
