@@ -17,6 +17,7 @@ export default async function handler (req, res) {
   }
 
   try {
+    console.log(req.body)
     const results = await GraphQlClient.mutate({
       mutation: CREATE_PLAYER_MUTATION,
       variables: {

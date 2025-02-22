@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
+import PaymentUtils from '../lib/payment-utils'
+import {useEffect} from "react";
+
 function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
   return <>
     <div className="form-group">
@@ -65,25 +68,37 @@ export const getServerSideProps = async () => {
       }`
   })
   const league = results.data.allLeagues[0]
-  return { props: { league } }
+  const token = await PaymentUtils.generateGatewayClientToken()
+  return { props: { league, braintreeToken: token } }
+}
+
+const locals = {}
+locals.formatDate = function (date) {
+  return new Date(date).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })
+}
+
+locals.formatTime = function (date) {
+  return new Date(date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })
 }
 
 export default function RegisterPage (props) {
-  const { league: activeLeague } = props
+  const { league: activeLeague, braintreeToken} = props
   const [player, setPlayer] = useState({})
 
+  useEffect(() => {
+    braintree.dropin.create({authorization: BRAINTREE_CLIENT_TOKEN, selector: '#payment-form'}, function (err, instance) {
+      document.querySelector('#submitButton').addEventListener('click', function (e) {
+        e.preventDefault()
+        instance.requestPaymentMethod(function (err, payload) {
+          document.querySelector('#nonce').value = payload.nonce
+          document.querySelector('form').submit()
+        });
+      })
+    });
+  }, []);
+  
   const adultPrice = activeLeague.pricingRegularAdult
   const studentPrice = activeLeague.pricingRegularStudent
-
-  const locals = {}
-
-  locals.formatDate = function (date) {
-    return new Date(date).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })
-  }
-
-  locals.formatTime = function (date) {
-    return new Date(date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })
-  }
   
   // if locals.league.isEarlyRegistrationPeriod
   //    option(value='Adult')="Adult - $" + fees.earlyAdult
@@ -95,16 +110,21 @@ export default function RegisterPage (props) {
   //    option(value='Adult')="Adult - $" + fees.lateAdult
   //    option(value='Student')="Student - $" + fees.lateStudent
 
+
   return <>
     <Head>
-      <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title} />
-      <meta property="og:url" content="https://www.sflultimate.com/register" />
-      <meta property="og:description" content={activeLeague.finalsTournamentDescription || ''} />
+      <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
+      <meta property="og:url" content="https://www.sflultimate.com/register"/>
+      <meta property="og:description" content={activeLeague.finalsTournamentDescription || ''}/>
       {
         activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
-          <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl} />
+          <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
         )
       }
+
+      <script src="https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js"/>
+      <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
+      <script dangerouslySetInnerHTML={{__html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';`}}></script>
     </Head>
     <div className="container register">
       <h1>{activeLeague.title} Sign Up</h1>
@@ -120,6 +140,8 @@ export default function RegisterPage (props) {
         <div className="col-md-12">
           <form id="registration" method="POST" action="/api/register">
             <input type="hidden" name="league" value={activeLeague.id}/>
+            <input type="hidden" name="payment_method_nonce" id="nonce"/>
+
             <pre>{JSON.stringify(player)}</pre>
             <div className="row">
               <div className="col-md-6">
@@ -223,6 +245,8 @@ export default function RegisterPage (props) {
               onChange={(e) => setPlayer({...player, registrationLevel: e.target.value})}
             />
 
+            <div id="payment-form"></div>
+
             <div className="text-center">
               <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton">Submit
               </button>
@@ -234,13 +258,8 @@ export default function RegisterPage (props) {
   </>
 }
 
-//     script(src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w")
-// block content
 //
 //     if locals.league.canRegister
-//
-//         .container.register: .row: .col-md-12
-//
 //             if err
 //                 br
 //                 .alert.alert-danger
@@ -418,7 +437,6 @@ export default function RegisterPage (props) {
 //             p Note that you will not get a jersey.
 //
 // block js
-//     script(src="https://js.braintreegateway.com/js/braintree-2.32.1.min.js")
 //     script.
 //         var clientToken = "#{braintree_token}";
 //     script(src='js/register-form.js')
@@ -434,8 +452,6 @@ export default function RegisterPage (props) {
 // })
 //
 // module.exports = async function (req, res) {
-//
-
 //   PaymentUtils.setBaseRegistrationLocals(view, res)
 //
 //   view.on('post', async function (next) {
@@ -591,21 +607,11 @@ export default function RegisterPage (props) {
 //
 //         await transporter.sendMail(emailSendParams)
 //       } catch (e) {
-//         console.error('Cound not send email for ' + email)
+//         console.error('Could not send email for ' + email)
 //         console.error(e)
 //       }
 //
 //       res.redirect('/confirmation')
-//     } catch (err) {
-//       locals.err = err
-//       console.log(err)
-//       return next()
-//     }
-//   })
-//
-//   // Render the view
-//   view.render('register')
-// }
 
 //
 // (function ($) {
