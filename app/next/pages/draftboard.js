@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { useState } from 'react'
-import {PlayerLink} from '../components/PlayerLink'
+import { PlayerLink } from '../components/PlayerLink'
 
 export async function getServerSideProps (context) {
   const results = await GraphqlClient.query({
@@ -50,7 +50,18 @@ export async function getServerSideProps (context) {
     `
   })
 
-  const players = Array.from(playersApi.data.allPlayers)
+  const playerToTeamMap = {}
+  teams.forEach(function (team) {
+    team.players.forEach(function (player) {
+      playerToTeamMap[player.id] = team.id
+    })
+  })
+
+  const players = Array.from(playersApi.data.allPlayers).map(function (player) {
+    const p = Object.assign({}, player)
+    p.team = playerToTeamMap[p.id] || null
+    return p
+  })
   return {
     props: { league, teams, user: context.req.user ? context.req.user : null, players }
   }
@@ -241,8 +252,8 @@ export default function Draftboard (props) {
     } else {
       throw new Error('Invalid action')
     }
-    GraphqlClient.mutate(params).then(function (b) {
-      console.log(b)
+    return GraphqlClient.mutate(params).then(function () {
+      window.location.reload()
     }).catch(function (e) {
       console.error(e)
     })
@@ -309,7 +320,7 @@ export default function Draftboard (props) {
               <div className="drafted-teams row">
                 {teams.map((team, index) => (
                   <div className="col-md-4" key={index}>
-                    <table className="table">
+                    <table className="table table-striped">
                       <thead>
                         <tr>
                           <th>{team.name} ({team.players.length})</th>
@@ -368,36 +379,44 @@ export default function Draftboard (props) {
               </tr>
             </thead>
             <tbody>
-              {players.sort((a, b) => b.skillLevel - a.skillLevel).map((player, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td><PlayerLink player={player} /></td>
-                  <td>{player.gender.charAt(0)}</td>
-                  <td>{formatDate(player.createdAt)}</td>
-                  <td>{player.age}</td>
-                  <td>{player.shirtSize}</td>
-                  <td>{player.preferredPositions}</td>
-                  <td>{player.skillLevel}</td>
-                  <td>{player.participation}</td>
-                  <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
-                  <td>{player.partnerName}</td>
-                  <td>
-                    <small className="badge"
-                      style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
-                  </td>
-                  <td>{player.wouldCaptain ? 'Yes' : ''}</td>
-                  <td>{player.wouldSponsor ? 'Yes' : ''}</td>
-                  {user && (
+              {players.map((player, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td><PlayerLink player={player} /></td>
+                    <td>{player.gender.charAt(0)}</td>
+                    <td>{formatDate(player.createdAt)}</td>
+                    <td>{player.age}</td>
+                    <td>{player.shirtSize}</td>
+                    <td>{player.preferredPositions}</td>
+                    <td>{player.skillLevel}</td>
+                    <td>{player.participation}</td>
+                    <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
+                    <td>{player.partnerName}</td>
                     <td>
-                      {teams.map((team, index) => (
-                        !player.team && <button key={index} className="btn btn-default"
-                          onClick={() => modifyRoster(team, player, 'add')}>Add
-                      To {team.name}</button>
-                      ))}
+                      <small className="badge"
+                        style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
                     </td>
-                  )}
-                </tr>
-              ))}
+                    <td>{player.wouldCaptain ? 'Yes' : ''}</td>
+                    <td>{player.wouldSponsor ? 'Yes' : ''}</td>
+                    <td>
+                      {user && !player.team && teams.map((team, index) => {
+                        return (
+                          <button
+                            key={index}
+                            className="btn btn-default"
+                            onClick={() => {
+                              modifyRoster(team, player, 'add')
+                            }}>
+                              Add To {team.name}
+                          </button>
+                        )
+                      })}
+                    </td>
+                  </tr>
+                )
+              })
+              }
             </tbody>
           </table>
 
