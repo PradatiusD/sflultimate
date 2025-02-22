@@ -46,6 +46,9 @@ export const getServerSideProps = async () => {
         allLeagues(where: {isActive: true}) {
           id
           title
+          description
+          registrationStart
+          registrationEnd
           pricingEarlyAdult
           pricingEarlyStudent
           pricingRegularAdult
@@ -71,6 +74,16 @@ export default function RegisterPage (props) {
 
   const adultPrice = activeLeague.pricingRegularAdult
   const studentPrice = activeLeague.pricingRegularStudent
+
+  const locals = {}
+
+  locals.formatDate = function (date) {
+    return new Date(date).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })
+  }
+
+  locals.formatTime = function (date) {
+    return new Date(date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })
+  }
   
   // if locals.league.isEarlyRegistrationPeriod
   //    option(value='Adult')="Adult - $" + fees.earlyAdult
@@ -94,11 +107,19 @@ export default function RegisterPage (props) {
       }
     </Head>
     <div className="container register">
+      <h1>{activeLeague.title} Sign Up</h1>
       <h3>Registration</h3>
+      
+      <div dangerouslySetInnerHTML={{__html: activeLeague.description}}/>
+      <p>
+        Regular registration is open <strong>as of {locals.formatDate(activeLeague.registrationStart)}</strong> and ends
+        on <strong>{locals.formatDate(activeLeague.registrationEnd)}</strong>
+      </p>
+
       <div className="row">
         <div className="col-md-12">
           <form id="registration" method="POST" action="/api/register">
-            <input type="hidden" name="league" value={activeLeague.id} />
+            <input type="hidden" name="league" value={activeLeague.id}/>
             <pre>{JSON.stringify(player)}</pre>
             <div className="row">
               <div className="col-md-6">
@@ -108,7 +129,7 @@ export default function RegisterPage (props) {
                   name="firstName"
                   placeholder=""
                   required
-                  onChange={(e) => setPlayer({ ...player, firstName: e.target.value })}
+                  onChange={(e) => setPlayer({...player, firstName: e.target.value})}
                 />
               </div>
               <div className="col-md-6">
@@ -118,7 +139,7 @@ export default function RegisterPage (props) {
                   name="lastName"
                   placeholder=""
                   required
-                  onChange={(e) => setPlayer({ ...player, lastName: e.target.value })}
+                  onChange={(e) => setPlayer({...player, lastName: e.target.value})}
                 />
               </div>
             </div>
@@ -127,12 +148,12 @@ export default function RegisterPage (props) {
               label="Gender"
               name="gender"
               options={[
-                { value: 'Female', label: 'Female' },
-                { value: 'Male', label: 'Male' },
-                { value: 'Other', label: 'Other / I\'d Prefer Not To' }
+                {value: 'Female', label: 'Female'},
+                {value: 'Male', label: 'Male'},
+                {value: 'Other', label: 'Other / I\'d Prefer Not To'}
               ]}
               helpText={'We use this information to draft teams that have even gender distributions.}'}
-              onChange={(e) => setPlayer({ ...player, gender: e.target.value })}
+              onChange={(e) => setPlayer({...player, gender: e.target.value})}
             />
 
             <FormInput
@@ -142,7 +163,7 @@ export default function RegisterPage (props) {
               name="email"
               required
               helpText={'We use your e-mail to send you updates and league information through the email you provide here.'}
-              onChange={(e) => setPlayer({ ...player, email: e.target.value })}
+              onChange={(e) => setPlayer({...player, email: e.target.value})}
             />
 
             <FormInput
@@ -151,7 +172,7 @@ export default function RegisterPage (props) {
               name="phoneNumber"
               type="tel"
               helpText={'Not required, but often our captains find reaching out via SMS/GroupMe/WhatsApp is much better than email.  Your number would be shared with your team.'}
-              onChange={(e) => setPlayer({ ...player, phoneNumber: e.target.value })}
+              onChange={(e) => setPlayer({...player, phoneNumber: e.target.value})}
             />
 
             <FormInput
@@ -160,7 +181,7 @@ export default function RegisterPage (props) {
               name="age"
               type="number"
               helpText={'Our insurance policy requires us to report how many people within certain age-ranges exist in the league.  We do not ask for your birthdate to protect your privacy.'}
-              onChange={(e) => setPlayer({ ...player, age: e.target.value })}
+              onChange={(e) => setPlayer({...player, age: e.target.value})}
             />
 
             <FormSelect
@@ -168,19 +189,19 @@ export default function RegisterPage (props) {
               id="skillLevel"
               name="skillLevel"
               options={[
-                { value: 1, label: '1 - Absolute Beginner - never played before' },
-                { value: 2, label: '2 - Hey wait, what\'s a flick?' },
-                { value: 3, label: '3 - Working on throws, basic knowledge of the game' },
-                { value: 4, label: '4 - Pick-up player, okay throws' },
-                { value: 5, label: '5 - Decent backhand & forehand. Little to no club experience' },
-                { value: 6, label: '6 - Fairly solid backhand & forehand. Some club experience' },
-                { value: 7, label: '7 - Tourney experience. Several years of club' },
-                { value: 8, label: '8 - Club level, solid all around, not prone to errors' },
-                { value: 9, label: '9 - Rock star. spot on throws, awesome D' }
+                {value: 1, label: '1 - Absolute Beginner - never played before'},
+                {value: 2, label: '2 - Hey wait, what\'s a flick?'},
+                {value: 3, label: '3 - Working on throws, basic knowledge of the game'},
+                {value: 4, label: '4 - Pick-up player, okay throws'},
+                {value: 5, label: '5 - Decent backhand & forehand. Little to no club experience'},
+                {value: 6, label: '6 - Fairly solid backhand & forehand. Some club experience'},
+                {value: 7, label: '7 - Tourney experience. Several years of club'},
+                {value: 8, label: '8 - Club level, solid all around, not prone to errors'},
+                {value: 9, label: '9 - Rock star. spot on throws, awesome D'}
 
               ]}
               helpText="Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team."
-              onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
+              onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
             />
 
             <FormInput
@@ -188,7 +209,7 @@ export default function RegisterPage (props) {
               id="partnerName"
               name="partnerName"
               helpText={'Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can\'t guarantee this.'}
-              onChange={(e) => setPlayer({ ...player, partnerName: e.target.value })}
+              onChange={(e) => setPlayer({...player, partnerName: e.target.value})}
             />
 
             <FormSelect
@@ -196,10 +217,10 @@ export default function RegisterPage (props) {
               id="registrationLevel"
               name="registrationLevel"
               options={[
-                { value: 'Adult', label: `Adult - $${adultPrice}` },
-                { value: 'Student', label: `Student - $${studentPrice}` }
+                {value: 'Adult', label: `Adult - $${adultPrice}`},
+                {value: 'Student', label: `Student - $${studentPrice}`}
               ]}
-              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
+              onChange={(e) => setPlayer({...player, registrationLevel: e.target.value})}
             />
 
             <div className="text-center">
@@ -227,14 +248,6 @@ export default function RegisterPage (props) {
 //                     span=err
 //             br
 //             br
-//             h1=league.title + " Sign Up"
-//
-//             if locals.league.description
-//                 !{locals.league.description}
-//
-//             p
-//             | Regular registration is open <strong>as of #{locals.formatDate(locals.league.registrationStart)}
-//             | and ends #{locals.formatDate(locals.league.registrationEnd)}</strong>.
 //
 //             br
 //
@@ -421,17 +434,8 @@ export default function RegisterPage (props) {
 // })
 //
 // module.exports = async function (req, res) {
-//   const view = new keystone.View(req, res)
-//   const locals = res.locals
 //
-//   locals.formatDate = function (date) {
-//     return date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })
-//   }
-//
-//   locals.formatTime = function (date) {
-//     return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })
-//   }
-//
+
 //   PaymentUtils.setBaseRegistrationLocals(view, res)
 //
 //   view.on('post', async function (next) {
