@@ -1,4 +1,4 @@
-const { Text, Relationship, DateTime, Integer, Checkbox, Select, Password } = require('@keystonejs/fields')
+const { Text, Relationship, DateTime, Integer, Checkbox, Select } = require('@keystonejs/fields')
 
 const fields = {
   createdAt: {
@@ -27,10 +27,6 @@ const fields = {
   },
   email: {
     type: Text,
-    isRequired: true
-  },
-  password: {
-    type: Password,
     isRequired: true
   },
   shirtSize: {

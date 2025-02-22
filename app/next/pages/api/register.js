@@ -24,19 +24,22 @@ export default async function handler (req, res) {
           email: req.body.email,
           createdAt: new Date(),
           updatedAt: new Date(),
-          firstName: 'test',
-          lastName: 'test',
-          age: 5,
-          password: 'testtesttesttesttesttesttest',
-          skillLevel: 1,
-          registrationLevel: 'Adult'
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          gender: req.body.gender,
+          age: parseInt(req.body.age),
+          skillLevel: parseInt(req.body.skillLevel),
+          registrationLevel: req.body.registrationLevel,
+          leagues: {
+            connect: [{ id: req.body.league }]
+          }
         }
       }
     })
     console.log(results)
-    res.status(200).json({ message: 'Success', data: `You sent: ${JSON.stringify(req.body, null, 2)}` })
+    res.status(200).json({ message: 'Success', data: results })
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Error' })
+    res.status(500).json({ message: 'Error', data: e })
   }
 }

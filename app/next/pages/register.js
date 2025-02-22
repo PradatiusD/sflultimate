@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { gql } from '@apollo/client'
+import Head from 'next/head'
+import GraphqlClient from '../lib/graphql-client'
 function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
   return <>
     <div className="form-group">
@@ -17,16 +20,121 @@ function FormInput ({ label, type, name, placeholder, required, helpText, onChan
   </>
 }
 
-export default function RegisterPage () {
+function FormSelect ({ label, name, options, required, helpText, onChange }) {
+  return <>
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
+      <select
+        id={name}
+        className="input-lg form-control"
+        name={name}
+        required={required}
+        onChange={onChange}
+      >
+        <option value="">Please Select</option>
+        {options.map((option, i) => <option key={i} value={option.value}>{option.label}</option>)}
+      </select>
+      <p className="help-block">{helpText}</p>
+    </div>
+  </>
+}
+
+export const getServerSideProps = async () => {
+  const results = await GraphqlClient.query({
+    query: gql`
+      query {
+        allLeagues(where: {isActive: true}) {
+          id
+          title
+          pricingEarlyAdult
+          pricingEarlyStudent
+          pricingRegularAdult
+          pricingRegularStudent
+          pricingLateStudent
+          pricingLateAdult
+          finalsTournamentDescription
+          finalsTournamentEndDate
+          finalsTournamentStartDate
+          registrationShareImage {
+            publicUrl
+          }
+        }
+      }`
+  })
+  const league = results.data.allLeagues[0]
+  return { props: { league } }
+}
+
+export default function RegisterPage (props) {
+  const { league: activeLeague } = props
   const [player, setPlayer] = useState({})
 
+  const adultPrice = activeLeague.pricingRegularAdult
+  const studentPrice = activeLeague.pricingRegularStudent
+  
+  // if locals.league.isEarlyRegistrationPeriod
+  //    option(value='Adult')="Adult - $" + fees.earlyAdult
+  //    option(value='Student')="Student - $" + fees.earlyStudent
+  // else if locals.league.isRegistrationPeriod
+  //    option(value='Adult')="Adult - $" + fees.regularAdult
+  //    option(value='Student')="Student - $" + fees.regularStudent
+  // else if locals.league.isLateRegistrationPeriod
+  //    option(value='Adult')="Adult - $" + fees.lateAdult
+  //    option(value='Student')="Student - $" + fees.lateStudent
+
   return <>
+    <Head>
+      <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title} />
+      <meta property="og:url" content="https://www.sflultimate.com/register" />
+      <meta property="og:description" content={activeLeague.finalsTournamentDescription || ''} />
+      {
+        activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
+          <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl} />
+        )
+      }
+    </Head>
     <div className="container register">
       <h3>Registration</h3>
       <div className="row">
         <div className="col-md-12">
           <form id="registration" method="POST" action="/api/register">
+            <input type="hidden" name="league" value={activeLeague.id} />
             <pre>{JSON.stringify(player)}</pre>
+            <div className="row">
+              <div className="col-md-6">
+                <FormInput
+                  label="First Name"
+                  id="firstName"
+                  name="firstName"
+                  placeholder=""
+                  required
+                  onChange={(e) => setPlayer({ ...player, firstName: e.target.value })}
+                />
+              </div>
+              <div className="col-md-6">
+                <FormInput
+                  label="Last Name"
+                  id="lastName"
+                  name="lastName"
+                  placeholder=""
+                  required
+                  onChange={(e) => setPlayer({ ...player, lastName: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <FormSelect
+              label="Gender"
+              name="gender"
+              options={[
+                { value: 'Female', label: 'Female' },
+                { value: 'Male', label: 'Male' },
+                { value: 'Other', label: 'Other / I\'d Prefer Not To' }
+              ]}
+              helpText={'We use this information to draft teams that have even gender distributions.}'}
+              onChange={(e) => setPlayer({ ...player, gender: e.target.value })}
+            />
+
             <FormInput
               label="Email Address"
               id="email"
@@ -55,6 +163,26 @@ export default function RegisterPage () {
               onChange={(e) => setPlayer({ ...player, age: e.target.value })}
             />
 
+            <FormSelect
+              label="Skill Level"
+              id="skillLevel"
+              name="skillLevel"
+              options={[
+                { value: 1, label: '1 - Absolute Beginner - never played before' },
+                { value: 2, label: '2 - Hey wait, what\'s a flick?' },
+                { value: 3, label: '3 - Working on throws, basic knowledge of the game' },
+                { value: 4, label: '4 - Pick-up player, okay throws' },
+                { value: 5, label: '5 - Decent backhand & forehand. Little to no club experience' },
+                { value: 6, label: '6 - Fairly solid backhand & forehand. Some club experience' },
+                { value: 7, label: '7 - Tourney experience. Several years of club' },
+                { value: 8, label: '8 - Club level, solid all around, not prone to errors' },
+                { value: 9, label: '9 - Rock star. spot on throws, awesome D' }
+
+              ]}
+              helpText="Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team."
+              onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
+            />
+
             <FormInput
               label="Partner Name"
               id="partnerName"
@@ -63,11 +191,19 @@ export default function RegisterPage () {
               onChange={(e) => setPlayer({ ...player, partnerName: e.target.value })}
             />
 
+            <FormSelect
+              label="Registration Type"
+              id="registrationLevel"
+              name="registrationLevel"
+              options={[
+                { value: 'Adult', label: `Adult - $${adultPrice}` },
+                { value: 'Student', label: `Student - $${studentPrice}` }
+              ]}
+              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
+            />
+
             <div className="text-center">
-              <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton"
-                onSubmit={(e) => {
-                  alert('yay')
-                }}>Submit
+              <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton">Submit
               </button>
             </div>
           </form>
@@ -77,13 +213,6 @@ export default function RegisterPage () {
   </>
 }
 
-//
-// block head
-//     meta(property="og:title" content="Register now for the SFL Ultimate " + locals.league.title)
-//     meta(property="og:url" content="https://www.sflultimate.com/register")
-//     meta(property="og:description" content=locals.league.summary || '')
-//     if locals.league.registrationShareImage && locals.league.registrationShareImage.url
-//         meta(property="og:image" content=locals.league.registrationShareImage.url)
 //     script(src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w")
 // block content
 //
@@ -114,42 +243,7 @@ export default function RegisterPage () {
 //                | Late registration (at a $#{locals.fees.lateAdult} fee for adults, $#{locals.fees.lateStudent} for students, as space permits) starts
 //                | #{formatDate(locals.league.lateRegistrationStart)} until #{formatDate(locals.league.lateRegistrationEnd)} at #{formatTime(locals.league.lateRegistrationEnd)}. This will not include a jersey.
 //
-//             hr
-//                 .row
-//                     .col-md-6
-//                         .form-group
-//                             label(for='firstName') First Name
-//                             input#firstName.input-lg.form-control(type='text' name='firstName' placeholder='' required)
-//                     .col-md-6
-//                         .form-group
-//                             label(for='lastName') Last Name
-//                             input#lastName.input-lg.form-control(type='text' name='lastName' placeholder='' required)
-//
-//
-//
-//                 .form-group
-//                     label(for="gender") Gender
-//                     select#gender.input-lg.form-control(name="gender")
-//                         option(value='Female') Female
-//                         option(value='Male') Male
-//                         option(value='Other') Other / I'd Prefer Not To
-//                     p.help-block We use this information to draft teams that have even gender distributions.
-//
-//
-//                 .form-group
-//                     label(for="skillLevel") Skill Level
-//                         select#skillLevel.input-lg.form-control(name="skillLevel")
-//                             option(value='1') 1 - Absolute Beginner - never played before
-//                             option(value='2') 2 - Hey wait, what's a flick?
-//                             option(value='3') 3 - Working on throws, basic knowledge of the game
-//                             option(value='4') 4 - Pick-up player, okay throws
-//                             option(value='5') 5 - Decent backhand & forehand. Little to no club experience
-//                             option(value='6') 6 - Fairly solid backhand & forehand. Some club experience
-//                             option(value='7') 7 - Tourney experience. Several years of club
-//                             option(value='8') 8 - Club level, solid all around, not prone to errors
-//                             option(value='9') 9 - Rock star. spot on throws, awesome D
-//                     p.help-block Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team.
-//
+
 //                 div#playerPositions
 //                     label(for="skillLevel") Preferred Player Positions
 //                     p.help-block This is to help captains draft, especially in cases where we captains might not know you.  Check all that apply.  You must pick one.
@@ -274,18 +368,7 @@ export default function RegisterPage () {
 //                 h3 Payment Information
 //                 input(id="recaptcha" name='recaptchaToken' type='hidden')
 //
-//                 .form-group
-//                     label(for="registrationLevel") Registration Level
-//                         select#registrationLevel.input-lg.form-control(name="registrationLevel")
-//                             if locals.league.isEarlyRegistrationPeriod
-//                                 option(value='Adult')="Adult - $" + fees.earlyAdult
-//                                 option(value='Student')="Student - $" + fees.earlyStudent
-//                             else if locals.league.isRegistrationPeriod
-//                                 option(value='Adult')="Adult - $" + fees.regularAdult
-//                                 option(value='Student')="Student - $" + fees.regularStudent
-//                             else if locals.league.isLateRegistrationPeriod
-//                                 option(value='Adult')="Adult - $" + fees.lateAdult
-//                                 option(value='Student')="Student - $" + fees.lateStudent
+
 //
 //                 .form-group
 //                     label(for="streetAddress") Street Address
@@ -327,10 +410,6 @@ export default function RegisterPage () {
 //         var clientToken = "#{braintree_token}";
 //     script(src='js/register-form.js')
 
-// const keystone = require('keystone')
-// const PlayerModel = keystone.list('Player').model
-// const PaymentUtils = require('../utils')
-// const uuid = require('uuid')
 // const nodemailer = require('nodemailer')
 //
 // const transporter = nodemailer.createTransport({
@@ -439,16 +518,6 @@ export default function RegisterPage () {
 //         return next()
 //       }
 //       const newPlayerRecord = {
-//         createdAt: new Date(),
-//         updatedAt: new Date(),
-//         age,
-//         name: {
-//           first: firstName,
-//           last: lastName
-//         },
-//         email,
-//         partners: partnerName,
-//         password: uuid.v4(),
 //         leagues: [
 //           locals.league._id
 //         ],
