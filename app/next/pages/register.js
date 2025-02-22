@@ -1,6 +1,79 @@
-export default function RegisterPage () {
+import { useState } from 'react'
+function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
   return <>
-    <div>register</div>
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
+      <input
+        id={name}
+        className="input-lg form-control"
+        type={type}
+        name={name}
+        placeholder={placeholder || ''}
+        required={required}
+        onChange={onChange}
+      />
+      <p className="help-block">{helpText}</p>
+    </div>
+  </>
+}
+
+export default function RegisterPage () {
+  const [player, setPlayer] = useState({})
+
+  return <>
+    <div className="container register">
+      <h3>Registration</h3>
+      <div className="row">
+        <div className="col-md-12">
+          <form id="registration" method="POST" action="/api/register">
+            <pre>{JSON.stringify(player)}</pre>
+            <FormInput
+              label="Email Address"
+              id="email"
+              type="email"
+              name="email"
+              required
+              helpText={'We use your e-mail to send you updates and league information through the email you provide here.'}
+              onChange={(e) => setPlayer({ ...player, email: e.target.value })}
+            />
+
+            <FormInput
+              label="Phone Number"
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              helpText={'Not required, but often our captains find reaching out via SMS/GroupMe/WhatsApp is much better than email.  Your number would be shared with your team.'}
+              onChange={(e) => setPlayer({ ...player, phoneNumber: e.target.value })}
+            />
+
+            <FormInput
+              label="Age (In Years)"
+              id="age"
+              name="age"
+              type="number"
+              helpText={'Our insurance policy requires us to report how many people within certain age-ranges exist in the league.  We do not ask for your birthdate to protect your privacy.'}
+              onChange={(e) => setPlayer({ ...player, age: e.target.value })}
+            />
+
+            <FormInput
+              label="Partner Name"
+              id="partnerName"
+              name="partnerName"
+              helpText={'Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can\'t guarantee this.'}
+              onChange={(e) => setPlayer({ ...player, partnerName: e.target.value })}
+            />
+
+            <div className="text-center">
+              <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton"
+                onSubmit={(e) => {
+                  alert('yay')
+                }}>Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </>
 }
 
@@ -9,41 +82,39 @@ export default function RegisterPage () {
 //     meta(property="og:title" content="Register now for the SFL Ultimate " + locals.league.title)
 //     meta(property="og:url" content="https://www.sflultimate.com/register")
 //     meta(property="og:description" content=locals.league.summary || '')
-//     if locals.league.registrationShareImage && locals.league.registrationShareImage.url 
+//     if locals.league.registrationShareImage && locals.league.registrationShareImage.url
 //         meta(property="og:image" content=locals.league.registrationShareImage.url)
 //     script(src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w")
 // block content
-//    
+//
 //     if locals.league.canRegister
 //
 //         .container.register: .row: .col-md-12
-//    
+//
 //             if err
 //                 br
 //                 .alert.alert-danger
-//                     strong Error: 
+//                     strong Error:
 //                     span=err
 //             br
 //             br
-//             h1=league.title + " Sign Up" 
+//             h1=league.title + " Sign Up"
 //
-//             if locals.league.description 
+//             if locals.league.description
 //                 !{locals.league.description}
 //
-//             p 
-//             | Regular registration is open <strong>as of #{locals.formatDate(locals.league.registrationStart)} 
+//             p
+//             | Regular registration is open <strong>as of #{locals.formatDate(locals.league.registrationStart)}
 //             | and ends #{locals.formatDate(locals.league.registrationEnd)}</strong>.
-//            
+//
 //             br
-//            
+//
 //             if locals.league.lateRegistrationStart && locals.league.lateRegistrationEnd
-//               .alert.alert-info 
+//               .alert.alert-info
 //                | Late registration (at a $#{locals.fees.lateAdult} fee for adults, $#{locals.fees.lateStudent} for students, as space permits) starts
 //                | #{formatDate(locals.league.lateRegistrationStart)} until #{formatDate(locals.league.lateRegistrationEnd)} at #{formatTime(locals.league.lateRegistrationEnd)}. This will not include a jersey.
-//                
+//
 //             hr
-//             h3 Registration
-//             form#registration(method="post" autocomplete="off")
 //                 .row
 //                     .col-md-6
 //                         .form-group
@@ -53,16 +124,8 @@ export default function RegisterPage () {
 //                         .form-group
 //                             label(for='lastName') Last Name
 //                             input#lastName.input-lg.form-control(type='text' name='lastName' placeholder='' required)
-//    
-//                 .form-group
-//                     label(for='email') Email Address
-//                     input#email.input-lg.form-control(type='email' name='email' placeholder='' required)
-//                     p.help-block We use your e-mail to send you updates and league information through the email you provide here.
 //
-//                 .form-group
-//                     label(for='phoneNumber') Phone Number
-//                     input#phoneNumber.input-lg.form-control(type='tel' name='phoneNumber' placeholder='')
-//                     p.help-block Not required, but often our captains find reaching out via SMS/GroupMe/WhatsApp is much better than email.  Your number would be shared with your team.                   
+//
 //
 //                 .form-group
 //                     label(for="gender") Gender
@@ -71,12 +134,8 @@ export default function RegisterPage () {
 //                         option(value='Male') Male
 //                         option(value='Other') Other / I'd Prefer Not To
 //                     p.help-block We use this information to draft teams that have even gender distributions.
-//    
-//                 .form-group
-//                     label(for="age") Age (In Years)
-//                     input#age.input-lg.form-control(type='number' name='age' required)
-//                     p.help-block Our insurance policy requires us to report how many people within certain age-ranges exist in the league.  We do not ask your birthdate to protect your privacy.
-//                    
+//
+//
 //                 .form-group
 //                     label(for="skillLevel") Skill Level
 //                         select#skillLevel.input-lg.form-control(name="skillLevel")
@@ -90,7 +149,7 @@ export default function RegisterPage () {
 //                             option(value='8') 8 - Club level, solid all around, not prone to errors
 //                             option(value='9') 9 - Rock star. spot on throws, awesome D
 //                     p.help-block Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team.
-//                
+//
 //                 div#playerPositions
 //                     label(for="skillLevel") Preferred Player Positions
 //                     p.help-block This is to help captains draft, especially in cases where we captains might not know you.  Check all that apply.  You must pick one.
@@ -105,7 +164,7 @@ export default function RegisterPage () {
 //                 .checkbox
 //                     label
 //                         input#playerPositionHybrid(type='checkbox' name="preferredPositions" value="hybrid")
-//                         | <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on either depending on what the team needs. 
+//                         | <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on either depending on what the team needs.
 //                 .checkbox
 //                     label
 //                         input#playerPositionDefense(type='checkbox' name="preferredPositions" value="defense")
@@ -151,35 +210,31 @@ export default function RegisterPage () {
 //
 //                   br
 //
-//                 .form-group
-//                     label(for='partnerName') Partner Name
-//                     input#partnerName.input-lg.form-control(type='text' name='partnerName' placeholder='')
-//                     p.help-block Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can't guarantee this.
 //
 //                 .form-group.hide
 //                     label(for='usauNumber') USAU Number
 //                     input#usauNumber.input-lg.form-control(type='text' name='usauNumber' placeholder='')
 //                     p.help-block We are trying to find out how many of our players are on USAU to see if we can use that insurance instead.
-//    
+//
 //                 .form-group
 //                     label Comments
 //                     textarea#comments(name="comments").form-control
 //                     p.help-block Type here any additional comments you may have (if you can't attend certain weeks, really don't want to play with a specific person, or want to give captains some idea of who you are go ahead).  The captains and organizers will use this information during the player draft.
-//                
+//
 //                 .form-group
 //                     label(for="wouldCaptain") Would you like to be a captain or co-captain?
 //                     select#wouldCaptain.input-lg.form-control(name="wouldCaptain")
 //                         option(value='No') No
 //                         option(value='Yes') Yes
-//                
+//
 //                 p.help-block If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play.
-//    
+//
 //                 h3 General Waiver
 //                 .checkbox
 //                     label
 //                         input#termsConditions(type='checkbox' name='termsConditions' required)
 //                         | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
-//                    
+//
 //                 h3 SFLUltimate Player Code of Conduct
 //                 .checkbox
 //                     label
@@ -205,7 +260,7 @@ export default function RegisterPage () {
 //                             | I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.
 //                 else
 //                     #no-requestSponsorship
-//    
+//
 //                 if locals.league.isLateRegistrationPeriod
 //                     h3 Late Registration
 //                     .checkbox
@@ -218,7 +273,7 @@ export default function RegisterPage () {
 //
 //                 h3 Payment Information
 //                 input(id="recaptcha" name='recaptchaToken' type='hidden')
-//                
+//
 //                 .form-group
 //                     label(for="registrationLevel") Registration Level
 //                         select#registrationLevel.input-lg.form-control(name="registrationLevel")
@@ -231,16 +286,14 @@ export default function RegisterPage () {
 //                             else if locals.league.isLateRegistrationPeriod
 //                                 option(value='Adult')="Adult - $" + fees.lateAdult
 //                                 option(value='Student')="Student - $" + fees.lateStudent
-//                
+//
 //                 .form-group
 //                     label(for="streetAddress") Street Address
 //                     input#streetAddress.input-lg.form-control(type='text' name='streetAddress' placeholder='' required)
 //                     p.help-block If you plan on paying with card (so no PayPal) type here just your street address (So 12345 Palm Tree Ave.). Do not pass city/zip code or apt number. We do not store this information, but send it to the payment processor for fraud prevention.
-//                
+//
 //                 #payment-form
-//                 .text-center
-//                     button.btn.btn-default.btn-lg.btn-primary(type='submit' id='submitButton') Submit
-//    
+//
 //         .modal.fade(tabindex='-1', role='dialog' id='waiver')
 //             .modal-dialog.modal-lg
 //                 .modal-content
@@ -261,7 +314,7 @@ export default function RegisterPage () {
 //                             | <strong>In completing this registration, I acknowledge and represent that</strong> I have read the foregoing Wavier of Liability and Hold Harmless Agreement, understand it and sign it voluntarily as my own free act and deed; no oral representations, statements, or inducements, apart from the foregoing written agreement, have been made; I am at least eighteen (18) years of age and fully competent; and I execute this Agreement for full, adequate and complete consideration fully intending to be bound by same.
 //                     .modal-footer
 //                         button.btn.btn-primary(type='button', data-dismiss='modal') Close
-//        
+//
 //     else
 //         .container.register: .row: .col-md-12
 //             h1 The Registration for #{locals.league.title} has closed
@@ -439,7 +492,7 @@ export default function RegisterPage () {
 //               <thead>
 //                 <tr>
 //                   <th>Field</th>
-//                   <th>Your Submission</th> 
+//                   <th>Your Submission</th>
 //                 </tr>
 //               </thead>
 //               <tbody>
@@ -456,7 +509,7 @@ export default function RegisterPage () {
 //                 <tr><td>Wanted to Captain</td><td>${wouldCaptain ? 'Yes' : 'No'}</td></tr>
 //                 <tr><td>Partner's Name</td><td>${partnerName}</td></tr>
 //                 <tr><td>Self-described skill level</td><td>${skillLevel}</td></tr>
-//                 <tr><td>Shirt Size</td><td>${shirtSize}</td></tr>          
+//                 <tr><td>Shirt Size</td><td>${shirtSize}</td></tr>
 //               </tbody>
 //             </table>
 //             <p><em>Organized by South Florida Ultimate Inc., a local non-for-profit and social recreational club organized for the exclusive purposes of <strong>playing</strong>, <strong>promoting</strong>, and <strong>enjoying</strong> the sport known as Ultimate or Ultimate Frisbee.</em></p>
@@ -480,7 +533,6 @@ export default function RegisterPage () {
 //   // Render the view
 //   view.render('register')
 // }
-
 
 //
 // (function ($) {

@@ -2,7 +2,7 @@ const storage = require('./file-storage-adapter')
 const { Text, Integer, Checkbox, File } = require('@keystonejs/fields')
 
 /**
- * Board Position Model
+ * Board Member Modal
  * ==============
  */
 const fields = {

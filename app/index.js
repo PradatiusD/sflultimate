@@ -5,26 +5,11 @@ const { PasswordAuthStrategy } = require('@keystonejs/auth-password')
 const { NextApp } = require('@keystonejs/app-next')
 const PROJECT_NAME = 'SFLUltimate'
 const keystone = require('./keystone')
+const contentListSchemas = require('./lists/index')
 
-const migratedLists = [
-  'BoardMember',
-  'BoardPosition',
-  'ClubTeam',
-  'Event',
-  'Game',
-  'League',
-  'Location',
-  'Player',
-  'PlayerGameStat',
-  'Team',
-  'Pickup',
-  'User'
-]
-
-for (const listName of migratedLists) {
-  const filePath = './lists/' + listName
-  const BoardMemberSchema = require(filePath)
-  keystone.createList(listName, BoardMemberSchema)
+for (const listName in contentListSchemas) {
+  const schema = contentListSchemas[listName]
+  keystone.createList(listName, schema)
 }
 
 const authStrategy = keystone.createAuthStrategy({
@@ -40,7 +25,13 @@ module.exports = {
   keystone,
   apps: [
     new GraphQLApp({
-      schemaName: 'public'
+      schemaName: 'public',
+      apollo: {
+        formatError: (err) => {
+          console.error(err)
+          return err
+        }
+      }
     }),
     new AdminUIApp({
       name: PROJECT_NAME,

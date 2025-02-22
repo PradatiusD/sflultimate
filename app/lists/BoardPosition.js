@@ -37,7 +37,7 @@ const fields = {
 module.exports = {
   fields,
   adminConfig: {
-    defaultColumns: 'title, description, commitment, assigned',
+    defaultColumns: 'title, description, commitment, assigned'
   },
   labelResolver: async (item) => {
     const itemResponse = await keystone.executeGraphQL({
