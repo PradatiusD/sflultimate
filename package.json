@@ -56,7 +56,8 @@
         "create-tables": "cross-env keystone create-tables",
         "cypress": "npx cypress open",
         "restore": "grunt restore",
-        "build-schema": "get-graphql-schema http://localhost:3000/admin/api/  > app/schema.graphql"
+        "build-schema": "get-graphql-schema http://localhost:3000/admin/api/  > app/schema.graphql",
+        "deploy": "git push heroku keystone-v5-migration:main"
     },
     "private": true
 }

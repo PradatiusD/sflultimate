@@ -7475,4 +7475,40 @@ button.close {
   color: #dbc3e5;
 }
 
+.key-takeaway {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+@media screen and (min-width: 768px) {
+  .key-takeaway div {
+    width: 50%;
+  }
+}
+.key-takeaway div {
+  margin: 1rem;
+}
+.key-takeaway.left-layout {
+  justify-content: left;
+}
+.key-takeaway.right-layout {
+  justify-content: right;
+}
+.key-takeaway h2 {
+  text-transform: uppercase;
+  font-size: 5rem;
+  text-shadow: 0px 0px 15px black;
+}
+.key-takeaway p {
+  background: rgba(0, 0, 0, 0.6);
+  text-shadow: 0px 0px 20px black;
+  padding: 1rem;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
 /*# sourceMappingURL=site.css.map */
