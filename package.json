@@ -2,7 +2,7 @@
   "name": "sflultimate",
   "version": "3.0.0",
   "engines": {
-    "node": ">=16.0.0"
+    "node": "16.20.2"
   },
   "dependencies": {
     "@keystonejs/auth-password": "^6.1.2",
