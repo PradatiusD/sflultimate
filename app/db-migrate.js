@@ -52,7 +52,10 @@
   collections.forEach(function (collectionStr) {
     const collection = db[collectionStr]
     print(collectionStr)
-    collection.find({}).toArray().forEach(function (record) {
+    collection.find({}).toArray().forEach(function (record, recordIndex) {
+      if (recordIndex % 10 === 0) {
+        print(collectionStr + '->' + recordIndex)
+      }
       Object.keys(record).forEach(function (key) {
         if (key === '_id') {
           return
@@ -78,7 +81,7 @@
         relationship('BoardPosition', 'assigned', 'BoardMember', record)
       } else if (collectionStr === 'players') {
         relationship('Player', 'leagues', 'League', record)
-        if (record.preferredPositions) {
+        if (Array.isArray(record.preferredPositions)) {
           record.preferredPositions = record.preferredPositions.join(', ')
         }
       }
