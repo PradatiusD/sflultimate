@@ -2,8 +2,6 @@
   "name": "sflultimate",
   "version": "3.0.0",
   "engines": {
-    "node": "v14.17.3",
-    "npm": "9.2.0"
   },
   "dependencies": {
     "@keystonejs/auth-password": "^6.1.2",

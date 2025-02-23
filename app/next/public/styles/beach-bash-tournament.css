@@ -1,53 +1,67 @@
 .bash-video-background {
-  position: relative; }
+  position: relative;
+}
+.bash-video-background video {
+  position: absolute;
+  top: 0;
+  left: -50%;
+}
+@media screen and (min-width: 855px) {
   .bash-video-background video {
-    position: absolute;
-    top: 0;
-    left: -50%; }
-    @media screen and (min-width: 855px) {
-      .bash-video-background video {
-        left: 0;
-        width: 100%; } }
+    left: 0;
+    width: 100%;
+  }
+}
 
 .free-agent-btn {
-  margin-left: 1em; }
+  margin-left: 1em;
+}
 
 .site-header {
-  display: none; }
+  display: none;
+}
 
 .beach-bash-hero-container {
   position: relative;
-  padding-top: 1em; }
-  .beach-bash-hero-container .jumbotron {
-    background: none;
-    color: white; }
-  .beach-bash-hero-container img {
-    max-width: 80%; }
-  .beach-bash-hero-container .tagline {
-    background: rgba(0, 0, 0, 0.44);
-    padding: 1em;
-    margin: 1em auto;
-    max-width: 700px;
-    font-size: 1.25em; }
+  padding-top: 1em;
+}
+.beach-bash-hero-container .jumbotron {
+  background: none;
+  color: white;
+}
+.beach-bash-hero-container img {
+  max-width: 80%;
+}
+.beach-bash-hero-container .tagline {
+  background: rgba(0, 0, 0, 0.44);
+  padding: 1em;
+  margin: 1em auto;
+  max-width: 700px;
+  font-size: 1.25em;
+}
 
 .beach-bash-content-container {
   background: white;
   position: relative;
   z-index: 1;
-  padding-top: 3em; }
+  padding-top: 3em;
+}
 
 .btn-primary, .credits {
   background-color: #90c4cf;
-  border-color: #1c515d; }
+  border-color: #1c515d;
+}
 
 .btn-primary:hover {
   background-color: #2f5962;
-  border-color: #0c2b33; }
+  border-color: #0c2b33;
+}
 
 .site-footer a {
-  color: #1c515d; }
-
+  color: #1c515d;
+}
 .site-footer .fa {
-  background-color: #90c4cf; }
+  background-color: #90c4cf;
+}
 
 /*# sourceMappingURL=beach-bash-tournament.css.map */
