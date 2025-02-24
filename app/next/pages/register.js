@@ -63,8 +63,12 @@ export const getServerSideProps = async () => {
           id
           title
           description
+          earlyRegistrationStart
+          earlyRegistrationEnd
           registrationStart
           registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
           pricingEarlyAdult
           pricingEarlyStudent
           pricingRegularAdult

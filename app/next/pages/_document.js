@@ -1,36 +1,10 @@
 import NextDocument, { Html, Head, Main, NextScript } from 'next/document'
-import GraphqlClient from '../lib/graphql-client'
-import { gql } from '@apollo/client'
-import { HeaderNavigation, FooterNavigation } from '../components/Navigation'
-
-/**
- *
- * @param {Date} regStart
- * @param {Date} regEnd
- * @return {boolean}
- */
-function isValidRegPeriod (regStart, regEnd) {
-  const now = Date.now()
-  return !!(regStart && regEnd && regStart.getTime() < now && now < regEnd.getTime())
-}
+import { FooterNavigation } from '../components/Navigation'
 
 class SFLUltimateDocument extends NextDocument {
   static async getInitialProps (context) {
     const initialProps = await NextDocument.getInitialProps(context)
     return { ...initialProps, pathname: context.pathname }
-  }
-
-  static async getServerSideProps (context) {
-    const results = await GraphqlClient.query({
-      query: gql`
-        query {
-          allLeagues(where: {isActive: true}) {
-            title
-          }
-        }`
-    })
-    const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-    return { props: { league } }
   }
 
   render (props) {
@@ -77,10 +51,9 @@ class SFLUltimateDocument extends NextDocument {
           </noscript>
         </Head>
         <body>
-          <HeaderNavigation section={section} />
           <Main/>
           <NextScript/>
-          <FooterNavigation section={section} />
+          <FooterNavigation />
           <div id="fb-root"></div>
           <div id="fb-customer-chat" className="fb-customer-chat"></div>
 

@@ -2,6 +2,8 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import { gql } from '@apollo/client'
 import GraphqlClient from "../lib/graphql-client";
+import { addLeagueStatus } from '../lib/payment-utils'
+import {FooterNavigation, HeaderNavigation} from "../components/Navigation";
 
 // const { getStandings } = require('./../stat-utils')
 //
@@ -23,10 +25,17 @@ export const getServerSideProps = (async () => {
       query {
         allLeagues(where: {isActive: true}) {
           title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
         }
       }`,
   });
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
   return { props: {league}}
 })
 
@@ -126,7 +135,7 @@ export default function Homepage (props) {
   ]
 
   return (
-    <div>
+    <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
@@ -141,8 +150,8 @@ export default function Homepage (props) {
         <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
         <link rel="stylesheet" href="/styles/site.css"/>
-
       </Head>
+      <HeaderNavigation league={league} />
       {/*<div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}>*/}
       {/*<div className="video-full-screen">*/}
       {/*  <video autoPlay={true} muted={true} loop={true}>*/}
@@ -265,6 +274,6 @@ export default function Homepage (props) {
           }
         </div>
       </section>
-    </div>
+    </>
   )
 }

@@ -1,34 +1,47 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from "../lib/graphql-client";
+import {addLeagueStatus} from "../lib/payment-utils";
+import {HeaderNavigation} from "../components/Navigation";
 export const getServerSideProps = (async () => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
-          allPickups(where: {isActive: true}) {
-            id
-            title
-            day
-            time
-            description
-            locationName
-            locationType
-            locationAddressStreet
-            locationAddressCity
-            locationAddressState
-            locationAddressZipCode
-            contactWhatsapp
-            contactUrl
-            contactEmail
-            contactPhone
-          }
+            allLeagues(where:{isActive: true}) {
+              title
+              earlyRegistrationStart
+              earlyRegistrationEnd
+              registrationStart
+              registrationEnd
+              lateRegistrationStart
+              lateRegistrationEnd
+            }
+            allPickups(where: {isActive: true}) {
+              id
+              title
+              day
+              time
+              description
+              locationName
+              locationType
+              locationAddressStreet
+              locationAddressCity
+              locationAddressState
+              locationAddressZipCode
+              contactWhatsapp
+              contactUrl
+              contactEmail
+              contactPhone
+            }
         }`,
   });
+  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
   const pickups = results.data.allPickups
-  return { props: {pickups}}
+  return { props: {pickups, league}}
 })
 export default function PickupsPage (props) {
-  const {pickups} = props
+  const {pickups, league} = props
   return (
     <>
       <Head>
@@ -37,6 +50,7 @@ export default function PickupsPage (props) {
         <meta property="og:description" content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!" />
         <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg" />
       </Head>
+      <HeaderNavigation league={league} />
 
       <div className="container pickup-listing-page">
         <section>

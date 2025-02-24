@@ -1,10 +1,22 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
+import {addLeagueStatus} from '../lib/payment-utils'
+import {HeaderNavigation} from "../components/Navigation";
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
+        allLeagues(where:{isActive: true}) {
+          id
+          title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
+        }
         allClubTeams {
           id
           name
@@ -46,11 +58,13 @@ export const getServerSideProps = async () => {
     return team
   })
   
-  return { props: { clubTeams } }
+  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
+  return { props: { clubTeams, league } }
 }
 
 export default function ClubTeamsPage (props) {
-  const {clubTeams} = props
+  const {clubTeams, league} = props
   return (
     <>
       <Head>
@@ -58,6 +72,7 @@ export default function ClubTeamsPage (props) {
         <meta property="og:url" content="https://www.sflultimate.com/club-teams" />
         <meta property="og:description" content="See what teams are local to the South Florida area!" />
       </Head>
+      <HeaderNavigation league={league} />
       <div className="container">
         <h1>Club Teams</h1>
         <p className="lead">South Florida has several local club teams that compete at a state and national level.</p>

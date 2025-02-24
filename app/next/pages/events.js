@@ -1,11 +1,23 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from "../lib/graphql-client";
+import {HeaderNavigation} from "../components/Navigation";
+import {addLeagueStatus} from "../lib/payment-utils";
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
+            allLeagues(where:{isActive: true}) {
+              id
+              title
+              earlyRegistrationStart
+              earlyRegistrationEnd
+              registrationStart
+              registrationEnd
+              lateRegistrationStart
+              lateRegistrationEnd
+            }
             allEvents {
               id
               image {
@@ -21,7 +33,10 @@ export const getServerSideProps = async () => {
             }
         }`
   })
-
+  
+  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
+  
   const events = results.data.allEvents.map(function (event) {
     event = JSON.parse(JSON.stringify(event))
     event.links = []
@@ -46,7 +61,7 @@ export const getServerSideProps = async () => {
     return event
   })
   
-  return { props: { events } }
+  return { props: { events, league } }
 }
 
 function EventItem (props) {
@@ -82,7 +97,7 @@ function EventItem (props) {
 }
 
 export default function EventsPage(props) {
-  const {events} = props
+  const {events, league} = props
   return (
     <>
       <Head>
@@ -90,6 +105,7 @@ export default function EventsPage(props) {
         <meta property="og:url" content="https://www.sflultimate.com/events"/>
         <meta property="og:description" content="See what events are local to the South Florida area!"/>
       </Head>
+      <HeaderNavigation league={league} />
       <div className="container">
         <h1>Calendar</h1>
         <iframe

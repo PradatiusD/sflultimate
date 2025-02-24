@@ -1,9 +1,30 @@
-import { useRouter } from 'next/router'
 // const { getStandings } = require('./../stat-utils')
 
+import GraphqlClient from '../../lib/graphql-client'
+import { gql } from '@apollo/client'
+import { HeaderNavigation } from '../../components/Navigation'
+import { addLeagueStatus } from '../../lib/payment-utils'
 export const getServerSideProps = async () => {
+  const results = await GraphqlClient.query({
+    query: gql`
+      query {
+        allLeagues(where:{isActive: true}) {
+          title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
+        }
+      }`
+  })
+  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
+
   return {
     props: {
+      league,
       game: {
         league: {}
       },
@@ -13,9 +34,10 @@ export const getServerSideProps = async () => {
 }
 
 export default function GamePage (props) {
-  const { game, preview, teams } = props
+  const { game, preview, teams, league } = props
   return (
-    <div>
+    <>
+      <HeaderNavigation league={league} />
       <div className="container">
         {preview ? (
           <p className="h1 text-center">Preview</p>
@@ -149,7 +171,7 @@ export default function GamePage (props) {
           ))}
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

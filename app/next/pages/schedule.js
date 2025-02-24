@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
+import { addLeagueStatus } from '../lib/payment-utils'
+import {HeaderNavigation} from "../components/Navigation"
 
 //   let games = await Game.model.find({
 //     league: res.locals.league._id
@@ -29,6 +31,12 @@ export const getServerSideProps = (async () => {
         allLeagues(where: {isActive: true}) {
           id
           title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
           finalsTournamentDescription
           finalsTournamentEndDate
           finalsTournamentStartDate
@@ -57,6 +65,7 @@ export const getServerSideProps = (async () => {
   const games = Array.from(results.data.allGames).sort((a, b) => {
     return new Date(a.scheduledTime).getTime() < new Date(b.scheduledTime).getTime()
   })
+  addLeagueStatus(league)
   return { props: {league, games}}
 })
 
@@ -72,6 +81,7 @@ export default function Schedule (props) {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
       </Head>
+      <HeaderNavigation league={league} />
       <div className="container">
         <div className="schedule">
           <section>

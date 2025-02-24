@@ -1,7 +1,9 @@
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
-import {buildPlayerUrl} from "../components/PlayerLink";
+import {buildPlayerUrl} from "../components/PlayerLink"
+import { addLeagueStatus } from '../lib/payment-utils'
+import {HeaderNavigation} from "../components/Navigation"
 
 //
 //   if (req.method === 'POST') {
@@ -37,6 +39,12 @@ export const getServerSideProps = async () => {
       query {
         allLeagues(where: {isActive: true}) {
           title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
         },
         allPlayerGameStats(where: {game: {league: {isActive: true}}}) {
           scores
@@ -63,6 +71,7 @@ export const getServerSideProps = async () => {
       }`
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
   const statsGroupedByPlayer = {}
   const awards = {Male: {}, Female: {}, Other: {}}
   const statKeysToCompare = ['assists', 'scores', 'defenses', 'overall']
@@ -88,7 +97,9 @@ export const getServerSideProps = async () => {
   }
   for (const team of results.data.allTeams) {
     for (const player of team.players) {
-      statsGroupedByPlayer[player.id].teamColor = team.color
+      if (statsGroupedByPlayer[player.id]) {
+        statsGroupedByPlayer[player.id].teamColor = team.color
+      }
     }
   }
   const players = JSON.parse(JSON.stringify(results.data.allPlayers)).map(function (player) {
@@ -178,6 +189,7 @@ export default function StatsPage (props) {
          
         </style>
       </Head>
+      <HeaderNavigation league={league} />
       <div className="container">
         <h1>{league.title} Stats</h1> 
         <h2>Leaderboard</h2>

@@ -1,11 +1,23 @@
 import Head from 'next/head'
 import GraphqlClient from "../lib/graphql-client";
 import {gql} from "@apollo/client";
+import {addLeagueStatus} from "../lib/payment-utils";
+import {HeaderNavigation} from "../components/Navigation";
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
+            allLeagues(where:{isActive: true}) {
+              id
+              title
+              earlyRegistrationStart
+              earlyRegistrationEnd
+              registrationStart
+              registrationEnd
+              lateRegistrationStart
+              lateRegistrationEnd
+            }
             allBoardMembers {
               id
               firstName
@@ -29,16 +41,20 @@ export const getServerSideProps = async () => {
         }`
   })
   
+  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
+  
   return { 
     props: { 
       boardMembers: results.data.allBoardMembers,
-      positions: JSON.parse(JSON.stringify(results.data.allBoardPositions))
+      positions: JSON.parse(JSON.stringify(results.data.allBoardPositions)),
+      league
     }
   }
 }
 
 export default function BoardPage (props) {
-  const {positions, boardMembers} = props
+  const {positions, boardMembers, league} = props
 
   const links = [
     {
@@ -54,10 +70,11 @@ export default function BoardPage (props) {
   return (
     <>
       <Head>
-        <meta property = "og:title"        content="South Florida Board" />
-        <meta property="og:url"          content="https://www.sflultimate.com/board" />
-        <meta property="og:description"  content="Learn how to become involved in your South Florida Ultimate board!" />
+        <meta property = "og:title" content="South Florida Board" />
+        <meta property="og:url" content="https://www.sflultimate.com/board" />
+        <meta property="og:description" content="Learn how to become involved in your South Florida Ultimate board!" />
       </Head>
+      <HeaderNavigation league={league} />
       <div className="container">
         <h1>Board</h1>
         <h2>What We Need</h2>

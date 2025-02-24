@@ -1,5 +1,6 @@
 import GraphqlClient from '../../lib/graphql-client'
 import { gql } from '@apollo/client'
+import {HeaderNavigation} from "../../components/Navigation";
 
 function getMongoTimestamp (idString) {
   const timestamp = idString.substring(0, 8)
@@ -13,6 +14,16 @@ export const getServerSideProps = async (context) => {
   const playerResults = await GraphqlClient.query({
     query: gql`
       query ($firstName: String!, $lastName: String!) {
+        allLeagues(where:{isActive: true}) {
+          id
+          title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
+        }
         allPlayers(where: {firstName_contains_i: $firstName, lastName_contains_i: $lastName}) {
           id
           firstName
@@ -130,18 +141,21 @@ export const getServerSideProps = async (context) => {
   })
 
   const player = playerResults.data.allPlayers[0]
+  const league = JSON.parse(JSON.stringify(playerResults.data.allLeagues[0]))
   return {
     props: {
       player: player,
-      leagueGameStatHistory: leagues
+      leagueGameStatHistory: leagues,
+      league: league
     }
   }
 }
 
 export default function PlayerPage (props) {
-  const { player, leagueGameStatHistory } = props
+  const { player, leagueGameStatHistory, league } = props
   return (
     <div>
+      <HeaderNavigation league={league} />
       <div className="container">
         <h1>{player.firstName} {player.lastName} Profile</h1>
         {leagueGameStatHistory.map((league, index) => (

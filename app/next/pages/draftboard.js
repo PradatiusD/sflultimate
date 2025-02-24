@@ -1,7 +1,9 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
+import {addLeagueStatus} from '../lib/payment-utils'
 import { useState } from 'react'
 import { PlayerLink } from '../components/PlayerLink'
+import {HeaderNavigation} from "../components/Navigation";
 
 export async function getServerSideProps (context) {
   const results = await GraphqlClient.query({
@@ -10,6 +12,12 @@ export async function getServerSideProps (context) {
         allLeagues(where:{isActive: true}) {
           id
           title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
         }
         allTeams(where: {league: {isActive: true}}) {
           id,
@@ -25,6 +33,7 @@ export async function getServerSideProps (context) {
   })
   const teams = results.data.allTeams
   const league = results.data.allLeagues[0]
+  addLeagueStatus(league)
 
   const playersApi = await GraphqlClient.query({
     query: gql`
@@ -312,6 +321,7 @@ export default function Draftboard (props) {
 
   return (
     <>
+      <HeaderNavigation league={league} />
       <div className="container-fluid">
         <h1>{league?.title} Draftboard</h1>
         <div id="draftboard">

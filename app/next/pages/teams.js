@@ -1,12 +1,20 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
+import { addLeagueStatus } from '../lib/payment-utils'
+import {FooterNavigation, HeaderNavigation} from "../components/Navigation";
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
         allLeagues(where:{isActive: true}) {
           title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
         }
         allTeams(where: {league: {isActive: true}}) {
           id,
@@ -29,12 +37,12 @@ export const getServerSideProps = async () => {
   })
   const league = results.data.allLeagues[0]
   const teams = results.data.allTeams
+  addLeagueStatus(league)
   return { props: { league, teams } }
 }
 
 export default function LeagueTeamsPage (props) {
   const {league, teams} = props
-  console.log(props)
   return (
     <>
       <Head>
@@ -45,6 +53,7 @@ export default function LeagueTeamsPage (props) {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
       </Head>
+      <HeaderNavigation league={league} />
       <div className="container">
         <h1>{league.title} Teams</h1>
         <div className="team-list">

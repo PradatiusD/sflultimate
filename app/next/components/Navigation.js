@@ -1,24 +1,4 @@
-
 let navLinks = []
-// const league = {}
-// if (league.tmp) {
-//   league.isEarlyRegistrationPeriod = isValidRegPeriod(league.earlyRegistrationStart, league.earlyRegistrationEnd)
-//   league.isRegistrationPeriod = isValidRegPeriod(league.registrationStart, league.registrationEnd)
-//   league.isLateRegistrationPeriod = isValidRegPeriod(league.lateRegistrationStart, league.lateRegistrationEnd) // || (req.query.force_form === 'true'
-//   league.canRegister = league.isEarlyRegistrationPeriod || league.isRegistrationPeriod || league.isLateRegistrationPeriod
-//
-//   if (league.canRegister) {
-//     navLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })
-//   }
-//
-//   if (!league.isRegistrationPeriod || league.isLateRegistrationPeriod) {
-//     navLinks = navLinks.concat([
-//       { label: 'Teams', key: 'teams', href: '/teams' },
-//       { label: 'Schedule', key: 'schedule', href: '/schedule' },
-//       { label: 'Stats', key: 'stats', href: '/stats' }
-//     ])
-//   }
-// }
 
 const evergreenLinks = [
   { label: 'Local Pickups', key: 'community', href: '/pickups' },
@@ -36,7 +16,23 @@ const footerLinks = [
 ].concat(evergreenLinks)
 
 function HeaderNavigation (props) {
-  const { section } = props
+  const { section, league } = props
+
+  let headerNavLinks = navLinks.slice()
+
+  if (league) {
+    if (league.canRegister) {
+      headerNavLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })
+    }
+
+    if (!league.isRegistrationPeriod || league.isLateRegistrationPeriod) {
+      headerNavLinks = headerNavLinks.concat([
+        { label: 'Teams', key: 'teams', href: '/teams' },
+        { label: 'Schedule', key: 'schedule', href: '/schedule' },
+        { label: 'Stats', key: 'stats', href: '/stats' }
+      ])
+    }
+  }
 
   return (
     <header id="header" className="site-header">
@@ -55,7 +51,7 @@ function HeaderNavigation (props) {
             <span className="icon-bar"></span>
             <div className="collapse navbar-collapse">
               <ul className="nav navbar-nav navbar-left">
-                {navLinks.map((link) => {
+                {headerNavLinks.map((link) => {
                   return (
                     <li key={link.key} className={section === link.key ? 'active' : null}>
                       <a href={link.href}>{link.label}</a>
