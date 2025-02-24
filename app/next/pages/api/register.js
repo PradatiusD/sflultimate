@@ -1,3 +1,5 @@
+import GraphqlClient from '../../lib/graphql-client'
+import { addLeagueStatus } from '../../lib/payment-utils'
 const nodemailer = require('nodemailer')
 const { gql } = require('@apollo/client')
 const GraphQlClient = require('./../../lib/graphql-client')
@@ -19,9 +21,19 @@ const CREATE_PLAYER_MUTATION = gql`
     }
   }
 `
-async function processPayment (payload) {
+async function processPayment (payload, league) {
+  let amount = 0
+  const registrationLevel = payload.registrationLevel
+  if (league.isEarlyRegistrationPeriod) {
+    amount = registrationLevel === 'Student' ? league.pricingEarlyStudent : league.pricingEarlyAdult
+  } else if (league.isRegistrationPeriod) {
+    amount = registrationLevel === 'Student' ? league.pricingRegularStudent : league.pricingRegularAdult
+  } else if (league.isLateRegistrationPeriod) {
+    amount = registrationLevel === 'Student' ? league.pricingLateStudent : league.pricingLateAdult
+  }
+
   const purchase = {
-    amount: 10,
+    amount: amount,
     paymentMethodNonce: payload.paymentMethodNonce,
     options: {
       submitForSettlement: true
@@ -75,18 +87,14 @@ function createPlayerRecord (payload) {
   })
 }
 
-function SendEmail (payload) {
-  const locals = {
-    league: {}
-  }
-
+function SendEmail (payload, league) {
   const emailSendParams = {
     from: 'South Florida Ultimate" <sflultimate@gmail.com>',
     to: payload.email,
-    subject: 'Registration Confirmation for ' + locals.league.title,
+    subject: 'Registration Confirmation for ' + league.title,
     html: `
             <p>Thank you for your payment!</p>
-            <p>Below you can find a receipt for your registration for ${locals.league.title}.</p>
+            <p>Below you can find a receipt for your registration for ${league.title}.</p>
             <table style="border: 1px solid #dadada; padding: 4px;">
               <thead>
                 <tr>
@@ -138,6 +146,29 @@ export default async function handler (req, res) {
       throw new Error('Unauthorized transaction, we believe you are a bot.  Please contact sflultimate@gmail.com.')
     }
 
+    const results = await GraphqlClient.query({
+      query: gql`
+        query {
+          allLeagues(where: {isActive: true}) {
+            title
+            pricingEarlyAdult
+            pricingEarlyStudent
+            pricingRegularAdult
+            pricingRegularStudent
+            pricingLateAdult
+            pricingLateStudent
+            earlyRegistrationStart
+            earlyRegistrationEnd
+            registrationStart
+            registrationEnd
+            lateRegistrationStart
+            lateRegistrationEnd
+          }
+        }`
+    })
+    const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+    addLeagueStatus(league)
+
     const sanitizedPayload = {
       paymentMethodNonce: req.body.paymentMethodNonce,
       firstName: req.body.firstName,
@@ -165,9 +196,9 @@ export default async function handler (req, res) {
       sanitizedPayload.preferredPositions = []
     }
 
-    const paymentResult = await processPayment(sanitizedPayload)
+    const paymentResult = await processPayment(sanitizedPayload, league)
     const dbCreateResult = await createPlayerRecord(sanitizedPayload)
-    const emailResult = await SendEmail({ ...sanitizedPayload, amount: paymentResult.amount })
+    const emailResult = await SendEmail({ ...sanitizedPayload, amount: paymentResult.amount }, league)
 
     res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
   } catch (e) {

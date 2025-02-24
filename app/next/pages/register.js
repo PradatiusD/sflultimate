@@ -4,6 +4,7 @@ import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
 import PaymentUtils from '../lib/payment-utils'
 import {useEffect} from "react";
+import {HeaderNavigation} from "../components/Navigation";
 
 function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
   return <>
@@ -149,6 +150,7 @@ export default function RegisterPage (props) {
       <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
       <script dangerouslySetInnerHTML={{__html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';`}}></script>
     </Head>
+    <HeaderNavigation league={activeLeague} />
     <div className="container register">
       <h1>{activeLeague.title} Sign Up</h1>
       <h3>Registration</h3>
@@ -249,7 +251,7 @@ export default function RegisterPage (props) {
             />
 
             <div id="playerPositions">
-              <label for="skillLevel">Preferred Player Positions</label>
+              <label htmlFor="skillLevel">Preferred Player Positions</label>
               <p class="help-block">This is to help captains draft, especially in cases where we captains might not know you. Check all that apply. You must pick one.</p>
               <div class="checkbox">
                 <label>
@@ -527,13 +529,7 @@ export default function RegisterPage (props) {
 //   PaymentUtils.setBaseRegistrationLocals(view, res)
 //
 //
-//     if (locals.league.isEarlyRegistrationPeriod) {
-//       amount = registrationLevel === 'Student' ? locals.fees.earlyStudent : locals.fees.earlyAdult
-//     } else if (locals.league.isRegistrationPeriod) {
-//       amount = registrationLevel === 'Student' ? locals.fees.regularStudent : locals.fees.regularAdult
-//     } else if (locals.league.isLateRegistrationPeriod) {
-//       amount = registrationLevel === 'Student' ? locals.fees.lateStudent : locals.fees.lateAdult
-//     }
+
 //       const newPlayerRecord = {
 //         leagues: [
 //           locals.league._id
