@@ -69,7 +69,6 @@ class PaymentUtils {
     league.isRegistrationPeriod = PaymentUtils.isValidRegPeriod(league.registrationStart, league.registrationEnd)
     league.isLateRegistrationPeriod = PaymentUtils.isValidRegPeriod(league.lateRegistrationStart, league.lateRegistrationEnd) // || (req.query.force_form === 'true'
     league.canRegister = league.isEarlyRegistrationPeriod || league.isRegistrationPeriod || league.isLateRegistrationPeriod
-    console.log(league)
   }
 
   /**

@@ -122,20 +122,19 @@ export default function RegisterPage (props) {
     })
 
   }, []);
-  
-  const adultPrice = activeLeague.pricingRegularAdult
-  const studentPrice = activeLeague.pricingRegularStudent
-  
-  // if locals.league.isEarlyRegistrationPeriod
-  //    option(value='Adult')="Adult - $" + fees.earlyAdult
-  //    option(value='Student')="Student - $" + fees.earlyStudent
-  // else if locals.league.isRegistrationPeriod
-  //    option(value='Adult')="Adult - $" + fees.regularAdult
-  //    option(value='Student')="Student - $" + fees.regularStudent
-  // else if locals.league.isLateRegistrationPeriod
-  //    option(value='Adult')="Adult - $" + fees.lateAdult
-  //    option(value='Student')="Student - $" + fees.lateStudent
 
+
+  let adultPrice, studentPrice
+  if (activeLeague.isEarlyRegistrationPeriod) {
+    studentPrice = activeLeague.pricingEarlyStudent
+    adultPrice = activeLeague.pricingEarlyAdult
+  } else if (activeLeague.isRegistrationPeriod) {
+    studentPrice = activeLeague.pricingRegularStudent
+    adultPrice = activeLeague.pricingRegularAdult
+  } else if (activeLeague.isLateRegistrationPeriod) {
+    studentPrice = league.pricingLateStudent
+    adultPrice = league.pricingLateAdult
+  }
 
   return <>
     <Head>
