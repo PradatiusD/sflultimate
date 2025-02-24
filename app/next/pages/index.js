@@ -5,8 +5,6 @@ import GraphqlClient from "../lib/graphql-client";
 
 // const { getStandings } = require('./../stat-utils')
 //
-//   const locals = res.locals
-//
 //   const currentLeague = res.locals.league ? res.locals.league : null
 //
 //   locals.standings = await getStandings({
