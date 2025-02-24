@@ -101,6 +101,7 @@ export default function EventsPage(props) {
   return (
     <>
       <Head>
+        <title>South Florida Events</title>
         <meta property="og:title" content="South Florida Events"/>
         <meta property="og:url" content="https://www.sflultimate.com/events"/>
         <meta property="og:description" content="See what events are local to the South Florida area!"/>

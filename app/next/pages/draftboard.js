@@ -1,9 +1,10 @@
 import { gql } from '@apollo/client'
+import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
-import {addLeagueStatus} from '../lib/payment-utils'
+import { addLeagueStatus } from '../lib/payment-utils'
 import { useState } from 'react'
 import { PlayerLink } from '../components/PlayerLink'
-import {HeaderNavigation} from "../components/Navigation";
+import { HeaderNavigation } from '../components/Navigation'
 
 export async function getServerSideProps (context) {
   const results = await GraphqlClient.query({
@@ -321,6 +322,9 @@ export default function Draftboard (props) {
 
   return (
     <>
+      <Head>
+        <title>{league?.title} Draftboard</title>
+      </Head>
       <HeaderNavigation league={league} />
       <div className="container-fluid">
         <h1>{league?.title} Draftboard</h1>
@@ -332,14 +336,14 @@ export default function Draftboard (props) {
                   <div className="col-md-4" key={index}>
                     <table className="table table-striped">
                       <thead>
-                        <tr>
-                          <th>{team.name} ({team.players.length})</th>
-                          <th>Actions</th>
-                        </tr>
+                      <tr>
+                        <th>{team.name} ({team.players.length})</th>
+                        <th>Actions</th>
+                      </tr>
                       </thead>
                       <tbody>
-                        {
-                          team.players.map((player, index) => {
+                      {
+                        team.players.map((player, index) => {
                             return (
                               <tr key={index}>
                                 <td>{player.firstName} {player.lastName} ({player.gender.charAt(0)})</td>
@@ -350,7 +354,7 @@ export default function Draftboard (props) {
                               </tr>
                             )
                           }
-                          )}
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -370,63 +374,63 @@ export default function Draftboard (props) {
 
           <table className="table table-hover table-striped">
             <thead>
-              <tr>
-                <th>Number</th>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Date Registered</th>
-                <th>Age</th>
-                <th>Shirt Size</th>
-                <th>Positions</th>
-                <th>Skill</th>
-                <th>Attendance</th>
-                <th>Will Attend Finals?</th>
-                <th>Partner</th>
-                <th>Comments</th>
-                <th>Would Captain?</th>
-                <th>Would Sponsor?</th>
-                {user && <th>Actions</th>}
-              </tr>
+            <tr>
+              <th>Number</th>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Date Registered</th>
+              <th>Age</th>
+              <th>Shirt Size</th>
+              <th>Positions</th>
+              <th>Skill</th>
+              <th>Attendance</th>
+              <th>Will Attend Finals?</th>
+              <th>Partner</th>
+              <th>Comments</th>
+              <th>Would Captain?</th>
+              <th>Would Sponsor?</th>
+              {user && <th>Actions</th>}
+            </tr>
             </thead>
             <tbody>
-              {players.map((player, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td><PlayerLink player={player} /></td>
-                    <td>{player.gender.charAt(0)}</td>
-                    <td>{formatDate(player.createdAt)}</td>
-                    <td>{player.age}</td>
-                    <td>{player.shirtSize}</td>
-                    <td>{player.preferredPositions}</td>
-                    <td>{player.skillLevel}</td>
-                    <td>{player.participation}</td>
-                    <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
-                    <td>{player.partnerName}</td>
-                    <td>
-                      <small className="badge"
-                        style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
-                    </td>
-                    <td>{player.wouldCaptain ? 'Yes' : ''}</td>
-                    <td>{player.wouldSponsor ? 'Yes' : ''}</td>
-                    <td>
-                      {user && !player.team && teams.map((team, index) => {
-                        return (
-                          <button
-                            key={index}
-                            className="btn btn-default"
-                            onClick={() => {
-                              modifyRoster(team, player, 'add')
-                            }}>
-                              Add To {team.name}
-                          </button>
-                        )
-                      })}
-                    </td>
-                  </tr>
-                )
-              })
-              }
+            {players.map((player, index) => {
+              return (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td><PlayerLink player={player} /></td>
+                  <td>{player.gender.charAt(0)}</td>
+                  <td>{formatDate(player.createdAt)}</td>
+                  <td>{player.age}</td>
+                  <td>{player.shirtSize}</td>
+                  <td>{player.preferredPositions}</td>
+                  <td>{player.skillLevel}</td>
+                  <td>{player.participation}</td>
+                  <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
+                  <td>{player.partnerName}</td>
+                  <td>
+                    <small className="badge"
+                           style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
+                  </td>
+                  <td>{player.wouldCaptain ? 'Yes' : ''}</td>
+                  <td>{player.wouldSponsor ? 'Yes' : ''}</td>
+                  <td>
+                    {user && !player.team && teams.map((team, index) => {
+                      return (
+                        <button
+                          key={index}
+                          className="btn btn-default"
+                          onClick={() => {
+                            modifyRoster(team, player, 'add')
+                          }}>
+                          Add To {team.name}
+                        </button>
+                      )
+                    })}
+                  </td>
+                </tr>
+              )
+            })
+            }
             </tbody>
           </table>
 
@@ -438,22 +442,22 @@ export default function Draftboard (props) {
                   <h4>{mapName}</h4>
                   <table className="table table-bordered table-striped">
                     <thead>
-                      <tr>
-                        {columnsForTotals[mapName].map((column, colIndex) => (
-                          <th key={colIndex}>{column}</th>
-                        ))}
-                        <th>Count</th>
-                      </tr>
+                    <tr>
+                      {columnsForTotals[mapName].map((column, colIndex) => (
+                        <th key={colIndex}>{column}</th>
+                      ))}
+                      <th>Count</th>
+                    </tr>
                     </thead>
                     <tbody>
-                      {Object.entries(totals[mapName]).map(([key, count], rowIndex) => (
-                        <tr key={rowIndex}>
-                          {key.split('|').map((columnValue, colIndex) => (
-                            <td key={colIndex}>{columnValue}</td>
-                          ))}
-                          <td>{count.toLocaleString()}</td>
-                        </tr>
-                      ))}
+                    {Object.entries(totals[mapName]).map(([key, count], rowIndex) => (
+                      <tr key={rowIndex}>
+                        {key.split('|').map((columnValue, colIndex) => (
+                          <td key={colIndex}>{columnValue}</td>
+                        ))}
+                        <td>{count.toLocaleString()}</td>
+                      </tr>
+                    ))}
                     </tbody>
                   </table>
                 </div>

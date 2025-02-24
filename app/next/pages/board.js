@@ -7,45 +7,45 @@ import {HeaderNavigation} from "../components/Navigation";
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
-          query {
-            allLeagues(where:{isActive: true}) {
-              id
-              title
-              earlyRegistrationStart
-              earlyRegistrationEnd
-              registrationStart
-              registrationEnd
-              lateRegistrationStart
-              lateRegistrationEnd
-            }
-            allBoardMembers {
-              id
-              firstName
-              lastName
-              image {
-                publicUrl
-              }
-              description
-              active
-            }
-            allBoardPositions {
-              id
-              title
-              description
-              active
-              assigned {
-                firstName
-                lastName
-              }
-            }
-        }`
+      query {
+        allLeagues(where:{isActive: true}) {
+          id
+          title
+          earlyRegistrationStart
+          earlyRegistrationEnd
+          registrationStart
+          registrationEnd
+          lateRegistrationStart
+          lateRegistrationEnd
+        }
+        allBoardMembers {
+          id
+          firstName
+          lastName
+          image {
+            publicUrl
+          }
+          description
+          active
+        }
+        allBoardPositions {
+          id
+          title
+          description
+          active
+          assigned {
+            firstName
+            lastName
+          }
+        }
+      }`
   })
-  
+
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
-  
-  return { 
-    props: { 
+
+  return {
+    props: {
       boardMembers: results.data.allBoardMembers,
       positions: JSON.parse(JSON.stringify(results.data.allBoardPositions)),
       league
@@ -70,6 +70,7 @@ export default function BoardPage (props) {
   return (
     <>
       <Head>
+        <title>South Florida Board</title>
         <meta property = "og:title" content="South Florida Board" />
         <meta property="og:url" content="https://www.sflultimate.com/board" />
         <meta property="og:description" content="Learn how to become involved in your South Florida Ultimate board!" />

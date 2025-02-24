@@ -88,7 +88,8 @@ export default function BeachBashTournament (props) {
   return (
     <>
       <Head>
-        <meta property="og:title" content="South Florida Ultimate Beach Bash 2023"/>
+        <title>South Florida Ultimate Beach Bash 2024</title>
+        <meta property="og:title" content="South Florida Ultimate Beach Bash 2024"/>
         <meta property="og:url" content="https://www.sflultimate.com/beach-bash-tournament"/>
         <meta property="og:image"
               content="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg"/>

@@ -45,10 +45,12 @@ export default function PickupsPage (props) {
   return (
     <>
       <Head>
-        <meta property="og:title" value="Local Broward, Palm Beach, & Miami-Dade County Pickups" />
-        <meta property="og:url" content="https://www.sflultimate.com/pickups" />
-        <meta property="og:description" content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!" />
-        <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg" />
+        <title>Local Broward, Palm Beach, & Miami-Dade County Pickups</title>
+        <meta property="og:title" value="Local Broward, Palm Beach, & Miami-Dade County Pickups"/>
+        <meta property="og:url" content="https://www.sflultimate.com/pickups"/>
+        <meta property="og:description"
+              content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!"/>
+        <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
       </Head>
       <HeaderNavigation league={league} />
 

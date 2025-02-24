@@ -138,6 +138,7 @@ export default function RegisterPage (props) {
 
   return <>
     <Head>
+      <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
       <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
       <meta property="og:url" content="https://www.sflultimate.com/register"/>
       <meta property="og:description" content={activeLeague.finalsTournamentDescription || ''}/>

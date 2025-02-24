@@ -46,14 +46,15 @@ export default function LeagueTeamsPage (props) {
   return (
     <>
       <Head>
-        <meta property="og:title" content="League Teams" />
-        <meta property="og:url" content="https://www.sflultimate.com/teams" />
-        <meta property="og:description" content={"Find out who is on your team for " + league.title} />
-        <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <title>League Teams</title>
+        <meta property="og:title" content="League Teams"/>
+        <meta property="og:url" content="https://www.sflultimate.com/teams"/>
+        <meta property="og:description" content={"Find out who is on your team for " + league.title}/>
+        <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg"/>
+        <meta property="og:image:width" content="1200"/>
+        <meta property="og:image:height" content="630"/>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation league={league}/>
       <div className="container">
         <h1>{league.title} Teams</h1>
         <div className="team-list">

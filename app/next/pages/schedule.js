@@ -74,7 +74,8 @@ export default function Schedule (props) {
   return (
     <>
       <Head>
-        <meta property="og:title" content="Spring League Schedule" />
+        <title>{league.title + " Schedule"}</title>
+        <meta property="og:title" content={league.title + " Schedule"} />
         <meta property="og:url" content="https://www.sflultimate.com/schedule" />
         <meta property="og:description" content={'Discover the games schedule for ' + league.title} />
         <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/schedule.jpg" />

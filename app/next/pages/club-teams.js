@@ -68,6 +68,7 @@ export default function ClubTeamsPage (props) {
   return (
     <>
       <Head>
+        <title>South Florida Club Teams</title>
         <meta property="og:title" content="South Florida Club Teams" />
         <meta property="og:url" content="https://www.sflultimate.com/club-teams" />
         <meta property="og:description" content="See what teams are local to the South Florida area!" />
