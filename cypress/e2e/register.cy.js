@@ -1,6 +1,7 @@
 const getIframeDocument = (selector) => {
   return cy
     .get(selector)
+    .get('iframe')
     .its('0.contentDocument').should('exist')
 }
 
@@ -12,7 +13,7 @@ const getIframeBody = (selector) => {
 
 async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.viewport('iphone-x')
-  const testUrl = 'http://localhost:5000/register'
+  const testUrl = 'http://localhost:3000/register'
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
@@ -55,10 +56,21 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   }
 
   cy.get('#streetAddress').type('123 Test Way')
-  getIframeBody('#braintree-dropin-frame').find('#credit-card-number').type(cardNumber || '4111 1111 1111 1111')
-  getIframeBody('#braintree-dropin-frame').find('#expiration').type(expirationDate || '02 25')
-  getIframeBody('#braintree-dropin-frame').find('#cvv').type('123')
-  getIframeBody('#braintree-dropin-frame').find('#postal-code').type('12345')
+  cy.iframe('#braintree-hosted-field-number')
+    .find('#credit-card-number')
+    .type(cardNumber || '4111 1111 1111 1111')
+
+  cy.iframe('#braintree-hosted-field-expirationDate')
+    .find('#expiration').type(expirationDate || '02 26')
+
+  cy.iframe('#braintree-hosted-field-cvv')
+    .find('#cvv')
+    .type('123')
+
+  cy.iframe('#braintree-hosted-field-postalCode')
+    .find('#postal-code')
+    .type('12345')
+
   cy.get('#submitButton').click()
 }
 

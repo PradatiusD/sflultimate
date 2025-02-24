@@ -9,21 +9,34 @@ function FormInput ({ label, type, name, placeholder, required, helpText, onChan
   return <>
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
-      <input
-        id={name}
-        className="input-lg form-control"
-        type={type}
-        name={name}
-        placeholder={placeholder || ''}
-        required={required}
-        onChange={onChange}
-      />
+      {
+        type === 'textarea' ? (
+          <textarea
+            id={name}
+            className="input-lg form-control"
+            name={name}
+            placeholder={placeholder || ''}
+            required={required}
+            onChange={onChange}
+            rows={3}
+          />
+        ) : <input
+          id={name}
+          className="input-lg form-control"
+          type={type}
+          name={name}
+          placeholder={placeholder || ''}
+          required={required}
+          onChange={onChange}
+        />
+      }
+
       <p className="help-block">{helpText}</p>
     </div>
   </>
 }
 
-function FormSelect ({ label, name, options, required, helpText, onChange }) {
+function FormSelect({label, name, options, required, helpText, onChange}) {
   return <>
     <div className="form-group">
       <label htmlFor={name}>{label}</label>
@@ -95,6 +108,13 @@ export default function RegisterPage (props) {
         });
       })
     });
+
+    window.grecaptcha.ready(function () {
+      window.grecaptcha.execute('6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w', { action: 'register' }).then(function (token) {
+        window.document.querySelector('#recaptcha').value = token
+      })
+    })
+
   }, []);
   
   const adultPrice = activeLeague.pricingRegularAdult
@@ -121,7 +141,6 @@ export default function RegisterPage (props) {
           <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
         )
       }
-
       <script src="https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js"/>
       <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
       <script dangerouslySetInnerHTML={{__html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';`}}></script>
@@ -140,9 +159,8 @@ export default function RegisterPage (props) {
         <div className="col-md-12">
           <form id="registration" method="POST" action="/api/register">
             <input type="hidden" name="league" value={activeLeague.id}/>
-            <input type="hidden" name="payment_method_nonce" id="nonce"/>
-
-            <pre>{JSON.stringify(player)}</pre>
+            <input type="hidden" name="paymentMethodNonce" id="nonce"/>
+            <input type="hidden" name="recaptchaToken" id="recaptcha"/>
             <div className="row">
               <div className="col-md-6">
                 <FormInput
@@ -226,6 +244,44 @@ export default function RegisterPage (props) {
               onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
             />
 
+            <div id="playerPositions">
+              <label for="skillLevel">Preferred Player Positions</label>
+              <p class="help-block">This is to help captains draft, especially in cases where we captains might not know you. Check all that apply. You must pick one.</p>
+              <div class="checkbox">
+                <label>
+                  <input id="playerPositionHandler" type="checkbox" name="preferredPositions" value="handler"/>
+                    <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around the field in the wind or against the zone.
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input id="playerPositionCutter" type="checkbox" name="preferredPositions" value="cutter"/>
+                    <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or cutting deep for a big throw.
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input id="playerPositionHybrid" type="checkbox" name="preferredPositions" value="hybrid"/>
+                  <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on either depending on what the team needs.
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input id="playerPositionDefense" type="checkbox" name="preferredPositions" value="defense"/>
+                  <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great cutters/handlers.
+                </label>
+              </div>
+              <div class="alert alert-danger" id="playerPositionError">Please pick <strong>at least one</strong> of the above.</div>
+            </div>
+
+
+            <div>
+              <label htmlFor="willAttendFinals">Finals attendance</label>
+              <div className="checkbox">
+                <label htmlFor="willAttendFinals"><input id="willAttendFinals" type="checkbox" name="willAttendFinals"/> I expect to be able to attend finals.</label>
+              </div>
+            </div>
+
             <FormInput
               label="Partner Name"
               id="partnerName"
@@ -233,6 +289,36 @@ export default function RegisterPage (props) {
               helpText={'Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can\'t guarantee this.'}
               onChange={(e) => setPlayer({...player, partnerName: e.target.value})}
             />
+            
+            <FormInput
+              label="Comments"
+              id="comments"
+              name="comments"
+              type="textarea"
+              helpText={'Type here any additional comments you may have (if you can\'t attend certain weeks, really don\'t want to play with a specific person, or want to give captains some idea of who you are go ahead).  The captains and organizers will use this information during the player draft.'}/>
+            
+            <FormSelect
+              label="Would you like to be a captain or co-captain?"
+              id="wouldCaptain"
+              name="wouldCaptain"
+              options={[
+                {value: 'No', label: 'No'},
+                {value: 'Yes', label: 'Yes'}
+              ]}
+              helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
+              />
+
+
+            <h3>General Waiver</h3>
+            <div className="checkbox">
+              <div className="checkbox">
+                <label htmlFor="termsConditions">
+                  <input type="checkbox" id="termsConditions" name="termsConditions" required/>
+                  I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
+                </label>
+              </div>
+            </div>
+
 
             <FormSelect
               label="Registration Type"
@@ -243,6 +329,69 @@ export default function RegisterPage (props) {
                 {value: 'Student', label: `Student - $${studentPrice}`}
               ]}
               onChange={(e) => setPlayer({...player, registrationLevel: e.target.value})}
+            />
+
+            {
+              activeLeague.isLateRegistrationPeriod ? (
+                <div>
+                  <h3>Late Registration</h3>
+                  <div className="checkbox">
+                    <label htmlFor="understandsLateFee"><input id="understandsLateFee" name="understandsLateFee" type="checkbox"/>I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me.</label>
+                  </div>
+                </div>
+              ) :
+                (
+                  <div id="no-understandsLateFee"/>
+                )
+            }
+
+            {
+              activeLeague.requestSponsorship ? (
+                  <div>
+                    <h3>Sponsorship</h3>
+                    <div className="checkbox">
+                      <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
+                    </div>
+                  </div>
+                ) :
+                (
+                  <div id="no-requestSponsorship"/>
+                )
+            }
+
+            <h3>SFLUltimate Player Code of Conduct</h3>
+            <div class="checkbox">
+              <label>
+                <input id="codeOfConduct1" type="checkbox" required />
+                  I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment.
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input id="codeOfConduct2" type="checkbox" required />
+                  I will facilitate the growth of the sport through mentorship and coaching of novice players.
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input id="codeOfConduct3" type="checkbox" required/>
+                  I will improve my skills in a safe and supportive environment, including avoiding dangerous plays.
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input id="codeOfConduct4" type="checkbox" required />
+                  I will take this as an opportunity to make new friends and to get inspired to join club teams.
+              </label>
+            </div>
+
+
+            <h3>Payment Information</h3>
+            <FormInput
+              label="Street Address"
+              id="streetAddress"
+              name="streetAddress"
+              helpText="If you plan on paying with card (so no PayPal) type here just your street address (So 12345 Palm Tree Ave.). Do not pass city/zip code or apt number. We do not store this information, but send it to the payment processor for fraud prevention."
             />
 
             <div id="payment-form"></div>
@@ -258,43 +407,19 @@ export default function RegisterPage (props) {
   </>
 }
 
-//
 //     if locals.league.canRegister
 //             if err
 //                 br
 //                 .alert.alert-danger
 //                     strong Error:
 //                     span=err
-//             br
-//             br
-//
-//             br
+
 //
 //             if locals.league.lateRegistrationStart && locals.league.lateRegistrationEnd
 //               .alert.alert-info
 //                | Late registration (at a $#{locals.fees.lateAdult} fee for adults, $#{locals.fees.lateStudent} for students, as space permits) starts
 //                | #{formatDate(locals.league.lateRegistrationStart)} until #{formatDate(locals.league.lateRegistrationEnd)} at #{formatTime(locals.league.lateRegistrationEnd)}. This will not include a jersey.
 //
-
-//                 div#playerPositions
-//                     label(for="skillLevel") Preferred Player Positions
-//                     p.help-block This is to help captains draft, especially in cases where we captains might not know you.  Check all that apply.  You must pick one.
-//                 .checkbox(style="margin-top: 0")
-//                     label
-//                         input#playerPositionHandler(type='checkbox' name="preferredPositions" value="handler")
-//                         | <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around the field in the wind or against the zone.
-//                 .checkbox
-//                     label
-//                         input#playerPositionCutter(type='checkbox' name="preferredPositions" value="cutter")
-//                         | <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or cutting deep for a big throw.
-//                 .checkbox
-//                     label
-//                         input#playerPositionHybrid(type='checkbox' name="preferredPositions" value="hybrid")
-//                         | <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on either depending on what the team needs.
-//                 .checkbox
-//                     label
-//                         input#playerPositionDefense(type='checkbox' name="preferredPositions" value="defense")
-//                         | <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great cutters/handlers.
 //
 //                 .alert.alert-danger#playerPositionError Please pick <strong>at least one</strong> of the above.
 //
@@ -309,12 +434,6 @@ export default function RegisterPage (props) {
 //                 else
 //                     #no-requestAttendance
 //
-//                 div
-//                     label(for="skillLevel") Finals attendance
-//                 .checkbox(style="margin-top: 0")
-//                     label
-//                         input#willAttendFinals(type='checkbox' name='willAttendFinals')
-//                         | I expect to be able to attend finals.
 //
 //                 if locals.league.requestShirtSize
 //                     .form-group
@@ -341,25 +460,7 @@ export default function RegisterPage (props) {
 //                     label(for='usauNumber') USAU Number
 //                     input#usauNumber.input-lg.form-control(type='text' name='usauNumber' placeholder='')
 //                     p.help-block We are trying to find out how many of our players are on USAU to see if we can use that insurance instead.
-//
-//                 .form-group
-//                     label Comments
-//                     textarea#comments(name="comments").form-control
-//                     p.help-block Type here any additional comments you may have (if you can't attend certain weeks, really don't want to play with a specific person, or want to give captains some idea of who you are go ahead).  The captains and organizers will use this information during the player draft.
-//
-//                 .form-group
-//                     label(for="wouldCaptain") Would you like to be a captain or co-captain?
-//                     select#wouldCaptain.input-lg.form-control(name="wouldCaptain")
-//                         option(value='No') No
-//                         option(value='Yes') Yes
-//
-//                 p.help-block If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play.
-//
-//                 h3 General Waiver
-//                 .checkbox
-//                     label
-//                         input#termsConditions(type='checkbox' name='termsConditions' required)
-//                         | I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
+
 //
 //                 h3 SFLUltimate Player Code of Conduct
 //                 .checkbox
@@ -378,34 +479,10 @@ export default function RegisterPage (props) {
 //                     label
 //                         input#codeOfConduct4(type='checkbox' required)
 //                         | I will take this as an opportunity to make new friends and to get inspired to join club teams.
-//                 if locals.league.requestSponsorship
-//                     h3 Sponsorship
-//                     .checkbox
-//                         label
-//                             input#wouldSponsor(type='checkbox' name='wouldSponsor')
-//                             | I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.
-//                 else
-//                     #no-requestSponsorship
-//
-//                 if locals.league.isLateRegistrationPeriod
-//                     h3 Late Registration
-//                     .checkbox
-//                         label
-//                             input#understandsLateFee(type='checkbox' required)
-//                             | I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me.
-//                 else
-//                     #no-understandsLateFee
-//
-//
-//                 h3 Payment Information
-//                 input(id="recaptcha" name='recaptchaToken' type='hidden')
-//
 
 //
-//                 .form-group
-//                     label(for="streetAddress") Street Address
-//                     input#streetAddress.input-lg.form-control(type='text' name='streetAddress' placeholder='' required)
-//                     p.help-block If you plan on paying with card (so no PayPal) type here just your street address (So 12345 Palm Tree Ave.). Do not pass city/zip code or apt number. We do not store this information, but send it to the payment processor for fraud prevention.
+//
+//
 //
 //                 #payment-form
 //
@@ -441,60 +518,10 @@ export default function RegisterPage (props) {
 //         var clientToken = "#{braintree_token}";
 //     script(src='js/register-form.js')
 
-// const nodemailer = require('nodemailer')
-//
-// const transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: process.env.SMTP_USER,
-//     pass: process.env.SMTP_PASSWORD
-//   }
-// })
 //
 // module.exports = async function (req, res) {
 //   PaymentUtils.setBaseRegistrationLocals(view, res)
 //
-//   view.on('post', async function (next) {
-//     // Cast to boolean
-//     req.body.wouldCaptain = req.body.wouldCaptain === 'Yes'
-//
-//     const {
-//       comments,
-//       email,
-//       firstName,
-//       gender,
-//       lastName,
-//       participation,
-//       age,
-//       ageGroup,
-//       phoneNumber,
-//       usauNumber,
-//       wouldCaptain,
-//       partnerName,
-//       registrationLevel,
-//       recaptchaToken,
-//       skillLevel,
-//       shirtSize,
-//       streetAddress,
-//       wouldSponsor,
-//       willAttendFinals,
-//       preferredPositions
-//     } = req.body
-//
-//     const paymentMethodNonce = req.body.payment_method_nonce
-//
-//     try {
-//       const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(recaptchaToken)
-//       if (recaptchaResponse && recaptchaResponse.score <= 0.5) {
-//         locals.err = 'Unauthorized transaction, we believe you are a bot.  Please contact sflultimate@gmail.com.'
-//         return next()
-//       }
-//     } catch (err) {
-//       locals.err = JSON.stringify(err)
-//       return next()
-//     }
-//
-//     let amount
 //
 //     if (locals.league.isEarlyRegistrationPeriod) {
 //       amount = registrationLevel === 'Student' ? locals.fees.earlyStudent : locals.fees.earlyAdult
@@ -521,61 +548,8 @@ export default function RegisterPage (props) {
 //         willAttendFinals
 //       }
 //
-//       if (Array.isArray(preferredPositions)) {
-//         newPlayerRecord.preferredPositions = preferredPositions
-//       } else if (typeof preferredPositions === 'string') {
-//         newPlayerRecord.preferredPositions = [preferredPositions]
-//       } else {
-//         newPlayerRecord.preferredPositions = []
-//       }
-//
-//       console.log(newPlayerRecord)
-//
-//       const player = new PlayerModel(newPlayerRecord)
-//
-//       await player.save()
-//
-//       try {
-//         const emailSendParams = {
-//           from: 'South Florida Ultimate" <sflultimate@gmail.com>',
-//           to: email,
-//           subject: 'Registration Confirmation for ' + locals.league.title,
-//           html: `
-//             <p>Thank you for your payment!</p>
-//             <p>Below you can find a receipt for your registration for ${locals.league.title}.</p>
-//             <table style="border: 1px solid #dadada; padding: 4px;">
-//               <thead>
-//                 <tr>
-//                   <th>Field</th>
-//                   <th>Your Submission</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 <tr><td>First Name</td><td>${firstName}</td></tr>
-//                 <tr><td>Last Name</td><td>${lastName}</td></tr>
-//                 <tr><td>Registration Level</td><td>${registrationLevel}</td></tr>
-//                 <tr><td>Amount Paid</td><td>$${amount}</td></tr>
-//                 <tr><td>Gender</td><td>${gender}</td></tr>
-//                 <tr><td>Participation</td><td>${participation}</td></tr>
-//                 <tr><td>Comments</td><td>${comments}</td></tr>
-//                 <tr><td>Email</td><td>${email}</td></tr>
-//                 <tr><td>Phone Number</td><td>${phoneNumber}</td></tr>
-//                 <tr><td>Age</td><td>${age}</td></tr>
-//                 <tr><td>Wanted to Captain</td><td>${wouldCaptain ? 'Yes' : 'No'}</td></tr>
-//                 <tr><td>Partner's Name</td><td>${partnerName}</td></tr>
-//                 <tr><td>Self-described skill level</td><td>${skillLevel}</td></tr>
-//                 <tr><td>Shirt Size</td><td>${shirtSize}</td></tr>
-//               </tbody>
-//             </table>
-//             <p><em>Organized by South Florida Ultimate Inc., a local non-for-profit and social recreational club organized for the exclusive purposes of <strong>playing</strong>, <strong>promoting</strong>, and <strong>enjoying</strong> the sport known as Ultimate or Ultimate Frisbee.</em></p>
-//           `
-//         }
-//
-//         await transporter.sendMail(emailSendParams)
-//       } catch (e) {
-//         console.error('Could not send email for ' + email)
-//         console.error(e)
-//       }
+
+
 //
 //       res.redirect('/confirmation')
 
@@ -601,9 +575,4 @@ export default function RegisterPage (props) {
 //     container: 'payment-form'
 //   })
 //
-//   window.grecaptcha.ready(function () {
-//     window.grecaptcha.execute('6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w', { action: 'register' }).then(function (token) {
-//       $('#recaptcha').val(token)
-//     })
-//   })
 // })(window.jQuery)
