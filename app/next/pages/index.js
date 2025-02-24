@@ -133,21 +133,21 @@ export default function Homepage (props) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
         <meta property="og:type" content="website"/>
-        <meta title="SFLUltimate"/>
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
-        <link rel="stylesheet"
-              href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
-        <link rel="stylesheet" href="/styles/site.css"/>
+        <title>South Florida Ultimate</title>
         <meta property="og:title" content="South Florida Ulitmate"/>
         <meta property="og:url" content="https://www.sflultimate.com/"/>
         <meta property="og:description"
               content="Since 1999, players from Miami & Ft. Lauderdale have united to promote grow the awesome sport of Ultimate Frisbee."/>
         <meta property="og:image" content="https://www.sflultimate.com/images/hatter-beach-ultimate.jpg"/>
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
+        <link rel="stylesheet" href="/styles/site.css"/>
+
       </Head>
       {/*<div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}>*/}
-        {/*<div className="video-full-screen">*/}
-        {/*  <video autoPlay={true} muted={true} loop={true}>*/}
+      {/*<div className="video-full-screen">*/}
+      {/*  <video autoPlay={true} muted={true} loop={true}>*/}
         {/*    <source src="https://d137pw2ndt5u9c.cloudfront.net/SFL_Community_Beach_Hatter_2019.mp4" type={'video/mp4'}/>*/}
         {/*  </video>*/}
         {/*</div>*/}
