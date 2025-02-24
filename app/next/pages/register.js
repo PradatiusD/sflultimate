@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
-import PaymentUtils from '../lib/payment-utils'
+import {generateGatewayClientToken, addLeagueStatus} from '../lib/payment-utils'
 import {useEffect} from "react";
 import {HeaderNavigation} from "../components/Navigation";
 
@@ -85,8 +85,9 @@ export const getServerSideProps = async () => {
         }
       }`
   })
-  const league = results.data.allLeagues[0]
-  const token = await PaymentUtils.generateGatewayClientToken()
+  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+  addLeagueStatus(league)
+  const token = await generateGatewayClientToken()
   return { props: { league, braintreeToken: token } }
 }
 
@@ -252,32 +253,32 @@ export default function RegisterPage (props) {
 
             <div id="playerPositions">
               <label htmlFor="skillLevel">Preferred Player Positions</label>
-              <p class="help-block">This is to help captains draft, especially in cases where we captains might not know you. Check all that apply. You must pick one.</p>
-              <div class="checkbox">
+              <p className="help-block">This is to help captains draft, especially in cases where we captains might not know you. Check all that apply. You must pick one.</p>
+              <div className="checkbox">
                 <label>
                   <input id="playerPositionHandler" type="checkbox" name="preferredPositions" value="handler"/>
                     <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around the field in the wind or against the zone.
                 </label>
               </div>
-              <div class="checkbox">
+              <div className="checkbox">
                 <label>
                   <input id="playerPositionCutter" type="checkbox" name="preferredPositions" value="cutter"/>
                     <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or cutting deep for a big throw.
                 </label>
               </div>
-              <div class="checkbox">
+              <div className="checkbox">
                 <label>
                   <input id="playerPositionHybrid" type="checkbox" name="preferredPositions" value="hybrid"/>
                   <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on either depending on what the team needs.
                 </label>
               </div>
-              <div class="checkbox">
+              <div className="checkbox">
                 <label>
                   <input id="playerPositionDefense" type="checkbox" name="preferredPositions" value="defense"/>
                   <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great cutters/handlers.
                 </label>
               </div>
-              <div class="alert alert-danger" id="playerPositionError">Please pick <strong>at least one</strong> of the above.</div>
+              <div className="alert alert-danger" id="playerPositionError">Please pick <strong>at least one</strong> of the above.</div>
             </div>
 
 
@@ -366,25 +367,25 @@ export default function RegisterPage (props) {
             }
 
             <h3>SFLUltimate Player Code of Conduct</h3>
-            <div class="checkbox">
+            <div className="checkbox">
               <label>
                 <input id="codeOfConduct1" type="checkbox" required />
                   I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment.
               </label>
             </div>
-            <div class="checkbox">
+            <div className="checkbox">
               <label>
                 <input id="codeOfConduct2" type="checkbox" required />
                   I will facilitate the growth of the sport through mentorship and coaching of novice players.
               </label>
             </div>
-            <div class="checkbox">
+            <div className="checkbox">
               <label>
                 <input id="codeOfConduct3" type="checkbox" required/>
                   I will improve my skills in a safe and supportive environment, including avoiding dangerous plays.
               </label>
             </div>
-            <div class="checkbox">
+            <div className="checkbox">
               <label>
                 <input id="codeOfConduct4" type="checkbox" required />
                   I will take this as an opportunity to make new friends and to get inspired to join club teams.

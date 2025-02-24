@@ -36,6 +36,7 @@ export const getServerSideProps = (async () => {
   });
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
+  console.log(league)
   return { props: {league}}
 })
 
