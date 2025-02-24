@@ -402,13 +402,15 @@
   
   h2 {
     text-transform: uppercase;
-    font-size: 5rem;
-    text-shadow: 0px 0px 15px black;
+    font-style: italic;
+    text-shadow: 4px 4px 0px #000000, 0px 0px 15px black;
+    font-size: 6rem;
   }
   p {
     background: rgb(0 0 0 / 60%);
     text-shadow: 0px 0px 20px black;
     padding: 1rem;
     font-size: 2rem;
-    font-weight: 400;  }
+    font-weight: 400;
+  }
 }

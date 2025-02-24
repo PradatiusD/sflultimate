@@ -51,22 +51,22 @@ export default function Homepage (props) {
     },
     {
       headline: 'Starting Play',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc6455bfcdf00289f599b-FBS05431-optimized.jpg',
       body: 'Each point begins with both teams lining up on the front of opposite end zone lines. The defense throws (“pulls”) the disc to the offense. A regulation game has seven players per team.'
     },
     {
       headline: 'Scoring',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc39b5bfcdf00289f58c3-FBS05458-optimized.jpg',
       body: 'Each time the offense catches a pass in the defense’s end zone, the offense scores a point. The teams switch direction after every goal, and the next point begins with a new pull by the team that just scored.'
     },
     {
       headline: 'Movement of the Disc',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3735bfcdf00289f587f-FBS05149-optimized.jpg',
       body: 'The disc may be advanced in any direction by completing a pass to a teammate. Players may not run with the disc. The person with the disc (“thrower”) has ten seconds to throw the disc. The defender guarding the thrower (“marker”) counts out the stall count.'
     },
     {
       headline: 'Change of Possession',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg',
       body: 'When a pass is not completed (e.g. out of bounds, drop, block, interception, stalled), the defense immediately takes possession of the disc and becomes the offense.'
     },
     {
@@ -76,12 +76,12 @@ export default function Homepage (props) {
     },
     {
       headline: 'Non-contact',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc4815bfcdf00289f590e-FBS05086-optimized.jpg',
       body: 'Players must attempt to avoid physical contact during play. Picks and screens are also prohibited.'
     },
     {
       headline: 'Fouls',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3335bfcdf00289f5834-FBS05079-optimized.jpg',
       body: 'When a player initiates contact that affects the play, a foul occurs. When a foul causes a player to lose possession, the play resumes as if the possession was retained. If the player that the foul was called against disagrees with the foul call, the play is redone.'
     },
     {
@@ -96,7 +96,7 @@ export default function Homepage (props) {
     },
     {
       headline: '10 Things to know about Spirit of the Game',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3605bfcdf00289f585d-FBS05553-optimized.jpg',
       body: `
     1. The golden rule: treat others as you would want to be treated. Spirited games result from mutual respect among opponents. Assume the best of your opponent. Give him or her the benefit of a doubt. You would want the same for yourself. But even if you are thick-skinned, do not assume that your opponent is.
     2. Control: SOTG takes real effort. SOTG is not just some abstract principle that everyone adopts and then games run smoothly without effort. Close calls are made in tight games. Hard fouls are committed. SOTG is about how you handle yourself under pressure: how you contain your emotion, tame your temper, and modulate your voice. If you initiate or contribute to the unraveling of spirit, the concept falls apart quickly. If you act to mend things (or at least not worsen the situation) by following (1) above, the game heals itself.
