@@ -43,14 +43,14 @@ function HeaderNavigation (props) {
               : '/images/logo-skyline.png'} alt=""/>
           </a>
           <div className="navbar-header">
-            <button className="navbar-toggle" type="button" data-toggle="collapse"
-              data-target=".navbar-collapse"></button>
-            <span className="sr-only">Toggle navigation</span>
-            <span className="icon-bar"></span>
-            <span className="icon-bar"></span>
-            <span className="icon-bar"></span>
+            <button className="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+            </button>
             <div className="collapse navbar-collapse">
-              <ul className="nav navbar-nav navbar-left">
+            <ul className="nav navbar-nav navbar-left">
                 {headerNavLinks.map((link) => {
                   return (
                     <li key={link.key} className={section === link.key ? 'active' : null}>

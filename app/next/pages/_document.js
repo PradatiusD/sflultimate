@@ -27,8 +27,7 @@ class SFLUltimateDocument extends NextDocument {
           <meta property="og:type" content="website"/>
           <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
           <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
-          <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,700i|Roboto:300,400,400i,700"/>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,700i|Roboto:300,400,400i,700"/>
           <link rel="stylesheet" href="/styles/site.css"/>
           <script dangerouslySetInnerHTML={{
             __html: `
@@ -53,7 +52,7 @@ class SFLUltimateDocument extends NextDocument {
         <body>
           <Main/>
           <NextScript/>
-          <FooterNavigation />
+          <FooterNavigation/>
           <div id="fb-root"></div>
           <div id="fb-customer-chat" className="fb-customer-chat"></div>
 
@@ -90,6 +89,9 @@ class SFLUltimateDocument extends NextDocument {
           }(document, 'script', 'facebook-jssdk'));
             `
           }}/>
+
+          <script src="/js/jquery/jquery-1.11.3.min.js" />
+          <script src="/js/bootstrap/bootstrap-3.3.5.min.js"/>
         </body>
       </Html>
     )
