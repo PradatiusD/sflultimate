@@ -21,6 +21,8 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#email').type(testEmailAddress)
   cy.get('#gender').select('Male')
   cy.get('#skillLevel').select('4')
+  cy.get('#participation').select('50')
+  cy.get('#shirtSize').select('M')
   cy.get('#partnerName').type('Test Friend')
   cy.get('#willAttendFinals').check()
   const $body = await cy.get('body')

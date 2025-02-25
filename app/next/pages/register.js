@@ -64,6 +64,7 @@ export const getServerSideProps = async () => {
           id
           title
           description
+          
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
@@ -76,6 +77,9 @@ export const getServerSideProps = async () => {
           pricingRegularStudent
           pricingLateStudent
           pricingLateAdult
+          requestShirtSize
+          requestSponsorship
+          requestAttendance
           finalsTournamentDescription
           finalsTournamentEndDate
           finalsTournamentStartDate
@@ -104,6 +108,33 @@ export default function RegisterPage (props) {
   const { league: activeLeague, braintreeToken} = props
   const [player, setPlayer] = useState({})
 
+  let adultPrice, studentPrice
+  if (activeLeague.isEarlyRegistrationPeriod) {
+    studentPrice = activeLeague.pricingEarlyStudent
+    adultPrice = activeLeague.pricingEarlyAdult
+  } else if (activeLeague.isRegistrationPeriod) {
+    studentPrice = activeLeague.pricingRegularStudent
+    adultPrice = activeLeague.pricingRegularAdult
+  } else if (activeLeague.isLateRegistrationPeriod) {
+    studentPrice = league.pricingLateStudent
+    adultPrice = league.pricingLateAdult
+  }
+
+  if (!activeLeague.canRegister) {
+    return <>
+      <HeaderNavigation league={activeLeague} />
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <h1>The Registration for {activeLeague.title} has closed</h1>
+            <p>If you wish to be considered for late registration (${adultPrice}+" for adults, ${studentPrice} for students), contact sflultimate@gmail.com. Late registration will be considered on a weekly basis as space permits.</p>
+            <p>Note that you will not get a jersey.</p>
+          </div>
+        </div>
+      </div>
+    </>
+  }
+
   useEffect(() => {
     braintree.dropin.create({authorization: BRAINTREE_CLIENT_TOKEN, selector: '#payment-form'}, function (err, instance) {
       document.querySelector('#submitButton').addEventListener('click', function (e) {
@@ -124,17 +155,6 @@ export default function RegisterPage (props) {
   }, []);
 
 
-  let adultPrice, studentPrice
-  if (activeLeague.isEarlyRegistrationPeriod) {
-    studentPrice = activeLeague.pricingEarlyStudent
-    adultPrice = activeLeague.pricingEarlyAdult
-  } else if (activeLeague.isRegistrationPeriod) {
-    studentPrice = activeLeague.pricingRegularStudent
-    adultPrice = activeLeague.pricingRegularAdult
-  } else if (activeLeague.isLateRegistrationPeriod) {
-    studentPrice = league.pricingLateStudent
-    adultPrice = league.pricingLateAdult
-  }
 
   return <>
     <Head>
@@ -155,7 +175,7 @@ export default function RegisterPage (props) {
     <div className="container register">
       <h1>{activeLeague.title} Sign Up</h1>
       <h3>Registration</h3>
-      
+
       <div dangerouslySetInnerHTML={{__html: activeLeague.description}}/>
       <p>
         Regular registration is open <strong>as of {locals.formatDate(activeLeague.registrationStart)}</strong> and ends
@@ -257,13 +277,13 @@ export default function RegisterPage (props) {
               <div className="checkbox">
                 <label>
                   <input id="playerPositionHandler" type="checkbox" name="preferredPositions" value="handler"/>
-                    <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around the field in the wind or against the zone.
+                  <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around the field in the wind or against the zone.
                 </label>
               </div>
               <div className="checkbox">
                 <label>
                   <input id="playerPositionCutter" type="checkbox" name="preferredPositions" value="cutter"/>
-                    <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or cutting deep for a big throw.
+                  <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or cutting deep for a big throw.
                 </label>
               </div>
               <div className="checkbox">
@@ -281,6 +301,22 @@ export default function RegisterPage (props) {
               <div className="alert alert-danger" id="playerPositionError">Please pick <strong>at least one</strong> of the above.</div>
             </div>
 
+            {
+              activeLeague.requestAttendance ? (
+                <FormSelect
+                  label="Expected Attendance"
+                  id="participation"
+                  name="participation"
+                  options={[
+                    {value: 30, label: `Less than 30% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.7)}+ weeks of play)`},
+                    {value: 50, label: `Around 50% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.5)} weeks of play)`},
+                    {value: 80, label: `Greater than 80% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.2)} week of play)`}
+                  ]}
+                  helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
+                  onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
+                />
+              ) : <div id="no-requestAttendance"></div>
+            }
 
             <div>
               <label htmlFor="willAttendFinals">Finals attendance</label>
@@ -289,6 +325,34 @@ export default function RegisterPage (props) {
               </div>
             </div>
 
+
+            {/*/img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px")*/}
+            {/*            //                         if locals.league.jerseyDesign
+            //                             p.help-block The above is the current design for this league, which will in color depending on what team you are on.
+*/}
+            {
+              activeLeague.requestShirtSize ? (
+                <FormSelect
+                  label="Shirt Size"
+                  id="shirtSize"
+                  name="shirtSize"
+                  options={[
+                    {value:"XS", label: 'XS'},
+                    {value:"S", label: 'S'},
+                    {value:"M", label: 'M'},
+                    {value:"L", label:  'L'},
+                    {value:"XL", label: 'XL'},
+                    {value:"XXL", label: 'XXL'},
+                    {value:"NA", label: 'I do not want a jersey'}
+                  ]}
+                  helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
+                  onChange={(e) => setPlayer({...player, shirtSize: e.target.value})}
+                />
+              ) : (
+                <div id={"no-requestShirtSize"}></div>
+              )
+            }
+            
             <FormInput
               label="Partner Name"
               id="partnerName"
@@ -296,24 +360,26 @@ export default function RegisterPage (props) {
               helpText={'Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can\'t guarantee this.'}
               onChange={(e) => setPlayer({...player, partnerName: e.target.value})}
             />
-            
+
             <FormInput
               label="Comments"
               id="comments"
               name="comments"
               type="textarea"
               helpText={'Type here any additional comments you may have (if you can\'t attend certain weeks, really don\'t want to play with a specific person, or want to give captains some idea of who you are go ahead).  The captains and organizers will use this information during the player draft.'}/>
-            
+
             <FormSelect
               label="Would you like to be a captain or co-captain?"
               id="wouldCaptain"
               name="wouldCaptain"
               options={[
-                {value: 'No', label: 'No'},
-                {value: 'Yes', label: 'Yes'}
+                {value: 'Yes', label: 'Yes'},
+                {value: 'No', label: 'No'}
               ]}
               helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
-              />
+            />
+            
+            <div className="alert alert-success"><strong>New in 2025:</strong> Captains will get a $20 discount on their league entry (we'll reimburse you after) AND be invited to our super secret in-person draft party!</div>
 
 
             <h3>General Waiver</h3>
@@ -340,13 +406,13 @@ export default function RegisterPage (props) {
 
             {
               activeLeague.isLateRegistrationPeriod ? (
-                <div>
-                  <h3>Late Registration</h3>
-                  <div className="checkbox">
-                    <label htmlFor="understandsLateFee"><input id="understandsLateFee" name="understandsLateFee" type="checkbox"/>I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me.</label>
+                  <div>
+                    <h3>Late Registration</h3>
+                    <div className="checkbox">
+                      <label htmlFor="understandsLateFee"><input id="understandsLateFee" name="understandsLateFee" type="checkbox"/>I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me.</label>
+                    </div>
                   </div>
-                </div>
-              ) :
+                ) :
                 (
                   <div id="no-understandsLateFee"/>
                 )
@@ -370,25 +436,25 @@ export default function RegisterPage (props) {
             <div className="checkbox">
               <label>
                 <input id="codeOfConduct1" type="checkbox" required />
-                  I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment.
+                I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment.
               </label>
             </div>
             <div className="checkbox">
               <label>
                 <input id="codeOfConduct2" type="checkbox" required />
-                  I will facilitate the growth of the sport through mentorship and coaching of novice players.
+                I will facilitate the growth of the sport through mentorship and coaching of novice players.
               </label>
             </div>
             <div className="checkbox">
               <label>
                 <input id="codeOfConduct3" type="checkbox" required/>
-                  I will improve my skills in a safe and supportive environment, including avoiding dangerous plays.
+                I will improve my skills in a safe and supportive environment, including avoiding dangerous plays.
               </label>
             </div>
             <div className="checkbox">
               <label>
                 <input id="codeOfConduct4" type="checkbox" required />
-                  I will take this as an opportunity to make new friends and to get inspired to join club teams.
+                I will take this as an opportunity to make new friends and to get inspired to join club teams.
               </label>
             </div>
 
@@ -414,12 +480,6 @@ export default function RegisterPage (props) {
   </>
 }
 
-//     if locals.league.canRegister
-//             if err
-//                 br
-//                 .alert.alert-danger
-//                     strong Error:
-//                     span=err
 
 //
 //             if locals.league.lateRegistrationStart && locals.league.lateRegistrationEnd
@@ -428,37 +488,6 @@ export default function RegisterPage (props) {
 //                | #{formatDate(locals.league.lateRegistrationStart)} until #{formatDate(locals.league.lateRegistrationEnd)} at #{formatTime(locals.league.lateRegistrationEnd)}. This will not include a jersey.
 //
 //
-//                 .alert.alert-danger#playerPositionError Please pick <strong>at least one</strong> of the above.
-//
-//                 if locals.league.requestAttendance
-//                     .form-group
-//                         label(for="participation") Expected Attendance
-//                         select#participation.input-lg.form-control(name="participation")
-//                             option(value="30") Less than 30% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.7)}+ weeks of play)
-//                             option(value="50") Around 50% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.5)} weeks of play)
-//                             option(value="80" selected="selected") Greater than 80% (miss #{Math.floor(league.numberOfWeeksOfPlay*0.2)} week of play)
-//                         p.help-block Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments.
-//                 else
-//                     #no-requestAttendance
-//
-//
-//                 if locals.league.requestShirtSize
-//                     .form-group
-//                         label(for="shirtSize") Shirt Size
-//                         if locals.league.jerseyDesign
-//                             img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px")
-//                         select#shirtSize.input-lg.form-control(name="shirtSize")
-//                             option(value="XS") XS
-//                             option(value="S") S
-//                             option(value="M") M
-//                             option(value="L") L
-//                             option(value="XL") XL
-//                             option(value="XXL") XXL
-//                             option(value="NA") I do not want a jersey
-//                         if locals.league.jerseyDesign
-//                             p.help-block The above is the current design for this league, which will in color depending on what team you are on.
-//                 else
-//                     #no-requestShirtSize
 //
 //                   br
 //
@@ -468,30 +497,6 @@ export default function RegisterPage (props) {
 //                     input#usauNumber.input-lg.form-control(type='text' name='usauNumber' placeholder='')
 //                     p.help-block We are trying to find out how many of our players are on USAU to see if we can use that insurance instead.
 
-//
-//                 h3 SFLUltimate Player Code of Conduct
-//                 .checkbox
-//                     label
-//                         input#codeOfConduct1(type='checkbox' required)
-//                         | I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment.
-//                 .checkbox
-//                     label
-//                         input#codeOfConduct2(type='checkbox' required)
-//                         | I will facilitate the growth of the sport through mentorship and coaching of novice players.
-//                 .checkbox
-//                     label
-//                         input#codeOfConduct3(type='checkbox' required)
-//                         | I will improve my skills in a safe and supportive environment, including avoiding dangerous plays.
-//                 .checkbox
-//                     label
-//                         input#codeOfConduct4(type='checkbox' required)
-//                         | I will take this as an opportunity to make new friends and to get inspired to join club teams.
-
-//
-//
-//
-//
-//                 #payment-form
 //
 //         .modal.fade(tabindex='-1', role='dialog' id='waiver')
 //             .modal-dialog.modal-lg
@@ -514,47 +519,14 @@ export default function RegisterPage (props) {
 //                     .modal-footer
 //                         button.btn.btn-primary(type='button', data-dismiss='modal') Close
 //
-//     else
-//         .container.register: .row: .col-md-12
-//             h1 The Registration for #{locals.league.title} has closed
-//             p="If you wish to be considered for late registration ($"+fees.lateAdult+" for adults, $"+fees.lateStudent+" for students), contact sflultimate@gmail.com. Late registration will be considered on a weekly basis as space permits."
-//             p Note that you will not get a jersey.
+
 //
-// block js
-//     script.
-//         var clientToken = "#{braintree_token}";
 //     script(src='js/register-form.js')
 
 //
 // module.exports = async function (req, res) {
 //   PaymentUtils.setBaseRegistrationLocals(view, res)
-//
-//
 
-//       const newPlayerRecord = {
-//         leagues: [
-//           locals.league._id
-//         ],
-//         gender,
-//         skillLevel,
-//         comments,
-//         shirtSize,
-//         participation,
-//         partnerName,
-//         wouldCaptain,
-//         registrationLevel,
-//         usauNumber,
-//         phoneNumber,
-//         wouldSponsor,
-//         willAttendFinals
-//       }
-//
-
-
-//
-//       res.redirect('/confirmation')
-
-//
 // (function ($) {
 //   document.querySelector('#submitButton').addEventListener('click', function (e) {
 //     const hasAtLeastOnePlayerPositionChecked = Array.from(document.querySelectorAll('input[name="preferredPositions"]')).find(function (item) {

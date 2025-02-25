@@ -21,17 +21,14 @@ const CREATE_PLAYER_MUTATION = gql`
     }
   }
 `
-async function processPayment (payload, league) {
-  let amount = 0
-  const registrationLevel = payload.registrationLevel
-  if (league.isEarlyRegistrationPeriod) {
-    amount = registrationLevel === 'Student' ? league.pricingEarlyStudent : league.pricingEarlyAdult
-  } else if (league.isRegistrationPeriod) {
-    amount = registrationLevel === 'Student' ? league.pricingRegularStudent : league.pricingRegularAdult
-  } else if (league.isLateRegistrationPeriod) {
-    amount = registrationLevel === 'Student' ? league.pricingLateStudent : league.pricingLateAdult
-  }
 
+/**
+ * 
+ * @param {object} payload
+ * @param {number} amount
+ * @return {Promise<unknown>}
+ */
+async function processPayment (payload, amount) {
   const purchase = {
     amount: amount,
     paymentMethodNonce: payload.paymentMethodNonce,
@@ -196,11 +193,25 @@ export default async function handler (req, res) {
       sanitizedPayload.preferredPositions = []
     }
 
-    const paymentResult = await processPayment(sanitizedPayload, league)
-    const dbCreateResult = await createPlayerRecord(sanitizedPayload)
-    const emailResult = await SendEmail({ ...sanitizedPayload, amount: paymentResult.amount }, league)
+    let amount = 0
+    const registrationLevel = sanitizedPayload.registrationLevel
+    if (league.isEarlyRegistrationPeriod) {
+      amount = registrationLevel === 'Student' ? league.pricingEarlyStudent : league.pricingEarlyAdult
+    } else if (league.isRegistrationPeriod) {
+      amount = registrationLevel === 'Student' ? league.pricingRegularStudent : league.pricingRegularAdult
+    } else if (league.isLateRegistrationPeriod) {
+      amount = registrationLevel === 'Student' ? league.pricingLateStudent : league.pricingLateAdult
+    }
 
-    res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
+    const paymentResult = await processPayment(sanitizedPayload, amount)
+    const dbCreateResult = await createPlayerRecord(sanitizedPayload)
+    const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
+    if (process.env.NODE_ENV === 'development') {
+      console.log({ paymentResult, dbCreateResult, emailResult })
+      // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
+    }
+
+    res.redirect('/confirmation')
   } catch (e) {
     console.error(e)
     res.status(500).json({ message: 'Error', data: e.message })

@@ -36,7 +36,6 @@ export const getServerSideProps = (async () => {
   });
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
-  console.log(league)
   return { props: {league}}
 })
 
@@ -79,7 +78,7 @@ export default function Homepage (props) {
     },
     {
       headline: 'Substitutions',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb631516cf0100287ff10d-20240218_132137-optimized.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bd11a189d0bc0028ae9e58-FBS05553-optimized.jpg',
       body: 'Players not in the game may replace players in the game after a score and during an injury timeout.'
     },
     {
