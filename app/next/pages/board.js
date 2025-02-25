@@ -18,17 +18,18 @@ export const getServerSideProps = async () => {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        allBoardMembers {
+        allBoardMembers(sortBy: order_ASC) {
           id
           firstName
           lastName
+          order
           image {
             publicUrl
           }
           description
           active
         }
-        allBoardPositions {
+        allBoardPositions(sortBy: order_ASC) {
           id
           title
           description
@@ -71,7 +72,7 @@ export default function BoardPage (props) {
     <>
       <Head>
         <title>South Florida Board</title>
-        <meta property = "og:title" content="South Florida Board" />
+        <meta property="og:title" content="South Florida Board" />
         <meta property="og:url" content="https://www.sflultimate.com/board" />
         <meta property="og:description" content="Learn how to become involved in your South Florida Ultimate board!" />
       </Head>
