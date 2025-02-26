@@ -62,24 +62,33 @@ async function processPayment (payload, amount) {
 }
 
 function createPlayerRecord (payload) {
+  const mutationData = {
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    firstName: payload.firstName,
+    lastName: payload.lastName,
+    gender: payload.gender,
+    email: payload.email,
+    age: payload.age,
+    skillLevel: payload.skillLevel,
+    registrationLevel: payload.registrationLevel,
+    participation: payload.participation,
+    comments: payload.comments,
+    phoneNumber: payload.phoneNumber,
+    partnerName: payload.partnerName,
+    shirtSize: payload.shirtSize,
+    wouldSponsor: payload.wouldSponsor,
+    willAttendFinals: payload.willAttendFinals,
+    wouldCaptain: payload.wouldCaptain,
+    leagues: {
+      connect: [{ id: payload.leagueId }]
+    }
+  }
+
   return GraphQlClient.mutate({
     mutation: CREATE_PLAYER_MUTATION,
     variables: {
-      data: {
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        email: payload.email,
-        gender: payload.gender,
-        age: payload.age,
-        skillLevel: payload.skillLevel,
-        registrationLevel: payload.registrationLevel,
-        preferredPositions: payload.preferredPositions.join(','),
-        leagues: {
-          connect: [{ id: payload.leagueId }]
-        }
-      }
+      data: mutationData
     }
   })
 }
@@ -176,12 +185,14 @@ export default async function handler (req, res) {
       skillLevel: parseInt(req.body.skillLevel),
       registrationLevel: req.body.registrationLevel,
       streetAddress: req.body.streetAddress,
-      partner: req.body.partnerName,
-      participation: req.body.participation,
+      participation: parseInt(req.body.participation),
       comments: req.body.comments,
       phoneNumber: req.body.phoneNumber,
       partnerName: req.body.partnerName,
       shirtSize: req.body.shirtSize,
+      wouldSponsor: req.body.wouldSponsor === 'on',
+      wouldCaptain: req.body.wouldCaptain === 'on',
+      willAttendFinals: req.body.willAttendFinals === 'on',
       leagueId: req.body.league
     }
 
@@ -207,7 +218,9 @@ export default async function handler (req, res) {
     const dbCreateResult = await createPlayerRecord(sanitizedPayload)
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
     if (process.env.NODE_ENV === 'development') {
-      console.log({ paymentResult, dbCreateResult, emailResult })
+      console.log(paymentResult)
+      console.log(dbCreateResult)
+      console.log(emailResult)
       // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
     }
 

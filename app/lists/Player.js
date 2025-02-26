@@ -19,7 +19,8 @@ const fields = {
   },
   gender: {
     type: Select,
-    options: ['Male', 'Female', 'Other']
+    options: ['Male', 'Female', 'Other'],
+    isRequired: true
   },
   age: {
     type: Integer,

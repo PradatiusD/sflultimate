@@ -25,9 +25,14 @@ export async function getServerSideProps (context) {
           name,
           players {
             id,
-            firstName,
-            lastName,
+            firstName
+            lastName
             gender
+            participation
+            partnerName
+            shirtSize
+            wouldCaptain
+            wouldSponsor
           }
         }
       }`

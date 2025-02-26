@@ -56,7 +56,7 @@ function FormSelect({label, name, options, required, helpText, onChange}) {
   </>
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
@@ -64,7 +64,7 @@ export const getServerSideProps = async () => {
           id
           title
           description
-          
+          numberOfWeeksOfPlay
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
@@ -92,7 +92,8 @@ export const getServerSideProps = async () => {
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
   const token = await generateGatewayClientToken()
-  return { props: { league, braintreeToken: token } }
+  const error = context.query.error || null
+  return { props: { league, braintreeToken: token, error } }
 }
 
 const locals = {}
@@ -178,7 +179,12 @@ export default function RegisterPage (props) {
     <HeaderNavigation league={activeLeague} />
     <div className="container register">
       <h1>{activeLeague.title} Sign Up</h1>
-      <h3>Registration</h3>
+
+      {
+        props.error && (
+          <div className="alert alert-danger"><strong>Error:</strong> {props.error}</div>
+        )
+      }
 
       <div dangerouslySetInnerHTML={{__html: activeLeague.description}}/>
       <p>
