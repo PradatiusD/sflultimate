@@ -223,8 +223,7 @@ export default async function handler (req, res) {
       console.log(emailResult)
       // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
     }
-
-    res.redirect('/confirmation')
+    res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayer.id)
   } catch (e) {
     console.error(e)
     res.redirect('/register?error=' + encodeURIComponent(e.message))

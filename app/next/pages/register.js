@@ -1,20 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
 import {generateGatewayClientToken, addLeagueStatus} from '../lib/payment-utils'
-import {useEffect} from "react";
 import {HeaderNavigation} from "../components/Navigation";
 
 function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
+  const [inputStateClass, setInputStateClass] = useState(['form-group'])
+
+  const inputClasses = ['input-lg', 'form-control']
   return <>
-    <div className="form-group">
-      <label htmlFor={name}>{label}</label>
+    <div className={inputStateClass.join(' ')}>
+      <label className="control-label" htmlFor={name}>{label}</label>
       {
         type === 'textarea' ? (
           <textarea
             id={name}
-            className="input-lg form-control"
+            className={inputClasses.join(' ')}
             name={name}
             placeholder={placeholder || ''}
             required={required}
@@ -23,30 +25,50 @@ function FormInput ({ label, type, name, placeholder, required, helpText, onChan
           />
         ) : <input
           id={name}
-          className="input-lg form-control"
+          className={inputClasses.join(' ')}
           type={type}
           name={name}
           placeholder={placeholder || ''}
           required={required}
-          onChange={onChange}
+          onChange={(e) => {
+            // if (e.target.validity.valid) {
+            //   setInputStateClass([...inputStateClass, 'has-feedback', 'has-success'])
+            // }
+            if (onChange) {
+              onChange(e)
+            }
+          }}
+          onInvalid={(e) => {
+            setInputStateClass([...inputStateClass, 'has-feedback', 'has-error'])
+          }}
         />
       }
-
       <p className="help-block">{helpText}</p>
     </div>
   </>
 }
 
 function FormSelect({label, name, options, required, helpText, onChange}) {
+  const [inputStateClass, setInputStateClass] = useState(['form-group'])
   return <>
-    <div className="form-group">
-      <label htmlFor={name}>{label}</label>
+    <div className={inputStateClass.join(' ')}>
+      <label className="control-label" htmlFor={name}>{label}</label>
       <select
         id={name}
         className="input-lg form-control"
         name={name}
         required={required}
-        onChange={onChange}
+        onChange={(e) => {
+          // if (e.target.validity.valid) {
+          //   setInputStateClass([...inputStateClass, 'has-feedback', 'has-success'])
+          // }
+          if (onChange) {
+            onChange(e)
+          }
+        }}
+        onInvalid={(e) => {
+          setInputStateClass([...inputStateClass, 'has-error'])
+        }}
       >
         <option value="">Please Select</option>
         {options.map((option, i) => <option key={i} value={option.value}>{option.label}</option>)}
@@ -54,6 +76,26 @@ function FormSelect({label, name, options, required, helpText, onChange}) {
       <p className="help-block">{helpText}</p>
     </div>
   </>
+}
+
+function FormCheckbox ({ label, id, required }) {
+  const [inputStateClass, setInputStateClass] = useState(['checkbox'])
+
+  return (
+    <div className={inputStateClass.join(" ")}>
+      <label>
+        <input
+          id={id} 
+          type="checkbox" 
+          required={required}
+          onInvalid={(e) => {
+            setInputStateClass([...inputStateClass, 'has-error'])
+          }}
+        />
+        {label}
+      </label>
+    </div>
+  )
 }
 
 export const getServerSideProps = async (context) => {
@@ -144,7 +186,7 @@ export default function RegisterPage (props) {
           document.querySelector('#nonce').value = payload.nonce
           const form = document.querySelector('form')
           if (!form.checkValidity()) {
-            return alert('Please fill out all required fields')
+            return alert('Please scroll up and double-check that you have filled out all the required fields.')
           }
           form.submit()
         });
@@ -230,7 +272,7 @@ export default function RegisterPage (props) {
                 {value: 'Male', label: 'Male'},
                 {value: 'Other', label: 'Other / I\'d Prefer Not To'}
               ]}
-              helpText={'We use this information to draft teams that have even gender distributions.}'}
+              helpText={'We use this information to draft teams that have even gender distributions.'}
               onChange={(e) => setPlayer({...player, gender: e.target.value})}
             />
 
@@ -262,7 +304,6 @@ export default function RegisterPage (props) {
               helpText={'Our insurance policy requires us to report how many people within certain age-ranges exist in the league.  We do not ask for your birthdate to protect your privacy.'}
               required
               onChange={(e) => setPlayer({...player, age: e.target.value})}
-              
             />
 
             <FormSelect
@@ -281,38 +322,45 @@ export default function RegisterPage (props) {
                 {value: 8, label: '8 - Club level, solid all around, not prone to errors'},
                 {value: 9, label: '9 - Rock star. spot on throws, awesome D'}
               ]}
-              helpText="Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team."
+              helpText={<span>Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team.</span>}
               onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
             />
 
             <div id="playerPositions">
               <label htmlFor="skillLevel">Preferred Player Positions</label>
-              <p className="help-block">This is to help captains draft, especially in cases where we captains might not know you. Check all that apply. You must pick one.</p>
+              <p className="help-block">This is to help captains draft, especially in cases where we captains might not
+                know you. Check all that apply. You must pick one.</p>
               <div className="checkbox">
                 <label>
                   <input id="playerPositionHandler" type="checkbox" name="preferredPositions" value="handler"/>
-                  <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around the field in the wind or against the zone.
+                  <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around
+                  the field in the wind or against the zone.
                 </label>
               </div>
               <div className="checkbox">
                 <label>
                   <input id="playerPositionCutter" type="checkbox" name="preferredPositions" value="cutter"/>
-                  <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or cutting deep for a big throw.
+                  <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or
+                  cutting deep for a big throw.
                 </label>
               </div>
               <div className="checkbox">
                 <label>
                   <input id="playerPositionHybrid" type="checkbox" name="preferredPositions" value="hybrid"/>
-                  <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on either depending on what the team needs.
+                  <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on
+                  either depending on what the team needs.
                 </label>
               </div>
               <div className="checkbox">
                 <label>
                   <input id="playerPositionDefense" type="checkbox" name="preferredPositions" value="defense"/>
-                  <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great cutters/handlers.
+                  <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great
+                  cutters/handlers.
                 </label>
               </div>
-              <div className="alert alert-danger" id="playerPositionError">Please pick <strong>at least one</strong> of the above.</div>
+              <div className="alert alert-danger" id="playerPositionError">Note: Please pick <strong>at least
+                one</strong> of the above.
+              </div>
             </div>
 
             {
@@ -323,9 +371,18 @@ export default function RegisterPage (props) {
                   name="participation"
                   required
                   options={[
-                    {value: 30, label: `Less than 30% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.7)}+ weeks of play)`},
-                    {value: 50, label: `Around 50% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.5)} weeks of play)`},
-                    {value: 80, label: `Greater than 80% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.2)} week of play)`}
+                    {
+                      value: 30,
+                      label: `Less than 30% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.7)}+ weeks of play)`
+                    },
+                    {
+                      value: 50,
+                      label: `Around 50% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.5)} weeks of play)`
+                    },
+                    {
+                      value: 80,
+                      label: `Greater than 80% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.2)} week of play)`
+                    }
                   ]}
                   helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
                   onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
@@ -336,10 +393,10 @@ export default function RegisterPage (props) {
             <div>
               <label htmlFor="willAttendFinals">Finals attendance</label>
               <div className="checkbox">
-                <label htmlFor="willAttendFinals"><input id="willAttendFinals" type="checkbox" name="willAttendFinals"/> I expect to be able to attend finals.</label>
+                <label htmlFor="willAttendFinals"><input id="willAttendFinals" type="checkbox"
+                                                         name="willAttendFinals"/> I expect to be able to attend finals.</label>
               </div>
             </div>
-
 
             {/*/img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px")*/}
             {/*            //                         if locals.league.jerseyDesign
@@ -353,13 +410,13 @@ export default function RegisterPage (props) {
                   name="shirtSize"
                   required
                   options={[
-                    {value:"XS", label: 'XS'},
-                    {value:"S", label: 'S'},
-                    {value:"M", label: 'M'},
-                    {value:"L", label:  'L'},
-                    {value:"XL", label: 'XL'},
-                    {value:"XXL", label: 'XXL'},
-                    {value:"NA", label: 'I do not want a jersey'}
+                    {value: "XS", label: 'XS'},
+                    {value: "S", label: 'S'},
+                    {value: "M", label: 'M'},
+                    {value: "L", label: 'L'},
+                    {value: "XL", label: 'XL'},
+                    {value: "XXL", label: 'XXL'},
+                    {value: "NA", label: 'I do not want a jersey'}
                   ]}
                   helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
                   onChange={(e) => setPlayer({...player, shirtSize: e.target.value})}
@@ -368,7 +425,7 @@ export default function RegisterPage (props) {
                 <div id={"no-requestShirtSize"}></div>
               )
             }
-            
+
             <FormInput
               label="Partner Name"
               id="partnerName"
@@ -395,20 +452,18 @@ export default function RegisterPage (props) {
               ]}
               helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
             />
-            
-            <div className="alert alert-success"><strong>New in 2025:</strong> Captains will get a $20 discount on their league entry (we'll reimburse you after) AND be invited to our super secret in-person draft party!</div>
+
+            <div className="alert alert-success"><strong>New in 2025:</strong> Captains will get a $20 discount on their
+              league entry (we'll reimburse you after) AND be invited to our super secret in-person draft party!
+            </div>
 
 
             <h3>General Waiver</h3>
-            <div className="checkbox">
-              <div className="checkbox">
-                <label htmlFor="termsConditions">
-                  <input type="checkbox" id="termsConditions" name="termsConditions" required/>
-                  I agree to SFLUltimate's <a data-toggle="modal" data-target="#waiver">terms & conditions</a>.
-                </label>
-              </div>
-            </div>
-
+            <FormCheckbox
+              id="termsConditions"
+              required
+              label={<span>I have read and agree to the <a href="/waiver" target="_blank">SFLUltimate Waiver</a></span>}
+              />
 
             <FormSelect
               label="Registration Type"
@@ -426,9 +481,11 @@ export default function RegisterPage (props) {
               activeLeague.isLateRegistrationPeriod ? (
                   <div>
                     <h3>Late Registration</h3>
-                    <div className="checkbox">
-                      <label htmlFor="understandsLateFee"><input id="understandsLateFee" name="understandsLateFee" type="checkbox"/>I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend.  If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me.</label>
-                    </div>
+                    <FormCheckbox
+                      id="understandsLateFee"
+                      required
+                      label="I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend. If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me."
+                    />
                   </div>
                 ) :
                 (
@@ -441,7 +498,8 @@ export default function RegisterPage (props) {
                   <div>
                     <h3>Sponsorship</h3>
                     <div className="checkbox">
-                      <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
+                      <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am
+                        interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
                     </div>
                   </div>
                 ) :
@@ -451,32 +509,27 @@ export default function RegisterPage (props) {
             }
 
             <h3>SFLUltimate Player Code of Conduct</h3>
-            <div className="checkbox">
-              <label>
-                <input id="codeOfConduct1" type="checkbox" required />
-                I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment.
-              </label>
-            </div>
-            <div className="checkbox">
-              <label>
-                <input id="codeOfConduct2" type="checkbox" required />
-                I will facilitate the growth of the sport through mentorship and coaching of novice players.
-              </label>
-            </div>
-            <div className="checkbox">
-              <label>
-                <input id="codeOfConduct3" type="checkbox" required/>
-                I will improve my skills in a safe and supportive environment, including avoiding dangerous plays.
-              </label>
-            </div>
-            <div className="checkbox">
-              <label>
-                <input id="codeOfConduct4" type="checkbox" required />
-                I will take this as an opportunity to make new friends and to get inspired to join club teams.
-              </label>
-            </div>
-
-
+            <FormCheckbox
+              id="codeOfConduct1"
+              label="I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment."
+              required
+              />
+            <FormCheckbox
+              id="codeOfConduct2"
+              label="I will facilitate the growth of the sport through mentorship and coaching of novice players."
+              required
+              />
+            <FormCheckbox
+              id="codeOfConduct3"
+              label="I will improve my skills in a safe and supportive environment, including avoiding dangerous plays."
+              required
+            />
+            <FormCheckbox
+              id="codeOfConduct4"
+              label="I will take this as an opportunity to make new friends and to get inspired to join club teams."
+              required
+            />
+            
             <h3>Payment Information</h3>
             <FormInput
               label="Street Address"

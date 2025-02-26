@@ -17,6 +17,12 @@ export const getServerSideProps = async (context) => {
           lateRegistrationStart
           lateRegistrationEnd
         }
+        Player(where: {id: "${context.query.id}"}) {
+          id
+          firstName
+          lastName
+          email
+        }
       }`
   })
 
@@ -27,13 +33,14 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       league,
-      referer
+      referer,
+      player: results.data.Player
     }
   }
 }
 
 export default function ConfirmationPage (props) {
-  const { league, referer } = props
+  const { league, referer, player } = props
 
   function ErrorState () {
     return (
@@ -59,14 +66,23 @@ export default function ConfirmationPage (props) {
 
   return <>
     <HeaderNavigation league={league} />
+    <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" class="img-responsive" alt=""/>
     <div className="container">
       <div className="row">
         <div className="col-md-12">
-          <div className="jumbotron text-center">
-            <h1>Thank you</h1>
-            <p className="lead">We've successfully received your payment</p>
+          <div className="text-center">
+            <h1>Thank you {player.firstName}!</h1>
+            <p className="lead">We've successfully received your payment!</p>
           </div>
-          <p>Feel free to share the joy of having signed up to play</p>
+          <p>Please check your email at <strong>{player.email}</strong> for a confirmation email.</p>
+          <p>Feel free to <strong>share the joy</strong> of having signed up to play! Also don't forget to follow us on social media!</p>
+          <ul>
+            <li><a target="_blank" href="https://instagram.com/sflultimate">Instagram</a></li>
+            <li><a target="_blank" href="https://chat.whatsapp.com/FZC77g5Tzsw8xwxMXG997V">WhatsApp</a></li>
+            <li><a target="_blank" href="https://www.facebook.com/sflultimate">Facebook</a></li>
+            <li><a target="_blank" href="https://www.tiktok.com/@sflultimate">TikTok</a></li>
+          </ul>
+
         </div>
       </div>
       <h2>Frequently Asked Questions</h2>
