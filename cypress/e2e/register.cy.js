@@ -12,6 +12,7 @@ const getIframeBody = (selector) => {
 }
 
 async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
+  // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
   const testUrl = 'http://localhost:3000/register'
   cy.visit(testUrl)

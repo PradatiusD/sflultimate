@@ -66,7 +66,11 @@ export default function ConfirmationPage (props) {
 
   return <>
     <HeaderNavigation league={league} />
-    <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" class="img-responsive" alt=""/>
+    <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-responsive" alt="" style={{
+      maxHeight: '480px',
+      margin: '1rem auto',
+      borderRadius: '1rem'
+    }}/>
     <div className="container">
       <div className="row">
         <div className="col-md-12">
