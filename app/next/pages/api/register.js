@@ -23,7 +23,7 @@ const CREATE_PLAYER_MUTATION = gql`
 `
 
 /**
- * 
+ *
  * @param {object} payload
  * @param {number} amount
  * @return {Promise<unknown>}
@@ -214,6 +214,6 @@ export default async function handler (req, res) {
     res.redirect('/confirmation')
   } catch (e) {
     console.error(e)
-    res.status(500).json({ message: 'Error', data: e.message })
+    res.redirect('/register?error=' + encodeURIComponent(e.message))
   }
 }

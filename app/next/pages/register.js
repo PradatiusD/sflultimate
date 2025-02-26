@@ -141,7 +141,11 @@ export default function RegisterPage (props) {
         e.preventDefault()
         instance.requestPaymentMethod(function (err, payload) {
           document.querySelector('#nonce').value = payload.nonce
-          document.querySelector('form').submit()
+          const form = document.querySelector('form')
+          if (!form.checkValidity()) {
+            return alert('Please fill out all required fields')
+          }
+          form.submit()
         });
       })
     });
@@ -214,6 +218,7 @@ export default function RegisterPage (props) {
             <FormSelect
               label="Gender"
               name="gender"
+              required
               options={[
                 {value: 'Female', label: 'Female'},
                 {value: 'Male', label: 'Male'},
@@ -240,6 +245,7 @@ export default function RegisterPage (props) {
               type="tel"
               helpText={'Not required, but often our captains find reaching out via SMS/GroupMe/WhatsApp is much better than email.  Your number would be shared with your team.'}
               onChange={(e) => setPlayer({...player, phoneNumber: e.target.value})}
+              required
             />
 
             <FormInput
@@ -248,13 +254,16 @@ export default function RegisterPage (props) {
               name="age"
               type="number"
               helpText={'Our insurance policy requires us to report how many people within certain age-ranges exist in the league.  We do not ask for your birthdate to protect your privacy.'}
+              required
               onChange={(e) => setPlayer({...player, age: e.target.value})}
+              
             />
 
             <FormSelect
               label="Skill Level"
               id="skillLevel"
               name="skillLevel"
+              required
               options={[
                 {value: 1, label: '1 - Absolute Beginner - never played before'},
                 {value: 2, label: '2 - Hey wait, what\'s a flick?'},
@@ -265,7 +274,6 @@ export default function RegisterPage (props) {
                 {value: 7, label: '7 - Tourney experience. Several years of club'},
                 {value: 8, label: '8 - Club level, solid all around, not prone to errors'},
                 {value: 9, label: '9 - Rock star. spot on throws, awesome D'}
-
               ]}
               helpText="Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team."
               onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
@@ -307,6 +315,7 @@ export default function RegisterPage (props) {
                   label="Expected Attendance"
                   id="participation"
                   name="participation"
+                  required
                   options={[
                     {value: 30, label: `Less than 30% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.7)}+ weeks of play)`},
                     {value: 50, label: `Around 50% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay*0.5)} weeks of play)`},
@@ -336,6 +345,7 @@ export default function RegisterPage (props) {
                   label="Shirt Size"
                   id="shirtSize"
                   name="shirtSize"
+                  required
                   options={[
                     {value:"XS", label: 'XS'},
                     {value:"S", label: 'S'},
@@ -372,6 +382,7 @@ export default function RegisterPage (props) {
               label="Would you like to be a captain or co-captain?"
               id="wouldCaptain"
               name="wouldCaptain"
+              required
               options={[
                 {value: 'Yes', label: 'Yes'},
                 {value: 'No', label: 'No'}
@@ -397,6 +408,7 @@ export default function RegisterPage (props) {
               label="Registration Type"
               id="registrationLevel"
               name="registrationLevel"
+              required
               options={[
                 {value: 'Adult', label: `Adult - $${adultPrice}`},
                 {value: 'Student', label: `Student - $${studentPrice}`}
