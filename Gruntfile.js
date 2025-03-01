@@ -25,9 +25,9 @@ module.exports = function (grunt) {
       mongorestore: {
         command: [
           process.env.DATABASE_DUMP_COMMAND,
-          'mongo ' + dbName + ' --eval \'printjson(db.dropDatabase())\'',
-          'mongorestore --noIndexRestore -d ' + dbName + ' dump/sflultimate/',
-          'mongo ' + dbName + ' app/db-migrate.js'
+          `mongo ${dbName} --eval 'printjson(db.dropDatabase())'`,
+          `mongorestore --noIndexRestore -d ${dbName} dump/${dbName}/` // ,
+          // 'mongo ' + dbName + ' app/db-migrate.js'
         ].join(' && ')
       }
     }

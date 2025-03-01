@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 import Head from 'next/head'
+import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { addLeagueStatus } from '../lib/payment-utils'
-import { useState } from 'react'
 import { PlayerLink } from '../components/PlayerLink'
 import { HeaderNavigation } from '../components/Navigation'
 
@@ -20,7 +20,7 @@ export async function getServerSideProps (context) {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        allTeams(where: {league: {isActive: true}}) {
+        allTeams(where: {league: {isActive: true}}, sortBy: name_ASC) {
           id,
           name,
           players {
@@ -28,24 +28,9 @@ export async function getServerSideProps (context) {
             firstName
             lastName
             gender
-            participation
-            partnerName
-            shirtSize
-            wouldCaptain
-            wouldSponsor
           }
         }
-      }`
-  })
-  const teams = results.data.allTeams
-  const league = results.data.allLeagues[0]
-  addLeagueStatus(league)
-
-  const playersApi = await GraphqlClient.query({
-    query: gql`
-      query {
-        allPlayers(where: {leagues_some: {id: "${league.id}"}}) {
-          id,
+        allPlayers(where: {leagues_some: {isActive: true}}, sortBy: createdAt_DESC) {
           createdAt,
           age,
           shirtSize,
@@ -61,9 +46,11 @@ export async function getServerSideProps (context) {
           preferredPositions,
           comments
         }
-      }
-    `
+      }`
   })
+  const teams = results.data.allTeams
+  const league = results.data.allLeagues[0]
+  addLeagueStatus(league)
 
   const playerToTeamMap = {}
   teams.forEach(function (team) {
@@ -72,7 +59,7 @@ export async function getServerSideProps (context) {
     })
   })
 
-  const players = Array.from(playersApi.data.allPlayers).map(function (player) {
+  const players = Array.from(results.data.allPlayers).map(function (player) {
     const p = Object.assign({}, player)
     p.team = playerToTeamMap[p.id] || null
     return p

@@ -25,7 +25,7 @@ function HeaderNavigation (props) {
       headerNavLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })
     }
 
-    if (!league.isRegistrationPeriod || league.isLateRegistrationPeriod) {
+    if ((!league.isRegistrationPeriod && !league.isEarlyRegistrationPeriod) || league.isLateRegistrationPeriod) {
       headerNavLinks = headerNavLinks.concat([
         { label: 'Teams', key: 'teams', href: '/teams' },
         { label: 'Schedule', key: 'schedule', href: '/schedule' },
