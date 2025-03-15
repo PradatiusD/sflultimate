@@ -7,10 +7,20 @@ import { PlayerLink } from '../components/PlayerLink'
 import { HeaderNavigation } from '../components/Navigation'
 
 export async function getServerSideProps (context) {
+  const queryVars = {
+    leagueFilter: {}
+  }
+  if (context.req.query.league_id) {
+    queryVars.leagueFilter = {
+      id: context.req.query.league_id
+    }
+  } else {
+    queryVars.leagueFilter.isActive = true
+  }
   const results = await GraphqlClient.query({
     query: gql`
-      query {
-        allLeagues(where:{isActive: true}) {
+      query GetLeagueForDraftboard ($leagueFilter: LeagueWhereInput) {
+        allLeagues(where: $leagueFilter) {
           id
           title
           earlyRegistrationStart
@@ -20,7 +30,7 @@ export async function getServerSideProps (context) {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        allTeams(where: {league: {isActive: true}}, sortBy: name_ASC) {
+        allTeams(where: {league: $leagueFilter}, sortBy: name_ASC) {
           id,
           name,
           players {
@@ -30,7 +40,7 @@ export async function getServerSideProps (context) {
             gender
           }
         }
-        allPlayers(where: {leagues_some: {isActive: true}}, sortBy: createdAt_DESC) {
+        allPlayers(where: {leagues_some: $leagueFilter}, sortBy: createdAt_DESC) {
           createdAt,
           age,
           shirtSize,
@@ -46,7 +56,8 @@ export async function getServerSideProps (context) {
           preferredPositions,
           comments
         }
-      }`
+      }`,
+    variables: queryVars
   })
   const teams = results.data.allTeams
   const league = results.data.allLeagues[0]
