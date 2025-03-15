@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
-import {generateGatewayClientToken, addLeagueStatus} from '../lib/payment-utils'
-import {HeaderNavigation} from "../components/Navigation";
+import { generateGatewayClientToken, addLeagueStatus } from '../lib/payment-utils'
+import { HeaderNavigation } from '../components/Navigation'
 
 function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
   const [inputStateClass, setInputStateClass] = useState(['form-group'])
@@ -48,7 +48,7 @@ function FormInput ({ label, type, name, placeholder, required, helpText, onChan
   </>
 }
 
-function FormSelect({label, name, options, required, helpText, onChange}) {
+function FormSelect ({ label, name, options, required, helpText, onChange }) {
   const [inputStateClass, setInputStateClass] = useState(['form-group'])
   return <>
     <div className={inputStateClass.join(' ')}>
@@ -82,11 +82,11 @@ function FormCheckbox ({ label, id, required }) {
   const [inputStateClass, setInputStateClass] = useState(['checkbox'])
 
   return (
-    <div className={inputStateClass.join(" ")}>
+    <div className={inputStateClass.join(' ')}>
       <label>
         <input
-          id={id} 
-          type="checkbox" 
+          id={id}
+          type="checkbox"
           required={required}
           onInvalid={(e) => {
             setInputStateClass([...inputStateClass, 'has-error'])
@@ -105,6 +105,7 @@ export const getServerSideProps = async (context) => {
         allLeagues(where: {isActive: true}) {
           id
           title
+          summary
           description
           numberOfWeeksOfPlay
           earlyRegistrationStart
@@ -148,7 +149,7 @@ locals.formatTime = function (date) {
 }
 
 export default function RegisterPage (props) {
-  const { league: activeLeague, braintreeToken} = props
+  const { league: activeLeague, braintreeToken } = props
   const [player, setPlayer] = useState({})
 
   let adultPrice, studentPrice
@@ -159,8 +160,8 @@ export default function RegisterPage (props) {
     studentPrice = activeLeague.pricingRegularStudent
     adultPrice = activeLeague.pricingRegularAdult
   } else if (activeLeague.isLateRegistrationPeriod) {
-    studentPrice = league.pricingLateStudent
-    adultPrice = league.pricingLateAdult
+    studentPrice = activeLeague.pricingLateStudent
+    adultPrice = activeLeague.pricingLateAdult
   }
 
   if (!activeLeague.canRegister) {
@@ -179,7 +180,7 @@ export default function RegisterPage (props) {
   }
 
   useEffect(() => {
-    braintree.dropin.create({authorization: BRAINTREE_CLIENT_TOKEN, selector: '#payment-form'}, function (err, instance) {
+    braintree.dropin.create({ authorization: BRAINTREE_CLIENT_TOKEN, selector: '#payment-form' }, function (err, instance) {
       document.querySelector('#submitButton').addEventListener('click', function (e) {
         e.preventDefault()
         instance.requestPaymentMethod(function (err, payload) {
@@ -189,26 +190,23 @@ export default function RegisterPage (props) {
             return alert('Please scroll up and double-check that you have filled out all the required fields.')
           }
           form.submit()
-        });
+        })
       })
-    });
+    })
 
     window.grecaptcha.ready(function () {
       window.grecaptcha.execute('6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w', { action: 'register' }).then(function (token) {
         window.document.querySelector('#recaptcha').value = token
       })
     })
-
-  }, []);
-
-
+  }, [])
 
   return <>
     <Head>
       <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
       <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
       <meta property="og:url" content="https://www.sflultimate.com/register"/>
-      <meta property="og:description" content={activeLeague.finalsTournamentDescription || ''}/>
+      <meta property="og:description" content={activeLeague.summary || ''}/>
       {
         activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
           <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
@@ -216,7 +214,7 @@ export default function RegisterPage (props) {
       }
       <script src="https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js"/>
       <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
-      <script dangerouslySetInnerHTML={{__html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';`}}></script>
+      <script dangerouslySetInnerHTML={{ __html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';` }}></script>
     </Head>
     <HeaderNavigation league={activeLeague} />
     <div className="container register">
@@ -228,7 +226,7 @@ export default function RegisterPage (props) {
         )
       }
 
-      <div dangerouslySetInnerHTML={{__html: activeLeague.description}}/>
+      <div dangerouslySetInnerHTML={{ __html: activeLeague.description }}/>
       <p>
         Regular registration is open <strong>as of {locals.formatDate(activeLeague.registrationStart)}</strong> and ends
         on <strong>{locals.formatDate(activeLeague.registrationEnd)}</strong>
@@ -248,7 +246,7 @@ export default function RegisterPage (props) {
                   name="firstName"
                   placeholder=""
                   required
-                  onChange={(e) => setPlayer({...player, firstName: e.target.value})}
+                  onChange={(e) => setPlayer({ ...player, firstName: e.target.value })}
                 />
               </div>
               <div className="col-md-6">
@@ -258,7 +256,7 @@ export default function RegisterPage (props) {
                   name="lastName"
                   placeholder=""
                   required
-                  onChange={(e) => setPlayer({...player, lastName: e.target.value})}
+                  onChange={(e) => setPlayer({ ...player, lastName: e.target.value })}
                 />
               </div>
             </div>
@@ -268,12 +266,12 @@ export default function RegisterPage (props) {
               name="gender"
               required
               options={[
-                {value: 'Female', label: 'Female'},
-                {value: 'Male', label: 'Male'},
-                {value: 'Other', label: 'Other / I\'d Prefer Not To'}
+                { value: 'Female', label: 'Female' },
+                { value: 'Male', label: 'Male' },
+                { value: 'Other', label: 'Other / I\'d Prefer Not To' }
               ]}
               helpText={'We use this information to draft teams that have even gender distributions.'}
-              onChange={(e) => setPlayer({...player, gender: e.target.value})}
+              onChange={(e) => setPlayer({ ...player, gender: e.target.value })}
             />
 
             <FormInput
@@ -283,7 +281,7 @@ export default function RegisterPage (props) {
               name="email"
               required
               helpText={'We use your e-mail to send you updates and league information through the email you provide here.'}
-              onChange={(e) => setPlayer({...player, email: e.target.value})}
+              onChange={(e) => setPlayer({ ...player, email: e.target.value })}
             />
 
             <FormInput
@@ -292,7 +290,7 @@ export default function RegisterPage (props) {
               name="phoneNumber"
               type="tel"
               helpText={'Not required, but often our captains find reaching out via SMS/GroupMe/WhatsApp is much better than email.  Your number would be shared with your team.'}
-              onChange={(e) => setPlayer({...player, phoneNumber: e.target.value})}
+              onChange={(e) => setPlayer({ ...player, phoneNumber: e.target.value })}
               required
             />
 
@@ -303,7 +301,7 @@ export default function RegisterPage (props) {
               type="number"
               helpText={'Our insurance policy requires us to report how many people within certain age-ranges exist in the league.  We do not ask for your birthdate to protect your privacy.'}
               required
-              onChange={(e) => setPlayer({...player, age: e.target.value})}
+              onChange={(e) => setPlayer({ ...player, age: e.target.value })}
             />
 
             <FormSelect
@@ -312,18 +310,18 @@ export default function RegisterPage (props) {
               name="skillLevel"
               required
               options={[
-                {value: 1, label: '1 - Absolute Beginner - never played before'},
-                {value: 2, label: '2 - Hey wait, what\'s a flick?'},
-                {value: 3, label: '3 - Working on throws, basic knowledge of the game'},
-                {value: 4, label: '4 - Pick-up player, okay throws'},
-                {value: 5, label: '5 - Decent backhand & forehand. Little to no club experience'},
-                {value: 6, label: '6 - Fairly solid backhand & forehand. Some club experience'},
-                {value: 7, label: '7 - Tourney experience. Several years of club'},
-                {value: 8, label: '8 - Club level, solid all around, not prone to errors'},
-                {value: 9, label: '9 - Rock star. spot on throws, awesome D'}
+                { value: 1, label: '1 - Absolute Beginner - never played before' },
+                { value: 2, label: '2 - Hey wait, what\'s a flick?' },
+                { value: 3, label: '3 - Working on throws, basic knowledge of the game' },
+                { value: 4, label: '4 - Pick-up player, okay throws' },
+                { value: 5, label: '5 - Decent backhand & forehand. Little to no club experience' },
+                { value: 6, label: '6 - Fairly solid backhand & forehand. Some club experience' },
+                { value: 7, label: '7 - Tourney experience. Several years of club' },
+                { value: 8, label: '8 - Club level, solid all around, not prone to errors' },
+                { value: 9, label: '9 - Rock star. spot on throws, awesome D' }
               ]}
               helpText={<span>Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team.</span>}
-              onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
+              onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
             />
 
             <div id="playerPositions">
@@ -385,7 +383,7 @@ export default function RegisterPage (props) {
                     }
                   ]}
                   helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
-                  onChange={(e) => setPlayer({...player, skillLevel: e.target.value})}
+                  onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
                 />
               ) : <div id="no-requestAttendance"></div>
             }
@@ -394,11 +392,11 @@ export default function RegisterPage (props) {
               <label htmlFor="willAttendFinals">Finals attendance</label>
               <div className="checkbox">
                 <label htmlFor="willAttendFinals"><input id="willAttendFinals" type="checkbox"
-                                                         name="willAttendFinals"/> I expect to be able to attend finals.</label>
+                  name="willAttendFinals"/> I expect to be able to attend finals.</label>
               </div>
             </div>
 
-            {/*/img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px")*/}
+            {/* /img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px") */}
             {/*            //                         if locals.league.jerseyDesign
             //                             p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 */}
@@ -410,19 +408,19 @@ export default function RegisterPage (props) {
                   name="shirtSize"
                   required
                   options={[
-                    {value: "XS", label: 'XS'},
-                    {value: "S", label: 'S'},
-                    {value: "M", label: 'M'},
-                    {value: "L", label: 'L'},
-                    {value: "XL", label: 'XL'},
-                    {value: "XXL", label: 'XXL'},
-                    {value: "NA", label: 'I do not want a jersey'}
+                    { value: 'XS', label: 'XS' },
+                    { value: 'S', label: 'S' },
+                    { value: 'M', label: 'M' },
+                    { value: 'L', label: 'L' },
+                    { value: 'XL', label: 'XL' },
+                    { value: 'XXL', label: 'XXL' },
+                    { value: 'NA', label: 'I do not want a jersey' }
                   ]}
                   helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
-                  onChange={(e) => setPlayer({...player, shirtSize: e.target.value})}
+                  onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
                 />
               ) : (
-                <div id={"no-requestShirtSize"}></div>
+                <div id={'no-requestShirtSize'}></div>
               )
             }
 
@@ -431,7 +429,7 @@ export default function RegisterPage (props) {
               id="partnerName"
               name="partnerName"
               helpText={'Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can\'t guarantee this.'}
-              onChange={(e) => setPlayer({...player, partnerName: e.target.value})}
+              onChange={(e) => setPlayer({ ...player, partnerName: e.target.value })}
             />
 
             <FormInput
@@ -447,8 +445,8 @@ export default function RegisterPage (props) {
               name="wouldCaptain"
               required
               options={[
-                {value: 'Yes', label: 'Yes'},
-                {value: 'No', label: 'No'}
+                { value: 'Yes', label: 'Yes' },
+                { value: 'No', label: 'No' }
               ]}
               helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
             />
@@ -457,13 +455,12 @@ export default function RegisterPage (props) {
               league entry (we'll reimburse you after) AND be invited to our super secret in-person draft party!
             </div>
 
-
             <h3>General Waiver</h3>
             <FormCheckbox
               id="termsConditions"
               required
               label={<span>I have read and agree to the <a href="/waiver" target="_blank">SFLUltimate Waiver</a></span>}
-              />
+            />
 
             <FormSelect
               label="Registration Type"
@@ -471,39 +468,39 @@ export default function RegisterPage (props) {
               name="registrationLevel"
               required
               options={[
-                {value: 'Adult', label: `Adult - $${adultPrice}`},
-                {value: 'Student', label: `Student - $${studentPrice}`}
+                { value: 'Adult', label: `Adult - $${adultPrice}` },
+                { value: 'Student', label: `Student - $${studentPrice}` }
               ]}
-              onChange={(e) => setPlayer({...player, registrationLevel: e.target.value})}
+              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
             />
 
             {
               activeLeague.isLateRegistrationPeriod ? (
-                  <div>
-                    <h3>Late Registration</h3>
-                    <FormCheckbox
-                      id="understandsLateFee"
-                      required
-                      label="I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend. If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me."
-                    />
-                  </div>
-                ) :
-                (
+                <div>
+                  <h3>Late Registration</h3>
+                  <FormCheckbox
+                    id="understandsLateFee"
+                    required
+                    label="I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend. If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me."
+                  />
+                </div>
+              )
+                : (
                   <div id="no-understandsLateFee"/>
                 )
             }
 
             {
               activeLeague.requestSponsorship ? (
-                  <div>
-                    <h3>Sponsorship</h3>
-                    <div className="checkbox">
-                      <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am
+                <div>
+                  <h3>Sponsorship</h3>
+                  <div className="checkbox">
+                    <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am
                         interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
-                    </div>
                   </div>
-                ) :
-                (
+                </div>
+              )
+                : (
                   <div id="no-requestSponsorship"/>
                 )
             }
@@ -513,12 +510,12 @@ export default function RegisterPage (props) {
               id="codeOfConduct1"
               label="I will foster Spirit of the Game with the aim of creating an inclusive and sportsmanlike environment."
               required
-              />
+            />
             <FormCheckbox
               id="codeOfConduct2"
               label="I will facilitate the growth of the sport through mentorship and coaching of novice players."
               required
-              />
+            />
             <FormCheckbox
               id="codeOfConduct3"
               label="I will improve my skills in a safe and supportive environment, including avoiding dangerous plays."
@@ -529,7 +526,7 @@ export default function RegisterPage (props) {
               label="I will take this as an opportunity to make new friends and to get inspired to join club teams."
               required
             />
-            
+
             <h3>Payment Information</h3>
             <FormInput
               label="Street Address"
@@ -550,7 +547,6 @@ export default function RegisterPage (props) {
     </div>
   </>
 }
-
 
 //
 //             if locals.league.lateRegistrationStart && locals.league.lateRegistrationEnd
