@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { addLeagueStatus } from '../lib/payment-utils'
-import {HeaderNavigation} from "../components/Navigation"
+import { HeaderNavigation } from '../components/Navigation'
 
 //   let games = await Game.model.find({
 //     league: res.locals.league._id
@@ -24,7 +24,7 @@ import {HeaderNavigation} from "../components/Navigation"
 // }
 //
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
@@ -40,6 +40,9 @@ export const getServerSideProps = (async () => {
           finalsTournamentDescription
           finalsTournamentEndDate
           finalsTournamentStartDate
+          finalsTournamentLocation {
+            name
+          }
         }
         allGames(where: {league: {isActive: true}}, sortBy: scheduledTime_ASC) {
           id
@@ -59,23 +62,25 @@ export const getServerSideProps = (async () => {
         allTeams(where: {league: {isActive: true}}) {
           color
         }
-      }`,
-  });
+      }`
+  })
   const league = results.data.allLeagues[0]
   const games = Array.from(results.data.allGames).sort((a, b) => {
     return new Date(a.scheduledTime).getTime() < new Date(b.scheduledTime).getTime()
   })
   addLeagueStatus(league)
-  return { props: {league, games}}
-})
+  return { props: { league, games } }
+}
 
 export default function Schedule (props) {
-  const {league, games} = props
+  const { league, games } = props
+  
+  const finalsStartDate = new Date(league.finalsTournamentStartDate)
   return (
     <>
       <Head>
-        <title>{league.title + " Schedule"}</title>
-        <meta property="og:title" content={league.title + " Schedule"} />
+        <title>{league.title + ' Schedule'}</title>
+        <meta property="og:title" content={`${league.title} Schedule`} />
         <meta property="og:url" content="https://www.sflultimate.com/schedule" />
         <meta property="og:description" content={'Discover the games schedule for ' + league.title} />
         <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/schedule.jpg" />
@@ -90,7 +95,7 @@ export default function Schedule (props) {
             <p className="lead">
               Pick your color to filter schedule by your team.<br/>
               <span className="team-color" ng-repeat="team in teams" ng-style="{'background-color': team.color}"
-                    ng-click="filterScheduleFor(team)"></span>
+                ng-click="filterScheduleFor(team)"></span>
             </p>
             <table className="table table-striped table-bordered">
               <thead>
@@ -104,9 +109,9 @@ export default function Schedule (props) {
               </thead>
               <tbody>
                 {
-                  games.map((game, index) => {
+                  games.map((game) => {
                     return (
-                      <tr className={(new Date(game.scheduledTime).getTime() < Date.now()) ?'text-muted': ''}>
+                      <tr className={(new Date(game.scheduledTime).getTime() < Date.now()) ? 'text-muted' : ''}>
                         <td>{new Date(game.scheduledTime).toLocaleDateString()}</td>
                         <td>{new Date(game.scheduledTime).toLocaleTimeString()}</td>
                         <td>
@@ -133,16 +138,16 @@ export default function Schedule (props) {
                         </td>
                         <td>{game?.location?.name}</td>
                         <td>
-                          <a href={"/games/" + game.id}>{new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}</a>
+                          <a href={'/games/' + game.id}>{new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}</a>
                         </td>
                       </tr>
                     )
                   })
                 }
                 <tr>
-                  <td>{league.finalsTournamentStartDate}</td>
-                  <td>{league.finalsTournamentStartDate} - {league.finalsTournamentEndDate}</td>
-                  <td ng-bind-html="finalsTournament.description" style={{maxWidth: '529px'}}></td>
+                  <td>{finalsStartDate.toLocaleDateString()}</td>
+                  <td>{finalsStartDate.toLocaleDateString()} {finalsStartDate.toLocaleTimeString()} - {new Date(league.finalsTournamentEndDate).toLocaleTimeString()}</td>
+                  <td style={{ maxWidth: '529px' }}>{league.finalsTournamentDescription}</td>
                   <td>{league.finalsTournamentLocation?.name}</td>
                 </tr>
               </tbody>
@@ -154,9 +159,6 @@ export default function Schedule (props) {
   )
 }
 
-//       $scope.standings = {}
-//       $scope.forfeits = {}
-//       $scope.finalsTournament = {}
 //
 //       // Today plus one day of separation
 //       var dayInMilliseconds = 1000 * 60 * 60 * 24

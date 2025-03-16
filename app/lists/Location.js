@@ -10,7 +10,7 @@ const fields = {
 
 module.exports = {
   fields,
-  labelResolver: item => item.title,
+  labelResolver: item => item.name,
   adminConfig: {
     defaultColumns: 'name'
   }
