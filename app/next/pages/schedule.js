@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { addLeagueStatus } from '../lib/payment-utils'
 import { HeaderNavigation } from '../components/Navigation'
+import { showDate, showHourMinute } from '../lib/utils'
 import { useState } from 'react'
 
 //   let games = await Game.model.find({
@@ -81,14 +82,6 @@ export default function Schedule (props) {
   const { league, games, teams } = props
 
   const finalsStartDate = new Date(league.finalsTournamentStartDate)
-
-  function showHourMinute (date) {
-    return new Date(date).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', timeZone: 'America/New_York' })
-  }
-
-  function showDate (date) {
-    return new Date(date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' })
-  }
 
   const [activeGames, setActiveGames] = useState(games)
 

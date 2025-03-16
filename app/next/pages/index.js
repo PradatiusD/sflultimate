@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import { useState, useEffect } from 'react'
 import { gql } from '@apollo/client'
-import GraphqlClient from "../lib/graphql-client";
+import GraphqlClient from '../lib/graphql-client'
 import { addLeagueStatus } from '../lib/payment-utils'
-import {FooterNavigation, HeaderNavigation} from "../components/Navigation";
+import { FooterNavigation, HeaderNavigation } from '../components/Navigation'
+import Standings from '../components/Standings'
 
 // const { getStandings } = require('./../stat-utils')
 //
@@ -19,7 +19,7 @@ import {FooterNavigation, HeaderNavigation} from "../components/Navigation";
 //     return
 //   }
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
@@ -31,15 +31,34 @@ export const getServerSideProps = (async () => {
           registrationEnd
           lateRegistrationStart
           lateRegistrationEnd
+        },
+        allGames(where: {league: {isActive: true}}) {
+          id
+          homeTeam {
+            id
+            name
+          }
+          awayTeam {
+            id
+            name
+          }
+          homeTeamScore
+          awayTeamScore
         }
-      }`,
-  });
+      }`
+  })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
-  return { props: {league}}
-})
+  return {
+    props: {
+      league,
+      games: results.data.allGames
+    }
+  }
+}
 
 export default function Homepage (props) {
+  const { games, league } = props
   const keyTakeaways = [
     {
       headline: 'Welcome',
@@ -117,11 +136,9 @@ export default function Homepage (props) {
     10. Have fun. All other things being equal, games are far more fun without the antipathy. Go hard. Play fair. Have fun.`
     }
   ]
-  
+
   keyTakeaways.pop()
 
-
-  const {league} = props
   const leagueChampions = [
     'league-champions-2017-spring.jpg',
     'league-champions-2016-fall.jpg',
@@ -144,7 +161,7 @@ export default function Homepage (props) {
         <meta property="og:title" content="South Florida Ulitmate"/>
         <meta property="og:url" content="https://www.sflultimate.com/"/>
         <meta property="og:description"
-              content="Since 1999, players from Miami & Ft. Lauderdale have united to promote grow the awesome sport of Ultimate Frisbee."/>
+          content="Since 1999, players from Miami & Ft. Lauderdale have united to promote grow the awesome sport of Ultimate Frisbee."/>
         <meta property="og:image" content="https://www.sflultimate.com/images/hatter-beach-ultimate.jpg"/>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
         <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
@@ -152,38 +169,38 @@ export default function Homepage (props) {
         <link rel="stylesheet" href="/styles/site.css"/>
       </Head>
       <HeaderNavigation league={league} />
-      {/*<div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}>*/}
-      {/*<div className="video-full-screen">*/}
-      {/*  <video autoPlay={true} muted={true} loop={true}>*/}
-        {/*    <source src="https://d137pw2ndt5u9c.cloudfront.net/SFL_Community_Beach_Hatter_2019.mp4" type={'video/mp4'}/>*/}
-        {/*  </video>*/}
-        {/*</div>*/}
-      {/*</div>*/}
+      {/* <div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}> */}
+      {/* <div className="video-full-screen"> */}
+      {/*  <video autoPlay={true} muted={true} loop={true}> */}
+      {/*    <source src="https://d137pw2ndt5u9c.cloudfront.net/SFL_Community_Beach_Hatter_2019.mp4" type={'video/mp4'}/> */}
+      {/*  </video> */}
+      {/* </div> */}
+      {/* </div> */}
       <div className="container">
         <div className="row">
           <div className="col-md-12">
-              {/*  if locals.league && locals.league.isRegistrationPeriod</p>*/}
-              {/*if locals.league && locals.league.isRegistrationPeriod*/}
-              {/*p Be sure to sign up for our locals.league.title*/}
-              {/*else*/}
-              {/*p We're working on our next league, while we wait go check out your local pick ups!*/}
+            {/*  if locals.league && locals.league.isRegistrationPeriod</p> */}
+            {/* if locals.league && locals.league.isRegistrationPeriod */}
+            {/* p Be sure to sign up for our locals.league.title */}
+            {/* else */}
+            {/* p We're working on our next league, while we wait go check out your local pick ups! */}
           </div>
         </div>
-        {/*<div className="row">*/}
-        {/*  <div className="col-md-12 text-center">*/}
-        {/*    {*/}
-        {/*      league ? <a href="/register" className="btn btn-lg btn-primary">Register</a> :*/}
-        {/*        <a href="/pickups" className="btn btn-lg btn-primary">Pick Ups</a>*/}
-        {/*    }*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+        {/* <div className="row"> */}
+        {/*  <div className="col-md-12 text-center"> */}
+        {/*    { */}
+        {/*      league ? <a href="/register" className="btn btn-lg btn-primary">Register</a> : */}
+        {/*        <a href="/pickups" className="btn btn-lg btn-primary">Pick Ups</a> */}
+        {/*    } */}
+        {/*  </div> */}
+        {/* </div> */}
       </div>
 
       {
         keyTakeaways.map((takeaway, index) => {
-          const cssClass = "key-takeaway " + ((index % 2 === 0) ? 'left-layout': 'right-layout') 
+          const cssClass = 'key-takeaway ' + ((index % 2 === 0) ? 'left-layout' : 'right-layout')
           return (
-            <section key={index} className={cssClass} style={{backgroundImage: `url(${takeaway.image})`}}>
+            <section key={index} className={cssClass} style={{ backgroundImage: `url(${takeaway.image})` }}>
               <div>
                 <h2>{takeaway.headline}</h2>
                 <p>{takeaway.body}</p>
@@ -214,7 +231,7 @@ export default function Homepage (props) {
         </div>
       </div>
 
-      <div className="container" style={{display: "none"}}>
+      <div className="container">
         <div className="row">
           <div className="col-md-12">
             <h3>Current Standings</h3>
@@ -223,40 +240,7 @@ export default function Homepage (props) {
         </div>
         <div className="row">
           <div className="col-md-12">
-            <div>
-              <table className="table table-striped table-bordered text-center">
-                <thead>
-                <tr>
-                  <th className="text-center">Name</th>
-                  <th className="text-center">Wins</th>
-                  <th className="text-center">Losses</th>
-                  <th className="text-center">Forfeits</th>
-                  <th className="text-center">Points Scored</th>
-                  <th className="text-center">Points Allowed</th>
-                  <th className="text-center">Avg. Points Scored</th>
-                  <th className="text-center">Avg. Points Allowed</th>
-                  <th className="text-center">Point Differential</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td className="text-left">=team.name</td>
-                  <td>=team.wins</td>
-                  <td>=team.losses</td>
-                  <td>=team.forfeits</td>
-                  <td>=team.pointsScored</td>
-                  <td>=team.pointsAllowed</td>
-                  <td>=team.avgPointsScoredPerGame</td>
-                  <td>=team.avgPointsAllowedPerGame</td>
-                  <td>=team.pointDiff</td>
-                </tr>
-                </tbody>
-              </table>
-              <p>
-                <em>Note: If one team forfeits, the opponent gets the equivalent of 13-0 game. If two teams playing
-                  each other forfeit, each takes a loss and a -13 hit to point differential.</em>
-              </p>
-            </div>
+            <Standings games={games} />
           </div>
         </div>
       </div>
@@ -269,7 +253,7 @@ export default function Homepage (props) {
         <div>
           {
             leagueChampions.map((championUrl, index) => {
-              return <figure key={index} style={{backgroundImage: 'url(/images/' + championUrl + ')'}}/>
+              return <figure key={index} style={{ backgroundImage: 'url(/images/' + championUrl + ')' }}/>
             })
           }
         </div>

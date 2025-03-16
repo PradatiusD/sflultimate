@@ -1,10 +1,11 @@
-// const { getStandings } = require('./../stat-utils')
-
 import GraphqlClient from '../../lib/graphql-client'
 import { gql } from '@apollo/client'
+import Head from 'next/head'
 import { HeaderNavigation } from '../../components/Navigation'
 import { addLeagueStatus } from '../../lib/payment-utils'
-export const getServerSideProps = async () => {
+import { showDate, showHourMinute } from '../../lib/utils'
+import Standings from '../../components/Standings'
+export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
@@ -16,27 +17,135 @@ export const getServerSideProps = async () => {
           registrationEnd
           lateRegistrationStart
           lateRegistrationEnd
+        },
+        currentGame: allGames(where: {id: "${context.params.game}"}) {
+          scheduledTime
+          league {
+            id
+            title
+          }
+          homeTeamScore
+          homeTeam {
+            id
+            name
+            players {
+              id
+              firstName
+              lastName
+            }
+          }
+          awayTeamScore
+          awayTeam {
+            id
+            name
+            players {
+              id
+              firstName
+              lastName
+            }
+          }
+        }
+        allPlayerGameStats(where: {game: {id: "${context.params.game}"}}) {
+          id
+          defenses
+          scores
+          assists
+          attended
+          player {
+            id
+          }
         }
       }`
   })
+  const game = results.data.currentGame[0]
+
+  const teamIds = [game.homeTeam.id, game.awayTeam.id]
+  const seasonResults = await GraphqlClient.query({
+    query: gql`
+      query($teamIds: [ID!]) {
+        seasonGames: allGames(where: {league: {id: "${game.league.id}"}, OR: [{homeTeam: {id_in: $teamIds}}, {awayTeam: {id_in: $teamIds}}]}) {
+          id
+          homeTeam {
+            id
+            name
+          }
+          awayTeam {
+            id
+            name
+          }
+          homeTeamScore
+          awayTeamScore
+        }
+      }
+    `,
+    variables: {
+      teamIds: teamIds
+    }
+  })
+
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
+
+  const stats = results.data.allPlayerGameStats
+
+  const playerMap = {}
+  for (const stat of stats) {
+    playerMap[stat.player.id] = stat
+  }
+  const teams = [game.homeTeam, game.awayTeam].map(function (team) {
+    const newTeam = Object.assign({}, team)
+    newTeam.stats = []
+    team.players.forEach(player => {
+      const stat = playerMap[player.id]
+      if (stat) {
+        const newStat = {
+          player: player,
+          assists: stat.assists || 0,
+          scores: stat.scores || 0,
+          defenses: stat.defenses || 0,
+          throwaways: stat.throwaways || 0,
+          drops: stat.drops || 0,
+          attended: stat.attended || false
+        }
+        newStat.total = newStat.assists + newStat.scores + newStat.defenses
+        if (newStat.total > 0 && stat.attended === false) {
+          newStat.attended = true
+        }
+        newTeam.stats.push(newStat)
+      }
+    })
+
+    newTeam.stats.sort((a, b) => {
+      return b.total - a.total
+    })
+
+    return newTeam
+  })
 
   return {
     props: {
       league,
-      game: {
-        league: {}
-      },
-      teams: []
+      game: game,
+      games: seasonResults.data.seasonGames,
+      teams: teams,
+      isGamePreview: stats.length === 0
     }
   }
 }
 
 export default function GamePage (props) {
-  const { game, preview, teams, league } = props
+  const { game, preview, teams, league, isGamePreview, games } = props
+  const title = game.league.title + ' ' + 'Matchup: ' + game.homeTeam.name + ' vs ' + game.awayTeam.name
+
+  const seoDescriptionSuffix = teams[0].name + ' vs ' + teams[1].name + ' - ' + showDate(game.scheduledTime)
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta property="og:title" content={title} />
+        <meta property="og:url" content={'https://www.sflultimate.com/game/' + game._id} />
+        <meta property="og:description" content={(isGamePreview ? 'Game Preview' : 'Game Recap') + ': ' + seoDescriptionSuffix } />
+      </Head>
       <HeaderNavigation league={league} />
       <div className="container">
         {preview ? (
@@ -46,49 +155,18 @@ export default function GamePage (props) {
         )}
         <p className="lead text-center">
           <strong>{game.league.title}</strong>
-          <br/> {new Date(game.scheduledTime).toLocaleDateString('en-US', {
-            month: 'long',
-            weekday: 'long',
-            day: 'numeric'
-          })} - {new Date(game.scheduledTime).toLocaleTimeString('en-US', {
-            timeZone: 'America/New_York',
-            minute: 'numeric',
-            hour: 'numeric'
-          })}
+          <br/> {showDate(game.scheduledTime)} - {showHourMinute(game.scheduledTime)}
           <br/> {game.location ? game.location.name : ''}
         </p>
         <div className="row">
           <p className="h3 text-center">Season Standings</p>
-          <table className="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Team Name</th>
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Point Diff</th>
-                <th>Points Scored</th>
-                <th>Points Allowed</th>
-                <th>Avg Points Scored</th>
-                <th>Avg Points Allowed</th>
-              </tr>
-            </thead>
-            <tbody>
-              {teams.map((team, index) => (
-                team.standing && (
-                  <tr key={index}>
-                    <td>{team.standing.name}</td>
-                    <td>{team.standing.wins}</td>
-                    <td>{team.standing.losses}</td>
-                    <td>{team.standing.pointDiff}</td>
-                    <td>{team.standing.pointsScored}</td>
-                    <td>{team.standing.pointsAllowed}</td>
-                    <td>{team.standing.avgPointsScoredPerGame}</td>
-                    <td>{team.standing.avgPointsAllowedPerGame}</td>
-                  </tr>
-                )
-              ))}
-            </tbody>
-          </table>
+          <Standings
+            games={games}
+            teamsFilter={(team) => {
+              return team.id === game.homeTeam.id || team.id === game.awayTeam.id
+            }}
+          />
+
           {teams.map((team, index) => (
             <div className="col-sm-6" key={index}>
               <div className="text-center">
@@ -98,58 +176,12 @@ export default function GamePage (props) {
               {preview ? (
                 <>
                   <p><em>Note: Below are season-wide stats.</em></p>
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Assists</th>
-                        <th>Scores</th>
-                        <th>Defenses</th>
-                        <th>Throwaways</th>
-                        <th>Drops</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {team.stats.map((stat, index) => (
-                        <tr key={index}>
-                          <td>{stat.player.name.first} {stat.player.name.last}</td>
-                          <td>{stat.assists}</td>
-                          <td>{stat.scores}</td>
-                          <td>{stat.defenses}</td>
-                          <td>{stat.throwaways}</td>
-                          <td>{stat.drops}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <GameStatTable team={team} />
                 </>
               ) : (
                 <>
                   <h3>Attended</h3>
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Assists</th>
-                        <th>Scores</th>
-                        <th>Defenses</th>
-                        <th>Throwaways</th>
-                        <th>Drops</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {team.stats.filter(stat => stat.attended).map((stat, index) => (
-                        <tr key={index}>
-                          <td>{stat.player.name.first} {stat.player.name.last}</td>
-                          <td>{stat.assists}</td>
-                          <td>{stat.scores}</td>
-                          <td>{stat.defenses}</td>
-                          <td>{stat.throwaways}</td>
-                          <td>{stat.drops}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <GameStatTable team={team} />
                   <h3>Missing</h3>
                   <table className="table table-striped">
                     <thead>
@@ -158,9 +190,9 @@ export default function GamePage (props) {
                       </tr>
                     </thead>
                     <tbody>
-                      {team.stats.filter(stat => !stat.attended).map((stat, index) => (
+                      {team.stats?.filter(stat => !stat.attended).map((stat, index) => (
                         <tr key={index}>
-                          <td>{stat.player.name.first} {stat.player.name.last}</td>
+                          <td>{stat.player.firstName} {stat.player.lastName}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -175,45 +207,38 @@ export default function GamePage (props) {
   )
 }
 
-//
-//   const $find = {
-//     _id: new ObjectID(req.params.gameID)
-//   }
-//
-//   locals.game = await Game.model.findOne($find)
-//     .populate('homeTeam')
-//     .populate('awayTeam')
-//     .populate('location')
-//     .populate('league', '-description -pricing -finalsTournament').lean().exec()
-//
-//   locals.standings = await getStandings({
-//     currentLeague: locals.game.league._id
-//   })
-//
-//   for (const standing of locals.standings) {
-//     if (standing.teamId === locals.game.homeTeam._id.toString()) {
-//       locals.game.homeTeam.standing = standing
-//     } else if (standing.teamId === locals.game.awayTeam._id.toString()) {
-//       locals.game.awayTeam.standing = standing
-//     }
-//   }
-//
-//   const playerMap = {}
-//   for (const key of ['homeTeam', 'awayTeam']) {
-//     for (const player of locals.game[key].players) {
-//       playerMap[player.toString()] = key
-//     }
-//   }
-//
-//   let stats = await PlayerGameStat.model.find({
-//     game: $find._id
-//   }).populate('player', 'name').lean().exec()
-//
-//   stats = stats.map((stat) => {
-//     stat.throwaways = stat.throwaways || 0
-//     stat.drops = stat.drops || 0
-//     return stat
-//   })
+function GameStatTable (props) {
+  const { team } = props
+  return (
+    <table className="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Assists</th>
+          <th>Scores</th>
+          <th>Defenses</th>
+          <th>Throwaways</th>
+          <th>Drops</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {team.stats?.map((stat, index) => (
+          <tr key={index}>
+            <td>{stat.player.firstName} {stat.player.lastName}</td>
+            <td>{stat.assists}</td>
+            <td>{stat.scores}</td>
+            <td>{stat.defenses}</td>
+            <td>{stat.throwaways}</td>
+            <td>{stat.drops}</td>
+            <td>{stat.total}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
 //
 //   // If no stats, show preview state of all stats
 //   if (stats.length === 0) {
@@ -230,7 +255,6 @@ export default function GamePage (props) {
 //         $in: locals.game.homeTeam.players.concat(locals.game.awayTeam.players)
 //       }
 //     }
-//     stats = await PlayerGameStat.model.find(playerFind).populate('player', 'name').lean().exec()
 //     // Now I need to reduce to season records
 //     const statMap = {}
 //     for (const stat of stats) {
@@ -254,20 +278,6 @@ export default function GamePage (props) {
 //     return playerMap[stat.player._id.toString()] === 'awayTeam'
 //   })
 //
-//   function totalContributionDescending (a, b) {
-//     const diff = (b.assists + b.scores + b.defenses) - (a.assists + a.scores + a.defenses)
-//     if (diff !== 0) {
-//       return diff
-//     }
-//     return a.player.name.first.localeCompare(b.player.name.first)
-//   }
-//
-//   const homeTeamStats = stats.filter(function (stat) {
-//     return playerMap[stat.player._id.toString()] === 'homeTeam'
-//   })
-//
-//   awayTeamStats.sort(totalContributionDescending)
-//   homeTeamStats.sort(totalContributionDescending)
 //
 //   locals.teams = [
 //     {
@@ -283,18 +293,3 @@ export default function GamePage (props) {
 //       stats: homeTeamStats
 //     }
 //   ]
-//
-//   // Render the view
-//   view.render('game')
-// }
-
-/*
-
-block head
-    meta(property="og:title"        content=locals.league.title + ' ' + 'Matchup: ' + teams[0].name  + " vs " + teams[1].name)
-    meta(property="og:url"          content="https://www.sflultimate.com/game/" + game._id)
-    if preview
-        meta(property="og:description"  content="Game Preview: " + teams[0].name  + " vs " + teams[1].name + " - " + game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'}))
-    else
-        meta(property="og:description"  content="Game Recap: " + teams[0].name  + " vs " + teams[1].name + " - " + game.scheduledTime.toLocaleDateString('en-US', {month: 'long', weekday: 'long', day: 'numeric'}))
- */

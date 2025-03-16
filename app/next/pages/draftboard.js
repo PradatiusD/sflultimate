@@ -41,6 +41,7 @@ export async function getServerSideProps (context) {
           }
         }
         allPlayers(where: {leagues_some: $leagueFilter}, sortBy: createdAt_DESC) {
+          id
           createdAt,
           age,
           shirtSize,
@@ -75,16 +76,266 @@ export async function getServerSideProps (context) {
     p.team = playerToTeamMap[p.id] || null
     return p
   })
+
   return {
-    props: { league, teams, user: context.req.user ? context.req.user : null, players }
+    props: {
+      league,
+      teams,
+      players,
+      user: context.req.user ? context.req.user : null
+    }
   }
 }
 
 export default function Draftboard (props) {
-  const { league, user, teams } = props
+  const { league, user, teams, players } = props
 
-  const [players, setPlayers] = useState(props.players)
+  const [activeData, setActiveData] = useState({
+    players: players,
+    teams: teams
+  })
 
+  const modifyRoster = (team, playerToUpdate, action) => {
+    const mutation = gql`
+      mutation update($id: ID!, $data: TeamUpdateInput) {
+        updateTeam(id: $id, data: $data) {
+          id,
+          name,
+          players {
+            id,
+            firstName
+            lastName
+            gender
+          }
+        }
+      }
+    `
+    const params = {
+      mutation: mutation,
+      variables: {
+        id: team.id,
+        data: {
+          players: {
+          }
+        }
+      }
+    }
+    if (action === 'add') {
+      params.variables.data.players.connect = { id: playerToUpdate.id }
+    } else if (action === 'remove') {
+      params.variables.data.players.disconnect = { id: playerToUpdate.id }
+    } else {
+      throw new Error('Invalid action')
+    }
+    return GraphqlClient.mutate(params).then(function (response) {
+      const newTeams = activeData.teams.map(t => {
+        if (t.id === response.data.updateTeam.id) {
+          return response.data.updateTeam
+        }
+        return t
+      })
+
+      const newPlayers = activeData.players.map(p => {
+        const isPlayerId = p.id === playerToUpdate.id
+        if (isPlayerId) {
+          const newP = Object.assign({}, p)
+          newP.team = action === 'add' ? response.data.updateTeam.id : null
+          return newP
+        }
+        return p
+      })
+      const newState = {
+        teams: newTeams,
+        players: newPlayers
+      }
+      setActiveData(newState)
+    }).catch(function (e) {
+      console.error(e)
+    })
+  }
+  const sortPlayersByRecency = () => {
+    const arrCopy = props.players.map(p => p)
+    arrCopy.sort(function (a, b) {
+      return b.createdAt.localeCompare(a.createdAt)
+    })
+
+    setActiveData({
+      teams: activeData.players,
+      players: arrCopy
+    })
+  }
+  const sortByGenderThenSkill = () => {
+    const arrCopy = props.players.map(p => p)
+    arrCopy.sort(function (a, b) {
+      const aGender = a.gender === 'Female' ? 1 : 0
+      const bGender = b.gender === 'Female' ? 1 : 0
+
+      const genderDiff = bGender - aGender
+
+      if (genderDiff === 0) {
+        return b.skillLevel - a.skillLevel
+      }
+
+      return bGender - aGender
+    })
+    setActiveData({
+      teams: activeData.players,
+      players: arrCopy
+    })
+  }
+  const showOnlyCaptains = () => {
+    const copy = props.players.filter(player => player.wouldCaptain)
+    setActiveData({
+      teams: activeData.players,
+      players: copy
+    })
+  }
+
+  const showOnlySponsors = () => {
+    const sponsors = props.players.filter(player => player.wouldSponsor)
+    setActiveData({
+      teams: activeData.players,
+      players: sponsors
+    })
+  }
+
+  const formatDate = function (date) {
+    return new Date(date).toLocaleString()
+  }
+
+  const getBadgeStyle = function (player) {
+    if (!player || !player.team) {
+      return {}
+    }
+
+    return {
+      backgroundColor: player.team && player.team.color ? player.team.color : 'white',
+      color: player && player.team.color === '#ffffff' ? 'black' : 'black'
+    }
+  }
+
+  return (
+    <>
+      <Head>
+        <title>{league?.title} Draftboard</title>
+      </Head>
+      <HeaderNavigation league={league} />
+      <div className="container-fluid">
+        <h1>{league?.title} Draftboard</h1>
+        <div id="draftboard">
+          {
+            user && (
+              <div className="drafted-teams row">
+                {activeData.teams.map((team, index) => (
+                  <div className="col-md-4" key={index}>
+                    <table className="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>{team.name} ({team.players.length})</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          team.players.map((player, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>{player.firstName} {player.lastName} ({player.gender.charAt(0)})</td>
+                                <td>
+                                  <button className="btn btn-default btn-sm" onClick={() => modifyRoster(team, player, 'remove')}>Remove
+                                  </button>
+                                </td>
+                              </tr>
+                            )
+                          }
+                          )}
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
+              </div>
+            )
+          }
+
+          <p className="lead">There are {players.length} players registered.</p>
+
+          <div className="btn-group">
+            <button className="btn btn-default" onClick={sortPlayersByRecency}>Sort By Recent</button>
+            <button className="btn btn-default" onClick={sortByGenderThenSkill}>Sort By Gender, Then Skill</button>
+            <button className="btn btn-default" onClick={showOnlyCaptains}>Show Only Captains</button>
+            <button className="btn btn-default" onClick={showOnlySponsors}>Show Only Sponsors</button>
+          </div>
+
+          <table className="table table-hover table-striped">
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Date Registered</th>
+                <th>Age</th>
+                <th>Shirt Size</th>
+                <th>Positions</th>
+                <th>Skill</th>
+                <th>Attendance</th>
+                <th>Will Attend Finals?</th>
+                <th>Partner</th>
+                <th>Comments</th>
+                <th>Would Captain?</th>
+                <th>Would Sponsor?</th>
+                {user && <th>Actions</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {activeData.players.map((player, index) => {
+                return (
+                  <tr key={player.id}>
+                    <td>{index + 1}</td>
+                    <td><PlayerLink player={player} /></td>
+                    <td>{player.gender.charAt(0)}</td>
+                    <td>{formatDate(player.createdAt)}</td>
+                    <td>{player.age}</td>
+                    <td>{player.shirtSize}</td>
+                    <td>{player.preferredPositions}</td>
+                    <td>{player.skillLevel}</td>
+                    <td>{player.participation}</td>
+                    <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
+                    <td>{player.partnerName}</td>
+                    <td>
+                      <small className="badge"
+                        style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
+                    </td>
+                    <td>{player.wouldCaptain ? 'Yes' : ''}</td>
+                    <td>{player.wouldSponsor ? 'Yes' : ''}</td>
+                    <td>
+                      {user && !player.team && teams.map((team, index) => {
+                        return (
+                          <button
+                            key={index}
+                            className="btn btn-default"
+                            onClick={() => {
+                              modifyRoster(team, player, 'add')
+                            }}>
+                          Add To {team.name}
+                          </button>
+                        )
+                      })}
+                    </td>
+                  </tr>
+                )
+              })
+              }
+            </tbody>
+          </table>
+          <AnalyticsTables players={players} />
+        </div>
+      </div>
+    </>
+  )
+}
+
+function AnalyticsTables (props) {
+  const { players } = props
   const columnsForTotals = {
     gender: ['Gender'],
     participation: ['Participation %'],
@@ -233,238 +484,36 @@ export default function Draftboard (props) {
       return obj
     }, {})
   }
-
-  const modifyRoster = (team, player, action) => {
-    const mutation = gql`
-      mutation update($id: ID!, $data: TeamUpdateInput) {
-        updateTeam(id: $id, data: $data) {
-          id
-          __typename
-          players {
-            id,
-            firstName,
-            lastName
-          }
-        }
-      }
-    `
-    const params = {
-      mutation: mutation,
-      variables: {
-        id: team.id,
-        data: {
-          players: {
-          }
-        }
-      }
-    }
-    if (action === 'add') {
-      params.variables.data.players.connect = { id: player.id }
-    } else if (action === 'remove') {
-      params.variables.data.players.disconnect = { id: player.id }
-    } else {
-      throw new Error('Invalid action')
-    }
-    return GraphqlClient.mutate(params).then(function () {
-      window.location.reload()
-    }).catch(function (e) {
-      console.error(e)
-    })
-  }
-  const sortPlayersByRecency = () => {
-    const arrCopy = props.players.map(p => p)
-    arrCopy.sort(function (a, b) {
-      return b.createdAt.localeCompare(a.createdAt)
-    })
-    setPlayers(arrCopy)
-  }
-  const sortByGenderThenSkill = () => {
-    const arrCopy = props.players.map(p => p)
-    arrCopy.sort(function (a, b) {
-      const aGender = a.gender === 'Female' ? 1 : 0
-      const bGender = b.gender === 'Female' ? 1 : 0
-
-      const genderDiff = bGender - aGender
-
-      if (genderDiff === 0) {
-        return b.skillLevel - a.skillLevel
-      }
-
-      return bGender - aGender
-    })
-    setPlayers(arrCopy)
-  }
-  const showOnlyCaptains = () => {
-    const copy = props.players.filter(player => player.wouldCaptain)
-    setPlayers(copy)
-  }
-
-  const showOnlySponsors = () => {
-    const sponsors = props.players.filter(player => player.wouldSponsor)
-    setPlayers(sponsors)
-  }
-
-  const formatDate = function (date) {
-    return new Date(date).toLocaleString()
-  }
-
-  const getBadgeStyle = function (player) {
-    if (!player || !player.team) {
-      return {}
-    }
-
-    return {
-      backgroundColor: player.team && player.team.color ? player.team.color : 'white',
-      color: player && player.team.color === '#ffffff' ? 'black' : 'black'
-    }
-  }
-
   return (
-    <>
-      <Head>
-        <title>{league?.title} Draftboard</title>
-      </Head>
-      <HeaderNavigation league={league} />
-      <div className="container-fluid">
-        <h1>{league?.title} Draftboard</h1>
-        <div id="draftboard">
-          {
-            user && (
-              <div className="drafted-teams row">
-                {teams.map((team, index) => (
-                  <div className="col-md-4" key={index}>
-                    <table className="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>{team.name} ({team.players.length})</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {
-                          team.players.map((player, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{player.firstName} {player.lastName} ({player.gender.charAt(0)})</td>
-                                <td>
-                                  <button className="btn btn-default btn-sm" onClick={() => modifyRoster(team, player, 'remove')}>Remove
-                                  </button>
-                                </td>
-                              </tr>
-                            )
-                          }
-                          )}
-                      </tbody>
-                    </table>
-                  </div>
-                ))}
-              </div>
-            )
-          }
-
-          <p className="lead">There are {players.length} players registered.</p>
-
-          <div className="btn-group">
-            <button className="btn btn-default" onClick={sortPlayersByRecency}>Sort By Recent</button>
-            <button className="btn btn-default" onClick={sortByGenderThenSkill}>Sort By Gender, Then Skill</button>
-            <button className="btn btn-default" onClick={showOnlyCaptains}>Show Only Captains</button>
-            <button className="btn btn-default" onClick={showOnlySponsors}>Show Only Sponsors</button>
-          </div>
-
-          <table className="table table-hover table-striped">
-            <thead>
-              <tr>
-                <th>Number</th>
-                <th>Name</th>
-                <th>Gender</th>
-                <th>Date Registered</th>
-                <th>Age</th>
-                <th>Shirt Size</th>
-                <th>Positions</th>
-                <th>Skill</th>
-                <th>Attendance</th>
-                <th>Will Attend Finals?</th>
-                <th>Partner</th>
-                <th>Comments</th>
-                <th>Would Captain?</th>
-                <th>Would Sponsor?</th>
-                {user && <th>Actions</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {players.map((player, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td><PlayerLink player={player} /></td>
-                    <td>{player.gender.charAt(0)}</td>
-                    <td>{formatDate(player.createdAt)}</td>
-                    <td>{player.age}</td>
-                    <td>{player.shirtSize}</td>
-                    <td>{player.preferredPositions}</td>
-                    <td>{player.skillLevel}</td>
-                    <td>{player.participation}</td>
-                    <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
-                    <td>{player.partnerName}</td>
-                    <td>
-                      <small className="badge"
-                        style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
-                    </td>
-                    <td>{player.wouldCaptain ? 'Yes' : ''}</td>
-                    <td>{player.wouldSponsor ? 'Yes' : ''}</td>
-                    <td>
-                      {user && !player.team && teams.map((team, index) => {
-                        return (
-                          <button
-                            key={index}
-                            className="btn btn-default"
-                            onClick={() => {
-                              modifyRoster(team, player, 'add')
-                            }}>
-                          Add To {team.name}
-                          </button>
-                        )
-                      })}
-                    </td>
+    <div className="row">
+      <div className="col-md-12">
+        <h3>Breakdowns</h3>
+        {keysForTotals.map((mapName, index) => (
+          <div key={index} className="col-md-6">
+            <h4>{mapName}</h4>
+            <table className="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  {columnsForTotals[mapName].map((column, colIndex) => (
+                    <th key={colIndex}>{column}</th>
+                  ))}
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(totals[mapName]).map(([key, count], rowIndex) => (
+                  <tr key={rowIndex}>
+                    {key.split('|').map((columnValue, colIndex) => (
+                      <td key={colIndex}>{columnValue}</td>
+                    ))}
+                    <td>{count.toLocaleString()}</td>
                   </tr>
-                )
-              })
-              }
-            </tbody>
-          </table>
-
-          <div className="row">
-            <div className="col-md-12">
-              <h3>Breakdowns</h3>
-              {keysForTotals.map((mapName, index) => (
-                <div key={index} className="col-md-6">
-                  <h4>{mapName}</h4>
-                  <table className="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        {columnsForTotals[mapName].map((column, colIndex) => (
-                          <th key={colIndex}>{column}</th>
-                        ))}
-                        <th>Count</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(totals[mapName]).map(([key, count], rowIndex) => (
-                        <tr key={rowIndex}>
-                          {key.split('|').map((columnValue, colIndex) => (
-                            <td key={colIndex}>{columnValue}</td>
-                          ))}
-                          <td>{count.toLocaleString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              ))}
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
+        ))}
       </div>
-    </>
+    </div>
   )
 }

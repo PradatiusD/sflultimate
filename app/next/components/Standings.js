@@ -1,61 +1,31 @@
-const keystone = require('keystone')
-const Game = keystone.list('Game')
-const Team = keystone.list('Team')
 
-/**
- * Get Current League Standings
- * @param options {object}
- * @param options.currentLeague {string}
- * @return {Promise<*[]>}
- */
-module.exports.getStandings = async function (options) {
-  const { currentLeague } = options
-  const games = await Game.model.find({
-    league: currentLeague,
-    $or: [
-      {
-        homeTeamScore: {
-          $exists: true,
-          $ne: 0
+export default function Standings (props) {
+  const { games, teamsFilter } = props
+  const teamMap = {}
+  games.forEach(game => {
+    ['homeTeam', 'awayTeam'].forEach((type) => {
+      const id = game[type].id
+      const name = game[type].name
+      if (!teamMap[id]) {
+        teamMap[id] = {
+          name: name,
+          games: []
         }
-      },
-      {
-        awayTeamScore: {
-          $exists: true,
-          $ne: 0
-        }
-      },
-      {
-        homeTeamForfeit: true
-      },
-      {
-        awayTeamForfeit: true
       }
-    ],
-    scheduledTime: {
-      $lte: new Date()
-    }
-  }).lean()
+      teamMap[id].games.push(game)
+    })
+  })
 
   const standingsMap = {}
-
-  const teams = await Team.model.find({
-    league: currentLeague
-  }).lean().exec()
-
-  const teamsMap = {}
-  for (const team of teams) {
-    teamsMap[team._id.valueOf()] = team.name
-  }
   for (const game of games) {
     const homeTeam = {
-      id: game.homeTeam.valueOf(),
+      id: game.homeTeam.id,
       score: game.homeTeamScore,
       forfeit: game.homeTeamForfeit
     }
 
     const awayTeam = {
-      id: game.awayTeam.valueOf(),
+      id: game.awayTeam.id,
       score: game.awayTeamScore,
       forfeit: game.awayTeamForfeit
     }
@@ -63,7 +33,7 @@ module.exports.getStandings = async function (options) {
     const createEntryIfMissing = function (teamId) {
       if (!standingsMap[teamId]) {
         standingsMap[teamId] = {
-          name: teamsMap[teamId],
+          name: teamMap[teamId].name,
           wins: 0,
           losses: 0,
           pointDiff: 0,
@@ -130,13 +100,13 @@ module.exports.getStandings = async function (options) {
     }
   }
 
-  const standings = []
+  let standings = []
   for (const id in standingsMap) {
     const teamEntry = standingsMap[id]
     const totalGames = teamEntry.wins + teamEntry.losses
     teamEntry.avgPointsScoredPerGame = (teamEntry.pointsScored / totalGames).toFixed(2)
     teamEntry.avgPointsAllowedPerGame = (teamEntry.pointsAllowed / totalGames).toFixed(2)
-    teamEntry.teamId = id
+    teamEntry.id = id
     standings.push(teamEntry)
   }
   standings.sort(function (a, b) {
@@ -146,5 +116,51 @@ module.exports.getStandings = async function (options) {
     }
     return b.pointDiff - a.pointDiff
   })
-  return standings
+
+  if (teamsFilter) {
+    standings = standings.filter(teamsFilter)
+  }
+
+  return (
+    <>
+      <table className="table table-striped table-bordered text-center">
+        <thead>
+          <tr>
+            <th className="text-center">Name</th>
+            <th className="text-center">Wins</th>
+            <th className="text-center">Losses</th>
+            <th className="text-center">Forfeits</th>
+            <th className="text-center">Points Scored</th>
+            <th className="text-center">Points Allowed</th>
+            <th className="text-center">Avg. Points Scored</th>
+            <th className="text-center">Avg. Points Allowed</th>
+            <th className="text-center">Point Differential</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            standings.map((team, index) => {
+              return (
+                <tr key={team.id}>
+                  <td className="text-left">{team.name}</td>
+                  <td>{team.wins}</td>
+                  <td>{team.losses}</td>
+                  <td>{team.forfeits}</td>
+                  <td>{team.pointsScored}</td>
+                  <td>{team.pointsAllowed}</td>
+                  <td>{team.avgPointsScoredPerGame}</td>
+                  <td>{team.avgPointsAllowedPerGame}</td>
+                  <td>{team.pointDiff}</td>
+                </tr>
+              )
+            })
+          }
+        </tbody>
+      </table>
+      <p>
+        <em>Note: If one team forfeits, the opponent gets the equivalent of 13-0 game. If two teams playing
+          each other forfeit, each takes a loss and a -13 hit to point differential.</em>
+      </p>
+    </>
+  )
 }
