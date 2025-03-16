@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { addLeagueStatus } from '../lib/payment-utils'
 import { HeaderNavigation } from '../components/Navigation'
+import { useState } from 'react'
 
 //   let games = await Game.model.find({
 //     league: res.locals.league._id
@@ -49,10 +50,12 @@ export const getServerSideProps = async () => {
           scheduledTime
           homeTeam {
             name
+            color
           }
           homeTeamScore
           awayTeam {
             name
+            color
           }
           awayTeamScore
           location {
@@ -60,6 +63,7 @@ export const getServerSideProps = async () => {
           }
         }
         allTeams(where: {league: {isActive: true}}) {
+          id
           color
         }
       }`
@@ -68,14 +72,26 @@ export const getServerSideProps = async () => {
   const games = Array.from(results.data.allGames).sort((a, b) => {
     return new Date(a.scheduledTime).getTime() < new Date(b.scheduledTime).getTime()
   })
+  const teams = results.data.allTeams
   addLeagueStatus(league)
-  return { props: { league, games } }
+  return { props: { league, games, teams } }
 }
 
 export default function Schedule (props) {
-  const { league, games } = props
-  
+  const { league, games, teams } = props
+
   const finalsStartDate = new Date(league.finalsTournamentStartDate)
+
+  function showHourMinute (date) {
+    return new Date(date).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', timeZone: 'America/New_York' })
+  }
+
+  function showDate (date) {
+    return new Date(date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' })
+  }
+
+  const [activeGames, setActiveGames] = useState(games)
+
   return (
     <>
       <Head>
@@ -94,8 +110,24 @@ export default function Schedule (props) {
             <h1>{league.title} Schedule</h1>
             <p className="lead">
               Pick your color to filter schedule by your team.<br/>
-              <span className="team-color" ng-repeat="team in teams" ng-style="{'background-color': team.color}"
-                ng-click="filterScheduleFor(team)"></span>
+              {
+                teams.map(team => {
+                  return (
+                    <span
+                      className="team-color"
+                      key={team.id}
+                      style={{ backgroundColor: team.color }}
+                      onClick={() => {
+                        const filteredList = games.filter((game) => {
+                          return game.homeTeam.color === team.color || game.awayTeam.color === team.color
+                        })
+                        setActiveGames(filteredList)
+                      }}
+                    ></span>
+                  )
+                })
+              }
+
             </p>
             <table className="table table-striped table-bordered">
               <thead>
@@ -109,11 +141,11 @@ export default function Schedule (props) {
               </thead>
               <tbody>
                 {
-                  games.map((game) => {
+                  activeGames.map((game) => {
                     return (
                       <tr className={(new Date(game.scheduledTime).getTime() < Date.now()) ? 'text-muted' : ''}>
-                        <td>{new Date(game.scheduledTime).toLocaleDateString()}</td>
-                        <td>{new Date(game.scheduledTime).toLocaleTimeString()}</td>
+                        <td>{showDate(game.scheduledTime)}</td>
+                        <td>{showHourMinute(game.scheduledTime)}</td>
                         <td>
                           <span>{game.homeTeam.name} vs. {game.awayTeam.name}</span>
                           {
@@ -145,8 +177,8 @@ export default function Schedule (props) {
                   })
                 }
                 <tr>
-                  <td>{finalsStartDate.toLocaleDateString()}</td>
-                  <td>{finalsStartDate.toLocaleDateString()} {finalsStartDate.toLocaleTimeString()} - {new Date(league.finalsTournamentEndDate).toLocaleTimeString()}</td>
+                  <td>{showDate(finalsStartDate)}</td>
+                  <td>{showHourMinute(finalsStartDate)} - {showHourMinute(league.finalsTournamentEndDate)}</td>
                   <td style={{ maxWidth: '529px' }}>{league.finalsTournamentDescription}</td>
                   <td>{league.finalsTournamentLocation?.name}</td>
                 </tr>
@@ -166,14 +198,6 @@ export default function Schedule (props) {
 //
 //       $scope.colorFilter = function (item) {
 //       return item
-//     }
-//
-//       $scope.filterScheduleFor = function (team) {
-//       $scope.colorFilter = function (game) {
-//       if (game.awayTeam._id === team._id || game.homeTeam._id === team._id) {
-//       return true
-//     }
-//     }
 //     }
 //
 //       $http.get(window.sflUtils.addLeagueOverride('/schedule?f=json')).then(function (response) {
