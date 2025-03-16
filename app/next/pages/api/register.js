@@ -72,6 +72,7 @@ function createPlayerRecord (payload) {
     age: payload.age,
     skillLevel: payload.skillLevel,
     registrationLevel: payload.registrationLevel,
+    preferredPositions: Array.isArray(payload.preferredPositions) ? payload.preferredPositions.join(', ') : '',
     participation: payload.participation,
     comments: payload.comments,
     phoneNumber: payload.phoneNumber,
