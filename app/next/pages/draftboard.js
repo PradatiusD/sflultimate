@@ -34,27 +34,28 @@ export async function getServerSideProps (context) {
           id,
           name,
           players {
-            id,
+            id
             firstName
             lastName
             gender
+            skillLevel
           }
         }
         allPlayers(where: {leagues_some: $leagueFilter}, sortBy: createdAt_DESC) {
           id
-          createdAt,
-          age,
-          shirtSize,
-          skillLevel,
-          participation,
-          partnerName,
+          createdAt
+          age
+          shirtSize
+          skillLevel
+          participation
+          partnerName
           willAttendFinals
-          firstName,
-          lastName,
-          gender,
-          wouldCaptain,
-          wouldSponsor,
-          preferredPositions,
+          firstName
+          lastName
+          gender
+          wouldCaptain
+          wouldSponsor
+          preferredPositions
           comments
         }
       }`,
@@ -92,20 +93,22 @@ export default function Draftboard (props) {
 
   const [activeData, setActiveData] = useState({
     players: players,
-    teams: teams
+    teams: teams,
+    mode: 'default'
   })
 
   const modifyRoster = (team, playerToUpdate, action) => {
     const mutation = gql`
       mutation update($id: ID!, $data: TeamUpdateInput) {
         updateTeam(id: $id, data: $data) {
-          id,
-          name,
+          id
+          name
           players {
-            id,
+            id
             firstName
             lastName
             gender
+            skillLevel
           }
         }
       }
@@ -146,7 +149,8 @@ export default function Draftboard (props) {
       })
       const newState = {
         teams: newTeams,
-        players: newPlayers
+        players: newPlayers,
+        mode: 'draft'
       }
       setActiveData(newState)
     }).catch(function (e) {
@@ -160,7 +164,7 @@ export default function Draftboard (props) {
     })
 
     setActiveData({
-      teams: activeData.players,
+      ...activeData,
       players: arrCopy
     })
   }
@@ -179,14 +183,14 @@ export default function Draftboard (props) {
       return bGender - aGender
     })
     setActiveData({
-      teams: activeData.players,
+      ...activeData,
       players: arrCopy
     })
   }
   const showOnlyCaptains = () => {
     const copy = props.players.filter(player => player.wouldCaptain)
     setActiveData({
-      teams: activeData.players,
+      ...activeData,
       players: copy
     })
   }
@@ -194,9 +198,17 @@ export default function Draftboard (props) {
   const showOnlySponsors = () => {
     const sponsors = props.players.filter(player => player.wouldSponsor)
     setActiveData({
-      teams: activeData.players,
+      teams: activeData.teams,
       players: sponsors
     })
+  }
+
+  const showDraftMode = () => {
+    setActiveData({
+      ...activeData,
+      mode: 'draft'
+    })
+    sortByGenderThenSkill()
   }
 
   const formatDate = function (date) {
@@ -214,6 +226,14 @@ export default function Draftboard (props) {
     }
   }
 
+  const largestTeamSize = Math.max(...activeData.teams.map(team => team.players.length))
+  const rowsFromLargestTeamSize = []
+  for (let i = 0; i < largestTeamSize; i++) {
+    rowsFromLargestTeamSize.push(i)
+  }
+
+  const isDraftMode = activeData.mode === 'draft'
+
   return (
     <>
       <Head>
@@ -226,33 +246,69 @@ export default function Draftboard (props) {
           {
             user && (
               <div className="drafted-teams row">
-                {activeData.teams.map((team, index) => (
-                  <div className="col-md-4" key={index}>
-                    <table className="table table-striped">
-                      <thead>
-                        <tr>
-                          <th>{team.name} ({team.players.length})</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {
-                          team.players.map((player, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{player.firstName} {player.lastName} ({player.gender.charAt(0)})</td>
-                                <td>
-                                  <button className="btn btn-default btn-sm" onClick={() => modifyRoster(team, player, 'remove')}>Remove
-                                  </button>
-                                </td>
-                              </tr>
-                            )
-                          }
-                          )}
-                      </tbody>
-                    </table>
-                  </div>
-                ))}
+                <table className="table table table-striped">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      {
+                        activeData.teams.map((team) => {
+                          return (
+                            <th key={team.id} style={{ backgroundColor: team.color }}>
+                              {team.name} ({team.players.length})
+                            </th>
+                          )
+                        })
+                      }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      rowsFromLargestTeamSize.map((playerIndex) => {
+                        return (
+                          <tr key={playerIndex}>
+                            <th>{playerIndex + 1}</th>
+                            {
+                              activeData.teams.map((team, index) => {
+                                const player = team.players[playerIndex]
+
+                                if (!player) {
+                                  return <td/>
+                                }
+
+                                return (
+                                  <td>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                      <span>
+                                        {player.firstName} {player.lastName} ({player.gender.charAt(0)}{player.skillLevel})
+                                      </span>
+                                      <button
+                                        className="btn btn-default btn-xs"
+                                        onClick={() => modifyRoster(team, player, 'remove')}>
+                                        <i className="fa fa-close"></i>
+                                      </button>
+                                    </div>
+                                  </td>
+                                )
+                              })
+                            }
+                          </tr>
+                        )
+                      })
+                    }
+                    <tr>
+                      <th></th>
+                      {
+                        activeData.teams.map((team) => {
+                          return (
+                            <th key={team.id} style={{ backgroundColor: team.color }}>
+                              {team.name} ({team.players.length})
+                            </th>
+                          )
+                        })
+                      }
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             )
           }
@@ -264,6 +320,7 @@ export default function Draftboard (props) {
             <button className="btn btn-default" onClick={sortByGenderThenSkill}>Sort By Gender, Then Skill</button>
             <button className="btn btn-default" onClick={showOnlyCaptains}>Show Only Captains</button>
             <button className="btn btn-default" onClick={showOnlySponsors}>Show Only Sponsors</button>
+            <button className="btn btn-default" onClick={showDraftMode}>Draft Mode</button>
           </div>
 
           <table className="table table-hover table-striped">
@@ -272,7 +329,9 @@ export default function Draftboard (props) {
                 <th>Number</th>
                 <th>Name</th>
                 <th>Gender</th>
-                <th>Date Registered</th>
+                {
+                  !isDraftMode && <th>Date Registered</th>
+                }
                 <th>Age</th>
                 <th>Shirt Size</th>
                 <th>Positions</th>
@@ -281,49 +340,60 @@ export default function Draftboard (props) {
                 <th>Will Attend Finals?</th>
                 <th>Partner</th>
                 <th>Comments</th>
-                <th>Would Captain?</th>
-                <th>Would Sponsor?</th>
+                {
+                  !isDraftMode && <th>Would Captain?</th>
+                }
+                {
+                  !isDraftMode && <th>Would Sponsor?</th>
+                }
                 {user && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
-              {activeData.players.map((player, index) => {
-                return (
-                  <tr key={player.id}>
-                    <td>{index + 1}</td>
-                    <td><PlayerLink player={player} /></td>
-                    <td>{player.gender.charAt(0)}</td>
-                    <td>{formatDate(player.createdAt)}</td>
-                    <td>{player.age}</td>
-                    <td>{player.shirtSize}</td>
-                    <td>{player.preferredPositions}</td>
-                    <td>{player.skillLevel}</td>
-                    <td>{player.participation}</td>
-                    <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
-                    <td>{player.partnerName}</td>
-                    <td>
-                      <small className="badge"
-                        style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
-                    </td>
-                    <td>{player.wouldCaptain ? 'Yes' : ''}</td>
-                    <td>{player.wouldSponsor ? 'Yes' : ''}</td>
-                    <td>
-                      {user && !player.team && teams.map((team, index) => {
-                        return (
-                          <button
-                            key={index}
-                            className="btn btn-default"
-                            onClick={() => {
-                              modifyRoster(team, player, 'add')
-                            }}>
-                          Add To {team.name}
-                          </button>
-                        )
-                      })}
-                    </td>
-                  </tr>
-                )
-              })
+              {
+                (activeData.mode === 'draft' ? activeData.players.filter(p => !p.team) : activeData.players).map((player, index) => {
+                  return (
+                    <tr key={player.id}>
+                      <td>{index + 1}</td>
+                      <td><PlayerLink player={player} /></td>
+                      <td>{player.gender.charAt(0)}</td>
+                      {
+                        !isDraftMode && <td>{formatDate(player.createdAt)}</td>
+                      }
+                      <td>{player.age}</td>
+                      <td>{player.shirtSize}</td>
+                      <td>{player.preferredPositions}</td>
+                      <td>{player.skillLevel}</td>
+                      <td>{player.participation}</td>
+                      <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
+                      <td>{player.partnerName}</td>
+                      <td>
+                        <small className="badge"
+                          style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
+                      </td>
+                      {
+                        !isDraftMode && <td>{player.wouldCaptain ? 'Yes' : ''}</td>
+                      }
+                      {
+                        !isDraftMode && <td>{player.wouldSponsor ? 'Yes' : ''}</td>
+                      }
+                      <td>
+                        {user && !player.team && teams.map((team, index) => {
+                          return (
+                            <button
+                              key={index}
+                              className="btn btn-default btn-xs"
+                              onClick={() => {
+                                modifyRoster(team, player, 'add')
+                              }}>
+                              <i className="fa fa-plus"></i> {team.name}
+                            </button>
+                          )
+                        })}
+                      </td>
+                    </tr>
+                  )
+                })
               }
             </tbody>
           </table>
