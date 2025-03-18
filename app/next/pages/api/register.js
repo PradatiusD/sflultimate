@@ -192,7 +192,7 @@ export default async function handler (req, res) {
       partnerName: req.body.partnerName,
       shirtSize: req.body.shirtSize,
       wouldSponsor: req.body.wouldSponsor === 'on',
-      wouldCaptain: req.body.wouldCaptain === 'on',
+      wouldCaptain: req.body.wouldCaptain === 'Yes',
       willAttendFinals: req.body.willAttendFinals === 'on',
       leagueId: req.body.league
     }

@@ -33,7 +33,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   }
   cy.get('#comments').type('A random comment about me when registering for the draft')
   cy.get('#phoneNumber').type('9543055611')
-  cy.get('#wouldCaptain').select('No')
+  cy.get('#wouldCaptain').select('Yes')
   cy.get('#termsConditions').check()
   const $noSponsorElement = await $body.find('#no-requestSponsorship')
   if (!$noSponsorElement.length) {
