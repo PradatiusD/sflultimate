@@ -28,6 +28,8 @@ export const getServerSideProps = (async () => {
               locationAddressCity
               locationAddressState
               locationAddressZipCode
+              locationLatitude
+              locationLongitude
               contactWhatsapp
               contactUrl
               contactEmail
@@ -135,9 +137,9 @@ export default function PickupsPage (props) {
             '<div id="siteNotice"></div>' +
             '<h4 id="firstHeading" class="firstHeading">' + game.title + '</h4>' +
             '<p class="text-muted"><b>' + game.day + ' at ' + game.time + '</b></p>' +
-            '<p><b>' + game.location.type.toUpperCase() + ': </b>' + game.description + '</p>' +
+            '<p><b>' + game.locationType.toUpperCase() + ': </b>' + game.description + '</p>' +
             '<div id="bodyContent">' +
-            '' + game.location.address.street + '<br>' + game.location.address.city + ', ' + game.location.address.state + ', ' + game.location.address.zipCode + '<br>' +
+            '' + game.locationAddressStreet + '<br>' + game.locationAddressCity + ', ' + game.locationAddressState + ', ' + game.locationAddressZipCode + '<br>' +
             '</div>'
         
           const infoWindow = new google.maps.InfoWindow({
@@ -149,8 +151,8 @@ export default function PickupsPage (props) {
           const markerOptions = {
             map: map,
             position: {
-              lat: game.location.latitude,
-              lng: game.location.longitude
+              lat: game.locationLatitude,
+              lng: game.locationLongitude
             },
             title: game.title
           }
