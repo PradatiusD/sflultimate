@@ -30,7 +30,7 @@ export async function getServerSideProps (context) {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        allTeams(where: {league: $leagueFilter}, sortBy: name_ASC) {
+        allTeams(where: {league: $leagueFilter}, sortBy: draftOrder_ASC) {
           id,
           name,
           players {
@@ -204,11 +204,24 @@ export default function Draftboard (props) {
   }
 
   const showDraftMode = () => {
+    const sortedPlayers = activeData.players.map(p => p)
+    sortedPlayers.sort(function (a, b) {
+      const aGender = a.gender === 'Female' ? 1 : 0
+      const bGender = b.gender === 'Female' ? 1 : 0
+
+      const genderDiff = bGender - aGender
+
+      if (genderDiff === 0) {
+        return b.skillLevel - a.skillLevel
+      }
+
+      return bGender - aGender
+    })
     setActiveData({
       ...activeData,
+      players: sortedPlayers,
       mode: 'draft'
     })
-    sortByGenderThenSkill()
   }
 
   const formatDate = function (date) {
@@ -269,14 +282,20 @@ export default function Draftboard (props) {
                             <th>{playerIndex + 1}</th>
                             {
                               activeData.teams.map((team, index) => {
-                                const player = team.players[playerIndex]
+                                const sortedPlayerList = team.players.map(d => d).sort((a, b) => {
+                                  if (a.gender !== b.gender) {
+                                    return a.gender.localeCompare(b.gender)
+                                  }
+                                  return b.skillLevel - a.skillLevel
+                                })
+                                const player = sortedPlayerList[playerIndex]
 
                                 if (!player) {
                                   return <td/>
                                 }
 
                                 return (
-                                  <td>
+                                  <td key={playerIndex}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                       <span>
                                         {player.firstName} {player.lastName} ({player.gender.charAt(0)}{player.skillLevel})
@@ -299,9 +318,11 @@ export default function Draftboard (props) {
                       <th></th>
                       {
                         activeData.teams.map((team) => {
+                          const totalTeamScore = team.players.reduce((acc, player) => acc + player.skillLevel, 0)
+                          const teamAverageSkill = team.players.length > 0 ? Math.round(totalTeamScore / team.players.length * 10) / 10 : '0'
                           return (
                             <th key={team.id} style={{ backgroundColor: team.color }}>
-                              {team.name} ({team.players.length})
+                              {team.name} ({team.players.length}) ({teamAverageSkill})
                             </th>
                           )
                         })
@@ -368,8 +389,7 @@ export default function Draftboard (props) {
                       <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
                       <td>{player.partnerName}</td>
                       <td>
-                        <small className="badge"
-                          style={getBadgeStyle(player)}>{player.team ? 'Rostered' : 'Unassigned'}</small> {player.comments}
+                        <small>{player.comments}</small>
                       </td>
                       {
                         !isDraftMode && <td>{player.wouldCaptain ? 'Yes' : ''}</td>
@@ -378,18 +398,24 @@ export default function Draftboard (props) {
                         !isDraftMode && <td>{player.wouldSponsor ? 'Yes' : ''}</td>
                       }
                       <td>
-                        {user && !player.team && teams.map((team, index) => {
-                          return (
-                            <button
-                              key={index}
-                              className="btn btn-default btn-xs"
-                              onClick={() => {
-                                modifyRoster(team, player, 'add')
-                              }}>
-                              <i className="fa fa-plus"></i> {team.name}
-                            </button>
+                        {
+                          user && isDraftMode && (
+                            <div style={{ minWidth: '400px' }}>
+                              {!player.team && teams.map((team, index) => {
+                                return (
+                                  <button
+                                    key={index}
+                                    className="btn btn-default btn-xs"
+                                    onClick={() => {
+                                      modifyRoster(team, player, 'add')
+                                    }}>
+                                    <i className="fa fa-plus" style={{ fontSize: '1.2rem' }}></i> {team.name}
+                                  </button>
+                                )
+                              })}
+                            </div>
                           )
-                        })}
+                        }
                       </td>
                     </tr>
                   )

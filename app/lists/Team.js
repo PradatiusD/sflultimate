@@ -1,4 +1,4 @@
-const { Text, Relationship } = require('@keystonejs/fields')
+const { Text, Relationship, Integer } = require('@keystonejs/fields')
 const { Color } = require('@keystonejs/fields-color')
 
 const fields = {
@@ -24,6 +24,9 @@ const fields = {
     type: Relationship,
     ref: 'League',
     initial: true
+  },
+  draftOrder: {
+    type: Integer
   }
 }
 
