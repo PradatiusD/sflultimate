@@ -1,11 +1,8 @@
 import GraphqlClient from '../../lib/graphql-client'
 import { gql } from '@apollo/client'
-import {HeaderNavigation} from "../../components/Navigation";
+import { HeaderNavigation } from '../../components/Navigation'
+import { getMongoTimestamp } from '../../lib/utils'
 
-function getMongoTimestamp (idString) {
-  const timestamp = idString.substring(0, 8)
-  return new Date(parseInt(timestamp, 16) * 1000)
-}
 export const getServerSideProps = async (context) => {
   const nameSplit = context.query.player.split('-')
   const firstName = nameSplit[0]
@@ -27,7 +24,8 @@ export const getServerSideProps = async (context) => {
         allPlayers(where: {firstName_contains_i: $firstName, lastName_contains_i: $lastName}) {
           id
           firstName
-          lastName,
+          lastName
+          preferredPositions
           leagues {
             id
             title
@@ -91,6 +89,8 @@ export const getServerSideProps = async (context) => {
           }
           captains {
             id
+            firstName
+            lastName
           }
         }
       }
@@ -101,11 +101,33 @@ export const getServerSideProps = async (context) => {
     }
   })
 
+  const playerGameStats = gameResults.data.allPlayerGameStats
+  const gameToStatsMap = {}
+  for (const stat of playerGameStats) {
+    if (stat.game) {
+      gameToStatsMap[stat.game.id] = stat
+    }
+  }
+
+  const allTimeTotals = {
+    assists: 0,
+    scores: 0,
+    defenses: 0
+  }
+
   // Now add the team/games to the array of leagues
   leagues.forEach(function (league) {
     const foundTeamForLeague = gameResults.data.allTeams.find(function (team) {
       return team.league.id === league.id
     })
+    league.totals = {
+      assists: 0,
+      scores: 0,
+      defenses: 0,
+      playerTeamScore: 0,
+      opponentTeamScore: 0,
+      outcomes: []
+    }
     if (foundTeamForLeague) {
       league.team = Object.assign({}, foundTeamForLeague)
       league.games = gameResults.data.allGames.reduce(function (acc, dbGame) {
@@ -122,22 +144,33 @@ export const getServerSideProps = async (context) => {
           leagueGame.playerTeamScore = isHomeTeam ? dbGame.homeTeamScore : dbGame.awayTeamScore
           leagueGame.opponentTeamScore = isHomeTeam ? dbGame.awayTeamScore : dbGame.homeTeamScore
           leagueGame.opponentTeamName = isHomeTeam ? dbGame.awayTeam.name : dbGame.homeTeam.name
+          league.totals.opponentTeamScore += leagueGame.opponentTeamScore
+          league.totals.playerTeamScore += leagueGame.playerTeamScore
 
-          leagueGame.stats = {}
+          leagueGame.stats = {
+            assists: gameToStatsMap[leagueGame.id]?.assists || 0,
+            scores: gameToStatsMap[leagueGame.id]?.scores || 0,
+            defenses: gameToStatsMap[leagueGame.id]?.defenses || 0
+          }
+
+          const keys = ['assists', 'scores', 'defenses']
+          keys.forEach((key) => {
+            const stat = gameToStatsMap[leagueGame.id] ? gameToStatsMap[leagueGame.id][key] : 0
+            leagueGame.stats[key] = stat
+            league.totals[key] += stat
+            allTimeTotals[key] += stat
+          })
+
           leagueGame.outcome = leagueGame.playerTeamScore > leagueGame.opponentTeamScore ? 'W' : 'L'
           acc.push(leagueGame)
         }
         return acc
       }, [])
-      league.totals = {
-        assists: 0,
-        scores: 0,
-        defenses: 0,
-        playerTeamScore: 0,
-        opponentTeamScore: 0,
-        outcomes: []
-      }
     }
+  })
+
+  leagues.sort(function (a, b) {
+    return getMongoTimestamp(b.id) - getMongoTimestamp(a.id)
   })
 
   const player = playerResults.data.allPlayers[0]
@@ -145,6 +178,7 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       player: player,
+      allTimeTotals: allTimeTotals,
       leagueGameStatHistory: leagues,
       league: league
     }
@@ -152,17 +186,30 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function PlayerPage (props) {
-  const { player, leagueGameStatHistory, league } = props
+  const { player, leagueGameStatHistory, league, allTimeTotals } = props
   return (
     <div>
       <HeaderNavigation league={league} />
       <div className="container">
         <h1>{player.firstName} {player.lastName} Profile</h1>
+        <div>
+          {
+            player.preferredPositions && (
+              <p className="lead">Preferred Positions: {Array.isArray(player.preferredPositions) ? player.preferredPositions.join(', ') : player.preferredPositions}</p>
+            )
+          }
+          <p className="lead" style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <span>Scores: <strong>{allTimeTotals.scores}</strong></span>
+            <span>Assists: <strong>{allTimeTotals.assists}</strong></span>
+            <span>Defenses: <strong>{allTimeTotals.defenses}</strong></span>
+          </p>
+        </div>
         {leagueGameStatHistory.map((league, index) => (
           league.team && (
             <div key={index}>
               <h2>{league.title}</h2>
-              <p className="lead">{league.team.name}</p>
+              <p className="lead" style={{ marginBottom: '0.5rem' }}>{league.team.name}</p>
+              <p><strong>Captains:</strong> {league.team.captains.map(c => c.firstName.trim() + ' ' + c.lastName.trim()).join(', ')}</p>
               <table className="table table-bordered table-striped">
                 <thead>
                   <tr>
@@ -197,13 +244,13 @@ export default function PlayerPage (props) {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td colSpan="2">Total</td>
-                    <td>{league.totals.playerTeamScore}</td>
-                    <td>{league.totals.opponentTeamScore}</td>
-                    <td>{league.totals.outcomes}</td>
-                    <td>{league.totals.assists}</td>
-                    <td>{league.totals.scores}</td>
-                    <td>{league.totals.defenses}</td>
+                    <td colSpan="2"><strong>Total</strong></td>
+                    <td><strong>{league.totals.playerTeamScore}</strong></td>
+                    <td><strong>{league.totals.opponentTeamScore}</strong></td>
+                    <td><strong>{league.totals.outcomes}</strong></td>
+                    <td><strong>{league.totals.assists}</strong></td>
+                    <td><strong>{league.totals.scores}</strong></td>
+                    <td><strong>{league.totals.defenses}</strong></td>
                   </tr>
                 </tfoot>
               </table>
