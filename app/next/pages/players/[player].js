@@ -112,7 +112,8 @@ export const getServerSideProps = async (context) => {
   const allTimeTotals = {
     assists: 0,
     scores: 0,
-    defenses: 0
+    defenses: 0,
+    leagues: leagues.length
   }
 
   // Now add the team/games to the array of leagues
@@ -140,6 +141,7 @@ export const getServerSideProps = async (context) => {
         const isValidGame = (pointsOnEitherGame && hasHomeScore && hasAwayScore)
 
         if (isPlayersTeam && isValidGame) {
+          
           const leagueGame = Object.assign({}, dbGame)
           leagueGame.playerTeamScore = isHomeTeam ? dbGame.homeTeamScore : dbGame.awayTeamScore
           leagueGame.opponentTeamScore = isHomeTeam ? dbGame.awayTeamScore : dbGame.homeTeamScore
@@ -199,6 +201,7 @@ export default function PlayerPage (props) {
             )
           }
           <p className="lead" style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <span>Leagues: <strong>{allTimeTotals.leagues}</strong></span>
             <span>Scores: <strong>{allTimeTotals.scores}</strong></span>
             <span>Assists: <strong>{allTimeTotals.assists}</strong></span>
             <span>Defenses: <strong>{allTimeTotals.defenses}</strong></span>
