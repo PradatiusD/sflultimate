@@ -2,7 +2,7 @@ const { ApolloClient, InMemoryCache } = require('@apollo/client')
 
 const host = !process.env.MONGOLAB_URI || process.env.MONGOLAB_URI.includes('localhost') ? 'http://localhost:3000' : 'https://www.sflultimate.com'
 const GraphqlClient = new ApolloClient({
-  uri: host + '/admin/api',
+  uri: 'https://www.sflultimate.com/admin/api',
   cache: new InMemoryCache(),
   defaultOptions: {
     query: {
