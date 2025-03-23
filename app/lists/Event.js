@@ -1,4 +1,5 @@
 const { Text, Url, DateTime, File } = require('@keystonejs/fields')
+const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
 const storage = require('./file-storage-adapter')
 
 const fields = {
@@ -25,7 +26,7 @@ const fields = {
     isRequired: true
   },
   description: {
-    type: Text,
+    type: Wysiwyg,
     isRequired: true
   },
   image: {
@@ -39,7 +40,10 @@ const fields = {
 
 module.exports = {
   fields,
-  labelResolver: item => `${new Date(item.startTime).toLocaleDateString()}`,
+  labelResolver: (item) => {
+    const startTime = item.startTime ? new Date(item.startTime).toLocaleDateString() : ''
+    return `${startTime} - ${item.name}`
+  },
   adminConfig: {
     defaultColumns: 'name, order, active, description, image'
   }

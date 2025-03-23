@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
-import GraphqlClient from "../lib/graphql-client";
-import {HeaderNavigation} from "../components/Navigation";
-import {addLeagueStatus} from "../lib/payment-utils";
+import GraphqlClient from '../lib/graphql-client'
+import { HeaderNavigation } from '../components/Navigation'
+import { addLeagueStatus } from '../lib/payment-utils'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -33,10 +33,10 @@ export const getServerSideProps = async () => {
             }
         }`
   })
-  
+
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
-  
+
   const events = results.data.allEvents.map(function (event) {
     event = JSON.parse(JSON.stringify(event))
     event.links = []
@@ -52,7 +52,7 @@ export const getServerSideProps = async () => {
       year: 'numeric',
       month: 'long',
       weekday: 'long',
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
       day: 'numeric',
       timeZone: 'America/New_York'
@@ -60,13 +60,13 @@ export const getServerSideProps = async () => {
 
     return event
   })
-  
+
   return { props: { events, league } }
 }
 
 function EventItem (props) {
-  const {event, status} = props
-  const containerClass = "row " + (status === 'past' ? ' text-muted': '')
+  const { event, status } = props
+  const containerClass = 'row ' + (status === 'past' ? ' text-muted' : '')
   return (
     <div className={containerClass}>
       <div className="col-sm-3">
@@ -96,8 +96,8 @@ function EventItem (props) {
   )
 }
 
-export default function EventsPage(props) {
-  const {events, league} = props
+export default function EventsPage (props) {
+  const { events, league } = props
   return (
     <>
       <Head>
@@ -108,20 +108,21 @@ export default function EventsPage(props) {
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
-        <h1>Calendar</h1>
+
+        <h1>Upcoming Events</h1>
+        <p className="lead">Below you will find a list of upcoming events happening in our community.</p>
+
+        {events.map((event) =>
+          event.active ? <EventItem event={event} key={event.id} /> : null
+        )}
+
+        <h1>SFLUltimate Yearly Calendar</h1>
         <iframe
           src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS1QbLcE0hE72nw--gBLaNKwIYX3P8YZr9w8TMz2yqL62qIkXxxoRcmNXLT_whp5mg_oVfV5dwV23mh/pubhtml?widget=true&headers=false#gid=1961170570"
           width="100%"
           frameBorder="0"
-          style={{height: '980px'}}
+          style={{ height: '980px' }}
         ></iframe>
-
-        <h1>Upcoming Events</h1>
-        <p className="lead">Below you will find our list of upcoming events.</p>
-
-        {events.map((event, index) =>
-          event.active ? <EventItem event={event} /> : null
-        )}
 
         <hr/>
 
@@ -129,7 +130,7 @@ export default function EventsPage(props) {
         <p className="lead">Here you can find our list of past events.</p>
 
         {events.map((event, index) =>
-          !event.active ? <EventItem event={event} status="past" /> : null
+          !event.active ? <EventItem event={event} key={event.id} status="past" /> : null
         )}
       </div>
     </>

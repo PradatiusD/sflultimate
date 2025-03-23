@@ -141,7 +141,6 @@ export const getServerSideProps = async (context) => {
         const isValidGame = (pointsOnEitherGame && hasHomeScore && hasAwayScore)
 
         if (isPlayersTeam && isValidGame) {
-          
           const leagueGame = Object.assign({}, dbGame)
           leagueGame.playerTeamScore = isHomeTeam ? dbGame.homeTeamScore : dbGame.awayTeamScore
           leagueGame.opponentTeamScore = isHomeTeam ? dbGame.awayTeamScore : dbGame.homeTeamScore
