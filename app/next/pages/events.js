@@ -81,8 +81,9 @@ function EventItem (props) {
           <br/>
           <em>{event.location}</em> • {event.category}
         </p>
-        <p>{event.description}</p>
-        <ul className="list-inline">
+
+        <div dangerouslySetInnerHTML={{ __html: event.description }}/>
+        <ul className="list-inline" style={{ marginTop: '1rem' }}>
           {event.links.map((link, linkIndex) => (
             <li key={linkIndex}>
               <a className="btn btn-default" href={link.url} target="_blank" rel="noopener noreferrer">
