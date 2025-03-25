@@ -24,6 +24,9 @@ export const getServerSideProps = async (context) => {
             id
             title
           }
+          location {
+            name
+          }
           homeTeamScore
           homeTeam {
             id
@@ -134,9 +137,8 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function GamePage (props) {
-  const { game, preview, teams, league, isGamePreview, games } = props
+  const { game, teams, league, isGamePreview, games } = props
   const title = game.league.title + ' ' + 'Matchup: ' + game.homeTeam.name + ' vs ' + game.awayTeam.name
-
   const seoDescriptionSuffix = teams[0].name + ' vs ' + teams[1].name + ' - ' + showDate(game.scheduledTime)
   return (
     <>
@@ -148,7 +150,7 @@ export default function GamePage (props) {
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
-        {preview ? (
+        {isGamePreview ? (
           <p className="h1 text-center">Preview</p>
         ) : (
           <p className="h1 text-center">Recap</p>
@@ -170,10 +172,10 @@ export default function GamePage (props) {
           {teams.map((team, index) => (
             <div className="col-sm-6" key={index}>
               <div className="text-center">
-                {!preview && <p className="h1">{team.score}</p>}
+                {!isGamePreview && <p className="h1">{team.score}</p>}
                 <h2>{team.name}</h2>
               </div>
-              {preview ? (
+              {isGamePreview ? (
                 <>
                   <p><em>Note: Below are season-wide stats.</em></p>
                   <GameStatTable team={team} />
@@ -217,23 +219,29 @@ function GameStatTable (props) {
           <th>Assists</th>
           <th>Scores</th>
           <th>Defenses</th>
-          <th>Throwaways</th>
-          <th>Drops</th>
           <th>Total</th>
         </tr>
       </thead>
       <tbody>
-        {team.stats?.map((stat, index) => (
+        {team.stats.length > 0 && team.stats.map((stat, index) => (
           <tr key={index}>
             <td>{stat.player.firstName} {stat.player.lastName}</td>
             <td>{stat.assists}</td>
             <td>{stat.scores}</td>
             <td>{stat.defenses}</td>
-            <td>{stat.throwaways}</td>
-            <td>{stat.drops}</td>
             <td>{stat.total}</td>
           </tr>
         ))}
+        {team.stats.length === 0 && team.players.map((player, index) => (
+          <tr key={index}>
+            <td>{player.firstName} {player.lastName}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        ))}
+
       </tbody>
     </table>
   )

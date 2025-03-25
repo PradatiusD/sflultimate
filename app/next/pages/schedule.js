@@ -6,26 +6,6 @@ import { HeaderNavigation } from '../components/Navigation'
 import { showDate, showHourMinute } from '../lib/utils'
 import { useState } from 'react'
 
-//   let games = await Game.model.find({
-//     league: res.locals.league._id
-//   }).sort({
-//     scheduledTime: 1
-//   }).lean().exec()
-//
-//   games = games.map((game) => {
-//     game.scheduledTimeEpoch = game.scheduledTime.getTime()
-//     return game
-//   })
-//
-//   const teams = await Team.model.find({
-//     league: res.locals.league._id
-//   }).lean().exec()
-//
-//   const locations = await Location.model.find({}).lean().exec()
-//   return res.json({ games, teams, locations, league: res.locals.league })
-// }
-//
-
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -54,14 +34,17 @@ export const getServerSideProps = async () => {
             color
           }
           homeTeamScore
+          homeTeamForfeit
           awayTeam {
             name
             color
           }
           awayTeamScore
+          awayTeamForfeit
           location {
             name
           }
+          
         }
         allTeams(where: {league: {isActive: true}}) {
           id
@@ -142,7 +125,7 @@ export default function Schedule (props) {
                         <td>
                           <span>{game.homeTeam.name} vs. {game.awayTeam.name}</span>
                           {
-                            game.homeTeamScore && game.awayTeamScore && (!game.homeTeamForfeit && !game.homeTeamForfeit) && (
+                            game.homeTeamScore !== 0 && game.awayTeamScore !== 0 && (!game.homeTeamForfeit && !game.homeTeamForfeit) && (
                               <span> ({game.homeTeamScore}-{game.awayTeamScore})</span>
                             )
                           }
@@ -163,7 +146,9 @@ export default function Schedule (props) {
                         </td>
                         <td>{game?.location?.name}</td>
                         <td>
-                          <a href={'/games/' + game.id}>{new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}</a>
+                          <a href={'/games/' + game.id}>
+                            {new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}
+                          </a>
                         </td>
                       </tr>
                     )

@@ -76,7 +76,7 @@ export default function Standings (props) {
           standingsMap[homeTeam.id].wins++
         }
       }
-    } else {
+    } else if (homeTeam.score !== 0 && awayTeam.score !== 0) {
       const pointDiff = Math.abs(homeTeam.score - awayTeam.score)
       let winner
       let loser
@@ -104,8 +104,8 @@ export default function Standings (props) {
   for (const id in standingsMap) {
     const teamEntry = standingsMap[id]
     const totalGames = teamEntry.wins + teamEntry.losses
-    teamEntry.avgPointsScoredPerGame = (teamEntry.pointsScored / totalGames).toFixed(2)
-    teamEntry.avgPointsAllowedPerGame = (teamEntry.pointsAllowed / totalGames).toFixed(2)
+    teamEntry.avgPointsScoredPerGame = totalGames !== 0 ? (teamEntry.pointsScored / totalGames).toFixed(2) : ''
+    teamEntry.avgPointsAllowedPerGame = totalGames !== 0 ? (teamEntry.pointsAllowed / totalGames).toFixed(2) : ''
     teamEntry.id = id
     standings.push(teamEntry)
   }

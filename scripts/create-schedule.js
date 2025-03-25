@@ -1,5 +1,5 @@
 /**
- * mongo sflultimate scripts/create-schedule.js
+ * mongo sflultimateV5 scripts/create-schedule.js
  */
 
 function attemptToBuildSchedule () {
@@ -152,8 +152,8 @@ const ives = ['6236877d28f3fe0004fc5f95']
 const holiday = ['6416b3cfe511210002ed4795', '641ae1c2fb9ec80002096f85', '641ae1ccfb9ec80002096f86']
 insertSchedule({
   locations: holiday,
-  startDate: '2024-03-17T20:00:00Z',
-  endDate: '2024-04-21T20:00:00Z',
+  startDate: '2025-03-30T20:00:00Z',
+  endDate: '2025-04-27T20:00:00Z',
   write: true,
-  skipDate: '2024-03-31T08:00:00.000Z'
+  skipDate: '2025-03-13T08:00:00.000Z'
 })

@@ -70,7 +70,6 @@ const fields = {
 
 module.exports = {
   fields,
-  labelResolver: item => item.title,
   adminConfig: {
     defaultColumns: 'league, homeTeam, homeTeamScore, awayTeam, awayTeamScore, scheduledTime, location'
   }
