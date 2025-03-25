@@ -5,7 +5,7 @@ const evergreenLinks = [
   { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
   { label: 'Our Board', key: 'board', href: '/board' },
   { label: 'Events', key: 'events', href: '/events' },
-  { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
+  // { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
 ]
 
 navLinks = navLinks.concat(evergreenLinks)

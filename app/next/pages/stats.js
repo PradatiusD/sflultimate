@@ -1,9 +1,9 @@
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
-import {buildPlayerUrl} from "../components/PlayerLink"
+import { buildPlayerUrl } from '../components/PlayerLink'
 import { addLeagueStatus } from '../lib/payment-utils'
-import {HeaderNavigation} from "../components/Navigation"
+import { HeaderNavigation } from '../components/Navigation'
 
 //
 //   if (req.method === 'POST') {
@@ -31,7 +31,6 @@ import {HeaderNavigation} from "../components/Navigation"
 //     })
 //   }
 //
-
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -73,10 +72,11 @@ export const getServerSideProps = async () => {
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
   const statsGroupedByPlayer = {}
-  const awards = {Male: {}, Female: {}, Other: {}}
+  const awards = { Male: {}, Female: {}, Other: {} }
   const statKeysToCompare = ['assists', 'scores', 'defenses', 'overall']
 
-  for (const stat of JSON.parse(JSON.stringify(results.data.allPlayerGameStats))) {
+  const playerGameStats = JSON.parse(JSON.stringify(results.data.allPlayerGameStats))
+  for (const stat of playerGameStats) {
     let o
     if (statsGroupedByPlayer[stat.player.id]) {
       o = statsGroupedByPlayer[stat.player.id]
@@ -89,17 +89,19 @@ export const getServerSideProps = async () => {
     }
     o.overall = o.scores + o.assists + o.defenses
     const gender = stat.player.gender
-    for (let key of statKeysToCompare) {
+    for (const key of statKeysToCompare) {
       if (!awards[gender][key] || awards[gender][key] < stat[key]) {
         awards[gender][key] = stat[key]
       }
     }
   }
+
   for (const team of results.data.allTeams) {
     for (const player of team.players) {
-      if (statsGroupedByPlayer[player.id]) {
-        statsGroupedByPlayer[player.id].teamColor = team.color
+      if (!statsGroupedByPlayer[player.id]) {
+        statsGroupedByPlayer[player.id] = {}
       }
+      statsGroupedByPlayer[player.id].teamColor = team.color
     }
   }
   const players = JSON.parse(JSON.stringify(results.data.allPlayers)).map(function (player) {
@@ -109,65 +111,66 @@ export const getServerSideProps = async () => {
   }).sort(function (a, b) {
     return b.overall - a.overall
   })
-  return { props: { league, players, statKeysToCompare, awards } }
+
+  return { props: { league, players, statKeysToCompare, awards, playerGameStats } }
 }
 
 function StatTable (props) {
-  const {players, awards, startRowNumber, statKeysToCompare} = props
+  const { players, awards, startRowNumber, statKeysToCompare } = props
   return (
     <table className="table table-striped">
       <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Team Color</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Assists</th>
-        <th>Scores</th>
-        <th>Defenses</th>
-        <th>Overall</th>
-      </tr>
+        <tr>
+          <th>Rank</th>
+          <th>Team Color</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Assists</th>
+          <th>Scores</th>
+          <th>Defenses</th>
+          <th>Overall</th>
+        </tr>
       </thead>
       <tbody>
-      {
-        players.map((player, index) => {
-
-          return (
-            <tr key={player.id}>
-              <td>{startRowNumber + index}</td>
-              <td>
-                <span className="team-color" style={{'background-color': player.teamColor}}></span>
-              </td>
-              <td>
-                <a href={player.url}>{player.firstName}</a>
-              </td>
-              <td>
-                <a href={player.url}>{player.lastName}</a>
-              </td>
-              {
-                statKeysToCompare.map((key) => {
-                  return (
-                    <td key={key}>
-                      <span
-                        className={awards[player.gender][key] === player[key] ? 'badge ' + player.gender : ''}>{player[key]}</span>
-                    </td>
-                  )
-                })
-              }
-            </tr>
-          )
-        })
-      }
+        {
+          players.map((player, index) => {
+            return (
+              <tr key={player.id}>
+                <td>{startRowNumber + index}</td>
+                <td>
+                  <span className="team-color" style={{ backgroundColor: player.teamColor }}></span>
+                </td>
+                <td>
+                  <a href={player.url}>{player.firstName}</a>
+                </td>
+                <td>
+                  <a href={player.url}>{player.lastName}</a>
+                </td>
+                {
+                  statKeysToCompare.map((key) => {
+                    return (
+                      <td key={key}>
+                        <span
+                          className={awards[player.gender][key] === player[key] ? 'badge ' + player.gender : ''}>{player[key]}</span>
+                      </td>
+                    )
+                  })
+                }
+              </tr>
+            )
+          })
+        }
       </tbody>
     </table>
   )
 }
 
 export default function StatsPage (props) {
-  const {league, players, awards, statKeysToCompare} = props
+  const { league, players, awards, statKeysToCompare, playerGameStats } = props
   return (
     <>
       <Head>
+        <title>League Stats</title>
         <meta property="og:title" content="League Stats"/>
         <meta property="og:url" content="https://www.sflultimate.com/stats"/>
         <meta property="og:description" content={'Find out who is making big plays for ' + league.title}/>
@@ -186,16 +189,27 @@ export default function StatsPage (props) {
               }
             `
           }
-         
+
         </style>
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
-        <h1>{league.title} Stats</h1> 
-        <h2>Leaderboard</h2>
-        <StatTable players={players.slice(0, 10)} awards={awards} startRowNumber={1} statKeysToCompare={statKeysToCompare} />
-        <h2>Rising Contenders</h2>
-        <StatTable players={players.slice(10)} awards={awards} startRowNumber={11} statKeysToCompare={statKeysToCompare} />
+        <h1>{league.title} Stats</h1>
+        {
+          playerGameStats.length > 0 ? (
+            <>
+              <h2>Leaderboard</h2>
+              <StatTable players={players.slice(0, 10)} awards={awards} startRowNumber={1} statKeysToCompare={statKeysToCompare} />
+              <h2>Rising Contenders</h2>
+              <StatTable players={players.slice(10)} awards={awards} startRowNumber={11} statKeysToCompare={statKeysToCompare} />
+            </>
+          )
+            : (
+              <>
+                <p className="alert alert-info">We're awaiting stats information for this leaderboard to update.  Check back later!</p>
+              </>
+            )
+        }
       </div>
     </>
   )
