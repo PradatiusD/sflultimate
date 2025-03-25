@@ -6,6 +6,19 @@ import { addLeagueStatus } from '../lib/payment-utils'
 import { PlayerLink } from '../components/PlayerLink'
 import { HeaderNavigation } from '../components/Navigation'
 
+const getBadgeStyle = function (color) {
+  let badgeColor
+  if (color === 'rgba(1, 0, 0, 1)') {
+    badgeColor = 'white'
+  } else {
+    badgeColor = 'black'
+  }
+  return {
+    backgroundColor: color || 'white',
+    color: badgeColor
+  }
+}
+
 export async function getServerSideProps (context) {
   const queryVars = {
     leagueFilter: {}
@@ -31,8 +44,9 @@ export async function getServerSideProps (context) {
           lateRegistrationEnd
         }
         allTeams(where: {league: $leagueFilter}, sortBy: draftOrder_ASC) {
-          id,
-          name,
+          id
+          name
+          color
           players {
             id
             firstName
@@ -65,8 +79,10 @@ export async function getServerSideProps (context) {
   const league = results.data.allLeagues[0]
   addLeagueStatus(league)
 
+  const teamMap = {}
   const playerToTeamMap = {}
   teams.forEach(function (team) {
+    teamMap[team.id] = team
     team.players.forEach(function (player) {
       playerToTeamMap[player.id] = team.id
     })
@@ -82,6 +98,7 @@ export async function getServerSideProps (context) {
     props: {
       league,
       teams,
+      teamMap,
       players,
       user: context.req.user ? context.req.user : null
     }
@@ -89,7 +106,7 @@ export async function getServerSideProps (context) {
 }
 
 export default function Draftboard (props) {
-  const { league, user, teams, players } = props
+  const { league, user, teams, teamMap, players } = props
 
   const [activeData, setActiveData] = useState({
     players: players,
@@ -226,17 +243,6 @@ export default function Draftboard (props) {
 
   const formatDate = function (date) {
     return new Date(date).toLocaleString()
-  }
-
-  const getBadgeStyle = function (player) {
-    if (!player || !player.team) {
-      return {}
-    }
-
-    return {
-      backgroundColor: player.team && player.team.color ? player.team.color : 'white',
-      color: player && player.team.color === '#ffffff' ? 'black' : 'black'
-    }
   }
 
   const largestTeamSize = Math.max(...activeData.teams.map(team => team.players.length))
@@ -389,7 +395,14 @@ export default function Draftboard (props) {
                       <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
                       <td>{player.partnerName}</td>
                       <td>
-                        <small>{player.comments}</small>
+                        {player.team && (
+                          <span className="badge" style={getBadgeStyle(teamMap[player.team].color)}>
+                            {teamMap[player.team].name}
+                          </span>
+                        )}
+                        <small>
+                          {player.comments}
+                        </small>
                       </td>
                       {
                         !isDraftMode && <td>{player.wouldCaptain ? 'Yes' : ''}</td>
@@ -423,7 +436,7 @@ export default function Draftboard (props) {
               }
             </tbody>
           </table>
-          <AnalyticsTables players={players} />
+          <AnalyticsTables players={players} teamMap={teamMap} />
         </div>
       </div>
     </>
@@ -431,7 +444,7 @@ export default function Draftboard (props) {
 }
 
 function AnalyticsTables (props) {
-  const { players } = props
+  const { players, teamMap } = props
   const columnsForTotals = {
     gender: ['Gender'],
     participation: ['Participation %'],
@@ -484,8 +497,8 @@ function AnalyticsTables (props) {
       if (key === 'teamColorAndNameWithShirtSizeAndGender') {
         if (player.team) {
           value = [
-            player.team.name,
-            player.team.color,
+            teamMap[player.team].name,
+            teamMap[player.team].color,
             player.shirtSize,
             player.gender
           ].join(JOIN_CHAR)
@@ -502,8 +515,8 @@ function AnalyticsTables (props) {
       if (key === 'teamNameAndColorWithShirtSize') {
         if (player.team) {
           value = [
-            player.team.name,
-            player.team.color,
+            teamMap[player.team].name,
+            teamMap[player.team].color,
             player.shirtSize
           ].join(JOIN_CHAR)
         } else {
@@ -599,9 +612,13 @@ function AnalyticsTables (props) {
               <tbody>
                 {Object.entries(totals[mapName]).map(([key, count], rowIndex) => (
                   <tr key={rowIndex}>
-                    {key.split('|').map((columnValue, colIndex) => (
-                      <td key={colIndex}>{columnValue}</td>
-                    ))}
+                    {
+                      key.split('|').map((columnValue, colIndex) => (
+                        <td key={colIndex} style={columnValue.indexOf('rgba') > -1 ? getBadgeStyle(columnValue) : {}}>
+                          {columnValue}
+                        </td>
+                      ))
+                    }
                     <td>{count.toLocaleString()}</td>
                   </tr>
                 ))}
