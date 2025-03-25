@@ -10,6 +10,9 @@ const contentListSchemas = require('./lists/index')
 for (const listName in contentListSchemas) {
   const schema = contentListSchemas[listName]
   keystone.createList(listName, schema)
+  if (schema.extendGraphQLSchema) {
+    keystone.extendGraphQLSchema(schema.extendGraphQLSchema)
+  }
 }
 
 const authStrategy = keystone.createAuthStrategy({

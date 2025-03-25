@@ -1,5 +1,4 @@
 const { Text, Relationship, DateTime, Integer, Checkbox, Select } = require('@keystonejs/fields')
-
 const fields = {
   createdAt: {
     type: DateTime,
@@ -8,6 +7,9 @@ const fields = {
   updatedAt: {
     type: DateTime,
     isRequired: true
+  },
+  name: {
+    type: Text
   },
   firstName: {
     type: Text,
@@ -89,23 +91,15 @@ const fields = {
   }
 }
 
-// Player.add(fields, 'Permissions', {
-//   isAdmin: {
-//     type: Checkbox,
-//     label: 'Can access Keystone',
-//     index: true
-//   }
-// })
-//
-// // Provide access to Keystone
-// Player.schema.virtual('canAccessKeystone').get(function () {
-//   return this.isAdmin
-// })
-
 module.exports = {
   fields,
-  labelResolver: member => member.firstName + ' ' + member.lastName,
+  labelResolver: (player) => {
+    const date = new Date(parseInt(player.id.substring(0, 8), 16) * 1000)
+    const year = date.getFullYear().toString().substring(2, 4)
+    const month = date.getMonth() + 1
+    return `${player.firstName} ${player.lastName} (${month}/${year})`
+  },
   adminConfig: {
-    defaultColumns: 'name, email, gender, leagues'
+    defaultColumns: 'firstName, lastName, email, gender, leagues'
   }
 }

@@ -65,6 +65,7 @@ function createPlayerRecord (payload) {
   const mutationData = {
     createdAt: new Date(),
     updatedAt: new Date(),
+    // name: payload.firstName + ' ' + payload.lastName,
     firstName: payload.firstName,
     lastName: payload.lastName,
     gender: payload.gender,
@@ -227,6 +228,9 @@ export default async function handler (req, res) {
     res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayer.id)
   } catch (e) {
     console.error(e)
+    if (e.cause && e.cause.result) {
+      console.error(e.cause.result)
+    }
     res.redirect('/register?error=' + encodeURIComponent(e.message))
   }
 }

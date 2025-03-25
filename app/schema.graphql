@@ -2020,12 +2020,12 @@ type Player {
   id: ID!
   createdAt: DateTime
   updatedAt: DateTime
+  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
   age: Int
   email: String
-  password_is_set: Boolean
   shirtSize: PlayerShirtSizeType
   skillLevel: Int
   participation: Int
@@ -2045,12 +2045,12 @@ type Player {
 input PlayerCreateInput {
   createdAt: DateTime
   updatedAt: DateTime
+  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
   age: Int
   email: String
-  password: String
   shirtSize: PlayerShirtSizeType
   skillLevel: Int
   participation: Int
@@ -2258,12 +2258,12 @@ input PlayersUpdateInput {
 input PlayerUpdateInput {
   createdAt: DateTime
   updatedAt: DateTime
+  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
   age: Int
   email: String
-  password: String
   shirtSize: PlayerShirtSizeType
   skillLevel: Int
   participation: Int
@@ -2302,6 +2302,24 @@ input PlayerWhereInput {
   updatedAt_gte: DateTime
   updatedAt_in: [DateTime]
   updatedAt_not_in: [DateTime]
+  name: String
+  name_not: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  name_i: String
+  name_not_i: String
+  name_contains_i: String
+  name_not_contains_i: String
+  name_starts_with_i: String
+  name_not_starts_with_i: String
+  name_ends_with_i: String
+  name_not_ends_with_i: String
+  name_in: [String]
+  name_not_in: [String]
   firstName: String
   firstName_not: String
   firstName_contains: String
@@ -2368,7 +2386,6 @@ input PlayerWhereInput {
   email_not_ends_with_i: String
   email_in: [String]
   email_not_in: [String]
-  password_is_set: Boolean
   shirtSize: PlayerShirtSizeType
   shirtSize_not: PlayerShirtSizeType
   shirtSize_in: [PlayerShirtSizeType]
@@ -2894,6 +2911,8 @@ enum SortPlayersBy {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  name_ASC
+  name_DESC
   firstName_ASC
   firstName_DESC
   lastName_ASC
@@ -2945,6 +2964,8 @@ enum SortTeamsBy {
   players_DESC
   league_ASC
   league_DESC
+  draftOrder_ASC
+  draftOrder_DESC
 }
 
 enum SortUsersBy {
@@ -2976,6 +2997,7 @@ type Team {
   players(where: PlayerWhereInput, search: String, sortBy: [SortPlayersBy!], orderBy: String, first: Int, skip: Int): [Player!]!
   _playersMeta(where: PlayerWhereInput, search: String, sortBy: [SortPlayersBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
   league: League
+  draftOrder: Int
 }
 
 input TeamCreateInput {
@@ -2984,6 +3006,7 @@ input TeamCreateInput {
   captains: PlayerRelateToManyInput
   players: PlayerRelateToManyInput
   league: LeagueRelateToOneInput
+  draftOrder: Int
 }
 
 input TeamRelateToOneInput {
@@ -3008,6 +3031,7 @@ input TeamUpdateInput {
   captains: PlayerRelateToManyInput
   players: PlayerRelateToManyInput
   league: LeagueRelateToOneInput
+  draftOrder: Int
 }
 
 input TeamWhereInput {
@@ -3073,6 +3097,14 @@ input TeamWhereInput {
   players_none: PlayerWhereInput
   league: LeagueWhereInput
   league_is_null: Boolean
+  draftOrder: Int
+  draftOrder_not: Int
+  draftOrder_lt: Int
+  draftOrder_lte: Int
+  draftOrder_gt: Int
+  draftOrder_gte: Int
+  draftOrder_in: [Int]
+  draftOrder_not_in: [Int]
 }
 
 input TeamWhereUniqueInput {
