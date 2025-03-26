@@ -54,7 +54,7 @@ export const getServerSideProps = async () => {
   })
   const league = results.data.allLeagues[0]
   const games = Array.from(results.data.allGames).sort((a, b) => {
-    return new Date(a.scheduledTime).getTime() < new Date(b.scheduledTime).getTime()
+    return new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime()
   })
   const teams = results.data.allTeams
   addLeagueStatus(league)
@@ -118,8 +118,9 @@ export default function Schedule (props) {
               <tbody>
                 {
                   activeGames.map((game) => {
+                    const inPast = new Date(game.scheduledTime).getTime() < Date.now()
                     return (
-                      <tr className={(new Date(game.scheduledTime).getTime() < Date.now()) ? 'text-muted' : ''}>
+                      <tr key={game.id} className={inPast ? 'text-muted' : ''}>
                         <td>{showDate(game.scheduledTime)}</td>
                         <td>{showHourMinute(game.scheduledTime)}</td>
                         <td>
