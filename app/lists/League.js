@@ -1,4 +1,5 @@
-const { Text, DateTime, Checkbox, Integer, Relationship, File } = require('@keystonejs/fields')
+const { Text, Checkbox, Integer, Relationship, File } = require('@keystonejs/fields')
+const CustomDateTime = require('../custom-fields/CustomDateTime')
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
 const storage = require('./file-storage-adapter')
 
@@ -26,22 +27,22 @@ const fields = {
     required: false
   },
   earlyRegistrationStart: {
-    type: DateTime
+    type: CustomDateTime
   },
   earlyRegistrationEnd: {
-    type: DateTime
+    type: CustomDateTime
   },
   registrationStart: {
-    type: DateTime
+    type: CustomDateTime
   },
   registrationEnd: {
-    type: DateTime
+    type: CustomDateTime
   },
   lateRegistrationStart: {
-    type: DateTime
+    type: CustomDateTime
   },
   lateRegistrationEnd: {
-    type: DateTime
+    type: CustomDateTime
   },
   pricingEarlyStudent: {
     type: Integer,
@@ -80,10 +81,10 @@ const fields = {
     default: 55
   },
   finalsTournamentStartDate: {
-    type: DateTime
+    type: CustomDateTime
   },
   finalsTournamentEndDate: {
-    type: DateTime
+    type: CustomDateTime
   },
   finalsTournamentDescription: {
     type: Wysiwyg,

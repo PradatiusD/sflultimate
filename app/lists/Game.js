@@ -1,4 +1,6 @@
 const { Text, Integer, DateTime, Checkbox, Relationship } = require('@keystonejs/fields')
+const CustomDateTime = require('../custom-fields/CustomDateTime')
+
 const fields = {
   name: {
     type: Text
@@ -11,7 +13,7 @@ const fields = {
     required: true
   },
   scheduledTime: {
-    type: DateTime,
+    type: CustomDateTime,
     initial: true
   },
   homeTeam: {
@@ -65,7 +67,7 @@ const fields = {
 //   next()
 // })
 //
-// 
+//
 // Game.register()
 
 module.exports = {

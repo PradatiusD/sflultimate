@@ -1,4 +1,5 @@
-const { Text, Url, DateTime, File } = require('@keystonejs/fields')
+const { Text, Url, File } = require('@keystonejs/fields')
+const CustomDateTime = require('../custom-fields/CustomDateTime')
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
 const storage = require('./file-storage-adapter')
 
@@ -12,14 +13,12 @@ const fields = {
     initial: true
   },
   startTime: {
-    type: DateTime,
-    isRequired: true,
-    format: 'dd/MM/yyyy HH:mm O'
+    type: CustomDateTime,
+    isRequired: true
   },
   endTime: {
-    type: DateTime,
-    isRequired: true,
-    format: 'dd/MM/yyyy HH:mm O'
+    type: CustomDateTime,
+    isRequired: true
   },
   location: {
     type: Text,

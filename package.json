@@ -22,12 +22,17 @@
         "dotenv": "^16.4.5",
         "mailchimp-api-v3": "^1.15.0",
         "nodemailer": "^6.9.1",
+        "react-datetime-picker": "^6.0.1",
         "request": "^2.88.0",
         "sass-mediaqueries": "^1.6.1",
         "superagent": "^4.0.0",
         "underscore": "^1.9.1"
     },
     "devDependencies": {
+        "@babel/cli": "^7.27.0",
+        "@babel/core": "^7.26.10",
+        "@babel/preset-env": "^7.26.9",
+        "@babel/preset-react": "^7.26.3",
         "cypress": "^13.6.6",
         "cypress-iframe": "^1.0.1",
         "eslint": "^7.32.0",
@@ -58,7 +63,8 @@
         "cypress": "npx cypress open",
         "restore": "grunt restore",
         "build-schema": "get-graphql-schema http://localhost:3000/admin/api/  > app/schema.graphql",
-        "deploy": "git push heroku keystone-v5-migration:main"
+        "deploy": "git push heroku keystone-v5-migration:main",
+        "custom-fields": "npx babel app/custom-fields/CustomDateTime/src/views/*.js --out-dir app/custom-fields/CustomDateTime/views"
     },
     "private": true
 }
