@@ -3,12 +3,14 @@ import { CreateItem, useList } from '@keystonejs/app-admin-ui/components'
 import { saveAs } from 'file-saver'
 import { gql } from '@apollo/client'
 import client from './../next/lib/graphql-client'
+import styles from './ExportCSVButton.module.css'
 
-const ExportCsvButton = () => {
+const ExportCSVButton = () => {
   const listData = useList()
   const { list } = listData
-  const fieldsOfFirstRecord = listData.listData && listData.listData.items && listData.listData.items[0]
-  const queriedFields = fieldsOfFirstRecord && Object.keys(fieldsOfFirstRecord)
+  const firstRecord = listData.listData && listData.listData.items && listData.listData.items[0]
+  const queriedFields = firstRecord && Object.keys(firstRecord).filter(f => typeof firstRecord[f] !== 'object')
+  console.log(queriedFields)
 
   const exportCsv = async () => {
     const fieldsToQuery = list.fields.filter(f => f.path !== 'image' && !f.config.many && queriedFields.includes(f.path))
@@ -59,8 +61,7 @@ const ExportCsvButton = () => {
 
   return (
     <div
-      className={'css-imhsor-ButtonElementComponent'}
-      style={{ marginLeft: '10px' }}
+      className={styles.exportCSVButton}
       onClick={() => exportCsv()}>
       Export CSV
     </div>
@@ -71,7 +72,7 @@ export default {
   listHeaderActions: () => (
     <div>
       <CreateItem />
-      <div style={{ display: 'inline-block' }}><ExportCsvButton /></div>
+      <div style={{ display: 'inline-block' }}><ExportCSVButton /></div>
     </div>
   )
 }
