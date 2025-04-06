@@ -5,10 +5,11 @@ const Event = require('./Event')
 const Game = require('./Game')
 const League = require('./League')
 const Location = require('./Location')
+const Pickup = require('./Pickup')
 const Player = require('./Player')
 const PlayerGameStat = require('./PlayerGameStat')
+const Post = require('./Post')
 const Team = require('./Team')
-const Pickup = require('./Pickup')
 const User = require('./User')
 
 module.exports = {
@@ -21,6 +22,7 @@ module.exports = {
   Location,
   Player,
   PlayerGameStat,
+  Post,
   Team,
   Pickup,
   User

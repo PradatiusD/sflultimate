@@ -1580,6 +1580,24 @@ type Mutation {
   """ Delete multiple PlayerGameStat items by ID. """
   deletePlayerGameStats(ids: [ID!]): [PlayerGameStat]
 
+  """ Create a single Post item. """
+  createPost(data: PostCreateInput): Post
+
+  """ Create multiple Post items. """
+  createPosts(data: [PostsCreateInput]): [Post]
+
+  """ Update a single Post item by ID. """
+  updatePost(id: ID!, data: PostUpdateInput): Post
+
+  """ Update multiple Post items by ID. """
+  updatePosts(data: [PostsUpdateInput]): [Post]
+
+  """ Delete a single Post item by ID. """
+  deletePost(id: ID!): Post
+
+  """ Delete multiple Post items by ID. """
+  deletePosts(ids: [ID!]): [Post]
+
   """ Create a single Team item. """
   createTeam(data: TeamCreateInput): Team
 
@@ -2513,6 +2531,149 @@ input PlayerWhereUniqueInput {
   id: ID!
 }
 
+""" A keystone list """
+type Post {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the Post List config, or
+   2. As an alias to the field set on 'labelField' in the Post List config, or
+   3. As an alias to a 'name' field on the Post List (if one exists), or
+   4. As an alias to the 'id' field on the Post List.
+  """
+  _label_: String
+  id: ID!
+  title: String
+  publishedDate: DateTime
+  slug: String
+  summary: String
+  body: String
+  image: File
+}
+
+input PostCreateInput {
+  title: String
+  publishedDate: DateTime
+  slug: String
+  summary: String
+  body: String
+  image: Upload
+}
+
+input PostsCreateInput {
+  data: PostCreateInput
+}
+
+input PostsUpdateInput {
+  id: ID!
+  data: PostUpdateInput
+}
+
+input PostUpdateInput {
+  title: String
+  publishedDate: DateTime
+  slug: String
+  summary: String
+  body: String
+  image: Upload
+}
+
+input PostWhereInput {
+  AND: [PostWhereInput]
+  OR: [PostWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  title: String
+  title_not: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  title_i: String
+  title_not_i: String
+  title_contains_i: String
+  title_not_contains_i: String
+  title_starts_with_i: String
+  title_not_starts_with_i: String
+  title_ends_with_i: String
+  title_not_ends_with_i: String
+  title_in: [String]
+  title_not_in: [String]
+  publishedDate: DateTime
+  publishedDate_not: DateTime
+  publishedDate_lt: DateTime
+  publishedDate_lte: DateTime
+  publishedDate_gt: DateTime
+  publishedDate_gte: DateTime
+  publishedDate_in: [DateTime]
+  publishedDate_not_in: [DateTime]
+  slug: String
+  slug_not: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
+  slug_i: String
+  slug_not_i: String
+  slug_contains_i: String
+  slug_not_contains_i: String
+  slug_starts_with_i: String
+  slug_not_starts_with_i: String
+  slug_ends_with_i: String
+  slug_not_ends_with_i: String
+  slug_in: [String]
+  slug_not_in: [String]
+  summary: String
+  summary_not: String
+  summary_contains: String
+  summary_not_contains: String
+  summary_starts_with: String
+  summary_not_starts_with: String
+  summary_ends_with: String
+  summary_not_ends_with: String
+  summary_i: String
+  summary_not_i: String
+  summary_contains_i: String
+  summary_not_contains_i: String
+  summary_starts_with_i: String
+  summary_not_starts_with_i: String
+  summary_ends_with_i: String
+  summary_not_ends_with_i: String
+  summary_in: [String]
+  summary_not_in: [String]
+  body: String
+  body_not: String
+  body_contains: String
+  body_not_contains: String
+  body_starts_with: String
+  body_not_starts_with: String
+  body_ends_with: String
+  body_not_ends_with: String
+  body_i: String
+  body_not_i: String
+  body_contains_i: String
+  body_not_contains_i: String
+  body_starts_with_i: String
+  body_not_starts_with_i: String
+  body_ends_with_i: String
+  body_not_ends_with_i: String
+  body_in: [String]
+  body_not_in: [String]
+  image: String
+  image_not: String
+  image_in: [String]
+  image_not_in: [String]
+}
+
+input PostWhereUniqueInput {
+  id: ID!
+}
+
 type Query {
   """ Search for all BoardMember items which match the where clause. """
   allBoardMembers(where: BoardMemberWhereInput, search: String, sortBy: [SortBoardMembersBy!], orderBy: String, first: Int, skip: Int): [BoardMember]
@@ -2629,6 +2790,18 @@ type Query {
 
   """ Retrieve the meta-data for the PlayerGameStat list. """
   _PlayerGameStatsMeta: _ListMeta
+
+  """ Search for all Post items which match the where clause. """
+  allPosts(where: PostWhereInput, search: String, sortBy: [SortPostsBy!], orderBy: String, first: Int, skip: Int): [Post]
+
+  """ Search for the Post item with the matching ID. """
+  Post(where: PostWhereUniqueInput!): Post
+
+  """ Perform a meta-query on all Post items which match the where clause. """
+  _allPostsMeta(where: PostWhereInput, search: String, sortBy: [SortPostsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the Post list. """
+  _PostsMeta: _ListMeta
 
   """ Search for all Team items which match the where clause. """
   allTeams(where: TeamWhereInput, search: String, sortBy: [SortTeamsBy!], orderBy: String, first: Int, skip: Int): [Team]
@@ -2949,6 +3122,21 @@ enum SortPlayersBy {
   willAttendFinals_DESC
   preferredPositions_ASC
   preferredPositions_DESC
+}
+
+enum SortPostsBy {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  publishedDate_ASC
+  publishedDate_DESC
+  slug_ASC
+  slug_DESC
+  summary_ASC
+  summary_DESC
+  body_ASC
+  body_DESC
 }
 
 enum SortTeamsBy {
