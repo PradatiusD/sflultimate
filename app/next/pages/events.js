@@ -18,7 +18,7 @@ export const getServerSideProps = async () => {
               lateRegistrationStart
               lateRegistrationEnd
             }
-            allEvents {
+            allEvents(sortBy: startTime_DESC) {
               id
               image {
                 publicUrl
@@ -68,32 +68,35 @@ function EventItem (props) {
   const { event, status } = props
   const containerClass = 'row ' + (status === 'past' ? ' text-muted' : '')
   return (
-    <div className={containerClass}>
-      <div className="col-sm-3">
-        <a href={event.image.publicUrl} target="_blank" rel="noopener noreferrer">
-          <img src={event.image.publicUrl} className="img-responsive" alt={event.name}/>
-        </a>
-      </div>
-      <div className="col-sm-9">
-        <h2>{event.name}</h2>
-        <p>
-          <strong>{event.startTimeFormatted}</strong>
-          <br/>
-          <em>{event.location}</em> • {event.category}
-        </p>
+    <>
+      <div className={containerClass}>
+        <div className="col-sm-3">
+          <a href={event.image.publicUrl} target="_blank" rel="noopener noreferrer">
+            <img src={event.image.publicUrl} className="img-responsive img-rounded" alt={event.name}/>
+          </a>
+        </div>
+        <div className="col-sm-9">
+          <h2>{event.name}</h2>
+          <p>
+            <strong>{event.startTimeFormatted}</strong>
+            <br/>
+            <em>{event.location}</em> • {event.category}
+          </p>
 
-        <div dangerouslySetInnerHTML={{ __html: event.description }}/>
-        <ul className="list-inline" style={{ marginTop: '1rem' }}>
-          {event.links.map((link, linkIndex) => (
-            <li key={linkIndex}>
-              <a className="btn btn-default" href={link.url} target="_blank" rel="noopener noreferrer">
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+          <div dangerouslySetInnerHTML={{ __html: event.description }}/>
+          <ul className="list-inline" style={{ marginTop: '1rem' }}>
+            {event.links.map((link, linkIndex) => (
+              <li key={linkIndex}>
+                <a className="btn btn-default" href={link.url} target="_blank" rel="noopener noreferrer">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+      <hr/>
+    </>
   )
 }
 
@@ -130,7 +133,7 @@ export default function EventsPage (props) {
         <h1>Past Events</h1>
         <p className="lead">Here you can find our list of past events.</p>
 
-        {events.map((event, index) =>
+        {events.map((event) =>
           !event.active ? <EventItem event={event} key={event.id} status="past" /> : null
         )}
       </div>
