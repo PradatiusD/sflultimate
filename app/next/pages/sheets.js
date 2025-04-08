@@ -21,18 +21,6 @@ export async function getServerSideProps (context) {
             name
           }
         }
-        allPlayerGameStats(where: {game: {league: {isActive: true}}}) {
-          id
-          player {
-            id
-          }
-          game {
-            id
-          }
-          scores
-          assists
-          defenses
-        }
         allTeams(where: {league: {isActive: true}}) {
           id
           name
@@ -54,7 +42,7 @@ export async function getServerSideProps (context) {
   })
   const league = results.data.allLeagues[0]
   const teams = results.data.allTeams
-  const games = results.data.allGames.map(function (game) {
+  let games = results.data.allGames.map(function (game) {
     const g = Object.assign({}, game)
     const awayTeam = teams.find((team) => team.id === game.awayTeam.id)
     const homeTeam = teams.find((team) => team.id === game.homeTeam.id)
@@ -71,8 +59,38 @@ export async function getServerSideProps (context) {
     return g
   })
 
+  if (context.query.date) {
+    const forcedDate = context.query.date
+    games = games.filter(function (game) {
+      return new Date(game.scheduledTime).toISOString().split('T')[0] === forcedDate
+    })
+  }
+
   const initPlayerMap = {}
-  results.data.allPlayerGameStats.forEach(function (playerGameStats) {
+  const statResults = await GraphqlClient.query({
+    query: gql`
+      query($gameIDs: [ID!]) {
+        allPlayerGameStats(where: {game: {id_in: $gameIDs}}) {
+          id
+          player {
+            id
+          }
+          game {
+            id
+          }
+          scores
+          assists
+          defenses
+          attended
+        }
+      }
+    `,
+    variables: {
+      gameIDs: games.map(game => game.id)
+    }
+  })
+
+  statResults.data.allPlayerGameStats.forEach(function (playerGameStats) {
     initPlayerMap[playerGameStats.player.id] = {
       gameStatId: playerGameStats.id,
       assists: playerGameStats.assists,
@@ -81,8 +99,6 @@ export async function getServerSideProps (context) {
       attended: playerGameStats.attended || false
     }
   })
-
-  console.log(initPlayerMap)
 
   teams.forEach(team => {
     team.players.forEach(player => {
@@ -134,6 +150,22 @@ function Sheets (props) {
       let mutation
       let params
       const statId = statsMap[player.id].gameStatId
+      const statDataVariable = {
+        player: {
+          connect: {
+            id: player.id
+          }
+        },
+        game: {
+          connect: {
+            id: game.id
+          }
+        },
+        assists: statsMap[player.id].assists,
+        scores: statsMap[player.id].scores,
+        defenses: statsMap[player.id].defenses,
+        attended: statsMap[player.id].attended || false
+      }
       if (statId) {
         mutation = gql`
           mutation updateStat($id: ID!, $data: PlayerGameStatUpdateInput) {
@@ -159,21 +191,7 @@ function Sheets (props) {
           mutation: mutation,
           variables: {
             id: statId,
-            data: {
-              player: {
-                connect: {
-                  id: player.id
-                }
-              },
-              game: {
-                connect: {
-                  id: game.id
-                }
-              },
-              assists: statsMap[player.id].assists,
-              scores: statsMap[player.id].scores,
-              defenses: statsMap[player.id].defenses
-            }
+            data: statDataVariable
           }
         }
       } else {
@@ -199,21 +217,7 @@ function Sheets (props) {
         params = {
           mutation: mutation,
           variables: {
-            data: {
-              player: {
-                connect: {
-                  id: player.id
-                }
-              },
-              game: {
-                connect: {
-                  id: game.id
-                }
-              },
-              assists: statsMap[player.id].assists,
-              scores: statsMap[player.id].scores,
-              defenses: statsMap[player.id].defenses
-            }
+            data: statDataVariable
           }
         }
       }
@@ -234,16 +238,7 @@ function Sheets (props) {
         }
       })
       setStatsMap(newState)
-      console.log(response)
     })
-
-    // $http.post('/stats', {
-    //   items: team.players.map(function (player) {
-    //     const stats = player.stats
-    //     stats.game = game._id
-    //     stats.player = player._id
-    //     return stats
-    //   })
     // }).then(function () {
     //   alert('Your data was saved for ' + team.name)
     // }).catch(function () {
@@ -369,7 +364,7 @@ function Sheets (props) {
                       const onChange = function (str) {
                         return (e) => {
                           const newStats = { ...stats }
-                          newStats[str] = parseInt(e.target.value) || 0
+                          newStats[str] = str === 'attended' ? e.target.checked : parseInt(e.target.value) || 0
                           const newStatsMap = { ...statsMap, [player.id]: newStats }
                           setStatsMap(newStatsMap)
                         }
@@ -390,7 +385,7 @@ function Sheets (props) {
                           <td><input {...sharedInputPros} value={stats.defenses} onChange={onChange('defenses')} /></td>
                           <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
                           <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                          <td><input type="checkbox" disabled={!editor}/></td>
+                          <td><input type="checkbox" checked={stats.attended} disabled={!editor} onChange={onChange('attended')} /></td>
                         </tr>
                       )
                     })

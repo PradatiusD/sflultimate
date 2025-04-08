@@ -48,13 +48,17 @@ export const getServerSideProps = async (context) => {
             }
           }
         }
-        allPlayerGameStats(where: {game: {id: "${context.params.game}"}}) {
+        # (where: {game: {id: "${context.params.game}"}})
+        allPlayerGameStats {
           id
           defenses
           scores
           assists
           attended
           player {
+            id
+          }
+          game {
             id
           }
         }
@@ -89,7 +93,9 @@ export const getServerSideProps = async (context) => {
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
 
-  const stats = results.data.allPlayerGameStats
+  const stats = results.data.allPlayerGameStats.filter(function (s) {
+    return s.game && s.game.id === context.params.game
+  })
 
   const playerMap = {}
   for (const stat of stats) {
@@ -223,7 +229,7 @@ function GameStatTable (props) {
         </tr>
       </thead>
       <tbody>
-        {team.stats.length > 0 && team.stats.map((stat, index) => (
+        {team.stats.length > 0 && team.stats.filter(s => s.attended || s.total > 0).map((stat, index) => (
           <tr key={index}>
             <td>{stat.player.firstName} {stat.player.lastName}</td>
             <td>{stat.assists}</td>

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { addLeagueStatus } from '../lib/payment-utils'
-import {FooterNavigation, HeaderNavigation} from "../components/Navigation";
+import { FooterNavigation, HeaderNavigation } from '../components/Navigation'
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -42,14 +42,14 @@ export const getServerSideProps = async () => {
 }
 
 export default function LeagueTeamsPage (props) {
-  const {league, teams} = props
+  const { league, teams } = props
   return (
     <>
       <Head>
         <title>League Teams</title>
         <meta property="og:title" content="League Teams"/>
         <meta property="og:url" content="https://www.sflultimate.com/teams"/>
-        <meta property="og:description" content={"Find out who is on your team for " + league.title}/>
+        <meta property="og:description" content={'Find out who is on your team for ' + league.title}/>
         <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg"/>
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
@@ -61,7 +61,6 @@ export default function LeagueTeamsPage (props) {
           <section>
             {
               teams.map((team, index) => {
-
                 let menTotal = 0
                 let womenTotal = 0
                 team.players.forEach(function (player) {
@@ -75,7 +74,7 @@ export default function LeagueTeamsPage (props) {
 
                 return (
                   <article key={team.id}>
-                    <h3><span className="team-color" style={{backgroundColor: team.color}}></span>{team.name}</h3>
+                    <h3><span className="team-color" style={{ backgroundColor: team.color }}></span>{team.name}</h3>
                     <p className="lead">
                       <span>Captain{team.captains.length > 1 ? 's' : ''}: </span>
                       {
@@ -91,16 +90,16 @@ export default function LeagueTeamsPage (props) {
                     </p>
                     <table className="table table-striped table-bordered">
                       <tbody>
-                      {
-                        team.players.map((player, index) => {
-                          const gender = player.gender.charAt(0)
-                          return (
-                            <tr key={player._id}>
-                              <td>{index + 1}. {gender} - {player.firstName} {player.lastName}</td>
-                            </tr>
-                          )
-                        })
-                      }
+                        {
+                          team.players.map((player, index) => {
+                            const gender = player.gender.charAt(0)
+                            return (
+                              <tr key={player._id}>
+                                <td>{index + 1}. {gender} - {player.firstName} {player.lastName}</td>
+                              </tr>
+                            )
+                          })
+                        }
                       </tbody>
                     </table>
                   </article>
