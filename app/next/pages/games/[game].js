@@ -48,8 +48,7 @@ export const getServerSideProps = async (context) => {
             }
           }
         }
-        # (where: {game: {id: "${context.params.game}"}})
-        allPlayerGameStats {
+        allPlayerGameStats(where: {game: {id: "${context.params.game}"}}) {
           id
           defenses
           scores
