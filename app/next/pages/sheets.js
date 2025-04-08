@@ -1,6 +1,8 @@
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
-export async function getServerSideProps () {
+import { useState } from 'react'
+
+export async function getServerSideProps (context) {
   const results = await GraphqlClient.query({
     query: gql`
       query {
@@ -8,8 +10,8 @@ export async function getServerSideProps () {
           title
         }
         allGames(where: {league: {isActive: true}}) {
-          id,
-          scheduledTime,
+          id
+          scheduledTime
           homeTeam {
             id
             name
@@ -19,8 +21,20 @@ export async function getServerSideProps () {
             name
           }
         }
+        allPlayerGameStats(where: {game: {league: {isActive: true}}}) {
+          id
+          player {
+            id
+          }
+          game {
+            id
+          }
+          scores
+          assists
+          defenses
+        }
         allTeams(where: {league: {isActive: true}}) {
-          id,
+          id
           name
           color
           captains {
@@ -56,7 +70,44 @@ export async function getServerSideProps () {
     ]
     return g
   })
-  return { props: { league, teams, games } }
+
+  const initPlayerMap = {}
+  results.data.allPlayerGameStats.forEach(function (playerGameStats) {
+    initPlayerMap[playerGameStats.player.id] = {
+      gameStatId: playerGameStats.id,
+      assists: playerGameStats.assists,
+      scores: playerGameStats.scores,
+      defenses: playerGameStats.defenses,
+      attended: playerGameStats.attended || false
+    }
+  })
+
+  console.log(initPlayerMap)
+
+  teams.forEach(team => {
+    team.players.forEach(player => {
+      if (initPlayerMap[player.id]) {
+        return
+      }
+
+      initPlayerMap[player.id] = {
+        assists: 0,
+        scores: 0,
+        defenses: 0,
+        attended: false
+      }
+    })
+  })
+
+  return {
+    props: {
+      league,
+      teams,
+      games,
+      queryParams: context.req.query,
+      initPlayerMap
+    }
+  }
 }
 
 function SpiritOfTheGameText () {
@@ -73,12 +124,119 @@ function SpiritOfTheGameText () {
 }
 
 function Sheets (props) {
-  const { teams, games } = props
-  const editor = false
+  const { teams, games, queryParams, initPlayerMap } = props
+  const editor = queryParams.editor
   const isTournament = false
   const today = new Date()
 
   const handleSave = function (game, team) {
+    function updateStatsForPlayer (player) {
+      let mutation
+      let params
+      const statId = statsMap[player.id].gameStatId
+      if (statId) {
+        mutation = gql`
+          mutation updateStat($id: ID!, $data: PlayerGameStatUpdateInput) {
+            updatePlayerGameStat(id: $id, data: $data) {
+              id
+              player {
+                id
+              }
+              game {
+                id
+              }
+              assists
+              scores
+              defenses
+              throwaways
+              drops
+              pointsPlayed
+              attended
+            }
+          }
+        `
+        params = {
+          mutation: mutation,
+          variables: {
+            id: statId,
+            data: {
+              player: {
+                connect: {
+                  id: player.id
+                }
+              },
+              game: {
+                connect: {
+                  id: game.id
+                }
+              },
+              assists: statsMap[player.id].assists,
+              scores: statsMap[player.id].scores,
+              defenses: statsMap[player.id].defenses
+            }
+          }
+        }
+      } else {
+        mutation = gql`
+          mutation createStat($data: PlayerGameStatCreateInput) {
+            createPlayerGameStat(data: $data) {
+              player {
+                id
+              }
+              game {
+                id
+              }
+              assists
+              scores
+              defenses
+              throwaways
+              drops
+              pointsPlayed
+              attended
+            }
+          }
+        `
+        params = {
+          mutation: mutation,
+          variables: {
+            data: {
+              player: {
+                connect: {
+                  id: player.id
+                }
+              },
+              game: {
+                connect: {
+                  id: game.id
+                }
+              },
+              assists: statsMap[player.id].assists,
+              scores: statsMap[player.id].scores,
+              defenses: statsMap[player.id].defenses
+            }
+          }
+        }
+      }
+
+      return GraphqlClient.mutate(params)
+    }
+
+    Promise.all(team.players.map(function (player) {
+      return updateStatsForPlayer(player)
+    })).then(function (response) {
+      const newState = { ...statsMap }
+      response.forEach(function (player) {
+        const response = (player.data.createPlayerGameStat || player.data.updatePlayerGameStat)
+        const playerId = response.player.id
+        newState[playerId] = {
+          ...response,
+          gameStatId: response.id
+        }
+      })
+      setStatsMap(newState)
+      console.log(response)
+    })
+
     // $http.post('/stats', {
     //   items: team.players.map(function (player) {
     //     const stats = player.stats
@@ -91,6 +249,7 @@ function Sheets (props) {
     // }).catch(function () {
     //   alert('There was an error saving for ' + team.name)
   }
+  const [statsMap, setStatsMap] = useState(initPlayerMap)
 
   return <>
     <link rel='stylesheet' href='/styles/site.css' media='all'/>
@@ -159,7 +318,7 @@ function Sheets (props) {
       <div className="game-container">
         {!isTournament && games.map((game) => (
           game.teams.map((team) => (
-            <section key={game.scheduledTime} className="stat-page-container">
+            <section key={team.currentTeam.id} className="stat-page-container">
               <table className="table table-bordered table-striped">
                 <thead>
                   <tr>
@@ -205,17 +364,36 @@ function Sheets (props) {
                 </thead>
                 <tbody>
                   {
-                    team.currentTeam.players.map((player) => (
-                      <tr key={player.firstName + player.lastName}>
-                        <td style={{ width: '20%' }}>{player.firstName} {player.lastName}</td>
-                        <td><input type="number" min="0" step="1" disabled={!editor}/></td>
-                        <td><input type="number" min="0" step="1" disabled={!editor}/></td>
-                        <td><input type="number" min="0" step="1" disabled={!editor}/></td>
-                        <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                        <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                        <td><input type="checkbox" disabled={!editor}/></td>
-                      </tr>
-                    ))
+                    team.currentTeam.players.map((player) => {
+                      const stats = statsMap[player.id] || {}
+                      const onChange = function (str) {
+                        return (e) => {
+                          const newStats = { ...stats }
+                          newStats[str] = parseInt(e.target.value) || 0
+                          const newStatsMap = { ...statsMap, [player.id]: newStats }
+                          setStatsMap(newStatsMap)
+                        }
+                      }
+                      const sharedInputPros = {
+                        disabled: !editor,
+                        min: 0,
+                        step: 1,
+                        type: 'number'
+                      }
+                      return (
+                        <tr key={player.firstName + player.lastName}>
+                          <td style={{ width: '20%' }}>{player.firstName} {player.lastName}</td>
+                          <td>
+                            <input {...sharedInputPros} value={stats.assists} onChange={onChange('assists')}/>
+                          </td>
+                          <td><input {...sharedInputPros} value={stats.scores} onChange={onChange('scores')} /></td>
+                          <td><input {...sharedInputPros} value={stats.defenses} onChange={onChange('defenses')} /></td>
+                          <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
+                          <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
+                          <td><input type="checkbox" disabled={!editor}/></td>
+                        </tr>
+                      )
+                    })
                   }
                 </tbody>
               </table>
@@ -287,12 +465,7 @@ function Sheets (props) {
 }
 
 export default Sheets
-
-//
-//     script(src='/js/utils.js')
-//
 //     (function () {
-//       app.controller('StatSheetController', function ($scope, $http) {
 //         // http://localhost:5000/sheets?is_tournament=true
 //         // http://localhost:5000/sheets?date=2022-10-11
 //         // http://localhost:5000/sheets?date=2022-10-11&editor=true

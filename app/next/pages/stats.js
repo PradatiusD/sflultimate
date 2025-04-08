@@ -87,10 +87,10 @@ export const getServerSideProps = async () => {
       statsGroupedByPlayer[stat.player.id] = stat
       o = stat
     }
-    o.overall = o.scores + o.assists + o.defenses
+    o.overall = (o.scores + o.assists + o.defenses) || 0
     const gender = stat.player.gender
     for (const key of statKeysToCompare) {
-      if (!awards[gender][key] || awards[gender][key] < stat[key]) {
+      if (stat[key] && (!awards[gender][key] || awards[gender][key] < stat[key])) {
         awards[gender][key] = stat[key]
       }
     }
@@ -99,7 +99,12 @@ export const getServerSideProps = async () => {
   for (const team of results.data.allTeams) {
     for (const player of team.players) {
       if (!statsGroupedByPlayer[player.id]) {
-        statsGroupedByPlayer[player.id] = {}
+        statsGroupedByPlayer[player.id] = {
+          scores: 0,
+          assists: 0,
+          defenses: 0,
+          overall: 0
+        }
       }
       statsGroupedByPlayer[player.id].teamColor = team.color
     }
