@@ -44,7 +44,14 @@ export const getServerSideProps = async () => {
           location {
             name
           }
-          
+          __typename
+        }
+        allEvents {
+          startTime
+          name
+          location
+          moreInformationUrl
+          __typename
         }
         allTeams(where: {league: {isActive: true}}) {
           id
@@ -57,16 +64,21 @@ export const getServerSideProps = async () => {
     return new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime()
   })
   const teams = results.data.allTeams
+  const events = results.data.allEvents.filter(event => event.startTime && new Date(event.startTime).getTime() > Date.now())
   addLeagueStatus(league)
-  return { props: { league, games, teams } }
+  return { props: { league, games, teams, events } }
 }
 
 export default function Schedule (props) {
-  const { league, games, teams } = props
+  const { league, games, teams, events } = props
 
   const finalsStartDate = new Date(league.finalsTournamentStartDate)
 
-  const [activeGames, setActiveGames] = useState(games)
+  const gamesAndEvents = games.concat(events)
+  gamesAndEvents.sort((a, b) => {
+    return new Date(a.startTime || a.scheduledTime).getTime() - new Date(b.startTime || b.scheduledTime).getTime()
+  })
+  const [activeGamesOrEvents, setActiveGamesOrEvents] = useState(gamesAndEvents)
 
   return (
     <>
@@ -97,7 +109,7 @@ export default function Schedule (props) {
                         const filteredList = games.filter((game) => {
                           return game.homeTeam.color === team.color || game.awayTeam.color === team.color
                         })
-                        setActiveGames(filteredList)
+                        setActiveGamesOrEvents(filteredList)
                       }}
                     ></span>
                   )
@@ -110,47 +122,63 @@ export default function Schedule (props) {
                 <tr>
                   <th>Date</th>
                   <th>Time</th>
-                  <th>Matchup</th>
+                  <th>Matchup / Event Name</th>
                   <th>Field</th>
                   <th>Preview/Recap</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  activeGames.map((game) => {
-                    const inPast = new Date(game.scheduledTime).getTime() < Date.now()
+                  activeGamesOrEvents.map((gameOrEvent) => {
+                    if (gameOrEvent.__typename === 'Game') {
+                      const inPast = new Date(gameOrEvent.scheduledTime).getTime() < Date.now()
+                      return (
+                        <tr key={gameOrEvent.id} className={inPast ? 'text-muted' : ''}>
+                          {
+
+                          }
+                          <td>{showDate(gameOrEvent.scheduledTime)}</td>
+                          <td>{showHourMinute(gameOrEvent.scheduledTime)}</td>
+                          <td>
+                            <span><span
+                              style={{ borderBottom: '3px solid ' + gameOrEvent.homeTeam.color }}>{gameOrEvent.homeTeam.name}</span> vs. <span
+                              style={{ borderBottom: '3px solid ' + gameOrEvent.awayTeam.color }}>{gameOrEvent.awayTeam.name}</span></span>
+                            {
+                              (gameOrEvent.homeTeamScore > 0 || gameOrEvent.awayTeamScore > 0) && (!gameOrEvent.homeTeamForfeit && !gameOrEvent.homeTeamForfeit) && (
+                                <span> ({gameOrEvent.homeTeamScore}-{gameOrEvent.awayTeamScore})</span>
+                              )
+                            }
+                            {
+                              gameOrEvent.homeTeamForfeit && (
+                                <span>
+                                  <br/> {gameOrEvent.homeTeam.name} forfeited
+                                </span>
+                              )
+                            }
+                            {
+                              gameOrEvent.awayTeamForfeit && (
+                                <span>
+                                  <br/> {gameOrEvent.awayTeam.name} forfeited
+                                </span>
+                              )
+                            }
+                          </td>
+                          <td>{gameOrEvent?.location?.name}</td>
+                          <td>
+                            <a href={'/games/' + gameOrEvent.id}>
+                              {new Date(gameOrEvent.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}
+                            </a>
+                          </td>
+                        </tr>
+                      )
+                    }
                     return (
-                      <tr key={game.id} className={inPast ? 'text-muted' : ''}>
-                        <td>{showDate(game.scheduledTime)}</td>
-                        <td>{showHourMinute(game.scheduledTime)}</td>
-                        <td>
-                          <span><span style={{ borderBottom: '3px solid ' + game.homeTeam.color }}>{game.homeTeam.name}</span> vs. <span style={{ borderBottom: '3px solid ' + game.awayTeam.color }}>{game.awayTeam.name}</span></span>
-                          {
-                            (game.homeTeamScore > 0 || game.awayTeamScore > 0) && (!game.homeTeamForfeit && !game.homeTeamForfeit) && (
-                              <span>({game.homeTeamScore}-{game.awayTeamScore})</span>
-                            )
-                          }
-                          {
-                            game.homeTeamForfeit && (
-                              <span>
-                                <br/> {game.homeTeam.name} forfeited
-                              </span>
-                            )
-                          }
-                          {
-                            game.awayTeamForfeit && (
-                              <span>
-                                <br/> {game.awayTeam.name} forfeited
-                              </span>
-                            )
-                          }
-                        </td>
-                        <td>{game?.location?.name}</td>
-                        <td>
-                          <a href={'/games/' + game.id}>
-                            {new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}
-                          </a>
-                        </td>
+                      <tr key={gameOrEvent.id}>
+                        <td>{showDate(gameOrEvent.startTime)}</td>
+                        <td>{showHourMinute(gameOrEvent.startTime)}</td>
+                        <td><span className="badge">Event</span> {gameOrEvent.name}</td>
+                        <td>{gameOrEvent.location}</td>
+                        <td><a target="_blank" href={gameOrEvent.moreInformationUrl}>More Information</a></td>
                       </tr>
                     )
                   })
