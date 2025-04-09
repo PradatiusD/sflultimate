@@ -76,7 +76,7 @@ export default function Standings (props) {
           standingsMap[homeTeam.id].wins++
         }
       }
-    } else if (homeTeam.score !== 0 && awayTeam.score !== 0) {
+    } else if (homeTeam.score !== 0 && awayTeam.score !== 0 && homeTeam.score !== null && awayTeam.score !== null) {
       const pointDiff = Math.abs(homeTeam.score - awayTeam.score)
       let winner
       let loser
