@@ -124,10 +124,10 @@ export default function Schedule (props) {
                         <td>{showDate(game.scheduledTime)}</td>
                         <td>{showHourMinute(game.scheduledTime)}</td>
                         <td>
-                          <span>{game.homeTeam.name} vs. {game.awayTeam.name}</span>
+                          <span><span style={{ borderBottom: '3px solid ' + game.homeTeam.color }}>{game.homeTeam.name}</span> vs. <span style={{ borderBottom: '3px solid ' + game.awayTeam.color }}>{game.awayTeam.name}</span></span>
                           {
-                            game.homeTeamScore !== 0 && game.awayTeamScore !== 0 && (!game.homeTeamForfeit && !game.homeTeamForfeit) && (
-                              <span> ({game.homeTeamScore}-{game.awayTeamScore})</span>
+                            (game.homeTeamScore > 0 || game.awayTeamScore > 0) && (!game.homeTeamForfeit && !game.homeTeamForfeit) && (
+                              <span>({game.homeTeamScore}-{game.awayTeamScore})</span>
                             )
                           }
                           {
