@@ -102,6 +102,11 @@ function EventItem (props) {
 
 export default function EventsPage (props) {
   const { events, league } = props
+
+  const upcomingEvents = events.filter((event) => event.active)
+  upcomingEvents.sort((a, b) => {
+    return a.startTime.localeCompare(b.startTime)
+  })
   return (
     <>
       <Head>
@@ -116,9 +121,11 @@ export default function EventsPage (props) {
         <h1>Upcoming Events</h1>
         <p className="lead">Below you will find a list of upcoming events happening in our community.</p>
 
-        {events.map((event) =>
-          event.active ? <EventItem event={event} key={event.id} /> : null
-        )}
+        {
+          upcomingEvents.map((event) => (
+            <EventItem event={event} key={event.id} />
+          ))
+        }
 
         <h1>SFLUltimate Yearly Calendar</h1>
         <iframe

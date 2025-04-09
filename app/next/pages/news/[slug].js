@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../components/Navigation'
 import { addLeagueStatus } from '../../lib/payment-utils'
 import Head from 'next/head'
+import {showDate} from "../../lib/utils";
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -24,6 +25,7 @@ export const getServerSideProps = async (context) => {
             slug
             summary
             body
+            publishedDate
             image {
               publicUrl
             }
@@ -52,6 +54,7 @@ export default function PostsPage (props) {
       <div className="container">
         <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" style={{ margin: '1rem auto', maxHeight: '500px' }} />
         <h2>{post.title}</h2>
+        <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
         <div dangerouslySetInnerHTML={{ __html: post.body }}/>
       </div>
     </>
