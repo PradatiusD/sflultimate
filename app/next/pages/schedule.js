@@ -78,7 +78,7 @@ export default function Schedule (props) {
   gamesAndEvents.sort((a, b) => {
     return new Date(a.startTime || a.scheduledTime).getTime() - new Date(b.startTime || b.scheduledTime).getTime()
   })
-  const [activeGamesOrEvents, setActiveGamesOrEvents] = useState(gamesAndEvents)
+  const [activeGames, setactiveGames] = useState(gamesAndEvents)
 
   return (
     <>
@@ -109,7 +109,7 @@ export default function Schedule (props) {
                         const filteredList = games.filter((game) => {
                           return game.homeTeam.color === team.color || game.awayTeam.color === team.color
                         })
-                        setActiveGamesOrEvents(filteredList)
+                        setactiveGames(filteredList)
                       }}
                     ></span>
                   )
@@ -129,7 +129,7 @@ export default function Schedule (props) {
               </thead>
               <tbody>
                 {
-                  activeGamesOrEvents.map((gameOrEvent) => {
+                  activeGames.map((gameOrEvent) => {
                     if (gameOrEvent.__typename === 'Game') {
                       const inPast = new Date(gameOrEvent.scheduledTime).getTime() < Date.now()
                       return (

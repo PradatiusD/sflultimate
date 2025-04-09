@@ -5,6 +5,7 @@ import { HeaderNavigation } from '../../components/Navigation'
 import { addLeagueStatus } from '../../lib/payment-utils'
 import { showDate, showHourMinute } from '../../lib/utils'
 import Standings from '../../components/Standings'
+import {buildPlayerUrl} from "../../components/PlayerLink";
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -48,21 +49,32 @@ export const getServerSideProps = async (context) => {
             }
           }
         }
-        allPlayerGameStats(where: {game: {id: "${context.params.game}"}}) {
-          id
-          defenses
-          scores
-          assists
-          attended
-          player {
-            id
-          }
-          game {
-            id
-          }
-        }
       }`
   })
+
+  const statsResults = await GraphqlClient.query({
+    query: gql`
+        query($playerIds: [ID!]!) {
+          allPlayerGameStats(where: {player: {id_in: $playerIds }}) {
+            id
+            defenses
+            scores
+            assists
+            attended
+            player {
+              id
+            }
+            game {
+              id
+            }
+          }
+        }
+    `,
+    variables: {
+      playerIds: results.data.currentGame[0].homeTeam.players.concat(results.data.currentGame[0].awayTeam.players).map(player => player.id)
+    }
+  })
+
   const game = results.data.currentGame[0]
 
   const teamIds = [game.homeTeam.id, game.awayTeam.id]
@@ -92,9 +104,7 @@ export const getServerSideProps = async (context) => {
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   addLeagueStatus(league)
 
-  const stats = results.data.allPlayerGameStats.filter(function (s) {
-    return s.game && s.game.id === context.params.game
-  })
+  const stats = statsResults.data.allPlayerGameStats
 
   const playerMap = {}
   for (const stat of stats) {
@@ -136,7 +146,7 @@ export const getServerSideProps = async (context) => {
       game: game,
       games: seasonResults.data.seasonGames,
       teams: teams,
-      isGamePreview: stats.length === 0
+      isGamePreview: new Date(game.scheduledTime).getTime() > Date.now()
     }
   }
 }
@@ -183,12 +193,12 @@ export default function GamePage (props) {
               {isGamePreview ? (
                 <>
                   <p><em>Note: Below are season-wide stats.</em></p>
-                  <GameStatTable team={team} />
+                  <GameStatTable team={team} isGamePreview={isGamePreview} />
                 </>
               ) : (
                 <>
                   <h3>Attended</h3>
-                  <GameStatTable team={team} />
+                  <GameStatTable team={team} isGamePreview={isGamePreview} />
                   <h3>Missing</h3>
                   <table className="table table-striped">
                     <thead>
@@ -199,7 +209,7 @@ export default function GamePage (props) {
                     <tbody>
                       {team.stats?.filter(stat => !stat.attended).map((stat, index) => (
                         <tr key={index}>
-                          <td>{stat.player.firstName} {stat.player.lastName}</td>
+                          <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
                         </tr>
                       ))}
                     </tbody>
@@ -215,7 +225,7 @@ export default function GamePage (props) {
 }
 
 function GameStatTable (props) {
-  const { team } = props
+  const { team, isGamePreview } = props
   return (
     <table className="table table-striped">
       <thead>
@@ -228,9 +238,9 @@ function GameStatTable (props) {
         </tr>
       </thead>
       <tbody>
-        {team.stats.length > 0 && team.stats.filter(s => s.attended || s.total > 0).map((stat, index) => (
+        {team.stats.length > 0 && team.stats.filter(s => isGamePreview ? true : s.attended || s.total > 0).map((stat, index) => (
           <tr key={index}>
-            <td>{stat.player.firstName} {stat.player.lastName}</td>
+            <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
             <td>{stat.assists}</td>
             <td>{stat.scores}</td>
             <td>{stat.defenses}</td>
@@ -239,7 +249,7 @@ function GameStatTable (props) {
         ))}
         {team.stats.length === 0 && team.players.map((player, index) => (
           <tr key={index}>
-            <td>{player.firstName} {player.lastName}</td>
+            <td><a href={buildPlayerUrl(player)}>{player.firstName} {player.lastName}</a></td>
             <td></td>
             <td></td>
             <td></td>
