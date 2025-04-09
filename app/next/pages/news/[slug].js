@@ -45,11 +45,12 @@ export default function PostsPage (props) {
         <title>South Florida Ultimate News</title>
         <meta property="og:title" content="South Florida Ultimate News" />
         <meta property="og:url" content={'https://www.sflultimate.com/news/' + post.slug} />
+        <meta property="og:image" content={post.image.publicUrl} />
         <meta property="og:description" content={post.summary} />
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
-        <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" style={{margin: '1rem auto'}} />
+        <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" style={{ margin: '1rem auto', maxHeight: '500px' }} />
         <h2>{post.title}</h2>
         <div dangerouslySetInnerHTML={{ __html: post.body }}/>
       </div>

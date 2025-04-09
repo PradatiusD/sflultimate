@@ -19,7 +19,7 @@ export const getServerSideProps = async () => {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        allPosts {
+        allPosts(sortBy: publishedDate_DESC) {
           id
           title
           slug
@@ -55,19 +55,22 @@ export default function PostsPage (props) {
           posts.map((post) => {
             const postUrl = '/news/' + post.slug
             return (
-              <div key={post.id} className="row">
-                <div className="col-md-3">
-                  <a href={postUrl}>
-                    <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" />
-                  </a>
+              <>
+                <div key={post.id} className="row">
+                  <div className="col-md-3">
+                    <a href={postUrl}>
+                      <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" />
+                    </a>
+                  </div>
+                  <div className="col-md-9">
+                    <h2 style={{ marginTop: '0' }}><a href={postUrl}>{post.title}</a></h2>
+                    <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                    <div dangerouslySetInnerHTML={{ __html: post.summary }}/>
+                  </div>
+                  <hr/>
                 </div>
-                <div className="col-md-9">
-                  <h2 style={{ marginTop: '0' }}><a href={postUrl}>{post.title}</a></h2>
-                  <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                  <div dangerouslySetInnerHTML={{ __html: post.summary }}/>
-                </div>
-                <hr/>
-              </div>
+                <hr />
+              </>
             )
           })
         }
