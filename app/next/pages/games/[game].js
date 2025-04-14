@@ -76,6 +76,8 @@ export const getServerSideProps = async (context) => {
   })
 
   const game = results.data.currentGame[0]
+  game.awayTeam.score = game.awayTeamScore
+  game.homeTeam.score = game.homeTeamScore
 
   const teamIds = [game.homeTeam.id, game.awayTeam.id]
   const seasonResults = await GraphqlClient.query({
@@ -110,6 +112,8 @@ export const getServerSideProps = async (context) => {
   for (const stat of stats) {
     playerMap[stat.player.id] = stat
   }
+
+
   const teams = [game.homeTeam, game.awayTeam].map(function (team) {
     const newTeam = Object.assign({}, team)
     newTeam.stats = []
