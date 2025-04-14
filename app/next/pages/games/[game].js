@@ -5,7 +5,7 @@ import { HeaderNavigation } from '../../components/Navigation'
 import { addLeagueStatus } from '../../lib/payment-utils'
 import { showDate, showHourMinute } from '../../lib/utils'
 import Standings from '../../components/Standings'
-import {buildPlayerUrl} from "../../components/PlayerLink";
+import { buildPlayerUrl } from '../../components/PlayerLink'
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -20,6 +20,7 @@ export const getServerSideProps = async (context) => {
           lateRegistrationEnd
         },
         currentGame: allGames(where: {id: "${context.params.game}"}) {
+          id
           scheduledTime
           league {
             id
@@ -51,33 +52,36 @@ export const getServerSideProps = async (context) => {
         }
       }`
   })
-
-  const statsResults = await GraphqlClient.query({
-    query: gql`
-        query($playerIds: [ID!]!) {
-          allPlayerGameStats(where: {player: {id_in: $playerIds }}) {
-            id
-            defenses
-            scores
-            assists
-            attended
-            player {
-              id
-            }
-            game {
-              id
-            }
-          }
-        }
-    `,
-    variables: {
-      playerIds: results.data.currentGame[0].homeTeam.players.concat(results.data.currentGame[0].awayTeam.players).map(player => player.id)
-    }
-  })
-
   const game = results.data.currentGame[0]
   game.awayTeam.score = game.awayTeamScore
   game.homeTeam.score = game.homeTeamScore
+
+  const isGamePreview = new Date(game.scheduledTime).getTime() > Date.now()
+
+  const statsQuery = {
+    query: gql`
+      query($playerIds: [ID!]!, $gameSearch: GameWhereInput) {
+        allPlayerGameStats(where: {player: {id_in: $playerIds }, game: $gameSearch}) {
+          id
+          defenses
+          scores
+          assists
+          attended
+          player {
+            id
+          }
+          game {
+            id
+          }
+        }
+      }
+    `,
+    variables: {
+      playerIds: results.data.currentGame[0].homeTeam.players.concat(results.data.currentGame[0].awayTeam.players).map(player => player.id),
+      gameSearch: isGamePreview ? {} : { id: game.id }
+    }
+  }
+  const statsResults = await GraphqlClient.query(statsQuery)
 
   const teamIds = [game.homeTeam.id, game.awayTeam.id]
   const seasonResults = await GraphqlClient.query({
@@ -112,7 +116,6 @@ export const getServerSideProps = async (context) => {
   for (const stat of stats) {
     playerMap[stat.player.id] = stat
   }
-
 
   const teams = [game.homeTeam, game.awayTeam].map(function (team) {
     const newTeam = Object.assign({}, team)
@@ -150,7 +153,7 @@ export const getServerSideProps = async (context) => {
       game: game,
       games: seasonResults.data.seasonGames,
       teams: teams,
-      isGamePreview: new Date(game.scheduledTime).getTime() > Date.now()
+      isGamePreview: isGamePreview
     }
   }
 }
@@ -201,9 +204,15 @@ export default function GamePage (props) {
                 </>
               ) : (
                 <>
-                  <h3>Attended</h3>
-                  <GameStatTable team={team} isGamePreview={isGamePreview} />
-                  <h3>Missing</h3>
+                  {
+                    team.stats.length > 0 && (
+                      <>
+                        <h3>Attended</h3>
+                        <GameStatTable team={team} isGamePreview={isGamePreview} />
+                      </>
+                    )
+                  }
+                  <h3>{team.stats.length > 0 ? 'Missing' : 'Stats Pending'}</h3>
                   <table className="table table-striped">
                     <thead>
                       <tr>
