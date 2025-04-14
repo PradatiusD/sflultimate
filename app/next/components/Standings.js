@@ -140,6 +140,12 @@ export default function Standings (props) {
         <tbody>
           {
             standings.map((team, index) => {
+              let pointDiffClass = ''
+              if (team.pointDiff > 0) {
+                pointDiffClass = 'success text-success'
+              } else if (team.pointDiff < 0) {
+                pointDiffClass = 'danger text-danger'
+              }
               return (
                 <tr key={team.id}>
                   <td className="text-left">{team.name}</td>
@@ -150,7 +156,7 @@ export default function Standings (props) {
                   <td>{team.pointsAllowed}</td>
                   <td>{team.avgPointsScoredPerGame}</td>
                   <td>{team.avgPointsAllowedPerGame}</td>
-                  <td>{team.pointDiff}</td>
+                  <td className={pointDiffClass}>{team.pointDiff > 0 ? '+' + team.pointDiff: team.pointDiff}</td>
                 </tr>
               )
             })
