@@ -64,6 +64,12 @@ export async function getServerSideProps (context) {
     games = games.filter(function (game) {
       return new Date(game.scheduledTime).toISOString().split('T')[0] === forcedDate
     })
+  } else {
+    const now = Date.now()
+    games = games.filter(function (game) {
+      const gameTime = new Date(game.scheduledTime).getTime()
+      return now <= gameTime && gameTime <= now + 13 * 24 * 60 * 60 * 1000
+    })
   }
 
   const initPlayerMap = {}
@@ -253,7 +259,8 @@ function Sheets (props) {
       href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
       rel="stylesheet"/>
     <style>{
-      `.spirit-of-the-game-text {
+      `
+      .spirit-of-the-game-text {
         font-size: 0.7em;
       }
 
@@ -286,6 +293,7 @@ function Sheets (props) {
         font-weight: 800;
         letter-spacing: 2px;
         text-transform: uppercase;
+        white-space: nowrap;
       }
 
       @media all {
@@ -320,8 +328,8 @@ function Sheets (props) {
                     <th style={{ minWidth: '90px' }}>Game Date</th>
                     <th style={{ minWidth: '140px' }}>Team</th>
                     <th style={{ minWidth: '130px' }}>Time-Outs Used</th>
-                    <th>1st Half Points</th>
-                    <th>2nd Half Points</th>
+                    <th>1<sup>st</sup> Half Points</th>
+                    <th>2<sup>nd</sup> Half Points</th>
                     <th>Most Spirited</th>
                   </tr>
                 </thead>
@@ -369,23 +377,32 @@ function Sheets (props) {
                           setStatsMap(newStatsMap)
                         }
                       }
-                      const sharedInputPros = {
+
+                      const inputProps = {
                         disabled: !editor,
+                        style: {}
+                      }
+                      if (new Date(game.scheduledTime).getTime() > Date.now()) {
+                        inputProps.style.display = 'none'
+                      }
+
+                      const textInputProps = {
                         min: 0,
                         step: 1,
-                        type: 'number'
+                        type: 'number',
+                        ...inputProps
                       }
                       return (
                         <tr key={player.firstName + player.lastName}>
                           <td style={{ width: '20%' }}>{player.firstName} {player.lastName}</td>
                           <td>
-                            <input {...sharedInputPros} value={stats.assists} onChange={onChange('assists')}/>
+                            <input {...textInputProps} value={stats.assists} onChange={onChange('assists')}/>
                           </td>
-                          <td><input {...sharedInputPros} value={stats.scores} onChange={onChange('scores')} /></td>
-                          <td><input {...sharedInputPros} value={stats.defenses} onChange={onChange('defenses')} /></td>
+                          <td><input {...textInputProps} value={stats.scores} onChange={onChange('scores')} /></td>
+                          <td><input {...textInputProps} value={stats.defenses} onChange={onChange('defenses')} /></td>
                           <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
                           <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                          <td><input type="checkbox" checked={stats.attended} disabled={!editor} onChange={onChange('attended')} /></td>
+                          <td><input type="checkbox" {...inputProps} checked={stats.attended} onChange={onChange('attended')} /></td>
                         </tr>
                       )
                     })
@@ -396,7 +413,7 @@ function Sheets (props) {
               <div className="form-group">
                 <label style={{ fontWeight: 'normal' }}>Please write here any spirit feedback you would like the
                     organizers to note:</label>
-                <textarea className="form-control" style={{ marginBottom: '10px' }} rows={3}></textarea>
+                <textarea className="form-control" style={{ marginBottom: '10px' }} rows={1}></textarea>
               </div>
               {editor && (
                 <button className="btn btn-primary" onClick={() => handleSave(game, team.currentTeam)}>
@@ -482,19 +499,6 @@ export default Sheets
 //         }).then(function (response) {
 //           const teamsData = teamsResponse.data
 //           const teams = teamsData.teams
-//           const validGameIDs = []
-//           const oneWeekFromNow = $scope.today.getTime() + (6 * 24 * 60 * 60 * 1000)
-//           const games = response.data.games.filter(function (game) {
-//             game.scheduledTime = new Date(game.scheduledTime)
-//             const gameIsToday = game.scheduledTime.toDateString() === $scope.today.toDateString()
-//             if (forcedDate) {
-//               if (gameIsToday) {
-//                 validGameIDs.push(game._id)
-//               }
-//               return gameIsToday
-//             }
-//             return Date.now() <= game.scheduledTimeEpoch && game.scheduledTimeEpoch <= oneWeekFromNow
-//           })
 //
 //           const statsMap = {}
 //           statsResponse.data.items.forEach(function (statEntry) {
