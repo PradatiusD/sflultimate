@@ -256,8 +256,16 @@ function GameStatTable (props) {
             <td></td>
           </tr>
         ))}
-
       </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>{team.stats.reduce((a, s) => a + s.assists, 0)}</th>
+          <th>{team.stats.reduce((a, s) => a + s.scores, 0)}</th>
+          <th>{team.stats.reduce((a, s) => a + s.defenses, 0)}</th>
+          <th>{team.stats.reduce((a, s) => a + s.total, 0)}</th>
+        </tr>
+      </tfoot>
     </table>
   )
 }
