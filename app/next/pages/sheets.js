@@ -357,12 +357,12 @@ function Sheets (props) {
                 <thead>
                   <tr>
                     <th>Player Name</th>
+                    <th>Attended</th>
                     <th>Assists</th>
                     <th>Scores</th>
                     <th>Defenses</th>
                     <th className="hidden">Throwaways</th>
                     <th className="hidden">Drops</th>
-                    <th>Attended</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -395,6 +395,7 @@ function Sheets (props) {
                       return (
                         <tr key={player.firstName + player.lastName}>
                           <td style={{ width: '20%' }}>{player.firstName} {player.lastName}</td>
+                          <td style={{width: '76px'}}><input type="checkbox" {...inputProps} checked={stats.attended} onChange={onChange('attended')} /></td>
                           <td>
                             <input {...textInputProps} value={stats.assists} onChange={onChange('assists')}/>
                           </td>
@@ -402,7 +403,6 @@ function Sheets (props) {
                           <td><input {...textInputProps} value={stats.defenses} onChange={onChange('defenses')} /></td>
                           <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
                           <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                          <td><input type="checkbox" {...inputProps} checked={stats.attended} onChange={onChange('attended')} /></td>
                         </tr>
                       )
                     })
