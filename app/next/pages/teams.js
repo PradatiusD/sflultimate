@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { addLeagueStatus } from '../lib/payment-utils'
 import { FooterNavigation, HeaderNavigation } from '../components/Navigation'
+import {PlayerLink} from "../components/PlayerLink";
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -94,8 +95,8 @@ export default function LeagueTeamsPage (props) {
                           team.players.map((player, index) => {
                             const gender = player.gender.charAt(0)
                             return (
-                              <tr key={player._id}>
-                                <td>{index + 1}. {gender} - {player.firstName} {player.lastName}</td>
+                              <tr key={player.id}>
+                                <td>{index + 1}. {gender} - <PlayerLink player={player} /></td>
                               </tr>
                             )
                           })
