@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
-import GraphqlClient from "../lib/graphql-client";
-import {addLeagueStatus} from "../lib/payment-utils";
-import {HeaderNavigation} from "../components/Navigation";
-export const getServerSideProps = (async () => {
+import GraphqlClient from '../lib/graphql-client'
+import { HeaderNavigation } from '../components/Navigation'
+import LeagueUtils from "../lib/league-utils";
+export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
@@ -35,15 +35,15 @@ export const getServerSideProps = (async () => {
               contactEmail
               contactPhone
             }
-        }`,
-  });
+        }`
+  })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league)
   const pickups = results.data.allPickups
-  return { props: {pickups, league}}
-})
+  return { props: { pickups, league } }
+}
 export default function PickupsPage (props) {
-  const {pickups, league} = props
+  const { pickups, league } = props
   return (
     <>
       <Head>
@@ -51,7 +51,7 @@ export default function PickupsPage (props) {
         <meta property="og:title" value="Local Broward, Palm Beach, & Miami-Dade County Pickups"/>
         <meta property="og:url" content="https://www.sflultimate.com/pickups"/>
         <meta property="og:description"
-              content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!"/>
+          content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!"/>
         <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
       </Head>
       <HeaderNavigation league={league} />
@@ -76,8 +76,8 @@ export default function PickupsPage (props) {
         </div>
 
         <h2>Local Map</h2>
-        
-        <section id="pickup-listing-map" style={{height: '400px'}} dangerouslySetInnerHTML={{
+
+        <section id="pickup-listing-map" style={{ height: '400px' }} dangerouslySetInnerHTML={{
           __html: ''
         }}></section>
 
@@ -105,7 +105,7 @@ export default function PickupsPage (props) {
                       <a className="btn btn-sm btn-default" href={pickup.contactUrl} target="_blank">View Website</a>
                       <a className="btn btn-sm btn-default" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>
                       <a className="btn btn-sm btn-default" href={`tel:${pickup.contactPhone}`}>Call Phone</a>
-                      <a className="btn btn-sm btn-default" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet +' '+pickup.locationAddressCity + ' '+pickup.locationAddressState + ' '+pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
+                      <a className="btn btn-sm btn-default" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
                     </div>
                     {
                       pickupIndex + 1 > pickups.length && <hr/>
@@ -118,7 +118,8 @@ export default function PickupsPage (props) {
         }
       </div>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDld-_TKoN-4PGLgQ1-JwN607eT4RfAMSQ" />
-      <script dangerouslySetInnerHTML={{__html:`
+      <script dangerouslySetInnerHTML={{
+        __html: `
         var map = new google.maps.Map(document.getElementById('pickup-listing-map'), {
           zoom: 8,
           center: {

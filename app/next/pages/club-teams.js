@@ -1,8 +1,9 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
-import { addLeagueStatus } from '../lib/payment-utils'
 import { HeaderNavigation } from '../components/Navigation'
+import LeagueUtils from '../lib/league-utils'
+
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -59,7 +60,7 @@ export const getServerSideProps = async () => {
   })
 
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league)
   return { props: { clubTeams, league } }
 }
 

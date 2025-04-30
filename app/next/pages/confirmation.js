@@ -1,7 +1,7 @@
 import GraphqlClient from '../lib/graphql-client'
-import { addLeagueStatus } from '../lib/payment-utils'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
+import LeagueUtils from '../lib/league-utils'
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -27,7 +27,7 @@ export const getServerSideProps = async (context) => {
   })
 
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league)
 
   const referer = context.req.headers.referer || null
   return {

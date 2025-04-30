@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
-import { generateGatewayClientToken, addLeagueStatus } from '../lib/payment-utils'
+import { generateGatewayClientToken } from '../lib/payment-utils'
 import { HeaderNavigation } from '../components/Navigation'
+import LeagueUtils from "../lib/league-utils";
 
 function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
   const [inputStateClass, setInputStateClass] = useState(['form-group'])
@@ -133,7 +134,7 @@ export const getServerSideProps = async (context) => {
       }`
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league)
   const token = await generateGatewayClientToken()
   const error = context.query.error || null
   return { props: { league, braintreeToken: token, error } }

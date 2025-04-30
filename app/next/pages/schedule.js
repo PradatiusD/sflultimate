@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
-import { addLeagueStatus } from '../lib/payment-utils'
 import { HeaderNavigation } from '../components/Navigation'
 import { showDate, showHourMinute } from '../lib/utils'
 import { useState } from 'react'
+import LeagueUtils from '../lib/league-utils'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -65,7 +65,7 @@ export const getServerSideProps = async () => {
   })
   const teams = results.data.allTeams
   const events = results.data.allEvents.filter(event => event.startTime && new Date(event.startTime).getTime() > Date.now())
-  addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league)
   return { props: { league, games, teams, events } }
 }
 

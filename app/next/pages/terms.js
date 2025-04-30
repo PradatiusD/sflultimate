@@ -3,10 +3,10 @@ export default function TermsPage () {
   return (
     <div>
       <Head>
-        <meta property="og:title"        content="South Florida Ultimate Inc. Terms & Conditions" />
-        <meta property="og:url"          content="https://www.sflultimate.com/terms" />
-        <meta property="og:image"        content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
-        <meta property="og:description"  content="Here you can find our terms as they relate to participating in SFUltimate events" />
+        <meta property="og:title" content="South Florida Ultimate Inc. Terms & Conditions" />
+        <meta property="og:url" content="https://www.sflultimate.com/terms" />
+        <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
+        <meta property="og:description" content="Here you can find our terms as they relate to participating in SFUltimate events" />
       </Head>
 
       <div className="container">

@@ -2,9 +2,9 @@ import { gql } from '@apollo/client'
 import Head from 'next/head'
 import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
-import { addLeagueStatus } from '../lib/payment-utils'
 import { PlayerLink } from '../components/PlayerLink'
 import { HeaderNavigation } from '../components/Navigation'
+import LeagueUtils from '../lib/league-utils'
 
 const getBadgeStyle = function (color) {
   let badgeColor
@@ -77,7 +77,7 @@ export async function getServerSideProps (context) {
   })
   const teams = results.data.allTeams
   const league = results.data.allLeagues[0]
-  addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league)
 
   const teamMap = {}
   const playerToTeamMap = {}

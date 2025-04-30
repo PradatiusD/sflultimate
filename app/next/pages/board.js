@@ -1,8 +1,8 @@
 import Head from 'next/head'
-import GraphqlClient from "../lib/graphql-client";
-import {gql} from "@apollo/client";
-import {addLeagueStatus} from "../lib/payment-utils";
-import {HeaderNavigation} from "../components/Navigation";
+import GraphqlClient from '../lib/graphql-client'
+import { gql } from '@apollo/client'
+import { HeaderNavigation } from '../components/Navigation'
+import LeagueUtils from '../lib/league-utils'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -43,7 +43,7 @@ export const getServerSideProps = async () => {
   })
 
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league)
 
   return {
     props: {
@@ -55,7 +55,7 @@ export const getServerSideProps = async () => {
 }
 
 export default function BoardPage (props) {
-  const {positions, boardMembers, league} = props
+  const { positions, boardMembers, league } = props
 
   const links = [
     {
@@ -67,7 +67,7 @@ export default function BoardPage (props) {
   positions.forEach((item) => {
     item.links = links
   })
-  
+
   return (
     <>
       <Head>
@@ -121,14 +121,14 @@ export default function BoardPage (props) {
           <h2 className="text-center">Our Team</h2>
           {boardMembers.map((member, index) => (
             member.active && (
-              <div className="row" style={{marginBottom: '1em'}} key={index}>
+              <div className="row" style={{ marginBottom: '1em' }} key={index}>
                 <div className="col-md-4">
                   {member.image && (
                     <img
                       src={member.image.publicUrl}
                       alt={`${member.firstName} ${member.lastName}`}
                       className="img-responsive img-rounded"
-                      style={{margin: '0 auto'}}
+                      style={{ margin: '0 auto' }}
                     />
                   )}
                 </div>
