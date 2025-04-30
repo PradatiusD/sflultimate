@@ -88,10 +88,15 @@ export const getServerSideProps = async () => {
       o = stat
     }
     o.overall = (o.scores + o.assists + o.defenses) || 0
+  }
+
+  for (const key in statsGroupedByPlayer) {
+    const stat = statsGroupedByPlayer[key]
     const gender = stat.player.gender
     for (const key of statKeysToCompare) {
-      if (stat[key] && (!awards[gender][key] || awards[gender][key] < stat[key])) {
-        awards[gender][key] = stat[key]
+      const playerStat = stat[key]
+      if (stat[key] && (!awards[gender][key] || awards[gender][key] < playerStat)) {
+        awards[gender][key] = playerStat
       }
     }
   }
