@@ -9,7 +9,7 @@ export async function getServerSideProps (context) {
         allLeagues(where:{isActive: true}) {
           title
         }
-        allGames(where: {league: {isActive: true}}) {
+        allGames(where: {league: {isActive: true}}, sortBy: scheduledTime_ASC) {
           id
           scheduledTime
           homeTeam {
@@ -244,11 +244,11 @@ function Sheets (props) {
         }
       })
       setStatsMap(newState)
+    }).then(function () {
+      alert('Your data was saved for ' + team.name)
+    }).catch(function () {
+      alert('There was an error saving for ' + team.name)
     })
-    // }).then(function () {
-    //   alert('Your data was saved for ' + team.name)
-    // }).catch(function () {
-    //   alert('There was an error saving for ' + team.name)
   }
   const [statsMap, setStatsMap] = useState(initPlayerMap)
 
