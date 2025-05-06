@@ -47,6 +47,7 @@ export const getServerSideProps = async () => {
           __typename
         }
         allEvents {
+          id
           startTime
           name
           location
@@ -186,7 +187,7 @@ export default function Schedule (props) {
                 <tr>
                   <td>{showDate(finalsStartDate)}</td>
                   <td>{showHourMinute(finalsStartDate)} - {showHourMinute(league.finalsTournamentEndDate)}</td>
-                  <td style={{ maxWidth: '529px' }}>{league.finalsTournamentDescription}</td>
+                  <td style={{ maxWidth: '529px' }} dangerouslySetInnerHTML={{__html: league.finalsTournamentDescription }}></td>
                   <td>{league.finalsTournamentLocation?.name}</td>
                 </tr>
               </tbody>
@@ -198,14 +199,6 @@ export default function Schedule (props) {
   )
 }
 
-//
-//       // Today plus one day of separation
-//       var dayInMilliseconds = 1000 * 60 * 60 * 24
-//       $scope.today = new Date().getTime() - dayInMilliseconds
-//
-//       $scope.colorFilter = function (item) {
-//       return item
-//     }
 //
 //       $http.get(window.sflUtils.addLeagueOverride('/schedule?f=json')).then(function (response) {
 //       $scope.teams = {}

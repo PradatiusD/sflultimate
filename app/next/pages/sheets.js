@@ -395,7 +395,7 @@ function Sheets (props) {
                       return (
                         <tr key={player.firstName + player.lastName}>
                           <td style={{ width: '20%' }}>{player.firstName} {player.lastName}</td>
-                          <td style={{width: '76px'}}><input type="checkbox" {...inputProps} checked={stats.attended} onChange={onChange('attended')} /></td>
+                          <td style={{ width: '76px' }}><input type="checkbox" {...inputProps} checked={stats.attended} onChange={onChange('attended')} /></td>
                           <td>
                             <input {...textInputProps} value={stats.assists} onChange={onChange('assists')}/>
                           </td>
