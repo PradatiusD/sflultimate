@@ -124,17 +124,17 @@ export async function getServerSideProps (context) {
 
   teams.forEach(team => {
     team.players.forEach(player => {
-      if (initPlayerMap[player.id]) {
-        return
+      if (!initPlayerMap[player.id]) {
+        initPlayerMap[player.id] = {}
       }
-
-      initPlayerMap[player.id] = {}
       teamsToGamesMap[team.id].forEach(gameId => {
-        initPlayerMap[player.id][gameId] = {
-          assists: 0,
-          scores: 0,
-          defenses: 0,
-          attended: false
+        if (!initPlayerMap[player.id][gameId]) {
+          initPlayerMap[player.id][gameId] = {
+            assists: 0,
+            scores: 0,
+            defenses: 0,
+            attended: false
+          }
         }
       })
     })
@@ -175,7 +175,7 @@ function Sheets (props) {
       let mutation
       let params
       const stats = statsMap[player.id][game.id]
-      const statId = stats.gameStatId
+      const statId = stats && stats.gameStatId
       const statDataVariable = {
         player: {
           connect: {
@@ -258,7 +258,7 @@ function Sheets (props) {
       response.forEach(function (player) {
         const response = (player.data.createPlayerGameStat || player.data.updatePlayerGameStat)
         const playerId = response.player.id
-        newState[playerId] = {
+        newState[playerId][game.id] = {
           ...response,
           gameStatId: response.id
         }
