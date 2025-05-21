@@ -33,6 +33,7 @@ export const getServerSideProps = async () => {
           id
           title
           description
+          commitment
           active
           assigned {
             firstName
@@ -92,21 +93,21 @@ export default function BoardPage (props) {
             position.active && (
               <div className="row" key={index}>
                 <div className="col-sm-12">
-                  <h2>{position.title}</h2>
-                  {position.assigned.length > 0 ? (
-                    <p>
+                  <h2>
+                    {position.title}
+                  </h2>
+                  <p>{position.commitment} Position • {' '}
+                    {position.assigned.length > 0 ? (
                       <strong>
                         Currently held by{' '}
                         {position.assigned
                           .map(p => `${p.firstName} ${p.lastName}`)
                           .join(' & ')}
                       </strong>
-                    </p>
-                  ) : (
-                    <p>
+                    ) : (
                       <strong>Available for application</strong>
-                    </p>
-                  )}
+                    )}
+                  </p>
                   <p>{position.description}</p>
                   <ul className="list-inline">
                     {position?.links?.map((link, i) => (
