@@ -1,5 +1,6 @@
 const { Text, Integer, Checkbox, Relationship } = require('@keystonejs/fields')
 const keystone = require('./../keystone')
+const {Wysiwyg} = require("@keystonejs/fields-wysiwyg-tinymce");
 
 /**
  * Board Position Model
@@ -20,7 +21,8 @@ const fields = {
     required: true
   },
   description: {
-    type: Text,
+    type: Wysiwyg,
+    wysiwyg: true,
     required: true
   },
   commitment: {
