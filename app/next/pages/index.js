@@ -62,7 +62,7 @@ export default function Homepage (props) {
   const keyTakeaways = [
     {
       headline: 'Welcome',
-      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/67bb4abfd29eaf002866628c-IMG_4660.jpg',
+      image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/682db0ce069a32002858c125-frisbee_final-417-o.jpg',
       body: 'Since 1999, players from Dade & Broward counties unite to grow the awesome sport of Ultimate Frisbee.'
     },
     {

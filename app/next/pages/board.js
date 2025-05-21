@@ -80,9 +80,10 @@ export default function BoardPage (props) {
         <meta property="og:image:height" content="630"/>
       </Head>
       <HeaderNavigation league={league} />
+      <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/682db0ce069a32002858c125-frisbee_final-417-o.jpg" alt="League Finals 2025" className="img-responsive"/>
       <div className="container">
         <h1>Board</h1>
-        <h2>What We Need</h2>
+        <h2>Our Positions</h2>
         <div>
           <p className="lead">
             It takes a community to grow one. Here's the roles needed to make this happen.
