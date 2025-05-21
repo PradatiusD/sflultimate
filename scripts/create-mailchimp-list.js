@@ -75,7 +75,7 @@ MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, clie
     }
   }
   console.log(list)
-  db.close()
+  return client.close()
 })
 
 async function addTagsToPlayer (options) {

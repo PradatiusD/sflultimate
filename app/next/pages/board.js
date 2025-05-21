@@ -71,10 +71,13 @@ export default function BoardPage (props) {
   return (
     <>
       <Head>
-        <title>South Florida Board</title>
-        <meta property="og:title" content="South Florida Board" />
+        <title>South Florida Ultimate Board</title>
+        <meta property="og:title" content="SFLUltimate | Join Our Board" />
+        <meta property="og:description" content="We’re looking for passionate, community-driven players to step up and shape the future of the game by volunteering or serving on the South Florida Ultimate board." />
         <meta property="og:url" content="https://www.sflultimate.com/board" />
-        <meta property="og:description" content="Learn how to become involved in your South Florida Ultimate board!" />
+        <meta property="og:image" content="https://d137pw2ndt5u9c.cloudfront.net/keystone/682dac872efed40028e728e6-temp-5.jpg"/>
+        <meta property="og:image:width" content="1200"/>
+        <meta property="og:image:height" content="630"/>
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
