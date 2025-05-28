@@ -239,7 +239,7 @@ export default function Homepage (props) {
           </div>
         </div>
         <div className="row">
-          <div className="col-md-12">
+          <div className="col-md-12 table-responsive">
             <Standings games={games} />
           </div>
         </div>
