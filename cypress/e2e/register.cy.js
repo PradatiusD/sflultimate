@@ -14,7 +14,7 @@ const getIframeBody = (selector) => {
 async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
-  const testUrl = 'http://localhost:3000/register'
+  const testUrl = 'http://localhost:5000/register?force_form=true'
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
@@ -35,6 +35,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#phoneNumber').type('9543055611')
   cy.get('#wouldCaptain').select('Yes')
   cy.get('#termsConditions').check()
+
   const $noSponsorElement = await $body.find('#no-requestSponsorship')
   if (!$noSponsorElement.length) {
     cy.get('#wouldSponsor').check()
@@ -52,6 +53,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
 
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')
+  cy.get('#donationLevel').select('tier_2')
 
   const $lateFeeCheckbox = await $body.find('#understandsLateFee')
   if ($lateFeeCheckbox.length) {

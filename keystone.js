@@ -4,6 +4,8 @@ require('dotenv').load()
 
 // Require keystone
 const keystone = require('keystone')
+const mongoose = require('mongoose')
+keystone.mongoose = mongoose
 
 /*
  * Keystone Configuration

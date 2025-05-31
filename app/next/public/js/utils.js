@@ -9,7 +9,8 @@ window.sflUtils = {
     const forceKey = 'set_league_id'
     const queryParamValue = queryParams.get(forceKey)
     if (queryParamValue) {
-      url += '&' + forceKey + '=' + queryParamValue
+      const startChar = url.includes('?') ? '&' : '?'
+      url += startChar + forceKey + '=' + queryParamValue
     }
     return url
   },
