@@ -6,11 +6,13 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
       <excludeFolder url="file://$MODULE_DIR$/dump" />
+      <excludeFolder url="file://$MODULE_DIR$/app/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="simpleParallax" level="application" />
     <orderEntry type="library" name="braintree" level="application" />
     <orderEntry type="library" name="braintree-2.32.1" level="application" />
+    <orderEntry type="library" name="dropin" level="application" />
   </component>
 </module>

@@ -1,0 +1,416 @@
+@import "./../../../../../node_modules/sass-mediaqueries/media-queries";
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(100%)}
+  to   { opacity: 1; transform: translateY(0%)}
+}
+
+#pickup-listing-map {
+  height: 450px;
+  #content {
+    font-size: 1.2em;
+    line-height: 1.4em;
+    font-weight: normal;
+    max-width: 400px;
+  }
+}
+
+.pickup-listing-page .badge {
+  margin-left: 4px;
+  text-transform: capitalize;
+}
+
+.beach-series-logo {
+  max-width: 100%;
+  width: 350px;
+  margin: 0 auto;
+  display: block;
+}
+
+.hero-sky {
+  background-size: cover;
+  background: url("/images/beach-andrea-dumping.jpg") center center;
+
+  .container {
+    position: relative;
+    min-height: 800px;
+
+    @include max-screen (840px) {
+      min-height: 400px;
+    }
+  }
+
+  h1 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: white;
+    text-shadow: 2px 2px 11px rgba(black, 0.8);
+    background-color: rgba(black, 0.30);
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    font-size: 3.5em;
+    font-weight: 300;
+
+    @include max-screen (480px) {
+      font-size: 2.5em;
+    }
+  }
+}
+
+.sfl-divider {
+  border-color: #dedede;
+  max-width: 60%;
+}
+
+.call-to-action {
+  position: relative;
+  background-size: cover;
+  background-position: center center;
+  padding: 6em 0;
+  color: white;
+
+  .video-full-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    video {
+      width: 100%;
+      height: auto;
+      @include max-screen(1279px) {
+        height: 100%;
+        width: auto;
+      }
+    }
+  }
+
+  h1 {
+    margin-top: 0;
+    animation-duration: 3s;
+  }
+  p {
+    font-size: 1.3em;
+    &:nth-child(2) {
+      animation-delay: 1.5s;
+    }
+    &:nth-child(3) {
+      animation-delay: 3s;
+    }
+  }
+
+  h1, p {
+    display: inline-block;
+    background: rgba(black, 0.40);
+    font-weight: 300;
+    text-shadow: 2px 2px 11px rgba(black, 0.8);
+    padding: 0.5em 1em;
+  }
+
+  .btn {
+    font-family: $headings-font-family;
+    text-transform: uppercase;
+    padding: 0.5em 1.5em;
+    border-bottom: 3px solid darken($brand-primary, 25%);
+    font-size: 1.3em;
+    animation-delay: 4s;
+  }
+
+  h1, p, .btn {
+    opacity: 0;
+    animation-fill-mode: forwards;
+    animation-name: fadein;
+    animation-duration: 1s;
+  }
+}
+
+.features {
+  color: black;
+  font-size: 1.15em;
+  padding: 1em 0em;
+  position: relative;
+  background: white;
+  h3 {
+    margin-top: 0.5em;
+  }
+}
+
+.champions {
+  position: relative;
+  text-align: center;
+
+  figure {
+    width: 33%;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.1);
+    margin-bottom: -3px;
+    background-size: cover;
+    min-height: 500px;
+    background-position: center center;
+
+    @include max-screen (1617px) {
+      min-height: 300px;
+    }
+    @include max-screen (850px) {
+      min-height: 200px;
+    }
+    @include max-screen (480px) {
+      min-height: 100px;
+    }
+  }
+
+  aside {
+    position: absolute;
+    color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow: 2px 2px 4px rgba(black, 0.55);
+
+    h2 {
+      font-size: 5em;
+      font-weight: 400;
+      white-space: nowrap;
+
+      @include max-screen(1039px) {
+        font-size: 3em;
+      }
+
+    }
+    p {
+      font-size: 2em;
+      @include max-screen(1039px) {
+        font-size: 1.5em;
+      }
+    }
+
+    h2, p {
+      padding: 0.25em 1.5em;
+      background: rgba(black, 0.55);
+    }
+
+  }
+}
+
+.grecaptcha-badge {
+  bottom: 100px !important;
+}
+
+.container-fluid a.navbar-brand {
+  float: none;
+  max-width: 300px;
+  margin: 0 auto !important;
+  height: auto;
+  display: block;
+  padding: 0;
+  text-align: center;
+
+  img {
+    margin-top: 1em;
+    display: block;
+    max-width: 100%;
+  }
+}
+
+.logo-circled {
+  margin: 0 auto 1em auto;
+}
+
+.site-footer {
+  margin-top: 30px;
+  border-top: 1px solid #eeeeee;
+  padding-top: 30px;
+  color: rgba(black, 0.90);
+  background: rgba(black, 0.10);
+  vertical-align: bottom;
+
+  .fa {
+    color: #FFF;
+    background: $brand-primary;
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 20px;
+    margin-right: 15px;
+    border-radius: 100%;
+    text-align: center;
+  }
+
+  .fa:hover {
+    background: black;
+  }
+}
+
+.gallery-image img{
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+.banner.unslider-fade {
+  min-height: 500px;
+
+  @media (max-width: 620px) {
+    min-height: 350px;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 225px;
+  }
+
+  img {
+    width: 100%;
+  }
+}
+
+.modal-body {
+  font-size: 17px;
+}
+
+
+/* Teams List */
+
+.team-list {
+  column-count: 3;
+  article {
+    break-inside: avoid-column;
+  }
+  @media screen and (max-width: 786px) {
+    column-count: 2;
+  }
+  @media screen and (max-width: 480px) {
+    column-count: 1;
+  }
+}
+
+.team-color {
+  border-radius: 100%;
+  border: 1px solid gray;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  margin-right: 5px;
+  position: relative;
+  top: 2px;
+  cursor: pointer;
+
+  &.white, &.yellow {
+    border: 1px solid rgba(0, 0, 0, 0.25);
+  }
+
+  .schedule & {
+    opacity: 0.5;
+    margin-right: 10px;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+.navbar-collapse {
+  border-top: 1px solid rgba(16, 16, 16, 0.37) !important;
+}
+
+#header > .navbar {
+  margin-bottom: 0;
+}
+
+.page-register-tournament {
+
+  .call-to-action {
+    display: block;
+    padding: 0;
+  }
+
+  .video-full-screen {
+    position: inherit;
+  }
+
+  .container {
+    font-size: 1.2em;
+  }
+
+  .site-footer a {
+    color: #15698c;
+  }
+
+  .navbar-inverse .navbar-nav > .active > a {
+    background-color: #17688a;
+  }
+
+  .navbar-inverse .navbar-collapse {
+    border-color: #ffffff2e !important;
+  }
+
+  .site-footer .fa {
+    background-color: #26abe3;
+  }
+
+  .navbar-inverse, .credits, .btn-lg {
+    background-color: #26abe3;
+    border-color: #15698c;
+  }
+
+  .navbar-inverse .navbar-nav > li > a {
+    color: white;
+  }
+}
+
+.credits {
+  background: $brand-primary;
+  color: white;
+  padding: 0.75em 0 1em 0;
+  border-top: 4px solid darken($brand-primary, 12%);
+  a {
+    color: lighten($brand-primary, 40%);
+  }
+}
+
+
+.key-takeaway {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  
+  @media screen and (min-width: 768px) {
+    div {
+      width: 50%;
+    }
+  }
+  
+  div {
+    margin: 1rem;
+  }
+  
+  &.left-layout {
+    justify-content: left;
+  }
+  
+  &.right-layout {
+    justify-content: right;
+  }
+  
+  h2 {
+    text-transform: uppercase;
+    font-style: italic;
+    text-shadow: 4px 4px 0px #000000, 0px 0px 15px black;
+    font-size: 6rem;
+  }
+  p {
+    background: rgb(0 0 0 / 60%);
+    text-shadow: 0px 0px 20px black;
+    padding: 1rem;
+    font-size: 2rem;
+    font-weight: 400;
+  }
+}

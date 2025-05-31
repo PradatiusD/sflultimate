@@ -1,10 +1,10 @@
-const sass = require('node-sass')
+// const sass = require('node-sass')
 
 module.exports = {
   dist: {
     options: {
       style: 'compressed',
-      implementation: sass,
+      // implementation: sass,
       sourceMap: true
     },
     files: {

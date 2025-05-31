@@ -13,19 +13,7 @@ const keystone = require('keystone')
 const League = keystone.list('League')
 const ObjectID = keystone.mongoose.mongo.ObjectID
 
-/**
- *
- * @param regStart
- * @param regEnd
- * @return {boolean}
- */
-function isValidRegPeriod (regStart, regEnd) {
-  const now = Date.now()
-  if (regStart && regEnd && regStart.getTime() < now && now < regEnd.getTime()) {
-    return true
-  }
-  return false
-}
+
 
 exports.getActiveLeague = async function (req) {
   const activeLeagueQuery = {}
@@ -68,42 +56,6 @@ exports.initLocals = async function (req, res, next) {
   }
 
   locals.league = activeLeague
-  locals.navLinks = []
-
-  if (activeLeague) {
-    activeLeague.isEarlyRegistrationPeriod = isValidRegPeriod(activeLeague.earlyRegistrationStart, activeLeague.earlyRegistrationEnd)
-    activeLeague.isRegistrationPeriod = isValidRegPeriod(activeLeague.registrationStart, activeLeague.registrationEnd)
-    activeLeague.isLateRegistrationPeriod = isValidRegPeriod(activeLeague.lateRegistrationStart, activeLeague.lateRegistrationEnd) || (req.query.force_form === 'true')
-    activeLeague.canRegister = activeLeague.isEarlyRegistrationPeriod || activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod
-
-    if (activeLeague.canRegister) {
-      locals.navLinks.push({ label: 'Register for ' + activeLeague.title, key: 'register', href: '/register' })
-    }
-
-    if (!activeLeague.isRegistrationPeriod || activeLeague.isLateRegistrationPeriod) {
-      locals.navLinks = locals.navLinks.concat([
-        { label: 'Teams', key: 'teams', href: '/teams' },
-        { label: 'Schedule', key: 'schedule', href: '/schedule' },
-        { label: 'Stats', key: 'stats', href: '/stats' }
-      ])
-    }
-  }
-
-  const evergreenLinks = [
-    { label: 'Local Pickups', key: 'community', href: '/pickups' },
-    { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
-    { label: 'Our Board', key: 'board', href: '/board' },
-    { label: 'Events', key: 'events', href: '/events' },
-    { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
-  ]
-
-  locals.navLinks = locals.navLinks.concat(evergreenLinks)
-
-  locals.footerLinks = [
-    { label: 'Terms & Conditions', key: 'terms', href: '/terms' },
-    { label: 'Privacy Policy', key: 'privacy', href: '/privacy' }
-  ].concat(evergreenLinks)
-
   locals.user = req.user
   next()
 }
