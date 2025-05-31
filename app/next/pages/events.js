@@ -131,8 +131,7 @@ export default function EventsPage (props) {
         <iframe
           src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS1QbLcE0hE72nw--gBLaNKwIYX3P8YZr9w8TMz2yqL62qIkXxxoRcmNXLT_whp5mg_oVfV5dwV23mh/pubhtml?widget=true&headers=false#gid=1961170570"
           width="100%"
-          frameBorder="0"
-          style={{ height: '980px' }}
+          style={{ height: '980px', display: 'none' }}
         ></iframe>
 
         <hr/>

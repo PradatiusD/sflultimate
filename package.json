@@ -60,7 +60,6 @@
         "cypress": "npx cypress open",
         "restore": "grunt restore",
         "build-schema": "get-graphql-schema http://localhost:3000/admin/api/  > app/schema.graphql",
-        "deploy": "git push heroku keystone-v5-migration:main",
         "custom-fields": "npx babel app/custom-fields/CustomDateTime/src/views/*.js --out-dir app/custom-fields/CustomDateTime/views"
     },
     "private": true
