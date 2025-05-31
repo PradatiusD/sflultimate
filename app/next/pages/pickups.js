@@ -16,9 +16,10 @@ export const getServerSideProps = async () => {
               lateRegistrationStart
               lateRegistrationEnd
             }
-            allPickups(where: {isActive: true}) {
+            allPickups(where: {isActive: true}, sortBy: order_ASC) {
               id
               title
+              order
               day
               time
               description
@@ -86,6 +87,7 @@ export default function PickupsPage (props) {
           pickups.map((pickup, pickupIndex) => {
             return (
               <article key={pickup.id}>
+                <hr/>
                 <div className="row">
                   <div className="col-sm-8">
                     <h3>{pickup.title}</h3>

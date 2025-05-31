@@ -127,7 +127,7 @@ export default function EventsPage (props) {
           ))
         }
 
-        <h1 style={{display: 'none'}}>SFLUltimate Yearly Calendar</h1>
+        <h1 style={{ display: 'none' }}>SFLUltimate Yearly Calendar</h1>
         <iframe
           src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS1QbLcE0hE72nw--gBLaNKwIYX3P8YZr9w8TMz2yqL62qIkXxxoRcmNXLT_whp5mg_oVfV5dwV23mh/pubhtml?widget=true&headers=false#gid=1961170570"
           width="100%"

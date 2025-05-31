@@ -12,6 +12,10 @@ const fields = {
     type: Checkbox,
     default: false
   },
+  order: {
+    type: Integer,
+    isRequired: true
+  },
   day: {
     type: Text,
     initial: true,
@@ -105,6 +109,6 @@ module.exports = {
   fields,
   labelResolver: item => item.title,
   adminConfig: {
-    defaultColumns: 'title, locationName, day, time, locationType'
+    defaultColumns: 'isActive, order, title, locationName, day, time, locationType'
   }
 }

@@ -59,7 +59,7 @@
         "create-tables": "cross-env keystone create-tables",
         "cypress": "npx cypress open",
         "restore": "grunt restore",
-        "build-schema": "get-graphql-schema http://localhost:3000/admin/api/  > app/schema.graphql",
+        "build-schema": "get-graphql-schema http://localhost:3000/admin/api/ > app/schema.graphql",
         "custom-fields": "npx babel app/custom-fields/CustomDateTime/src/views/*.js --out-dir app/custom-fields/CustomDateTime/views"
     },
     "private": true

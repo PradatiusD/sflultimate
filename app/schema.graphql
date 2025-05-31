@@ -1672,6 +1672,7 @@ type Pickup {
   id: ID!
   title: String
   isActive: Boolean
+  order: Int
   day: String
   time: String
   contactName: String
@@ -1693,6 +1694,7 @@ type Pickup {
 input PickupCreateInput {
   title: String
   isActive: Boolean
+  order: Int
   day: String
   time: String
   contactName: String
@@ -1730,6 +1732,7 @@ input PickupsUpdateInput {
 input PickupUpdateInput {
   title: String
   isActive: Boolean
+  order: Int
   day: String
   time: String
   contactName: String
@@ -1775,6 +1778,14 @@ input PickupWhereInput {
   title_not_in: [String]
   isActive: Boolean
   isActive_not: Boolean
+  order: Int
+  order_not: Int
+  order_lt: Int
+  order_lte: Int
+  order_gt: Int
+  order_gte: Int
+  order_in: [Int]
+  order_not_in: [Int]
   day: String
   day_not: String
   day_contains: String
@@ -3016,6 +3027,8 @@ enum SortPickupsBy {
   title_DESC
   isActive_ASC
   isActive_DESC
+  order_ASC
+  order_DESC
   day_ASC
   day_DESC
   time_ASC
