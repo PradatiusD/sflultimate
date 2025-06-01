@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import {HeaderNavigation} from "../components/Navigation";
 export default function TermsPage () {
   return (
     <div>
@@ -8,7 +9,7 @@ export default function TermsPage () {
         <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
         <meta property="og:description" content="Here you can find our terms as they relate to participating in SFUltimate events" />
       </Head>
-
+      <HeaderNavigation />
       <div className="container">
         <div className="row">
           <div className="col-sm-8 col-sm-offset-2">
