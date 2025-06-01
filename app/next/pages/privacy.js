@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
 
 export default function Privacy () {
