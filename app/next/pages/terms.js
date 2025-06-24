@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {HeaderNavigation} from "../components/Navigation";
+import { HeaderNavigation } from '../components/Navigation'
 export default function TermsPage () {
   return (
     <div>
