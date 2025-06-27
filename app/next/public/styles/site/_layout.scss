@@ -197,17 +197,42 @@
   bottom: 100px !important;
 }
 
+.navbar-brand-container {
+  position: relative;
+  width: 120px;
+  height: 50px;
+}
+
+.mobile-logo {
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+  left: 50%;
+  margin-left: -90px;
+  img {
+    width: 150px;
+    max-width: 100%;
+    position: relative;
+    left: 24px;
+  }
+}
+
+.navbar-fixed-top {
+  //z-index: 99999;
+}
+
 .container-fluid a.navbar-brand {
   float: none;
   max-width: 300px;
   margin: 0 auto !important;
   height: auto;
-  display: block;
   padding: 0;
   text-align: center;
 
   img {
-    margin-top: 1em;
+    position: absolute;
+    top: 0;
+    width: 200px;
     display: block;
     max-width: 100%;
   }
@@ -215,6 +240,10 @@
 
 .logo-circled {
   margin: 0 auto 1em auto;
+}
+
+.site-header {
+  margin-bottom: 100px;
 }
 
 .site-footer {

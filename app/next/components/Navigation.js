@@ -5,7 +5,7 @@ const evergreenLinks = [
   { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
   { label: 'Our Board', key: 'board', href: '/board' },
   { label: 'Events', key: 'events', href: '/events' },
-  { label: 'News', key: 'events', href: '/news' },
+  { label: 'News', key: 'events', href: '/news' }
   // { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
 ]
 
@@ -37,12 +37,13 @@ function HeaderNavigation (props) {
 
   return (
     <header id="header" className="site-header">
-      <div role="navigation" className="navbar navbar-inverse">
+      <div className="navbar-brand-container hidden-sm hidden-md hidden-lg mobile-logo">
+        <a href="/">
+          <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
+        </a>
+      </div>
+      <div role="navigation" className="navbar navbar-inverse navbar-fixed-top">
         <div className="container-fluid">
-          <a href="/" className="navbar-brand">
-            <img src={(section === 'register-tournament') ? '/images/south-florida-2020-final-optimized.png'
-              : '/images/logo-skyline.png'} alt=""/>
-          </a>
           <div className="navbar-header">
             <button className="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
               <span className="sr-only">Toggle navigation</span>
@@ -51,7 +52,15 @@ function HeaderNavigation (props) {
               <span className="icon-bar"></span>
             </button>
             <div className="collapse navbar-collapse">
-            <ul className="nav navbar-nav navbar-left">
+              <ul className="nav navbar-nav navbar-left">
+                <li className="navbar-brand-container hidden-xs">
+                  <a href="/" className="navbar-brand">
+                    <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
+                  </a>
+                </li>
+                <li className="hidden-sm">
+                  <a href="/">Home</a>
+                </li>
                 {headerNavLinks.map((link) => {
                   return (
                     <li key={link.key} className={section === link.key ? 'active' : null}>
