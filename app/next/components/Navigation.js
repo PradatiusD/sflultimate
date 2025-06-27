@@ -58,7 +58,7 @@ function HeaderNavigation (props) {
                     <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
                   </a>
                 </li>
-                <li className="hidden-sm">
+                <li className="hidden-sm hidden-md hidden-lg">
                   <a href="/">Home</a>
                 </li>
                 {headerNavLinks.map((link) => {
