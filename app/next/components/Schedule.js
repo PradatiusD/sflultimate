@@ -1,4 +1,4 @@
-import { showDate, showHourMinute } from '../lib/utils'
+import { showDate, showHourMinute, showWeekday } from '../lib/utils'
 import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
@@ -121,6 +121,7 @@ export const Schedule = function (props) {
               <thead>
                 <tr>
                   <th>Date</th>
+                  <th>Weekday</th>
                   <th>Time</th>
                   <th>Matchup / Event Name</th>
                   <th>Field</th>
@@ -138,6 +139,7 @@ export const Schedule = function (props) {
 
                           }
                           <td>{showDate(gameOrEvent.scheduledTime)}</td>
+                          <td>{showWeekday(gameOrEvent.scheduledTime)}</td>
                           <td>{showHourMinute(gameOrEvent.scheduledTime)}</td>
                           <td>
                             <span><span
@@ -185,6 +187,7 @@ export const Schedule = function (props) {
                 }
                 <tr>
                   <td>{showDate(finalsStartDate)}</td>
+                  <td></td>
                   <td>{showHourMinute(finalsStartDate)} - {showHourMinute(league.finalsTournamentEndDate)}</td>
                   <td style={{ maxWidth: '529px' }} dangerouslySetInnerHTML={{ __html: league.finalsTournamentDescription }}></td>
                   <td>{league.finalsTournamentLocation?.name}</td>

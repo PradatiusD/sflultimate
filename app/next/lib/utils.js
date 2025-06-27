@@ -2,6 +2,10 @@ function showHourMinute (date) {
   return new Date(date).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', timeZone: 'America/New_York' })
 }
 
+function showWeekday (date) {
+  return new Date(date).toLocaleDateString('en-US', { weekday: 'short',  timeZone: 'America/New_York' })
+}
+
 function showDate (date, options) {
   const localeDefault = {
     month: 'numeric',
@@ -25,6 +29,7 @@ function getMongoTimestamp (id) {
 
 export {
   showDate,
+  showWeekday,
   showHourMinute,
   getMongoTimestamp
 }
