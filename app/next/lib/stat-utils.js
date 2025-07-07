@@ -51,6 +51,7 @@ export async function getLeagueStats (context) {
       }`,
     variables: variables
   })
+
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league)
   const statsGroupedByPlayer = {}

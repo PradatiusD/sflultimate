@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from "../lib/league-utils";
+import LeagueUtils from '../lib/league-utils'
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`

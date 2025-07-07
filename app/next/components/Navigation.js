@@ -35,6 +35,24 @@ function HeaderNavigation (props) {
     }
   }
 
+  const leagueNames = [
+    'Spring League 2025',
+    'Winter Beach League 2025',
+    'Fall League 2024',
+    'Spring League 2024',
+    'Winter Beach League 2024',
+    'Fall League 2023',
+    'Spring League 2023',
+    'Mini-Beach League 2023',
+    'Fall League 2022',
+    'Spring League 2022',
+    'Fall League 2021',
+    'Spring League 2017',
+    'Fall League 2017',
+    'Spring League 2016',
+    'Fall League 2016'
+  ]
+
   return (
     <header id="header" className="site-header">
       <div className="navbar-brand-container hidden-sm hidden-md hidden-lg mobile-logo">
@@ -55,13 +73,35 @@ function HeaderNavigation (props) {
               <ul className="nav navbar-nav navbar-left">
                 <li className="navbar-brand-container hidden-xs">
                   <a href="/" className="navbar-brand">
-                    <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
+                    <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
                   </a>
                 </li>
                 <li className="hidden-sm hidden-md hidden-lg">
                   <a href="/">Home</a>
                 </li>
                 {headerNavLinks.map((link) => {
+                  if (link.key === 'stats' || link.key === 'schedule') {
+                    return (
+                      <li className="dropdown">
+                        <a className="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          {link.label} {' '}
+                          <span className="caret"></span>
+                        </a>
+                        <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                          {
+                            leagueNames.map((name) => {
+                              const leagueUrl = `/leagues/${name.toLowerCase().replace(/ /g, '-')}/stats`
+                              return (
+                                <li key={name}>
+                                  <a href={leagueUrl}>{name}</a>
+                                </li>
+                              )
+                            })
+                          }
+                        </ul>
+                      </li>
+                    )
+                  }
                   return (
                     <li key={link.key} className={section === link.key ? 'active' : null}>
                       <a href={link.href}>{link.label}</a>
