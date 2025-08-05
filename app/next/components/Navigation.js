@@ -90,7 +90,7 @@ function HeaderNavigation (props) {
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                           {
                             leagueNames.map((name) => {
-                              const leagueUrl = `/leagues/${name.toLowerCase().replace(/ /g, '-')}/stats`
+                              const leagueUrl = `/leagues/${name.toLowerCase().replace(/ /g, '-')}/${link.key}`
                               return (
                                 <li key={name}>
                                   <a href={leagueUrl}>{name}</a>
