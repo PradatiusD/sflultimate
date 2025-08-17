@@ -30,8 +30,10 @@ function getMongoTimestamp (id) {
 function addLeagueToVariables (context, variables) {
   const isArchivedLeague = context && context.req.url.startsWith('/leagues/')
   if (isArchivedLeague) {
+    let leagueSlug = context.req.url.split('/')[2].replace(/-/g, ' ')
+    leagueSlug = leagueSlug.replace('mini ', 'mini-')
     variables.leagueCriteria = {
-      title_i: context.req.url.split('/')[2].replace(/-/g, ' ')
+      title_i: leagueSlug
     }
   } else {
     variables.leagueCriteria = {
