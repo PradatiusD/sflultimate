@@ -80,9 +80,9 @@ function HeaderNavigation (props) {
                   <a href="/">Home</a>
                 </li>
                 {headerNavLinks.map((link) => {
-                  if (link.key === 'stats' || link.key === 'schedule') {
+                  if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
                     return (
-                      <li className="dropdown">
+                      <li className="dropdown" key={link.key}>
                         <a className="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                           {link.label} {' '}
                           <span className="caret"></span>

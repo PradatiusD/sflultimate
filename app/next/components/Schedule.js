@@ -1,21 +1,11 @@
-import { showDate, showHourMinute, showWeekday } from '../lib/utils'
+import {addLeagueToVariables, showDate, showHourMinute, showWeekday} from '../lib/utils'
 import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import LeagueUtils from '../lib/league-utils'
 
 export const getScheduleData = async function (context) {
-  const variables = {}
-  const isArchivedLeague = context && context.req.url.startsWith('/leagues/')
-  if (isArchivedLeague) {
-    variables.leagueCriteria = {
-      title_i: context.req.url.split('/')[2].replace(/-/g, ' ')
-    }
-  } else {
-    variables.leagueCriteria = {
-      isActive: true
-    }
-  }
+  const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
     query: gql`
       query($leagueCriteria: LeagueWhereInput) {
@@ -77,7 +67,7 @@ export const getScheduleData = async function (context) {
   const teams = results.data.allTeams
   const events = results.data.allEvents.filter(event => event.startTime && new Date(event.startTime).getTime() > Date.now())
   LeagueUtils.addLeagueStatus(league)
-  return { league, games, teams, events, isArchivedLeague }
+  return { league, games, teams, events, isArchivedLeague: context.req.url.startsWith('/leagues/') }
 }
 
 export const Schedule = function (props) {

@@ -27,9 +27,24 @@ function getMongoTimestamp (id) {
   return new Date(parseInt(id.substring(0, 8), 16) * 1000)
 }
 
+function addLeagueToVariables (context, variables) {
+  const isArchivedLeague = context && context.req.url.startsWith('/leagues/')
+  if (isArchivedLeague) {
+    variables.leagueCriteria = {
+      title_i: context.req.url.split('/')[2].replace(/-/g, ' ')
+    }
+  } else {
+    variables.leagueCriteria = {
+      isActive: true
+    }
+  }
+  return variables
+}
+
 export {
   showDate,
   showWeekday,
   showHourMinute,
-  getMongoTimestamp
+  getMongoTimestamp,
+  addLeagueToVariables
 }
