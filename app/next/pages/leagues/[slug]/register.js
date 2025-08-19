@@ -1,109 +1,19 @@
 import { useEffect, useState } from 'react'
 import { gql } from '@apollo/client'
 import Head from 'next/head'
-import GraphqlClient from '../lib/graphql-client'
-import { generateGatewayClientToken } from '../lib/payment-utils'
-import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from "../lib/league-utils";
-
-function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
-  const [inputStateClass, setInputStateClass] = useState(['form-group'])
-
-  const inputClasses = ['input-lg', 'form-control']
-  return <>
-    <div className={inputStateClass.join(' ')}>
-      <label className="control-label" htmlFor={name}>{label}</label>
-      {
-        type === 'textarea' ? (
-          <textarea
-            id={name}
-            className={inputClasses.join(' ')}
-            name={name}
-            placeholder={placeholder || ''}
-            required={required}
-            onChange={onChange}
-            rows={3}
-          />
-        ) : <input
-          id={name}
-          className={inputClasses.join(' ')}
-          type={type}
-          name={name}
-          placeholder={placeholder || ''}
-          required={required}
-          onChange={(e) => {
-            // if (e.target.validity.valid) {
-            //   setInputStateClass([...inputStateClass, 'has-feedback', 'has-success'])
-            // }
-            if (onChange) {
-              onChange(e)
-            }
-          }}
-          onInvalid={(e) => {
-            setInputStateClass([...inputStateClass, 'has-feedback', 'has-error'])
-          }}
-        />
-      }
-      <p className="help-block">{helpText}</p>
-    </div>
-  </>
-}
-
-function FormSelect ({ label, name, options, required, helpText, onChange }) {
-  const [inputStateClass, setInputStateClass] = useState(['form-group'])
-  return <>
-    <div className={inputStateClass.join(' ')}>
-      <label className="control-label" htmlFor={name}>{label}</label>
-      <select
-        id={name}
-        className="input-lg form-control"
-        name={name}
-        required={required}
-        onChange={(e) => {
-          // if (e.target.validity.valid) {
-          //   setInputStateClass([...inputStateClass, 'has-feedback', 'has-success'])
-          // }
-          if (onChange) {
-            onChange(e)
-          }
-        }}
-        onInvalid={(e) => {
-          setInputStateClass([...inputStateClass, 'has-error'])
-        }}
-      >
-        <option value="">Please Select</option>
-        {options.map((option, i) => <option key={i} value={option.value}>{option.label}</option>)}
-      </select>
-      <p className="help-block">{helpText}</p>
-    </div>
-  </>
-}
-
-function FormCheckbox ({ label, id, required }) {
-  const [inputStateClass, setInputStateClass] = useState(['checkbox'])
-
-  return (
-    <div className={inputStateClass.join(' ')}>
-      <label>
-        <input
-          id={id}
-          type="checkbox"
-          required={required}
-          onInvalid={(e) => {
-            setInputStateClass([...inputStateClass, 'has-error'])
-          }}
-        />
-        {label}
-      </label>
-    </div>
-  )
-}
+import GraphqlClient from '../../../lib/graphql-client'
+import { generateGatewayClientToken } from '../../../lib/payment-utils'
+import { HeaderNavigation } from '../../../components/Navigation'
+import { addLeagueToVariables } from '../../../lib/utils'
+import LeagueUtils from '../../../lib/league-utils'
+import { FormInput, FormSelect, FormCheckbox } from '../../../components/FormElements'
 
 export const getServerSideProps = async (context) => {
+  const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
     query: gql`
-      query {
-        allLeagues(where: {isActive: true}) {
+      query($leagueCriteria: LeagueWhereInput) {
+        allLeagues(where: $leagueCriteria) {
           id
           title
           summary
@@ -131,10 +41,11 @@ export const getServerSideProps = async (context) => {
             publicUrl
           }
         }
-      }`
+      }`,
+    variables: variables
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
+  LeagueUtils.addLeagueStatus(league, context)
   const token = await generateGatewayClientToken()
   const error = context.query.error || null
   return { props: { league, braintreeToken: token, error } }

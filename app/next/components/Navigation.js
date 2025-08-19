@@ -22,9 +22,9 @@ function HeaderNavigation (props) {
   let headerNavLinks = navLinks.slice()
 
   if (league) {
-    if (league.canRegister) {
-      headerNavLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })
-    }
+    // if (league.canRegister) {
+    //   headerNavLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })
+    // }
 
     if ((!league.isRegistrationPeriod && !league.isEarlyRegistrationPeriod) || league.isLateRegistrationPeriod) {
       headerNavLinks = headerNavLinks.concat([
