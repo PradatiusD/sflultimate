@@ -10,6 +10,12 @@ const fields = {
     required: true,
     index: true
   },
+  slug: {
+    type: Text,
+    initial: true,
+    required: true,
+    index: true
+  },
   summary: {
     type: Text
   },

@@ -84,7 +84,7 @@ export default function LeagueTeams (props) {
                     <tbody>
                       {
                         team.players.map((player, index) => {
-                          const gender = player.gender.charAt(0)
+                          const gender = player?.gender?.charAt(0)
                           return (
                             <tr key={player.id}>
                               <td>{index + 1}. {gender} - <PlayerLink player={player} /></td>
