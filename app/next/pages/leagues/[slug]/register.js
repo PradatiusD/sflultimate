@@ -379,18 +379,6 @@ export default function RegisterPage (props) {
               label={<span>I have read and agree to the <a href="/waiver" target="_blank">SFLUltimate Waiver</a></span>}
             />
 
-            <FormSelect
-              label="Registration Type"
-              id="registrationLevel"
-              name="registrationLevel"
-              required
-              options={[
-                { value: 'Adult', label: `Adult - $${adultPrice}` },
-                { value: 'Student', label: `Student - $${studentPrice}` }
-              ]}
-              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
-            />
-
             {
               activeLeague.isLateRegistrationPeriod
                 ? (
@@ -455,17 +443,32 @@ export default function RegisterPage (props) {
             <h3>Payment Information</h3>
 
             <FormSelect
-              label="Donation"
+              label="Registration Type"
+              id="registrationLevel"
+              name="registrationLevel"
+              required
+              options={[
+                { value: 'Adult', label: `Adult - $${adultPrice}` },
+                { value: 'Student', label: `Student - $${studentPrice}` }
+              ]}
+              helpText={<span>Want to play ultimate but just can’t afford the fees right now? We want to help you get sponsored to play league. If you are interested in seeking sponsorship, please fill out a <a
+                href="https://forms.gle/4PN68iK3FAU2iksT6" target="_blank">this application</a> by the applicable deadline. It will be reviewed by a portion of the SFU Board and you’ll be notified if you are a recipient. Sponsorships are not guaranteed, and all applications will be reviewed before each league.Partial and full sponsorships may be available. The recipient of any level sponsorship is expected to have reliable transportation and be able to attend at least 75% of the sponsored league.</span>}
+              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
+            />
+
+            <FormSelect
+              label="Make Donation / Sponsor a Player"
               id="donationLevel"
               name="donationLevel"
               required
               options={[
                 { value: 'tier_0', label: '$0' },
-                { value: 'tier_1', label: '$5' },
-                { value: 'tier_2', label: '$10' },
-                { value: 'tier_3', label: '$25' }
+                { value: 'tier_1', label: '$10 - sponsor a disc (for youth)' },
+                { value: 'tier_2', label: '$80 - sponsor a player' },
+                { value: 'tier_3', label: '$160 - sponsor two players' }
               ]}
-              helpText={'SFLUltimate runs as cheaply as possible, and any leftover funds are focused on funding youth outreach, beginner pickup programs, and as seed capital to host larger tournaments like Beach Bash.  Donations like the following help us.'}
+              helpText={<span>Want to give back to the community? Help a new player get to play frisbee? You can sponsor a player for their league or clinic fees by selecting here. 100% of your tax-deductible donation goes toward sponsored player fees. You can directly sponsor a player of your choosing, or trust that it will go to a qualified applicant as selected by the SFU Board.
+                <br/><br/>We all know how special ultimate is. From making lifelong friends, staying fit and enjoying the outdoors, throwing that perfect throw to your teammate, or chasing down that plastic, ultimate can be life changing. YOU can give that gift to another player who cannot afford to play. Please donate any amount HERE, or when you sign up for your next league. </span>}
               onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
             />
 
