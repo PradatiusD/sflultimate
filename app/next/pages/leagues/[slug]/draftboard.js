@@ -1,10 +1,11 @@
 import { gql } from '@apollo/client'
 import Head from 'next/head'
 import { useState } from 'react'
-import GraphqlClient from '../lib/graphql-client'
-import { PlayerLink } from '../components/PlayerLink'
-import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from '../lib/league-utils'
+import GraphqlClient from '../../../lib/graphql-client'
+import { PlayerLink } from '../../../components/PlayerLink'
+import { HeaderNavigation } from '../../../components/Navigation'
+import LeagueUtils from '../../../lib/league-utils'
+import { addLeagueToVariables } from '../../../lib/utils'
 
 const getBadgeStyle = function (color) {
   let badgeColor
@@ -18,22 +19,12 @@ const getBadgeStyle = function (color) {
     color: badgeColor
   }
 }
-
 export async function getServerSideProps (context) {
-  const queryVars = {
-    leagueFilter: {}
-  }
-  if (context.req.query.league_id) {
-    queryVars.leagueFilter = {
-      id: context.req.query.league_id
-    }
-  } else {
-    queryVars.leagueFilter.isActive = true
-  }
+  const variables = addLeagueToVariables(context)
   const results = await GraphqlClient.query({
     query: gql`
-      query GetLeagueForDraftboard ($leagueFilter: LeagueWhereInput) {
-        allLeagues(where: $leagueFilter) {
+      query GetLeagueForDraftboard ($leagueCriteria: LeagueWhereInput) {
+        allLeagues(where: $leagueCriteria) {
           id
           title
           earlyRegistrationStart
@@ -43,7 +34,7 @@ export async function getServerSideProps (context) {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        allTeams(where: {league: $leagueFilter}, sortBy: draftOrder_ASC) {
+        allTeams(where: {league: $leagueCriteria}, sortBy: draftOrder_ASC) {
           id
           name
           color
@@ -55,7 +46,7 @@ export async function getServerSideProps (context) {
             skillLevel
           }
         }
-        allPlayers(where: {leagues_some: $leagueFilter}, sortBy: createdAt_DESC) {
+        allPlayers(where: {leagues_some: $leagueCriteria}, sortBy: createdAt_DESC) {
           id
           createdAt
           age
@@ -71,10 +62,16 @@ export async function getServerSideProps (context) {
           wouldSponsor
           preferredPositions
           comments
+          leagues {
+            id
+            slug
+          }
         }
-      }`,
-    variables: queryVars
+        }
+      `,
+    variables
   })
+
   const teams = results.data.allTeams
   const league = results.data.allLeagues[0]
   LeagueUtils.addLeagueStatus(league)
@@ -104,13 +101,12 @@ export async function getServerSideProps (context) {
     }
   }
 }
-
 export default function Draftboard (props) {
   const { league, user, teams, teamMap, players } = props
 
   const [activeData, setActiveData] = useState({
-    players: players,
-    teams: teams,
+    players,
+    teams,
     mode: 'default'
   })
 
@@ -131,7 +127,7 @@ export default function Draftboard (props) {
       }
     `
     const params = {
-      mutation: mutation,
+      mutation,
       variables: {
         id: team.id,
         data: {
@@ -304,7 +300,7 @@ export default function Draftboard (props) {
                                   <td key={playerIndex}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                       <span>
-                                        {player.firstName} {player.lastName} ({player.gender.charAt(0)}{player.skillLevel})
+                                        {player.firstName} {player.lastName} ({player.gender?.charAt(0)}{player.skillLevel})
                                       </span>
                                       <button
                                         className="btn btn-default btn-xs"
@@ -383,7 +379,7 @@ export default function Draftboard (props) {
                     <tr key={player.id}>
                       <td>{index + 1}</td>
                       <td><PlayerLink player={player} /></td>
-                      <td>{player.gender.charAt(0)}</td>
+                      <td>{player.gender?.charAt(0)}</td>
                       {
                         !isDraftMode && <td>{formatDate(player.createdAt)}</td>
                       }
@@ -610,7 +606,7 @@ function AnalyticsTables (props) {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(totals[mapName]).map(([key, count], rowIndex) => (
+                {totals[mapName] && Object.entries(totals[mapName]).map(([key, count], rowIndex) => (
                   <tr key={rowIndex}>
                     {
                       key.split('|').map((columnValue, colIndex) => (
