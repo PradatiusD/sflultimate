@@ -2,14 +2,17 @@ import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
+import { addLeagueToVariables } from '../lib/utils'
 
 export const getServerSideProps = async (context) => {
+  const variables = addLeagueToVariables(context)
   const results = await GraphqlClient.query({
     query: gql`
-      query {
-        allLeagues(where:{isActive: true}) {
+      query($leagueCriteria: LeagueWhereInput) {
+        allLeagues(where:$leagueCriteria) {
           id
           title
+          slug
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
@@ -23,7 +26,8 @@ export const getServerSideProps = async (context) => {
           lastName
           email
         }
-      }`
+      }`,
+    variables
   })
 
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
@@ -41,6 +45,8 @@ export const getServerSideProps = async (context) => {
 
 export default function ConfirmationPage (props) {
   const { league, referer, player } = props
+  const parsedURL = new URL(referer)
+  const validPathNames = ['/register-team', '/leagues/' + league.slug + '/register']
 
   function ErrorState () {
     return (
@@ -48,6 +54,7 @@ export default function ConfirmationPage (props) {
         <HeaderNavigation league={league} />
         <div className="container">
           <h1>Error</h1>
+          <p>The referrer for this request was not valid.</p>
         </div>
       </>
     )
@@ -56,9 +63,6 @@ export default function ConfirmationPage (props) {
   if (!referer) {
     return <ErrorState />
   }
-
-  const parsedURL = new URL(referer)
-  const validPathNames = ['/register-team', '/register']
 
   if (validPathNames.indexOf(parsedURL.pathname) === -1) {
     return <ErrorState />

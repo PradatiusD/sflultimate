@@ -14,7 +14,7 @@ const getIframeBody = (selector) => {
 async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
-  const testUrl = 'http://localhost:5000/register?force_form=true'
+  const testUrl = 'http://localhost:3000/leagues/fall-mixed-league-2025/register?force_form=true'
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')

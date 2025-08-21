@@ -1,8 +1,7 @@
 {
-  "extends": "standard",
+  "extends": ["standard", "plugin:cypress/recommended", "next"],
   "plugins": [
-    "cypress",
-    "mocha"
+    "cypress"
   ],
   "env": {
     "browser": true,

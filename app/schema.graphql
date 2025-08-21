@@ -1017,6 +1017,7 @@ type League {
   _label_: String
   id: ID!
   title: String
+  slug: String
   summary: String
   description: String
   isActive: Boolean
@@ -1046,6 +1047,7 @@ type League {
 
 input LeagueCreateInput {
   title: String
+  slug: String
   summary: String
   description: String
   isActive: Boolean
@@ -1098,6 +1100,7 @@ input LeaguesUpdateInput {
 
 input LeagueUpdateInput {
   title: String
+  slug: String
   summary: String
   description: String
   isActive: Boolean
@@ -1150,6 +1153,24 @@ input LeagueWhereInput {
   title_not_ends_with_i: String
   title_in: [String]
   title_not_in: [String]
+  slug: String
+  slug_not: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
+  slug_i: String
+  slug_not_i: String
+  slug_contains_i: String
+  slug_not_contains_i: String
+  slug_starts_with_i: String
+  slug_not_starts_with_i: String
+  slug_ends_with_i: String
+  slug_not_ends_with_i: String
+  slug_in: [String]
+  slug_not_in: [String]
   summary: String
   summary_not: String
   summary_contains: String
@@ -2068,6 +2089,7 @@ type Player {
   phoneNumber: String
   wouldSponsor: Boolean
   willAttendFinals: Boolean
+  donationAmount: Int
   preferredPositions: String
 }
 
@@ -2092,6 +2114,7 @@ input PlayerCreateInput {
   phoneNumber: String
   wouldSponsor: Boolean
   willAttendFinals: Boolean
+  donationAmount: Int
   preferredPositions: String
 }
 
@@ -2305,6 +2328,7 @@ input PlayerUpdateInput {
   phoneNumber: String
   wouldSponsor: Boolean
   willAttendFinals: Boolean
+  donationAmount: Int
   preferredPositions: String
 }
 
@@ -2518,6 +2542,14 @@ input PlayerWhereInput {
   wouldSponsor_not: Boolean
   willAttendFinals: Boolean
   willAttendFinals_not: Boolean
+  donationAmount: Int
+  donationAmount_not: Int
+  donationAmount_lt: Int
+  donationAmount_lte: Int
+  donationAmount_gt: Int
+  donationAmount_gte: Int
+  donationAmount_in: [Int]
+  donationAmount_not_in: [Int]
   preferredPositions: String
   preferredPositions_not: String
   preferredPositions_contains: String
@@ -2965,6 +2997,8 @@ enum SortLeaguesBy {
   id_DESC
   title_ASC
   title_DESC
+  slug_ASC
+  slug_DESC
   summary_ASC
   summary_DESC
   description_ASC
@@ -3133,6 +3167,8 @@ enum SortPlayersBy {
   wouldSponsor_DESC
   willAttendFinals_ASC
   willAttendFinals_DESC
+  donationAmount_ASC
+  donationAmount_DESC
   preferredPositions_ASC
   preferredPositions_DESC
 }

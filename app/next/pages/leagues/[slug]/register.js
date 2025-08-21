@@ -7,7 +7,7 @@ import { HeaderNavigation } from '../../../components/Navigation'
 import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'
 import { FormInput, FormSelect, FormCheckbox } from '../../../components/FormElements'
-
+const x = ''
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -42,13 +42,13 @@ export const getServerSideProps = async (context) => {
           }
         }
       }`,
-    variables: variables
+    variables
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league, context)
   const token = await generateGatewayClientToken()
   const error = context.query.error || null
-  return { props: { league, braintreeToken: token, error } }
+  return { props: { league, braintreeToken: token, error, forceForm: context.req.query.force_form || '' } }
 }
 
 const locals = {}
@@ -61,7 +61,7 @@ locals.formatTime = function (date) {
 }
 
 export default function RegisterPage (props) {
-  const { league: activeLeague, braintreeToken } = props
+  const { league: activeLeague, braintreeToken, forceForm } = props
   const [player, setPlayer] = useState({})
 
   let adultPrice, studentPrice
@@ -71,7 +71,7 @@ export default function RegisterPage (props) {
   } else if (activeLeague.isRegistrationPeriod) {
     studentPrice = activeLeague.pricingRegularStudent
     adultPrice = activeLeague.pricingRegularAdult
-  } else if (activeLeague.isLateRegistrationPeriod) {
+  } else if (activeLeague.isLateRegistrationPeriod || forceForm === 'true') {
     studentPrice = activeLeague.pricingLateStudent
     adultPrice = activeLeague.pricingLateAdult
   }
@@ -131,13 +131,11 @@ export default function RegisterPage (props) {
     <HeaderNavigation league={activeLeague} />
     <div className="container register">
       <h1>{activeLeague.title} Sign Up</h1>
-
       {
         props.error && (
           <div className="alert alert-danger"><strong>Error:</strong> {props.error}</div>
         )
       }
-
       <div dangerouslySetInnerHTML={{ __html: activeLeague.description }}/>
       <p>
         Regular registration is open <strong>as of {locals.formatDate(activeLeague.registrationStart)}</strong> and ends
@@ -147,7 +145,7 @@ export default function RegisterPage (props) {
       <div className="row">
         <div className="col-md-12">
           <form id="registration" method="POST" action="/api/register">
-            <input type="hidden" name="league" value={activeLeague.id}/>
+            <input type="hidden" name="leagueId" value={activeLeague.id}/>
             <input type="hidden" name="paymentMethodNonce" id="nonce"/>
             <input type="hidden" name="recaptchaToken" id="recaptcha"/>
             <div className="row">
@@ -274,7 +272,8 @@ export default function RegisterPage (props) {
             </div>
 
             {
-              activeLeague.requestAttendance ? (
+              activeLeague.requestAttendance
+                ? (
                 <FormSelect
                   label="Expected Attendance"
                   id="participation"
@@ -297,7 +296,8 @@ export default function RegisterPage (props) {
                   helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
                   onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
                 />
-              ) : <div id="no-requestAttendance"></div>
+                  )
+                : <div id="no-requestAttendance"></div>
             }
 
             <div>
@@ -313,7 +313,8 @@ export default function RegisterPage (props) {
             //                             p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 */}
             {
-              activeLeague.requestShirtSize ? (
+              activeLeague.requestShirtSize
+                ? (
                 <FormSelect
                   label="Shirt Size"
                   id="shirtSize"
@@ -331,9 +332,10 @@ export default function RegisterPage (props) {
                   helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
                   onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
                 />
-              ) : (
+                  )
+                : (
                 <div id={'no-requestShirtSize'}></div>
-              )
+                  )
             }
 
             <FormInput
@@ -387,7 +389,8 @@ export default function RegisterPage (props) {
             />
 
             {
-              activeLeague.isLateRegistrationPeriod ? (
+              activeLeague.isLateRegistrationPeriod
+                ? (
                 <div>
                   <h3>Late Registration</h3>
                   <FormCheckbox
@@ -396,14 +399,15 @@ export default function RegisterPage (props) {
                     label="I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend. If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me."
                   />
                 </div>
-              )
+                  )
                 : (
                   <div id="no-understandsLateFee"/>
-                )
+                  )
             }
 
             {
-              activeLeague.requestSponsorship ? (
+              activeLeague.requestSponsorship
+                ? (
                 <div>
                   <h3>Sponsorship</h3>
                   <div className="checkbox">
@@ -411,10 +415,10 @@ export default function RegisterPage (props) {
                         interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
                   </div>
                 </div>
-              )
+                  )
                 : (
                   <div id="no-requestSponsorship"/>
-                )
+                  )
             }
 
             <h3>SFLUltimate Player Code of Conduct</h3>
@@ -437,6 +441,21 @@ export default function RegisterPage (props) {
               id="codeOfConduct4"
               label="I will take this as an opportunity to make new friends and to get inspired to join club teams."
               required
+            />
+
+            <FormSelect
+              label="Donation"
+              id="donationLevel"
+              name="donationLevel"
+              required
+              options={[
+                { value: 'tier_0', label: '$0' },
+                { value: 'tier_1', label: '$5' },
+                { value: 'tier_2', label: '$10' },
+                { value: 'tier_3', label: '$25' }
+              ]}
+              helpText={'SFLUltimate runs as cheaply as possible, and any leftover funds are focused on funding youth outreach, beginner pickup programs, and as seed capital to host larger tournaments like Beach Bash.  Donations like the following help us.'}
+              onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
             />
 
             <h3>Payment Information</h3>

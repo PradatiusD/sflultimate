@@ -1,4 +1,3 @@
-
 export default class LeagueUtils {
   static addLeagueStatus (league, context) {
     league.isEarlyRegistrationPeriod = LeagueUtils.isValidRegPeriod(league.earlyRegistrationStart, league.earlyRegistrationEnd)

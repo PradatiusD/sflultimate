@@ -1,5 +1,5 @@
 import GraphqlClient from '../../lib/graphql-client'
-import { addLeagueStatus } from '../../lib/payment-utils'
+import LeagueUtils from '../../lib/league-utils'
 const nodemailer = require('nodemailer')
 const { gql } = require('@apollo/client')
 const GraphQlClient = require('./../../lib/graphql-client')
@@ -30,7 +30,7 @@ const CREATE_PLAYER_MUTATION = gql`
  */
 async function processPayment (payload, amount) {
   const purchase = {
-    amount: amount,
+    amount,
     paymentMethodNonce: payload.paymentMethodNonce,
     options: {
       submitForSettlement: true
@@ -82,10 +82,13 @@ function createPlayerRecord (payload) {
     wouldSponsor: payload.wouldSponsor,
     willAttendFinals: payload.willAttendFinals,
     wouldCaptain: payload.wouldCaptain,
+    donationAmount: payload.donationAmount,
     leagues: {
       connect: [{ id: payload.leagueId }]
     }
   }
+
+  console.log('Creating player record with data:', mutationData.leagues)
 
   return GraphQlClient.mutate({
     mutation: CREATE_PLAYER_MUTATION,
@@ -148,6 +151,8 @@ export default async function handler (req, res) {
     return res
   }
 
+  let league
+
   try {
     const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(req.body.recaptchaToken)
     if (recaptchaResponse && recaptchaResponse.success && recaptchaResponse.score <= 0.5) {
@@ -156,9 +161,10 @@ export default async function handler (req, res) {
 
     const results = await GraphqlClient.query({
       query: gql`
-        query {
-          allLeagues(where: {isActive: true}) {
+        query($leagueId: ID) {
+          allLeagues(where: {id: $leagueId}) {
             title
+            slug
             pricingEarlyAdult
             pricingEarlyStudent
             pricingRegularAdult
@@ -172,10 +178,13 @@ export default async function handler (req, res) {
             lateRegistrationStart
             lateRegistrationEnd
           }
-        }`
+        }`,
+      variables: {
+        leagueId: req.body.leagueId
+      }
     })
-    const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-    addLeagueStatus(league)
+    league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
+    LeagueUtils.addLeagueStatus(league)
 
     const sanitizedPayload = {
       paymentMethodNonce: req.body.paymentMethodNonce,
@@ -195,7 +204,8 @@ export default async function handler (req, res) {
       wouldSponsor: req.body.wouldSponsor === 'on',
       wouldCaptain: req.body.wouldCaptain === 'Yes',
       willAttendFinals: req.body.willAttendFinals === 'on',
-      leagueId: req.body.league
+      leagueId: req.body.leagueId,
+      donationLevel: req.body.donationLevel
     }
 
     if (Array.isArray(req.body.preferredPositions)) {
@@ -216,6 +226,16 @@ export default async function handler (req, res) {
       amount = registrationLevel === 'Student' ? league.pricingLateStudent : league.pricingLateAdult
     }
 
+    const donationTiers = {
+      tier_0: 0,
+      tier_1: 5,
+      tier_2: 10,
+      tier_3: 25
+    }
+
+    const donationAmount = donationTiers[sanitizedPayload.donationLevel] || 0
+    amount += donationAmount
+    sanitizedPayload.donationAmount = amount
     const paymentResult = await processPayment(sanitizedPayload, amount)
     const dbCreateResult = await createPlayerRecord(sanitizedPayload)
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
@@ -225,12 +245,11 @@ export default async function handler (req, res) {
       console.log(emailResult)
       // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
     }
-    res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayer.id)
+
+    res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayer.id + '&leagueId=' + sanitizedPayload.leagueId)
   } catch (e) {
     console.error(e)
-    if (e.cause && e.cause.result) {
-      console.error(e.cause.result)
-    }
-    res.redirect('/register?error=' + encodeURIComponent(e.message))
+    console.log(JSON.stringify(e))
+    res.redirect('/leagues/' + league.slug + '/register?error=' + encodeURIComponent(e.message))
   }
 }

@@ -86,6 +86,9 @@ const fields = {
     type: Checkbox,
     isRequired: false
   },
+  donationAmount: {
+    type: Integer
+  },
   preferredPositions: {
     type: Text
   }
