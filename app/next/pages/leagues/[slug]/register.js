@@ -365,8 +365,11 @@ export default function RegisterPage (props) {
               helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
             />
 
-            <div className="alert alert-success"><strong>New in 2025:</strong> Captains will get a $20 discount on their
-              league entry (we'll reimburse you after) AND be invited to our super secret in-person draft party!
+            <div className="alert alert-success">
+              <strong>FYI: </strong>Captains get a <strong>$20 discount</strong> on their league entry!
+              <br />
+              <br />
+              Also be sure to come to our <strong>DRAFT PARTY</strong>. Location and time TBD, come get hype about the league and watch the captains select teams for both divisions, hosted by league commissioners <strong>Franco Benito</strong> and <strong>Emiliano Castillo</strong>. Get to know your new teammates and see friendly faces too!
             </div>
 
             <h3>General Waiver</h3>
@@ -443,6 +446,14 @@ export default function RegisterPage (props) {
               required
             />
 
+            <FormCheckbox
+              id="codeOfConduct5"
+              label={<span>I am aware that any egregious or repeated violations of the above agreement <strong>may result in suspension/removal</strong> from SFLUltimate events.</span>}
+              required
+            />
+
+            <h3>Payment Information</h3>
+
             <FormSelect
               label="Donation"
               id="donationLevel"
@@ -458,7 +469,6 @@ export default function RegisterPage (props) {
               onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
             />
 
-            <h3>Payment Information</h3>
             <FormInput
               label="Street Address"
               id="streetAddress"
