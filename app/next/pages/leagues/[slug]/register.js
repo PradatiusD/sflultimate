@@ -76,10 +76,30 @@ export default function RegisterPage (props) {
     studentPrice = activeLeague.pricingLateStudent
     adultPrice = activeLeague.pricingLateAdult
   }
+  
+  const headerHtml = (
+    <>
+      <Head>
+        <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
+        <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
+        <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
+        <meta property="og:description" content={activeLeague.summary || ''}/>
+        {
+          activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
+            <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
+          )
+        }
+        <script src="https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js"/>
+        <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
+        <script dangerouslySetInnerHTML={{ __html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';` }}></script>
+      </Head>
+      <HeaderNavigation league={activeLeague} />
+    </>
+  )
 
   if (!activeLeague.canRegister) {
     return <>
-      <HeaderNavigation league={activeLeague} />
+      {headerHtml}
       <div className="container">
         <div className="row">
           <div className="col-md-12">
@@ -115,21 +135,7 @@ export default function RegisterPage (props) {
   }, [])
 
   return <>
-    <Head>
-      <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
-      <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
-      <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
-      <meta property="og:description" content={activeLeague.summary || ''}/>
-      {
-        activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
-          <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
-        )
-      }
-      <script src="https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js"/>
-      <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
-      <script dangerouslySetInnerHTML={{ __html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';` }}></script>
-    </Head>
-    <HeaderNavigation league={activeLeague} />
+    {headerHtml}
     <div className="container register">
       <h1>{activeLeague.title} Sign Up</h1>
       {
