@@ -16,6 +16,7 @@ export const getServerSideProps = async (context) => {
         allLeagues(where: $leagueCriteria) {
           id
           title
+          slug
           summary
           description
           numberOfWeeksOfPlay
@@ -117,7 +118,7 @@ export default function RegisterPage (props) {
     <Head>
       <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
       <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
-      <meta property="og:url" content="https://www.sflultimate.com/register"/>
+      <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
       <meta property="og:description" content={activeLeague.summary || ''}/>
       {
         activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
