@@ -2078,6 +2078,9 @@ type Player {
   email: String
   shirtSize: PlayerShirtSizeType
   skillLevel: Int
+  athleticismLevel: Int
+  experienceLevel: Int
+  throwsLevel: Int
   participation: Int
   registrationLevel: PlayerRegistrationLevelType
   leagues(where: LeagueWhereInput, search: String, sortBy: [SortLeaguesBy!], orderBy: String, first: Int, skip: Int): [League!]!
@@ -2104,6 +2107,9 @@ input PlayerCreateInput {
   email: String
   shirtSize: PlayerShirtSizeType
   skillLevel: Int
+  athleticismLevel: Int
+  experienceLevel: Int
+  throwsLevel: Int
   participation: Int
   registrationLevel: PlayerRegistrationLevelType
   leagues: LeagueRelateToManyInput
@@ -2318,6 +2324,9 @@ input PlayerUpdateInput {
   email: String
   shirtSize: PlayerShirtSizeType
   skillLevel: Int
+  athleticismLevel: Int
+  experienceLevel: Int
+  throwsLevel: Int
   participation: Int
   registrationLevel: PlayerRegistrationLevelType
   leagues: LeagueRelateToManyInput
@@ -2447,6 +2456,18 @@ input PlayerWhereInput {
   skillLevel_not: Int
   skillLevel_in: [Int]
   skillLevel_not_in: [Int]
+  athleticismLevel: Int
+  athleticismLevel_not: Int
+  athleticismLevel_in: [Int]
+  athleticismLevel_not_in: [Int]
+  experienceLevel: Int
+  experienceLevel_not: Int
+  experienceLevel_in: [Int]
+  experienceLevel_not_in: [Int]
+  throwsLevel: Int
+  throwsLevel_not: Int
+  throwsLevel_in: [Int]
+  throwsLevel_not_in: [Int]
   participation: Int
   participation_not: Int
   participation_in: [Int]
@@ -3147,6 +3168,12 @@ enum SortPlayersBy {
   shirtSize_DESC
   skillLevel_ASC
   skillLevel_DESC
+  athleticismLevel_ASC
+  athleticismLevel_DESC
+  experienceLevel_ASC
+  experienceLevel_DESC
+  throwsLevel_ASC
+  throwsLevel_DESC
   participation_ASC
   participation_DESC
   registrationLevel_ASC

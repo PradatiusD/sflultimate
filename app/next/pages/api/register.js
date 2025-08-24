@@ -46,7 +46,7 @@ async function processPayment (payload, amount) {
     customFields: {
       partner: payload.partnerName,
       gender: payload.gender,
-      skillLevel: payload.skillLevel,
+      skillLevel: [payload.athleticismLevel, payload.experienceLevel, payload.throwsLevel].join(', '),
       participation: payload.participation
     }
   }
@@ -71,7 +71,9 @@ function createPlayerRecord (payload) {
     gender: payload.gender,
     email: payload.email,
     age: payload.age,
-    skillLevel: payload.skillLevel,
+    athleticismLevel: payload.athleticismLevel,
+    experienceLevel: payload.experienceLevel,
+    throwsLevel: payload.throwsLevel,
     registrationLevel: payload.registrationLevel,
     preferredPositions: Array.isArray(payload.preferredPositions) ? payload.preferredPositions.join(', ') : '',
     participation: payload.participation,
@@ -126,7 +128,9 @@ function SendEmail (payload, league) {
                 <tr><td>Age</td><td>${payload.age}</td></tr>
                 <tr><td>Wanted to Captain</td><td>${payload.wouldCaptain ? 'Yes' : 'No'}</td></tr>
                 <tr><td>Partner's Name</td><td>${payload.partnerName}</td></tr>
-                <tr><td>Self-described skill level</td><td>${payload.skillLevel}</td></tr>
+                <tr><td>Self-described athleticism-level</td><td>${payload.athleticismLevel}</td></tr>
+                <tr><td>Self-described athleticism-level</td><td>${payload.experienceLevel}</td></tr>
+                <tr><td>Self-described athleticism-level</td><td>${payload.throwsLevel}</td></tr>
                 <tr><td>Shirt Size</td><td>${payload.shirtSize}</td></tr>
               </tbody>
             </table>
@@ -193,7 +197,9 @@ export default async function handler (req, res) {
       gender: req.body.gender,
       email: req.body.email,
       age: parseInt(req.body.age),
-      skillLevel: parseInt(req.body.skillLevel),
+      athleticismLevel: parseInt(req.body.athleticismLevel),
+      experienceLevel: parseInt(req.body.experienceLevel),
+      throwsLevel: parseInt(req.body.throwsLevel),
       registrationLevel: req.body.registrationLevel,
       streetAddress: req.body.streetAddress,
       participation: parseInt(req.body.participation),

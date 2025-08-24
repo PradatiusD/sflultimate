@@ -5,23 +5,19 @@ const getIframeDocument = (selector) => {
     .its('0.contentDocument').should('exist')
 }
 
-const getIframeBody = (selector) => {
-  return getIframeDocument(selector)
-    .its('body').should('not.be.undefined')
-    .then(cy.wrap)
-}
-
 async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
-  const testUrl = 'http://localhost:3000/leagues/fall-mixed-league-2025/register?force_form=true'
+  const testUrl = 'http://localhost:3000/leagues/fall-league-2025-mens-division/register?force_form=true'
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
   const testEmailAddress = 'danielprada2012+sflultimate-test-' + Math.floor(Math.random() * 10000).toString() + '@gmail.com'
   cy.get('#email').type(testEmailAddress)
   cy.get('#gender').select('Male')
-  cy.get('#skillLevel').select('4')
+  cy.get('#athleticismLevel').select('2')
+  cy.get('#experienceLevel').select('4')
+  cy.get('#throwsLevel').select('3')
   cy.get('#participation').select('50')
   cy.get('#shirtSize').select('M')
   cy.get('#partnerName').type('Test Friend')
@@ -50,6 +46,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
   cy.get('#codeOfConduct2').check()
   cy.get('#codeOfConduct3').check()
   cy.get('#codeOfConduct4').check()
+  cy.get('#codeOfConduct5').check()
 
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')

@@ -7,7 +7,6 @@ import { HeaderNavigation } from '../../../components/Navigation'
 import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'
 import { FormInput, FormSelect, FormCheckbox } from '../../../components/FormElements'
-const x = ''
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -76,7 +75,7 @@ export default function RegisterPage (props) {
     studentPrice = activeLeague.pricingLateStudent
     adultPrice = activeLeague.pricingLateAdult
   }
-  
+
   const headerHtml = (
     <>
       <Head>
@@ -221,25 +220,67 @@ export default function RegisterPage (props) {
               onChange={(e) => setPlayer({ ...player, age: e.target.value })}
             />
 
-            <FormSelect
-              label="Skill Level"
-              id="skillLevel"
-              name="skillLevel"
-              required
-              options={[
-                { value: 1, label: '1 - Absolute Beginner - never played before' },
-                { value: 2, label: '2 - Hey wait, what\'s a flick?' },
-                { value: 3, label: '3 - Working on throws, basic knowledge of the game' },
-                { value: 4, label: '4 - Pick-up player, okay throws' },
-                { value: 5, label: '5 - Decent backhand & forehand. Little to no club experience' },
-                { value: 6, label: '6 - Fairly solid backhand & forehand. Some club experience' },
-                { value: 7, label: '7 - Tourney experience. Several years of club' },
-                { value: 8, label: '8 - Club level, solid all around, not prone to errors' },
-                { value: 9, label: '9 - Rock star. spot on throws, awesome D' }
-              ]}
-              helpText={<span>Consider throwing accuracy, defensive abilities, agility and game awareness when choosing a skill level. <strong>Please choose HONESTLY</strong> as this helps captains to accurately draft a balanced team.</span>}
-              onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
-            />
+            <div className="alert alert-info"><strong>New ranking system:</strong> We've changed our way of evaluating skill level to be more holistic.  This helps captains pick balanced teams, especially for players new to the community.
+            </div>
+
+
+            {
+              [
+                {
+                  label: 'Athleticism Level',
+                  id: 'athleticismLevel',
+                  question: 'On a scale from 1 to 5, how would you rate your current overall athleticism?',
+                  choices: [
+                    { value: 1, label: 'I\'m pretty new to running sports, but am excited to play' },
+                    { value: 2, label: 'I go to the gym but don\'t run that often' },
+                    { value: 3, label: 'I feel in the middle of the pack in terms of athleticism' },
+                    { value: 4, label: 'I\'m active, I have great cardio and can run up and down the field with ease' },
+                    { value: 5, label: 'I\'m very in shape, I\'ve recently played high-level competitive sports' }
+                  ]
+                },
+                {
+                  label: 'Experience Level',
+                  id: 'experienceLevel',
+                  question: 'On a scale from 1 to 5, how would you rate your overall experience playing ultimate?',
+                  choices: [
+                    { value: 1, label: 'I\'m new to ultimate and have never played before' },
+                    { value: 2, label: 'I\'ve played a few times in pickup and know the basic rules' },
+                    { value: 3, label: 'I know where to be on the field, I play often' },
+                    { value: 4, label: 'I\'ve played club or college tournaments' },
+                    { value: 5, label: 'I\'ve played at regionals, nationals, or international competitions' }
+                  ]
+                },
+                {
+                  label: 'Throws Level',
+                  id: 'throwsLevel',
+                  question: 'On a scale from 1 to 5, how would you rate your throwing ability, and decision-making?',
+                  choices: [
+                    { value: 1, label: 'I\'m still learning how to throw' },
+                    { value: 2, label: 'I can throw backhands comfortably' },
+                    { value: 3, label: 'I can throw both backhands and forehands/flicks comfortably' },
+                    { value: 4, label: 'I can throw a variety of throws and hit my target most of the time' },
+                    { value: 5, label: 'I can throw hucks, hammers, under heavy wind, and/or have excellent decision-making' }
+                  ]
+                }
+              ].map(function (questionSet) {
+                return (
+                  <FormSelect
+                    key={questionSet.id}
+                    label={questionSet.label}
+                    id={questionSet.id}
+                    name={questionSet.id}
+                    required
+                    options={questionSet.choices.map(function (choice) {
+                      return { value: choice.value, label: choice.value + ' - ' + choice.label }
+                    })}
+                    helpText={questionSet.question}
+                    onChange={(e) => setPlayer({ ...player, [questionSet.id]: e.target.value })}
+                  />
+                )
+              })
+            }
+
+
 
             <div id="playerPositions">
               <label htmlFor="skillLevel">Preferred Player Positions</label>
@@ -281,29 +322,29 @@ export default function RegisterPage (props) {
             {
               activeLeague.requestAttendance
                 ? (
-                <FormSelect
-                  label="Expected Attendance"
-                  id="participation"
-                  name="participation"
-                  required
-                  options={[
-                    {
-                      value: 30,
-                      label: `Less than 30% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.7)}+ weeks of play)`
-                    },
-                    {
-                      value: 50,
-                      label: `Around 50% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.5)} weeks of play)`
-                    },
-                    {
-                      value: 80,
-                      label: `Greater than 80% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.2)} week of play)`
-                    }
-                  ]}
-                  helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
-                  onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
-                />
-                  )
+                  <FormSelect
+                    label="Expected Attendance"
+                    id="participation"
+                    name="participation"
+                    required
+                    options={[
+                      {
+                        value: 30,
+                        label: `Less than 30% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.7)}+ weeks of play)`
+                      },
+                      {
+                        value: 50,
+                        label: `Around 50% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.5)} weeks of play)`
+                      },
+                      {
+                        value: 80,
+                        label: `Greater than 80% (miss ${Math.floor(activeLeague.numberOfWeeksOfPlay * 0.2)} week of play)`
+                      }
+                    ]}
+                    helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
+                    onChange={(e) => setPlayer({ ...player, skillLevel: e.target.value })}
+                  />
+                )
                 : <div id="no-requestAttendance"></div>
             }
 
@@ -311,7 +352,7 @@ export default function RegisterPage (props) {
               <label htmlFor="willAttendFinals">Finals attendance</label>
               <div className="checkbox">
                 <label htmlFor="willAttendFinals"><input id="willAttendFinals" type="checkbox"
-                  name="willAttendFinals"/> I expect to be able to attend finals.</label>
+                                                         name="willAttendFinals"/> I expect to be able to attend finals.</label>
               </div>
             </div>
 
@@ -322,27 +363,27 @@ export default function RegisterPage (props) {
             {
               activeLeague.requestShirtSize
                 ? (
-                <FormSelect
-                  label="Shirt Size"
-                  id="shirtSize"
-                  name="shirtSize"
-                  required
-                  options={[
-                    { value: 'XS', label: 'XS' },
-                    { value: 'S', label: 'S' },
-                    { value: 'M', label: 'M' },
-                    { value: 'L', label: 'L' },
-                    { value: 'XL', label: 'XL' },
-                    { value: 'XXL', label: 'XXL' },
-                    { value: 'NA', label: 'I do not want a jersey' }
-                  ]}
-                  helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
-                  onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
-                />
-                  )
+                  <FormSelect
+                    label="Shirt Size"
+                    id="shirtSize"
+                    name="shirtSize"
+                    required
+                    options={[
+                      { value: 'XS', label: 'XS' },
+                      { value: 'S', label: 'S' },
+                      { value: 'M', label: 'M' },
+                      { value: 'L', label: 'L' },
+                      { value: 'XL', label: 'XL' },
+                      { value: 'XXL', label: 'XXL' },
+                      { value: 'NA', label: 'I do not want a jersey' }
+                    ]}
+                    helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
+                    onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
+                  />
+                )
                 : (
-                <div id={'no-requestShirtSize'}></div>
-                  )
+                  <div id={'no-requestShirtSize'}></div>
+                )
             }
 
             <FormInput
@@ -389,34 +430,34 @@ export default function RegisterPage (props) {
             {
               activeLeague.isLateRegistrationPeriod
                 ? (
-                <div>
-                  <h3>Late Registration</h3>
-                  <FormCheckbox
-                    id="understandsLateFee"
-                    required
-                    label="I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend. If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me."
-                  />
-                </div>
-                  )
+                  <div>
+                    <h3>Late Registration</h3>
+                    <FormCheckbox
+                      id="understandsLateFee"
+                      required
+                      label="I understand that since my registration is late, I may not be provided a jersey. Until I am cleared by SFL Ultimate to play and assigned a team I will not attend. If for any reason SFLUltimate cannot find me a team due to spacing limitations, SFL Ultimate will refund me."
+                    />
+                  </div>
+                )
                 : (
                   <div id="no-understandsLateFee"/>
-                  )
+                )
             }
 
             {
               activeLeague.requestSponsorship
                 ? (
-                <div>
-                  <h3>Sponsorship</h3>
-                  <div className="checkbox">
-                    <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am
+                  <div>
+                    <h3>Sponsorship</h3>
+                    <div className="checkbox">
+                      <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am
                         interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
+                    </div>
                   </div>
-                </div>
-                  )
+                )
                 : (
                   <div id="no-requestSponsorship"/>
-                  )
+                )
             }
 
             <h3>SFLUltimate Player Code of Conduct</h3>
@@ -545,7 +586,7 @@ export default function RegisterPage (props) {
 // module.exports = async function (req, res) {
 //   PaymentUtils.setBaseRegistrationLocals(view, res)
 
-// (function ($) {
+
 //   document.querySelector('#submitButton').addEventListener('click', function (e) {
 //     const hasAtLeastOnePlayerPositionChecked = Array.from(document.querySelectorAll('input[name="preferredPositions"]')).find(function (item) {
 //       return item.checked
@@ -565,5 +606,3 @@ export default function RegisterPage (props) {
 //   braintree.setup(clientToken, 'dropin', {
 //     container: 'payment-form'
 //   })
-//
-// })(window.jQuery)

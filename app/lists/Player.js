@@ -39,7 +39,22 @@ const fields = {
   skillLevel: {
     type: Select,
     options: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => { return { value: i, label: i.toString() } }),
-    isRequired: true,
+    isRequired: false,
+    dataType: 'integer'
+  },
+  athleticismLevel: {
+    type: Select,
+    options: [1, 2, 3, 4, 5].map(i => { return { value: i, label: i.toString() } }),
+    dataType: 'integer'
+  },
+  experienceLevel: {
+    type: Select,
+    options: [1, 2, 3, 4, 5].map(i => { return { value: i, label: i.toString() } }),
+    dataType: 'integer'
+  },
+  throwsLevel: {
+    type: Select,
+    options: [1, 2, 3, 4, 5].map(i => { return { value: i, label: i.toString() } }),
     dataType: 'integer'
   },
   participation: {

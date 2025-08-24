@@ -44,6 +44,9 @@ export async function getServerSideProps (context) {
             lastName
             gender
             skillLevel
+            athleticismLevel
+            experienceLevel
+            throwsLevel
           }
         }
         allPlayers(where: {leagues_some: $leagueCriteria}, sortBy: createdAt_DESC) {
@@ -52,6 +55,9 @@ export async function getServerSideProps (context) {
           age
           shirtSize
           skillLevel
+          athleticismLevel
+          experienceLevel
+          throwsLevel
           participation
           partnerName
           willAttendFinals
@@ -122,6 +128,9 @@ export default function Draftboard (props) {
             lastName
             gender
             skillLevel
+            athleticismLevel
+            experienceLevel
+            throwsLevel
           }
         }
       }
@@ -293,7 +302,7 @@ export default function Draftboard (props) {
                                 const player = sortedPlayerList[playerIndex]
 
                                 if (!player) {
-                                  return <td/>
+                                  return <td key={playerIndex}/>
                                 }
 
                                 return (
@@ -358,7 +367,10 @@ export default function Draftboard (props) {
                 <th>Age</th>
                 <th>Shirt Size</th>
                 <th>Positions</th>
-                <th>Skill</th>
+                <th>Skill (Old)</th>
+                <th>Athl.</th>
+                <th>Exp.</th>
+                <th>Thr.</th>
                 <th>Attendance</th>
                 <th>Will Attend Finals?</th>
                 <th>Partner</th>
@@ -387,6 +399,9 @@ export default function Draftboard (props) {
                       <td>{player.shirtSize}</td>
                       <td>{player.preferredPositions}</td>
                       <td>{player.skillLevel}</td>
+                      <td>{player.athleticismLevel}</td>
+                      <td>{player.experienceLevel}</td>
+                      <td>{player.throwsLevel}</td>
                       <td>{player.participation}</td>
                       <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
                       <td>{player.partnerName}</td>
