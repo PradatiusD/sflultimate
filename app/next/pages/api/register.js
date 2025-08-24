@@ -128,9 +128,9 @@ function SendEmail (payload, league) {
                 <tr><td>Age</td><td>${payload.age}</td></tr>
                 <tr><td>Wanted to Captain</td><td>${payload.wouldCaptain ? 'Yes' : 'No'}</td></tr>
                 <tr><td>Partner's Name</td><td>${payload.partnerName}</td></tr>
-                <tr><td>Self-described athleticism-level</td><td>${payload.athleticismLevel}</td></tr>
-                <tr><td>Self-described athleticism-level</td><td>${payload.experienceLevel}</td></tr>
-                <tr><td>Self-described athleticism-level</td><td>${payload.throwsLevel}</td></tr>
+                <tr><td>Self-described athleticism level</td><td>${payload.athleticismLevel}</td></tr>
+                <tr><td>Self-described experience level</td><td>${payload.experienceLevel}</td></tr>
+                <tr><td>Self-described throws level</td><td>${payload.throwsLevel}</td></tr>
                 <tr><td>Shirt Size</td><td>${payload.shirtSize}</td></tr>
               </tbody>
             </table>
