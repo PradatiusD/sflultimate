@@ -74,13 +74,13 @@ const fields = {
     required: true,
     default: 55
   },
-  pricingLateAdult: {
+  pricingLateStudent: {
     type: Integer,
     initial: true,
     required: true,
     default: 55
   },
-  pricingLateStudent: {
+  pricingLateAdult: {
     type: Integer,
     initial: true,
     required: true,
