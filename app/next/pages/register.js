@@ -50,9 +50,9 @@ export default function LeagueRegisterPage (props) {
     <div>
       <Head>
         <title>{'Register now for the SFL Ultimate Fall League'}</title>
-        <meta property="og:title" content={'Register now for the SFL Ultimate Fall League'}/>
+        <meta property="og:title" content={'Register now for the new SFL Ultimate Fall League!'}/>
         <meta property="og:url" content={'https://www.sflultimate.com/register'}/>
-        <meta property="og:description" content={'Come enjoy an entirely new division, with an mixed and open league.'}/>
+        <meta property="og:description" content={'We are back at Amelia Earhart park, but this time with new league formats/playoffs, lined fields, draft party, end of season party, and more!'}/>
         <meta property="og:image" content={'https://d137pw2ndt5u9c.cloudfront.net/keystone/68ab30f3e54b7536052f20fe-sflultimate-fall-league-2025-both-divisions.png'}/>
         <style>{`
         .league-logo {
