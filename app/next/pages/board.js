@@ -87,7 +87,7 @@ export default function BoardPage (props) {
         <h2>Our Positions</h2>
         <div>
           <p className="lead">
-            It takes a community to grow one. Here's the roles needed to make this happen.
+            It takes a community to grow one. Here&#39;s the roles needed to make this happen.
           </p>
           {positions.map((position, index) => (
             position.active && (
@@ -97,16 +97,20 @@ export default function BoardPage (props) {
                     {position.title}
                   </h2>
                   <p>{position.commitment} Position • {' '}
-                    {position.assigned.length > 0 ? (
+                    {
+                      position.assigned.length > 0
+                        ? (
                       <strong>
                         Currently held by{' '}
                         {position.assigned
                           .map(p => `${p.firstName} ${p.lastName}`)
                           .join(' & ')}
                       </strong>
-                    ) : (
+                          )
+                        : (
                       <strong>Available for application</strong>
-                    )}
+                          )
+                    }
                   </p>
                   <p>{position.description}</p>
                   <ul className="list-inline">

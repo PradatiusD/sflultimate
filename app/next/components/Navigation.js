@@ -20,7 +20,7 @@ function HeaderNavigation (props) {
   const { section, league } = props
 
   let headerNavLinks = navLinks.slice()
-
+  headerNavLinks.push({ label: 'Register', key: 'register', href: '/register' })
   if (league) {
     // if (league.canRegister) {
     //   headerNavLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })

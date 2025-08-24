@@ -54,7 +54,7 @@ export default function LeagueRegisterPage (props) {
         <meta property="og:url" content={'https://www.sflultimate.com/register'}/>
         <meta property="og:description" content={'Come enjoy an entirely new division, with an mixed and open league.'}/>
         <meta property="og:image" content={'https://d137pw2ndt5u9c.cloudfront.net/keystone/68ab30f3e54b7536052f20fe-sflultimate-fall-league-2025-both-divisions.png'}/>
-        <style jsx>{`
+        <style>{`
         .league-logo {
             border: 1px solid #cfcfcf;
             border-radius: 8px;
@@ -72,7 +72,7 @@ export default function LeagueRegisterPage (props) {
               const href = '/leagues/' + league.slug + '/register'
               return (
                 <div key={league.id} className="col-md-6">
-                  <h2>{league.title}</h2>
+                  <h2>{league.title.replace('Fall League 2025 -', '')}</h2>
                   <a href={href}>
                     <img className="img-responsive league-logo" src={league.registrationShareImage.publicUrl} alt={league.title + ' thumbnail'} />
                   </a>
