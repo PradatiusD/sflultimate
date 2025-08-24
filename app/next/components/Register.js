@@ -363,7 +363,7 @@ export default function RegisterPage (props) {
             />
 
             <div className="alert alert-success">
-              <strong>FYI: </strong>Captains get a <strong>$20 discount</strong> on their league entry!
+              <strong>FYI: </strong>Captains get a <strong>$15 discount</strong> on their league entry!
               <br />
               <br />
               Also be sure to come to our <strong>DRAFT PARTY</strong> on October 8th, location/time TBD, come get hype about the league and watch the captains select teams for both divisions, hosted by league commissioners <strong>Franco Benito</strong> and <strong>Emiliano Castillo</strong>. Get to know your new teammates and see friendly faces too!
