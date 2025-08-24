@@ -481,6 +481,11 @@ export default function RegisterPage (props) {
 
             <div id="payment-form"></div>
 
+            <p>South Florida Ultimate Inc. is a 501(c)(3) non-profit. Some of your league fees and donations go toward helping us advance our mission of growing ultimate frisbee in South Florida.</p>
+            <p>Our current programming includes sponsored adult beginner pickup, adult/youth clinics, and donating discs to new players. We also have some exciting new events on the horizon, stay tuned for more announcements!</p>
+            <p>One day we wish to offer paid positions for coaching, league organizing, and staffing our youth teams and clinics. Your participation in our leagues help bring the sport to new players and the next generation! If you are interested in volunteering, please check out our <a
+              href="/board" target="_blank">board page</a> to get in touch.</p>
+            <p className="text-center"><strong>THANK YOU FOR YOUR SUPPORT AND SEE YOU ON THE FIELDS!</strong></p>
             <div className="text-center">
               <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton">Submit
               </button>

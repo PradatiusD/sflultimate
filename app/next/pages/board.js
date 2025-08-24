@@ -112,7 +112,7 @@ export default function BoardPage (props) {
                           )
                     }
                   </p>
-                  <p>{position.description}</p>
+                  <p dangerouslySetInnerHTML={{ __html: position.description }}></p>
                   <ul className="list-inline">
                     {position?.links?.map((link, i) => (
                       <li key={i}>
