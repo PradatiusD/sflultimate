@@ -326,7 +326,7 @@ export default function RegisterPage (props) {
                       { value: 'XXL', label: 'XXL' },
                       { value: 'NA', label: 'I do not want a jersey' }
                     ]}
-                    helpText="Knowing how often you plan on being there helps captains pick well-rounded teams.  If you have specific dates you will be out, be sure to place that in the comments."
+                    helpText="You’ll be able to rep SFU anytime you take the field with your custom jersey. It will be your team color for this season."
                     onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
                   />
                   )
