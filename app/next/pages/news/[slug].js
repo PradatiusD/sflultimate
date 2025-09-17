@@ -48,7 +48,7 @@ export default function PostsPage (props) {
         <meta property="og:title" content="South Florida Ultimate News" />
         <meta property="og:url" content={'https://www.sflultimate.com/news/' + post.slug} />
         <meta property="og:image" content={post.image.publicUrl} />
-        <meta property="og:description" content={post.summary} />
+        <meta property="og:description" content={post.summary.replace(/<[^>]*>/g, '')} />
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
