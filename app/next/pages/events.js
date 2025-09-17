@@ -71,9 +71,13 @@ function EventItem (props) {
     <>
       <div className={containerClass}>
         <div className="col-sm-3">
-          <a href={event.image.publicUrl} target="_blank" rel="noopener noreferrer">
-            <img src={event.image.publicUrl} className="img-responsive img-rounded" alt={event.name}/>
-          </a>
+          {
+            event.image && (
+              <a href={event.image.publicUrl} target="_blank" rel="noopener noreferrer">
+                <img src={event.image.publicUrl} className="img-responsive img-rounded" alt={event.name}/>
+              </a>
+            )
+          }
         </div>
         <div className="col-sm-9">
           <h2>{event.name}</h2>

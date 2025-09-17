@@ -8,9 +8,6 @@ const fields = {
     type: DateTime,
     isRequired: true
   },
-  name: {
-    type: Text
-  },
   firstName: {
     type: Text,
     isRequired: true
