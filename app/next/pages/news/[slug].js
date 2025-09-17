@@ -52,10 +52,18 @@ export default function PostsPage (props) {
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
-        <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" style={{ margin: '1rem auto', maxHeight: '500px' }} />
-        <h2>{post.title}</h2>
-        <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-        <div dangerouslySetInnerHTML={{ __html: post.body }}/>
+        <div className="row">
+          <div className="col-md-8 col-md-offset-2">
+            {
+              post.image && (
+                <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" style={{ margin: '1rem auto', maxHeight: '500px' }} />
+              )
+            }
+            <h1>{post.title}</h1>
+            <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+            <div dangerouslySetInnerHTML={{ __html: post.body }}/>
+          </div>
+        </div>
       </div>
     </>
   )
