@@ -44,6 +44,11 @@ export default function PostsPage (props) {
   const { post, league } = props
   const parsedBody = parse(post.body)
   parsedBody.getElementsByTagName('table').forEach(table => {
+    const $thead = parse('<thead></thead>').firstElementChild
+    table.prepend($thead)
+    const firstTr = table.querySelector('tbody').firstElementChild
+    $thead.append(firstTr)
+    $thead.innerHTML = $thead.innerHTML.replace(/<td/g, '<th')
     table.classList.add('table')
     table.classList.add('table-striped')
     table.classList.add('table-bordered')
