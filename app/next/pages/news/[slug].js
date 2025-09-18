@@ -4,6 +4,7 @@ import { HeaderNavigation } from '../../components/Navigation'
 import Head from 'next/head'
 import { showDate } from '../../lib/utils'
 import LeagueUtils from '../../lib/league-utils'
+import { parse } from 'node-html-parser'
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -41,6 +42,14 @@ export const getServerSideProps = async (context) => {
 
 export default function PostsPage (props) {
   const { post, league } = props
+  const parsedBody = parse(post.body)
+  parsedBody.getElementsByTagName('table').forEach(table => {
+    table.classList.add('table')
+    table.classList.add('table-striped')
+    table.classList.add('table-bordered')
+    table.removeAttribute('style')
+  })
+  const modifiedBody = parsedBody.outerHTML
   return (
     <>
       <Head>
@@ -61,7 +70,7 @@ export default function PostsPage (props) {
             }
             <h1>{post.title}</h1>
             <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-            <div dangerouslySetInnerHTML={{ __html: post.body }}/>
+            <div dangerouslySetInnerHTML={{ __html: modifiedBody }}/>
           </div>
         </div>
       </div>
