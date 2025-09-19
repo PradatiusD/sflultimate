@@ -78,6 +78,11 @@ export default function PostsPage (props) {
             <div dangerouslySetInnerHTML={{ __html: modifiedBody }}/>
           </div>
         </div>
+        {
+          modifiedBody.includes('instagram-media') && (
+            <script src="https://www.instagram.com/embed.js"></script>
+          )
+        }
       </div>
     </>
   )
