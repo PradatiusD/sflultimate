@@ -1,3 +1,5 @@
+import Notification from './Notification'
+
 let navLinks = []
 
 const evergreenLinks = [
@@ -54,66 +56,69 @@ function HeaderNavigation (props) {
   ]
 
   return (
-    <header id="header" className="site-header">
-      <div className="navbar-brand-container hidden-sm hidden-md hidden-lg mobile-logo">
-        <a href="/">
-          <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
-        </a>
-      </div>
-      <div role="navigation" className="navbar navbar-inverse navbar-fixed-top">
-        <div className="container-fluid">
-          <div className="navbar-header">
-            <button className="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <div className="collapse navbar-collapse">
-              <ul className="nav navbar-nav navbar-left">
-                <li className="navbar-brand-container hidden-xs">
-                  <a href="/" className="navbar-brand">
-                    <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
-                  </a>
-                </li>
-                <li className="hidden-sm hidden-md hidden-lg">
-                  <a href="/">Home</a>
-                </li>
-                {headerNavLinks.map((link) => {
-                  if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
+    <>
+      <header id="header" className="site-header">
+        <div className="navbar-brand-container hidden-sm hidden-md hidden-lg mobile-logo">
+          <a href="/">
+            <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
+          </a>
+        </div>
+        <div role="navigation" className="navbar navbar-inverse navbar-fixed-top">
+          <div className="container-fluid">
+            <div className="navbar-header">
+              <button className="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span className="sr-only">Toggle navigation</span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+              </button>
+              <div className="collapse navbar-collapse">
+                <ul className="nav navbar-nav navbar-left">
+                  <li className="navbar-brand-container hidden-xs">
+                    <a href="/" className="navbar-brand">
+                      <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
+                    </a>
+                  </li>
+                  <li className="hidden-sm hidden-md hidden-lg">
+                    <a href="/">Home</a>
+                  </li>
+                  {headerNavLinks.map((link) => {
+                    if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
+                      return (
+                        <li className="dropdown" key={link.key}>
+                          <a className="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {link.label} {' '}
+                            <span className="caret"></span>
+                          </a>
+                          <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            {
+                              leagueNames.map((name) => {
+                                const leagueUrl = `/leagues/${name.toLowerCase().replace(/ /g, '-')}/${link.key}`
+                                return (
+                                  <li key={name}>
+                                    <a href={leagueUrl}>{name}</a>
+                                  </li>
+                                )
+                              })
+                            }
+                          </ul>
+                        </li>
+                      )
+                    }
                     return (
-                      <li className="dropdown" key={link.key}>
-                        <a className="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                          {link.label} {' '}
-                          <span className="caret"></span>
-                        </a>
-                        <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                          {
-                            leagueNames.map((name) => {
-                              const leagueUrl = `/leagues/${name.toLowerCase().replace(/ /g, '-')}/${link.key}`
-                              return (
-                                <li key={name}>
-                                  <a href={leagueUrl}>{name}</a>
-                                </li>
-                              )
-                            })
-                          }
-                        </ul>
+                      <li key={link.key} className={section === link.key ? 'active' : null}>
+                        <a href={link.href}>{link.label} {link.key === 'register' && <span className="badge text-success" style={{ background: 'green' }}>OPEN</span>}</a>
                       </li>
                     )
-                  }
-                  return (
-                    <li key={link.key} className={section === link.key ? 'active' : null}>
-                      <a href={link.href}>{link.label}</a>
-                    </li>
-                  )
-                })}
-              </ul>
+                  })}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <Notification />
+    </>
   )
 }
 
