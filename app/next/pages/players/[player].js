@@ -2,6 +2,8 @@ import GraphqlClient from '../../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../components/Navigation'
 import { getMongoTimestamp } from '../../lib/utils'
+import Head from 'next/head'
+import {buildPlayerUrl} from "../../components/PlayerLink";
 
 export const getServerSideProps = async (context) => {
   const nameSplit = context.query.player.split('-')
@@ -190,6 +192,12 @@ export default function PlayerPage (props) {
   const { player, leagueGameStatHistory, league, allTimeTotals } = props
   return (
     <div>
+      <Head>
+        <title>{player.firstName} {player.lastName} Statistics</title>
+        <meta property="og:title" content={`${player.firstName} ${player.lastName} Statistics`} />
+        <meta property="og:url" content={'https://www.sflultimate.com/players' + buildPlayerUrl(player)}/>
+        <meta property="og:description" content={`See historical scores, assists, and defenses for ${player.firstName} ${player.lastName} across current and past SFLUltimate events`}/>
+      </Head>
       <HeaderNavigation league={league} />
       <div className="container">
         <h1>{player.firstName} {player.lastName} Profile</h1>
