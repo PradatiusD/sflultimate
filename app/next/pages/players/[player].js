@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../components/Navigation'
 import { getMongoTimestamp } from '../../lib/utils'
 import Head from 'next/head'
-import {buildPlayerUrl} from "../../components/PlayerLink";
+import { buildPlayerUrl } from '../../components/PlayerLink'
 
 export const getServerSideProps = async (context) => {
   const nameSplit = context.query.player.split('-')
@@ -98,7 +98,7 @@ export const getServerSideProps = async (context) => {
       }
     `,
     variables: {
-      playerIds: playerIds,
+      playerIds,
       leagueIds: leagueIdList
     }
   })
@@ -180,10 +180,10 @@ export const getServerSideProps = async (context) => {
   const league = JSON.parse(JSON.stringify(playerResults.data.allLeagues[0]))
   return {
     props: {
-      player: player,
-      allTimeTotals: allTimeTotals,
+      player,
+      allTimeTotals,
       leagueGameStatHistory: leagues,
-      league: league
+      league
     }
   }
 }

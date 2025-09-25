@@ -1,60 +1,97 @@
+import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
+
+function VideoBackground (props) {
+  return (
+    <div style={{ position: 'relative' }}>
+      <video autoPlay muted loop style={{
+        width: '100%',
+        height: 'auto',
+        objectFit: 'cover',
+        minHeight: '400px',
+        maxHeight: '50vh'
+      }}>
+        <source src={props.src} type="video/mp4" />
+      </video>
+      <h2 style={{
+        position: 'absolute',
+        color: 'white',
+        bottom: '10%',
+        background: '#00000080',
+        padding: '1rem 2rem',
+        fontStyle: 'italic',
+        fontSize: '6rem',
+        letterSpacing: '3px'
+      }}>
+        {props.text}
+      </h2>
+    </div>
+  )
+}
 
 export default function YouthPage () {
   return (
     <div>
+      <Head>
+        <title>SFLUltimate: Youth Programs</title>
+        <meta property="og:title" content="SFLUltimate: Youth Programs" />
+        <meta property="og:url" content="https://www.sflultimate.com/youth" />
+        <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
+        <meta property="og:description" content="Learn more about our youth ultimate programs, including summer camps, clinics, and programming." />
+      </Head>
       <HeaderNavigation />
-      <div style={{ position: 'relative' }}>
-        <video autoPlay muted loop style={{
-          width: '100%',
-          height: 'auto',
-          objectFit: 'cover',
-          minHeight: '400px',
-          maxHeight: '50vh'
-        }}>
-          <source src="https://d137pw2ndt5u9c.cloudfront.net/youth-sizzle.mp4" type="video/mp4" />
-        </video>
-        <h2 style={{
-          position: 'absolute',
-          color: 'white',
-          bottom: '10%',
-          background: '#00000080',
-          padding: '1rem 2rem',
-          fontStyle: 'italic',
-          fontSize: '6rem',
-          letterSpacing: '3px'
-        }}>
-          Youth Ultimate
-        </h2>
-      </div>
+
+      <VideoBackground
+        src={'https://d137pw2ndt5u9c.cloudfront.net/youth-playing.mp4'}
+        text={'About Youth Ultimate'}
+      />
 
       <div className="container-fluid">
         <div className="row">
+          <br/>
           <div className="col-sm-8 col-sm-offset-2">
-            <h2>Our Coach</h2>
-            <p>
-              Meet Coach Aguiar, a passionate and experienced youth ultimate frisbee coach dedicated to the love for the game while helping young athletes grow both on and off the field.
-            </p>
-            <img className="img-responsive" src="https://d137pw2ndt5u9c.cloudfront.net/youth-highlight.jpg" alt="Coach Aguiar coaching youth ultimate frisbee" />
-
+            <div className="row">
+              <div className="col-md-4">
+                <br/>
+                <br/>
+                <img className="img-responsive img-circle" src="https://d137pw2ndt5u9c.cloudfront.net/keystone/68d4a37d2747d60029c57b07-lina-fonseca.jpg" alt="Coach Aguiar coaching youth ultimate frisbee" />
+              </div>
+              <div className="col-md-8">
+                <h2>Our Coach: Lina Fonseca</h2>
+                <p>
+                  Lina Fonseca, started playing ultimate with the local women's team Soul Lions at the age of 13 , the city team from Ibagué, Colombia.  From that experience and her talent, she received a full scholarship at the University of Tolima - Ibagué.  In 2019 she moved to South Florida, playing with Fire Ultimate, Rocket, Fiasco Women's Ultimate team, reaching to the heights of USAU Nationals with Spanglish in Colorado.   She serves as the Youth Director, and is certified by USAU for Safe Sport Training, CDC Heads Up, and Youth Coach.
+                  She deeply appreciated the community, the structure, the discipline, and the values that Ultimate shared to her, and that is why she wishes to share that same passion and joy with kids
+                </p>
+              </div>
+            </div>
             <h4>Coaching Experience</h4>
             <p>
               With years of coaching experience, Coach Aguiar brings a wide variety of strategies and tactics from all around the world. As a club player, he understands the technical aspects of the sport and is skilled at breaking down complex concepts into simple terms for the athletes.
             </p>
-
-            <h4>Philosophy</h4>
-            <p>
-              Coach Aguiar’s coaching philosophy centers around creating a positive and inclusive environment where players feel comfortable to take risks, make mistakes, and learn from each experience. He emphasizes skill development, strategy, and teamwork while explaining how important values such as sportsmanship, respect, and perseverance are in ultimate.
-            </p>
-            <p>
-              Through engaging and dynamic training sessions, Coach Aguiar focuses on teaching fundamental skills such as throwing, catching, cutting, and defensive positioning, while also introducing more advanced tactics and game scenarios. He believes in adapting his coaching approach to meet the individual needs and abilities of each player, ensuring that everyone has the opportunity to succeed and thrive.
-            </p>
-
+            <div className="row">
+              <div className="col-md-6">
+                <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/68d4a04b2747d60029c5791f-youth-demo.jpg" alt="Youth Demo" className="img-responsive"/>
+              </div>
+              <div className="col-md-6">
+                <h4>Philosophy</h4>
+                <p>
+                  Our coaching philosophy centers around creating a positive and inclusive environment where players feel comfortable to take risks, make mistakes, and learn from each experience. He emphasizes skill development, strategy, and teamwork while explaining how important values such as sportsmanship, respect, and perseverance are in ultimate.
+                </p>
+              </div>
+              <p>
+                Through engaging and dynamic training sessions, Coach Aguiar focuses on teaching fundamental skills such as throwing, catching, cutting, and defensive positioning, while also introducing more advanced tactics and game scenarios. He believes in adapting his coaching approach to meet the individual needs and abilities of each player, ensuring that everyone has the opportunity to succeed and thrive.
+              </p>
+            </div>
+          </div>
+          <VideoBackground
+            src={'https://d137pw2ndt5u9c.cloudfront.net/youth-sizzle.mp4'}
+            text={'Sports & Wellness'}
+          />
+          <div className="container">
             <h4>Development</h4>
             <p>
               Beyond the Xs and Os of the game, Coach Aguiar prioritizes the development of his players, helping their confidence, leadership skills, and sense of belonging within the ultimate frisbee community. He serves as a mentor and role model, inspiring young athletes to reach their full potential both on and off the field.
             </p>
-
             <h4>Let&#39;s Play</h4>
             <p>
               With Coach Aguiar at the wheel, players not only improve their athletic abilities but also cultivate lifelong friendships, memories, and a deep appreciation for the sport of ultimate frisbee. His passion, dedication, and commitment to excellence make him a valued leader and mentor for youth ultimate frisbee players everywhere.
