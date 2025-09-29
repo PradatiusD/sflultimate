@@ -3,7 +3,7 @@ function showHourMinute (date) {
 }
 
 function showWeekday (date) {
-  return new Date(date).toLocaleDateString('en-US', { weekday: 'short',  timeZone: 'America/New_York' })
+  return new Date(date).toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/New_York' })
 }
 
 function showDate (date, options) {
@@ -47,10 +47,30 @@ function addLeagueToVariables (context, variables = {}) {
   return variables
 }
 
+function createSummary (string, numCharsLimit) {
+  // remove html tags
+  string = string.replace(/<.*?>/g, '')
+
+  // split into words
+  const arr = string.split(/\s/g)
+
+  let finalStr = ''
+  for (let i = 0; i < arr.length; i++) {
+    const isTooBig = arr[i].length + finalStr.length > numCharsLimit
+    finalStr += arr[i] + (isTooBig ? '...' : ' ')
+    if (isTooBig) {
+      break
+    }
+  }
+
+  return finalStr
+}
+
 export {
   showDate,
   showWeekday,
   showHourMinute,
   getMongoTimestamp,
-  addLeagueToVariables
+  addLeagueToVariables,
+  createSummary
 }

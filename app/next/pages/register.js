@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from './../lib/graphql-client'
-import { addLeagueToVariables } from './../lib/utils'
+import { addLeagueToVariables } from '../lib/utils'
 import { HeaderNavigation } from '../components/Navigation'
 import Head from 'next/head'
 export const getServerSideProps = async (context) => {

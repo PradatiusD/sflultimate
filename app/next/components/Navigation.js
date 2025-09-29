@@ -7,7 +7,7 @@ const evergreenLinks = [
   { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
   { label: 'Our Board', key: 'board', href: '/board' },
   { label: 'Events', key: 'events', href: '/events' },
-  { label: 'News', key: 'events', href: '/news' }
+  { label: 'News', key: 'news', href: '/news' }
   // { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
 ]
 

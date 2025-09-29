@@ -443,3 +443,12 @@
     font-weight: 400;
   }
 }
+
+.homepage-news-card {
+  img {
+    aspect-ratio: 2;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+  }
+  margin-bottom: 1rem;
+}

@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
-import {HeaderNavigation } from '../components/Navigation'
+import { HeaderNavigation } from '../components/Navigation'
 import Standings from '../components/Standings'
 import LeagueUtils from '../lib/league-utils'
+import { createSummary, showDate } from '../lib/utils'
 
 // const { getStandings } = require('./../stat-utils')
 //
@@ -24,14 +25,39 @@ export const getServerSideProps = async () => {
     query: gql`
       query {
         allLeagues(where: {isActive: true}) {
+          id
           title
+          slug
+          summary
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
           registrationEnd
           lateRegistrationStart
           lateRegistrationEnd
-        },
+          registrationShareImage {
+            publicUrl
+          }
+        }
+        allPosts(sortBy: publishedDate_DESC, first: 2) {
+          id
+          title
+          slug
+          summary
+          publishedDate
+          image {
+            publicUrl
+          }
+        }
+        allEvents {
+          id
+          name
+          description
+          startTime
+          image {
+            publicUrl
+          }
+        }
         allGames(where: {league: {isActive: true}}) {
           id
           homeTeam {
@@ -46,20 +72,236 @@ export const getServerSideProps = async () => {
           awayTeamScore
         }
       }`
+  }, {
+    variables: {}
   })
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
+
+  const activeEvents = results.data.allEvents.filter(function (e) {
+    return new Date(e.startTime).getTime() > Date.now()
+  }).sort(function (a, b) {
+    return new Date(a.startTime).getTime() - new Date(b.endTime).getTime()
+  })
+
   return {
     props: {
-      league,
-      games: results.data.allGames
+      leagues: results.data.allLeagues,
+      games: results.data.allGames,
+      events: activeEvents,
+      news: results.data.allPosts
     }
   }
 }
 
 export default function Homepage (props) {
-  const { games, league } = props
-  const keyTakeaways = [
+  const { games, leagues, events, news } = props
+
+  const keyTakeaways = getKeyTakeawaysData()
+  keyTakeaways.pop()
+
+  const leagueChampions = [
+    'league-champions-2017-spring.jpg',
+    'league-champions-2016-fall.jpg',
+    'league-champions-2016-spring.jpg',
+    'league-champions-2015-fall.jpg',
+    'league-champions-2015-spring.jpg',
+    'league-medals-2015-spring.jpg',
+    'league-champions-2014-fall.jpg',
+    'league-champions-2014-spring.jpg',
+    'league-champions-2013-spring.jpg'
+  ]
+
+  return (
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
+        <title>South Florida Ultimate: Pickups, Leagues, News & Events</title>
+        <meta property="og:title" content="South Florida Ultimate: Pickups, Leagues, News & Events" />
+        <meta property="og:url" content="https://www.sflultimate.com/"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:description" content="Since 1999, we organize & amplify the Ultimate Frisbee scene for Broward, Miami-Dade & Palm Beach." />
+        <meta property="og:image" content="https://www.sflultimate.com/images/hatter-beach-ultimate.jpg"/>
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
+        <link rel="stylesheet" href="/styles/site.css"/>
+      </Head>
+      <HeaderNavigation />
+      {/* <div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}> */}
+      {/* <div className="video-full-screen"> */}
+      {/*  <video autoPlay={true} muted={true} loop={true}> */}
+      {/*    <source src="https://d137pw2ndt5u9c.cloudfront.net/SFL_Community_Beach_Hatter_2019.mp4" type={'video/mp4'}/> */}
+      {/*  </video> */}
+      {/* </div> */}
+      {/* </div> */}
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            {/*  if locals.league && locals.league.isRegistrationPeriod</p> */}
+            {/* if locals.league && locals.league.isRegistrationPeriod */}
+            {/* p Be sure to sign up for our locals.league.title */}
+            {/* else */}
+            {/* p We're working on our next league, while we wait go check out your local pick ups! */}
+          </div>
+        </div>
+        {/* <div className="row"> */}
+        {/*  <div className="col-md-12 text-center"> */}
+        {/*    { */}
+        {/*      league ? <a href="/register" className="btn btn-lg btn-primary">Register</a> : */}
+        {/*        <a href="/pickups" className="btn btn-lg btn-primary">Pick Ups</a> */}
+        {/*    } */}
+        {/*  </div> */}
+        {/* </div> */}
+      </div>
+
+      <div className="container">
+        <div className="row">
+          <div className="col-md-4">
+            <h3>Upcoming Events</h3>
+            {
+              events.map((event) => {
+                return (
+                  <div key={event.id} className="homepage-news-card">
+                    <div className="row">
+                      <div className="col-xs-3">
+                        {
+                          event.image && event.image.publicUrl && (
+                            <img className="img-responsive img-circle" src={event.image.publicUrl} style={{ aspectRatio: '1' }} />
+                          )
+                        }
+                      </div>
+                      <div className="col-xs-9">
+                        <a href="/events">
+                          <strong>{event.name}</strong>
+                        </a>
+                        <div>
+                          <small className="text-muted">{showDate(event.startTime, { month: 'long', day: 'numeric', year: 'numeric' })}</small>
+                        </div>
+                        <div dangerouslySetInnerHTML={{ __html: createSummary(event.description, 140) }}></div>
+                      </div>
+                    </div>
+                    <hr />
+                  </div>
+                )
+              })
+            }
+          </div>
+          <div className="col-md-4">
+            <h3>Active Leagues</h3>
+            {
+              leagues.map((league) => {
+                const href = `/leagues/${league.slug}/register`
+                return (
+                  <div key={league.id} style={{ marginBottom: '1rem' }}>
+                    {
+                      league.registrationShareImage && league.registrationShareImage.publicUrl && (
+                        <a href={href}>
+                          <img className="img-responsive img-rounded " src={league.registrationShareImage.publicUrl} />
+                        </a>
+                      )
+                    }
+                    <a href={href}><strong>{league.title}</strong></a>
+                    <div dangerouslySetInnerHTML={{ __html: league.summary }}></div>
+                  </div>
+                )
+              })
+            }
+          </div>
+          <div className="col-md-4">
+            <h3>News</h3>
+            {
+              news.map((post) => {
+                const href = '/news/' + post.slug
+                return (
+                  <div key={post.id} className="homepage-news-card">
+                    {
+                      post.image && post.image.publicUrl && (
+                        <a href={href}>
+                          <img className="img-responsive img-rounded " src={post.image.publicUrl} />
+                        </a>
+                      )
+                    }
+                    <a href={href}><strong>{post.title}</strong></a>
+                    <div>
+                      <small className="text-muted">{showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</small>
+                    </div>
+                    <div dangerouslySetInnerHTML={{ __html: createSummary(post.summary, 140) }}></div>
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
+      </div>
+
+      {
+        keyTakeaways.map((takeaway, index) => {
+          const cssClass = 'key-takeaway ' + ((index % 2 === 0) ? 'left-layout' : 'right-layout')
+          return (
+            <section key={index} className={cssClass} style={{ backgroundImage: `url(${takeaway.image})` }}>
+              <div>
+                <h2>{takeaway.headline}</h2>
+                <p>{takeaway.body}</p>
+              </div>
+            </section>
+          )
+        })
+      }
+
+      <div className="features">
+        <div className="container">
+          <h2 className="text-center">Why play South Florida Ultimate?</h2>
+          <hr className="sfl-divider"/>
+          <div className="row">
+            <article className="col-sm-4 text-center"><i className="fa fa-smile-o fa-4x"></i>
+              <h3>Community</h3>
+              <p>From club athletes to newbies, league welcomes players of all skills & ability</p>
+            </article>
+            <article className="col-sm-4 text-center"><i className="fa fa-trophy fa-4x"></i>
+              <h3>Play Ultimate</h3>
+              <p>We have 8-10 regular season games and one final playoff tournament!</p>
+            </article>
+            <article className="col-sm-4 text-center"><i className="fa fa-female fa-4x"></i>
+              <h3>Ladies Welcome</h3>
+              <p>Our league is co-ed, and is always excited to invite new lady players!</p>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+            <h3>Current Standings</h3>
+            <p>Here you can see the current standings for the current league!</p>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12 table-responsive">
+            <Standings games={games} />
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <section className="champions">
+        <aside className="text-center">
+          <h2>Hall of Fame</h2>
+          <p>The past champions of South Florida</p>
+        </aside>
+        <div>
+          {
+            leagueChampions.map((championUrl, index) => {
+              return <figure key={index} style={{ backgroundImage: 'url(/images/' + championUrl + ')' }}/>
+            })
+          }
+        </div>
+      </section>
+    </>
+  )
+}
+
+function getKeyTakeawaysData () {
+  return [
     {
       headline: 'Welcome',
       image: 'https://d137pw2ndt5u9c.cloudfront.net/keystone/682db0ce069a32002858c125-frisbee_final-417-o.jpg',
@@ -136,128 +378,4 @@ export default function Homepage (props) {
     10. Have fun. All other things being equal, games are far more fun without the antipathy. Go hard. Play fair. Have fun.`
     }
   ]
-
-  keyTakeaways.pop()
-
-  const leagueChampions = [
-    'league-champions-2017-spring.jpg',
-    'league-champions-2016-fall.jpg',
-    'league-champions-2016-spring.jpg',
-    'league-champions-2015-fall.jpg',
-    'league-champions-2015-spring.jpg',
-    'league-medals-2015-spring.jpg',
-    'league-champions-2014-fall.jpg',
-    'league-champions-2014-spring.jpg',
-    'league-champions-2013-spring.jpg'
-  ]
-
-  return (
-    <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
-        <meta property="og:type" content="website"/>
-        <title>South Florida Ultimate</title>
-        <meta property="og:title" content="South Florida Ulitmate"/>
-        <meta property="og:url" content="https://www.sflultimate.com/"/>
-        <meta property="og:description"
-          content="Since 1999, players from Miami & Ft. Lauderdale have united to promote grow the awesome sport of Ultimate Frisbee."/>
-        <meta property="og:image" content="https://www.sflultimate.com/images/hatter-beach-ultimate.jpg"/>
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
-        <link rel="stylesheet" href="/styles/site.css"/>
-      </Head>
-      <HeaderNavigation league={league} />
-      {/* <div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}> */}
-      {/* <div className="video-full-screen"> */}
-      {/*  <video autoPlay={true} muted={true} loop={true}> */}
-      {/*    <source src="https://d137pw2ndt5u9c.cloudfront.net/SFL_Community_Beach_Hatter_2019.mp4" type={'video/mp4'}/> */}
-      {/*  </video> */}
-      {/* </div> */}
-      {/* </div> */}
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            {/*  if locals.league && locals.league.isRegistrationPeriod</p> */}
-            {/* if locals.league && locals.league.isRegistrationPeriod */}
-            {/* p Be sure to sign up for our locals.league.title */}
-            {/* else */}
-            {/* p We're working on our next league, while we wait go check out your local pick ups! */}
-          </div>
-        </div>
-        {/* <div className="row"> */}
-        {/*  <div className="col-md-12 text-center"> */}
-        {/*    { */}
-        {/*      league ? <a href="/register" className="btn btn-lg btn-primary">Register</a> : */}
-        {/*        <a href="/pickups" className="btn btn-lg btn-primary">Pick Ups</a> */}
-        {/*    } */}
-        {/*  </div> */}
-        {/* </div> */}
-      </div>
-
-      {
-        keyTakeaways.map((takeaway, index) => {
-          const cssClass = 'key-takeaway ' + ((index % 2 === 0) ? 'left-layout' : 'right-layout')
-          return (
-            <section key={index} className={cssClass} style={{ backgroundImage: `url(${takeaway.image})` }}>
-              <div>
-                <h2>{takeaway.headline}</h2>
-                <p>{takeaway.body}</p>
-              </div>
-            </section>
-          )
-        })
-      }
-
-      <div className="features">
-        <div className="container">
-          <h2 className="text-center">Why play South Florida Ultimate?</h2>
-          <hr className="sfl-divider"/>
-          <div className="row">
-            <article className="col-sm-4 text-center"><i className="fa fa-smile-o fa-4x"></i>
-              <h3>Community</h3>
-              <p>From club athletes to newbies, league welcomes players of all skills & ability</p>
-            </article>
-            <article className="col-sm-4 text-center"><i className="fa fa-trophy fa-4x"></i>
-              <h3>Play Ultimate</h3>
-              <p>We have 8-10 regular season games and one final playoff tournament!</p>
-            </article>
-            <article className="col-sm-4 text-center"><i className="fa fa-female fa-4x"></i>
-              <h3>Ladies Welcome</h3>
-              <p>Our league is co-ed, and is always excited to invite new lady players!</p>
-            </article>
-          </div>
-        </div>
-      </div>
-
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            <h3>Current Standings</h3>
-            <p>Here you can see the current standings for the current league!</p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-12 table-responsive">
-            <Standings games={games} />
-          </div>
-        </div>
-      </div>
-      <hr/>
-      <section className="champions">
-        <aside className="text-center">
-          <h2>Hall of Fame</h2>
-          <p>The past champions of South Florida</p>
-        </aside>
-        <div>
-          {
-            leagueChampions.map((championUrl, index) => {
-              return <figure key={index} style={{ backgroundImage: 'url(/images/' + championUrl + ')' }}/>
-            })
-          }
-        </div>
-      </section>
-    </>
-  )
 }
