@@ -79,7 +79,7 @@ export const getServerSideProps = async () => {
   const activeEvents = results.data.allEvents.filter(function (e) {
     return new Date(e.startTime).getTime() > Date.now()
   }).sort(function (a, b) {
-    return new Date(a.startTime).getTime() - new Date(b.endTime).getTime()
+    return new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   })
 
   return {
