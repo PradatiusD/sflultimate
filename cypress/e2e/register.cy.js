@@ -1,14 +1,12 @@
-const getIframeDocument = (selector) => {
-  return cy
-    .get(selector)
-    .get('iframe')
-    .its('0.contentDocument').should('exist')
-}
-
-async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
+async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disablePayment }) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
-  const testUrl = 'http://localhost:3000/leagues/fall-league-2025-mens-division/register?force_form=true'
+  let testUrl = 'http://localhost:3000/leagues/fall-league-2025-mens-division/register'
+  if (disablePayment) {
+    const url = new URL(testUrl)
+    url.searchParams.set('disable_payment', 'true')
+    testUrl = url.toString()
+  }
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
@@ -50,34 +48,38 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate }) {
 
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')
-  cy.get('#donationLevel').select('tier_2')
+  if (!disablePayment) {
+    cy.get('#donationLevel').select('tier_2')
+  }
 
   const $lateFeeCheckbox = await $body.find('#understandsLateFee')
   if ($lateFeeCheckbox.length) {
     cy.get('#understandsLateFee').check()
   }
 
-  cy.get('#streetAddress').type('123 Test Way')
-  cy.iframe('#braintree-hosted-field-number')
-    .find('#credit-card-number')
-    .type(cardNumber || '4111 1111 1111 1111')
+  if (!disablePayment) {
+    cy.get('#streetAddress').type('123 Test Way')
+    cy.iframe('#braintree-hosted-field-number')
+      .find('#credit-card-number')
+      .type(cardNumber || '4111 1111 1111 1111')
 
-  cy.iframe('#braintree-hosted-field-expirationDate')
-    .find('#expiration').type(expirationDate || '02 26')
+    cy.iframe('#braintree-hosted-field-expirationDate')
+      .find('#expiration').type(expirationDate || '02 26')
 
-  cy.iframe('#braintree-hosted-field-cvv')
-    .find('#cvv')
-    .type('123')
+    cy.iframe('#braintree-hosted-field-cvv')
+      .find('#cvv')
+      .type('123')
 
-  cy.iframe('#braintree-hosted-field-postalCode')
-    .find('#postal-code')
-    .type('12345')
+    cy.iframe('#braintree-hosted-field-postalCode')
+      .find('#postal-code')
+      .type('12345')
+  }
 
   cy.get('#submitButton').click()
 }
 
 describe('Registration', () => {
-  it('Should allow regular registration', () => {
+  it('Should allow regular registration with payment', () => {
     shouldHandlePaymentWithNumber({})
   })
 
@@ -87,4 +89,9 @@ describe('Registration', () => {
   //     // expirationDate: '01 22'
   //   })
   // })
+  it('Should allow comped registration', () => {
+    shouldHandlePaymentWithNumber({
+      disablePayment: true
+    })
+  })
 })

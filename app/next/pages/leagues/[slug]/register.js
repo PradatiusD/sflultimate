@@ -44,8 +44,14 @@ export const getServerSideProps = async (context) => {
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league, context)
   const token = await generateGatewayClientToken()
-  const error = context.query.error || null
-  return { props: { league, braintreeToken: token, error, forceForm: context.req.query.force_form || '' } }
+  const queryString = context.req.query
+  return {
+    props: {
+      league,
+      braintreeToken: token,
+      query: queryString
+    }
+  }
 }
 
 export default function LeagueRegisterPage (props) {

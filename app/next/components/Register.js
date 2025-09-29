@@ -13,17 +13,23 @@ locals.formatTime = function (date) {
 }
 
 export default function RegisterPage (props) {
-  const { league: activeLeague, braintreeToken, forceForm } = props
+  const { league: activeLeague, braintreeToken, query } = props
   const [player, setPlayer] = useState({})
+  const forceForm = query.force_form === 'true'
+  const disablePayment = query.disable_payment === 'true'
+  const errorMessage = query.error
 
   let adultPrice, studentPrice
-  if (activeLeague.isEarlyRegistrationPeriod) {
+  if (disablePayment) {
+    studentPrice = 0
+    adultPrice = 0
+  } else if (activeLeague.isEarlyRegistrationPeriod) {
     studentPrice = activeLeague.pricingEarlyStudent
     adultPrice = activeLeague.pricingEarlyAdult
   } else if (activeLeague.isRegistrationPeriod) {
     studentPrice = activeLeague.pricingRegularStudent
     adultPrice = activeLeague.pricingRegularAdult
-  } else if (activeLeague.isLateRegistrationPeriod || forceForm === 'true') {
+  } else if (activeLeague.isLateRegistrationPeriod || forceForm) {
     studentPrice = activeLeague.pricingLateStudent
     adultPrice = activeLeague.pricingLateAdult
   }
@@ -64,6 +70,16 @@ export default function RegisterPage (props) {
   }
 
   useEffect(() => {
+    window.grecaptcha.ready(function () {
+      window.grecaptcha.execute('6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w', { action: 'register' }).then(function (token) {
+        window.document.querySelector('#recaptcha').value = token
+      })
+    })
+
+    if (window.location.href.includes('disable_payment=true')) {
+      return
+    }
+
     braintree.dropin.create({ authorization: BRAINTREE_CLIENT_TOKEN, selector: '#payment-form' }, function (err, instance) {
       document.querySelector('#submitButton').addEventListener('click', function (e) {
         e.preventDefault()
@@ -77,12 +93,6 @@ export default function RegisterPage (props) {
         })
       })
     })
-
-    window.grecaptcha.ready(function () {
-      window.grecaptcha.execute('6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w', { action: 'register' }).then(function (token) {
-        window.document.querySelector('#recaptcha').value = token
-      })
-    })
   }, [])
 
   return <>
@@ -90,8 +100,13 @@ export default function RegisterPage (props) {
     <div className="container register">
       <h1>{activeLeague.title} Sign Up</h1>
       {
-        props.error && (
-          <div className="alert alert-danger"><strong>Error:</strong> {props.error}</div>
+        errorMessage && (
+          <div className="alert alert-danger"><strong>Error:</strong> {errorMessage}</div>
+        )
+      }
+      {
+        disablePayment && (
+          <div className="alert alert-info"><strong>Please Note:</strong> This registration is in comped mode, you will not be asked for payment.  Please note that an SFL team member must personally confirm to you that you are good to go after registering.</div>
         )
       }
       <div dangerouslySetInnerHTML={{ __html: activeLeague.description }}/>
@@ -440,26 +455,36 @@ export default function RegisterPage (props) {
             <h3>Sponsor a Player</h3>
             <p><span>Want to give back to the community? Help a new player get to play frisbee? You can sponsor a player for their league or clinic fees by selecting here. 100% of your tax-deductible donation goes toward sponsored player fees. You can directly sponsor a player of your choosing, or trust that it will go to a qualified applicant as selected by the SFU Board.
                 <br/><br/>We all know how special ultimate is. From making lifelong friends, staying fit and enjoying the outdoors, throwing that perfect throw to your teammate, or chasing down that plastic, ultimate can be life changing. YOU can give that gift to another player who cannot afford to play. Please donate any amount HERE, or when you sign up for your next league. </span></p>
-            <FormSelect
-              label="Sponsor a Player"
-              id="donationLevel"
-              name="donationLevel"
-              required
-              options={[
-                { value: 'tier_0', label: '$0' },
-                { value: 'tier_1', label: '$40 - sponsor 1/2 a player' },
-                { value: 'tier_2', label: '$80 - sponsor a player' },
-                { value: 'tier_3', label: '$160 - sponsor two players' }
-              ]}
-              onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
-            />
 
-            <h4>Get Sponsored</h4>
-            <p><span>Want to play ultimate but just can’t afford the fees right now? We want to help you get sponsored to play league. If you are interested in seeking sponsorship, please fill out <a
-              href="https://forms.gle/4PN68iK3FAU2iksT6" target="_blank">this application</a> by the applicable deadline. It will be reviewed by a portion of the SFU Board and you’ll be notified if you are a recipient. Sponsorships are not guaranteed, and all applications will be reviewed before each league.Partial and full sponsorships may be available. The recipient of any level sponsorship is expected to have reliable transportation and be able to attend at least 75% of the sponsored league.</span></p>
+            {
+              !disablePayment && (
+                <FormSelect
+                  label="Sponsor a Player"
+                  id="donationLevel"
+                  name="donationLevel"
+                  required
+                  options={[
+                    { value: 'tier_0', label: '$0' },
+                    { value: 'tier_1', label: '$40 - sponsor 1/2 a player' },
+                    { value: 'tier_2', label: '$80 - sponsor a player' },
+                    { value: 'tier_3', label: '$160 - sponsor two players' }
+                  ]}
+                  onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
+                />
+              )
+            }
+
+            {
+              !disablePayment && (
+                <>
+                  <h4>Get Sponsored</h4>
+                  <p><span>Want to play ultimate but just can’t afford the fees right now? We want to help you get sponsored to play league. If you are interested in seeking sponsorship, please fill out <a
+                    href="https://forms.gle/4PN68iK3FAU2iksT6" target="_blank">this application</a> by the applicable deadline. It will be reviewed by a portion of the SFU Board and you’ll be notified if you are a recipient. Sponsorships are not guaranteed, and all applications will be reviewed before each league.Partial and full sponsorships may be available. The recipient of any level sponsorship is expected to have reliable transportation and be able to attend at least 75% of the sponsored league.</span></p>
+                </>
+              )
+            }
 
             <h3>Payment Information</h3>
-
             <FormSelect
               label="Registration Type"
               id="registrationLevel"
@@ -472,14 +497,22 @@ export default function RegisterPage (props) {
               onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
             />
 
-            <FormInput
-              label="Street Address"
-              id="streetAddress"
-              name="streetAddress"
-              helpText="If you plan on paying with card (so no PayPal) type here just your street address (So 12345 Palm Tree Ave.). Do not pass city/zip code or apt number. We do not store this information, but send it to the payment processor for fraud prevention."
-            />
+            {
+              !disablePayment && (
+                <FormInput
+                  label="Street Address"
+                  id="streetAddress"
+                  name="streetAddress"
+                  helpText="If you plan on paying with card (so no PayPal) type here just your street address (So 12345 Palm Tree Ave.). Do not pass city/zip code or apt number. We do not store this information, but send it to the payment processor for fraud prevention."
+                />
+              )
+            }
 
-            <div id="payment-form"></div>
+            {
+              !disablePayment && (
+                <div id="payment-form"></div>
+              )
+            }
 
             <p>South Florida Ultimate Inc. is a 501(c)(3) non-profit. Some of your league fees and donations go toward helping us advance our mission of growing ultimate frisbee in South Florida.</p>
             <p>Our current programming includes sponsored adult beginner pickup, adult/youth clinics, and donating discs to new players. We also have some exciting new events on the horizon, stay tuned for more announcements!</p>
@@ -487,7 +520,8 @@ export default function RegisterPage (props) {
               href="/board" target="_blank">board page</a> to get in touch.</p>
             <p className="text-center"><strong>THANK YOU FOR YOUR SUPPORT AND SEE YOU ON THE FIELDS!</strong></p>
             <div className="text-center">
-              <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton">Submit
+              <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton">
+                Submit
               </button>
             </div>
           </form>

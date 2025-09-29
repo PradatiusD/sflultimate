@@ -85,6 +85,7 @@ function createPlayerRecord (payload) {
     willAttendFinals: payload.willAttendFinals,
     wouldCaptain: payload.wouldCaptain,
     donationAmount: payload.donationAmount,
+    compedRegistration: payload.compedRegistration || false,
     leagues: {
       connect: [{ id: payload.leagueId }]
     }
@@ -163,6 +164,8 @@ export default async function handler (req, res) {
       throw new Error('Unauthorized transaction, we believe you are a bot.  Please contact sflultimate@gmail.com.')
     }
 
+    const disablePayment = req.headers.referer.includes('disable_payment=true')
+
     const results = await GraphqlClient.query({
       query: gql`
         query($leagueId: ID) {
@@ -211,7 +214,8 @@ export default async function handler (req, res) {
       wouldCaptain: req.body.wouldCaptain === 'Yes',
       willAttendFinals: req.body.willAttendFinals === 'on',
       leagueId: req.body.leagueId,
-      donationLevel: req.body.donationLevel
+      donationLevel: req.body.donationLevel,
+      compedRegistration: false
     }
 
     if (Array.isArray(req.body.preferredPositions)) {
@@ -232,6 +236,7 @@ export default async function handler (req, res) {
       amount = registrationLevel === 'Student' ? league.pricingLateStudent : league.pricingLateAdult
     }
 
+    // Donation
     const donationTiers = {
       tier_0: 0,
       tier_1: 40,
@@ -242,7 +247,14 @@ export default async function handler (req, res) {
     const donationAmount = donationTiers[sanitizedPayload.donationLevel] || 0
     amount += donationAmount
     sanitizedPayload.donationAmount = amount
-    const paymentResult = await processPayment(sanitizedPayload, amount)
+
+    if (disablePayment) {
+      amount = 0
+      sanitizedPayload.donationAmount = donationAmount
+      sanitizedPayload.compedRegistration = true
+    }
+
+    const paymentResult = disablePayment ? null : await processPayment(sanitizedPayload, amount)
     const dbCreateResult = await createPlayerRecord(sanitizedPayload)
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
     if (process.env.NODE_ENV === 'development') {

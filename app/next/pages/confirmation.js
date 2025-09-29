@@ -63,7 +63,6 @@ export default function ConfirmationPage (props) {
   if (!referer) {
     return <ErrorState />
   }
-
   if (validPathNames.indexOf(parsedURL.pathname) === -1) {
     return <ErrorState />
   }

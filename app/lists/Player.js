@@ -103,6 +103,10 @@ const fields = {
   },
   preferredPositions: {
     type: Text
+  },
+  compedRegistration: {
+    type: Checkbox,
+    isRequired: false
   }
 }
 
