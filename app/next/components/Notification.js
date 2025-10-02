@@ -2,14 +2,18 @@
 import Countdown from 'react-countdown'
 
 export default function Notification () {
+  const registrationCloseDate = new Date('2025-10-05T03:59:59.000Z')
+  if (registrationCloseDate.getTime() > Date.now()) {
+    return <></>
+  }
   return (
     <div className="container">
       <div className="alert alert-info" role="alert">
         <span className="glyphicon glyphicon-info-sign" style={{ position: 'relative', top: '2px' }}></span>{' '}
-        <strong><a href="/register">Fall League Registration</a> closing soon:</strong>
+        <strong><a href="/register">Fall League Registration</a> closes soon:</strong>
         {' '} only{' '}
         <Countdown
-          date={new Date('2025-10-04T04:00:00.000Z').getTime()}
+          date={registrationCloseDate.getTime()}
           intervalDelay={1000}
           precision={0}
           renderer={(props) => {

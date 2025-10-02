@@ -128,7 +128,7 @@
 .features {
   color: black;
   font-size: 1.15em;
-  padding: 1em 0em;
+  padding: 1em 0;
   position: relative;
   background: white;
   h3 {
@@ -432,12 +432,12 @@
   h2 {
     text-transform: uppercase;
     font-style: italic;
-    text-shadow: 4px 4px 0px #000000, 0px 0px 15px black;
+    text-shadow: 4px 4px 0 #000000, 0 0 15px black;
     font-size: 6rem;
   }
   p {
     background: rgb(0 0 0 / 60%);
-    text-shadow: 0px 0px 20px black;
+    text-shadow: 0 0 20px black;
     padding: 1rem;
     font-size: 2rem;
     font-weight: 400;

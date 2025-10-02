@@ -3,8 +3,8 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
 import Standings from '../components/Standings'
-import LeagueUtils from '../lib/league-utils'
 import { createSummary, showDate } from '../lib/utils'
+import Image from 'next/image'
 
 // const { getStandings } = require('./../stat-utils')
 //
@@ -196,7 +196,7 @@ export default function Homepage (props) {
                     {
                       league.registrationShareImage && league.registrationShareImage.publicUrl && (
                         <a href={href}>
-                          <img className="img-responsive img-rounded " src={league.registrationShareImage.publicUrl} />
+                          <Image className="img-responsive img-rounded " src={league.registrationShareImage.publicUrl} height={630} width={1200} />
                         </a>
                       )
                     }
@@ -217,7 +217,7 @@ export default function Homepage (props) {
                     {
                       post.image && post.image.publicUrl && (
                         <a href={href}>
-                          <img className="img-responsive img-rounded " src={post.image.publicUrl} />
+                          <img className="img-responsive img-rounded" src={post.image.publicUrl} />
                         </a>
                       )
                     }
