@@ -1,4 +1,5 @@
-const { Text, Relationship, DateTime, Integer, Checkbox, Select } = require('@keystonejs/fields')
+const { Text, Relationship, DateTime, Integer, Checkbox, Select, File } = require('@keystonejs/fields')
+const storage = require('./file-storage-adapter')
 const fields = {
   createdAt: {
     type: DateTime,
@@ -107,6 +108,10 @@ const fields = {
   compedRegistration: {
     type: Checkbox,
     isRequired: false
+  },
+  profileImage: {
+    type: File,
+    adapter: storage
   }
 }
 

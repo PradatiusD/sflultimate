@@ -7546,4 +7546,10 @@ button.close {
   margin-bottom: 0.5rem;
 }
 
+.pending-team {
+  padding: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
 /*# sourceMappingURL=site.css.map */

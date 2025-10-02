@@ -3,7 +3,7 @@ import Countdown from 'react-countdown'
 
 export default function Notification () {
   const registrationCloseDate = new Date('2025-10-05T03:59:59.000Z')
-  if (registrationCloseDate.getTime() > Date.now()) {
+  if (registrationCloseDate.getTime() < Date.now()) {
     return <></>
   }
   return (

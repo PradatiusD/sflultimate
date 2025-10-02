@@ -36,16 +36,56 @@ export const getLeagueTeamsData = async (context) => {
           }
         }
       }`,
-    variables: variables
+    variables
   })
   const league = results.data.allLeagues[0]
   const teams = results.data.allTeams
+  let players = []
+  if (teams.length === 0) {
+    const playersRegistered = await GraphqlClient.query({
+      query: gql`
+        query($leagueCriteria: LeagueWhereInput) {
+          allPlayers(sortBy: [gender_ASC, firstName_ASC, lastName_ASC], where: {leagues_some: $leagueCriteria}) {
+            id
+            gender
+            firstName
+            lastName
+            profileImage {
+              publicUrl
+            }
+          }
+        }`,
+      variables
+    })
+    players = playersRegistered.data.allPlayers
+  }
   LeagueUtils.addLeagueStatus(league)
-  return { props: { league, teams, url: context.req.url } }
+  return { props: { league, teams, url: context.req.url, players } }
 }
 
 export default function LeagueTeams (props) {
-  const { league, teams } = props
+  const { league, teams, players } = props
+
+  if (teams.length === 0) {
+    return (
+      <div className="container">
+        <h1>Teams Pending...</h1>
+        <p className="lead">Players haven&#39;t been drafted yet, but here is who we have signed up so far!</p>
+        {
+          players.map((player) => {
+            const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://picsum.photos/300/300?grayscale'
+            return (
+            <div key={player.id} className="col-sm-2 col-xs-4 pending-team">
+              <img src={srcUrl} className="img-responsive img-rounded" />
+              <PlayerLink player={player} />
+            </div>
+            )
+          })
+        }
+      </div>
+    )
+  }
+
   return (
     <div className="container">
       <h1>{league.title} Teams</h1>

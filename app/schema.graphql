@@ -1032,8 +1032,8 @@ type League {
   pricingEarlyAdult: Int
   pricingRegularStudent: Int
   pricingRegularAdult: Int
-  pricingLateAdult: Int
   pricingLateStudent: Int
+  pricingLateAdult: Int
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
   finalsTournamentDescription: String
@@ -1062,8 +1062,8 @@ input LeagueCreateInput {
   pricingEarlyAdult: Int
   pricingRegularStudent: Int
   pricingRegularAdult: Int
-  pricingLateAdult: Int
   pricingLateStudent: Int
+  pricingLateAdult: Int
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
   finalsTournamentDescription: String
@@ -1115,8 +1115,8 @@ input LeagueUpdateInput {
   pricingEarlyAdult: Int
   pricingRegularStudent: Int
   pricingRegularAdult: Int
-  pricingLateAdult: Int
   pricingLateStudent: Int
+  pricingLateAdult: Int
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
   finalsTournamentDescription: String
@@ -1297,14 +1297,6 @@ input LeagueWhereInput {
   pricingRegularAdult_gte: Int
   pricingRegularAdult_in: [Int]
   pricingRegularAdult_not_in: [Int]
-  pricingLateAdult: Int
-  pricingLateAdult_not: Int
-  pricingLateAdult_lt: Int
-  pricingLateAdult_lte: Int
-  pricingLateAdult_gt: Int
-  pricingLateAdult_gte: Int
-  pricingLateAdult_in: [Int]
-  pricingLateAdult_not_in: [Int]
   pricingLateStudent: Int
   pricingLateStudent_not: Int
   pricingLateStudent_lt: Int
@@ -1313,6 +1305,14 @@ input LeagueWhereInput {
   pricingLateStudent_gte: Int
   pricingLateStudent_in: [Int]
   pricingLateStudent_not_in: [Int]
+  pricingLateAdult: Int
+  pricingLateAdult_not: Int
+  pricingLateAdult_lt: Int
+  pricingLateAdult_lte: Int
+  pricingLateAdult_gt: Int
+  pricingLateAdult_gte: Int
+  pricingLateAdult_in: [Int]
+  pricingLateAdult_not_in: [Int]
   finalsTournamentStartDate: DateTime
   finalsTournamentStartDate_not: DateTime
   finalsTournamentStartDate_lt: DateTime
@@ -2070,7 +2070,6 @@ type Player {
   id: ID!
   createdAt: DateTime
   updatedAt: DateTime
-  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
@@ -2094,12 +2093,13 @@ type Player {
   willAttendFinals: Boolean
   donationAmount: Int
   preferredPositions: String
+  compedRegistration: Boolean
+  profileImage: File
 }
 
 input PlayerCreateInput {
   createdAt: DateTime
   updatedAt: DateTime
-  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
@@ -2122,6 +2122,8 @@ input PlayerCreateInput {
   willAttendFinals: Boolean
   donationAmount: Int
   preferredPositions: String
+  compedRegistration: Boolean
+  profileImage: Upload
 }
 
 """ A keystone list """
@@ -2316,7 +2318,6 @@ input PlayersUpdateInput {
 input PlayerUpdateInput {
   createdAt: DateTime
   updatedAt: DateTime
-  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
@@ -2339,6 +2340,8 @@ input PlayerUpdateInput {
   willAttendFinals: Boolean
   donationAmount: Int
   preferredPositions: String
+  compedRegistration: Boolean
+  profileImage: Upload
 }
 
 input PlayerWhereInput {
@@ -2364,24 +2367,6 @@ input PlayerWhereInput {
   updatedAt_gte: DateTime
   updatedAt_in: [DateTime]
   updatedAt_not_in: [DateTime]
-  name: String
-  name_not: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  name_i: String
-  name_not_i: String
-  name_contains_i: String
-  name_not_contains_i: String
-  name_starts_with_i: String
-  name_not_starts_with_i: String
-  name_ends_with_i: String
-  name_not_ends_with_i: String
-  name_in: [String]
-  name_not_in: [String]
   firstName: String
   firstName_not: String
   firstName_contains: String
@@ -2589,6 +2574,12 @@ input PlayerWhereInput {
   preferredPositions_not_ends_with_i: String
   preferredPositions_in: [String]
   preferredPositions_not_in: [String]
+  compedRegistration: Boolean
+  compedRegistration_not: Boolean
+  profileImage: String
+  profileImage_not: String
+  profileImage_in: [String]
+  profileImage_not_in: [String]
 }
 
 input PlayerWhereUniqueInput {
@@ -3048,10 +3039,10 @@ enum SortLeaguesBy {
   pricingRegularStudent_DESC
   pricingRegularAdult_ASC
   pricingRegularAdult_DESC
-  pricingLateAdult_ASC
-  pricingLateAdult_DESC
   pricingLateStudent_ASC
   pricingLateStudent_DESC
+  pricingLateAdult_ASC
+  pricingLateAdult_DESC
   finalsTournamentStartDate_ASC
   finalsTournamentStartDate_DESC
   finalsTournamentEndDate_ASC
@@ -3152,8 +3143,6 @@ enum SortPlayersBy {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
-  name_ASC
-  name_DESC
   firstName_ASC
   firstName_DESC
   lastName_ASC
@@ -3198,6 +3187,8 @@ enum SortPlayersBy {
   donationAmount_DESC
   preferredPositions_ASC
   preferredPositions_DESC
+  compedRegistration_ASC
+  compedRegistration_DESC
 }
 
 enum SortPostsBy {
