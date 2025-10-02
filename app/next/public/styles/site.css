@@ -7546,6 +7546,20 @@ button.close {
   margin-bottom: 0.5rem;
 }
 
+.pending-team-grid {
+  display: grid;
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+@media screen and (max-width: 767px) {
+  .pending-team-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
 .pending-team {
   padding: 1rem;
   font-weight: bold;

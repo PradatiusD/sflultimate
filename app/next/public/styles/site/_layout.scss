@@ -453,6 +453,18 @@
   margin-bottom: 1rem;
 }
 
+.pending-team-grid {
+  display: grid;
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  @media screen and (max-width: 767px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+}
+
 .pending-team {
   padding: 1rem;
   font-weight: bold;

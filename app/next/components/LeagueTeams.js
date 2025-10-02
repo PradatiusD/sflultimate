@@ -71,19 +71,21 @@ export default function LeagueTeams (props) {
       <div className="container">
         <h1>Teams Pending...</h1>
         <p className="lead">Players haven&#39;t been drafted yet, but here is who we have signed up so far!</p>
-        {
-          players.map((player) => {
-            const srcUrl = player.profileImage && player.profileImage.publicUrl
-            return (
-            <div key={player.id} className="col-sm-2 col-xs-4 pending-team">
-              {
-                srcUrl && <img src={srcUrl} className="img-responsive img-rounded" />
-              }
-              <PlayerLink player={player} />
-            </div>
-            )
-          })
-        }
+        <div className="pending-team-grid">
+          {
+            players.map((player) => {
+              const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://placehold.co/200x200?text=Image+Pending'
+              return (
+                <div key={player.id} className="pending-team">
+                  {
+                    srcUrl && <img src={srcUrl} className="img-responsive img-rounded" />
+                  }
+                  <PlayerLink player={player} />
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
     )
   }
