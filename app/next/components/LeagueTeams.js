@@ -73,10 +73,12 @@ export default function LeagueTeams (props) {
         <p className="lead">Players haven&#39;t been drafted yet, but here is who we have signed up so far!</p>
         {
           players.map((player) => {
-            const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://picsum.photos/300/300?grayscale'
+            const srcUrl = player.profileImage && player.profileImage.publicUrl
             return (
             <div key={player.id} className="col-sm-2 col-xs-4 pending-team">
-              <img src={srcUrl} className="img-responsive img-rounded" />
+              {
+                srcUrl && <img src={srcUrl} className="img-responsive img-rounded" />
+              }
               <PlayerLink player={player} />
             </div>
             )

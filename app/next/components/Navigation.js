@@ -19,23 +19,15 @@ const footerLinks = [
 ].concat(evergreenLinks)
 
 function HeaderNavigation (props) {
-  const { section, league } = props
+  const { section } = props
 
   let headerNavLinks = navLinks.slice()
   headerNavLinks.push({ label: 'Register', key: 'register', href: '/register' })
-  if (league) {
-    // if (league.canRegister) {
-    //   headerNavLinks.push({ label: 'Register for ' + league.title, key: 'register', href: '/register' })
-    // }
-
-    if ((!league.isRegistrationPeriod && !league.isEarlyRegistrationPeriod) || league.isLateRegistrationPeriod) {
-      headerNavLinks = headerNavLinks.concat([
-        { label: 'Teams', key: 'teams', href: '/teams' },
-        { label: 'Schedule', key: 'schedule', href: '/schedule' },
-        { label: 'Stats', key: 'stats', href: '/stats' }
-      ])
-    }
-  }
+  headerNavLinks = headerNavLinks.concat([
+    { label: 'Teams', key: 'teams', href: '/teams' },
+    { label: 'Schedule', key: 'schedule', href: '/schedule' },
+    { label: 'Stats', key: 'stats', href: '/stats' }
+  ])
 
   const leagueNames = [
     'Spring League 2025',
