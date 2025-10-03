@@ -38,6 +38,9 @@ export const getServerSideProps = async (context) => {
             publicUrl
           }
         }
+        allPlayers(where: {leagues_some: $leagueCriteria}) {
+          gender
+        }
       }`,
     variables
   })
@@ -45,11 +48,13 @@ export const getServerSideProps = async (context) => {
   LeagueUtils.addLeagueStatus(league, context)
   const token = await generateGatewayClientToken()
   const queryString = context.req.query
+  const players = results.data.allPlayers
   return {
     props: {
       league,
       braintreeToken: token,
-      query: queryString
+      query: queryString,
+      players
     }
   }
 }

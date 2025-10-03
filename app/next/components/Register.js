@@ -12,8 +12,41 @@ locals.formatTime = function (date) {
   return new Date(date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })
 }
 
+function PlayerAmountAlert (props) {
+  const { players, league } = props
+  if (league.id !== '68a47a9c99efe6002956a439') {
+    return <></>
+  }
+  const playersPerGender = {}
+  players.forEach(player => {
+    if (!playersPerGender[player.gender]) {
+      playersPerGender[player.gender] = 0
+    }
+    playersPerGender[player.gender]++
+  })
+
+  return (
+    <>
+      {
+        playersPerGender.Male < 48 && (
+          <div className="alert alert-info">
+            <span><strong>For men registrations: </strong>At the time of loading this page only <strong>{48 - playersPerGender.Male} guy spots left</strong>, and once filled we will move you to play the men's league, unless a player from the mixed team should drop.</span>
+          </div>
+        )
+      }
+      {
+        playersPerGender.Male >= 48 && (
+          <div className="alert alert-warning">
+            <span>We are at capacity for men in the mixed league, if you register you will be on a waitlist or moved to the men&apos;s league.</span>
+          </div>
+        )
+      }
+    </>
+  )
+}
+
 export default function RegisterPage (props) {
-  const { league: activeLeague, braintreeToken, query } = props
+  const { league: activeLeague, braintreeToken, query, players } = props
   const [player, setPlayer] = useState({})
   const forceForm = query.force_form === 'true'
   const disablePayment = query.disable_payment === 'true'
@@ -109,6 +142,7 @@ export default function RegisterPage (props) {
           <div className="alert alert-info"><strong>Please Note:</strong> This registration is in comped mode, you will not be asked for payment.  Please note that an SFL team member must personally confirm to you that you are good to go after registering.</div>
         )
       }
+
       <div dangerouslySetInnerHTML={{ __html: activeLeague.description }}/>
       <p>
         Regular registration is open <strong>as of {locals.formatDate(activeLeague.registrationStart)}</strong> and ends
@@ -156,6 +190,12 @@ export default function RegisterPage (props) {
               helpText={'We use this information to draft teams that have even gender distributions.'}
               onChange={(e) => setPlayer({ ...player, gender: e.target.value })}
             />
+
+            {
+              player.gender === 'Male' && (
+                <PlayerAmountAlert players={players} league={activeLeague} />
+              )
+            }
 
             <FormInput
               label="Email Address"
