@@ -17,6 +17,9 @@ export const getLeagueTeamsData = async (context) => {
           registrationEnd
           lateRegistrationStart
           lateRegistrationEnd
+          registrationShareImage {
+            publicUrl
+          }
         }
         allTeams(where: {league: $leagueCriteria}) {
           id,

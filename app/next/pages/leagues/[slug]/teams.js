@@ -6,15 +6,22 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function LeagueTeamsPage (props) {
-  const { league, url } = props
+  const { league, url, teams } = props
   return (
     <>
       <Head>
-        <title>{league.title} Teams</title>
+        <title>{teams.length > 0 ? league.title + ' Teams' : league.title + ' Current Signups'}</title>
         <meta property="og:title" content={'League ' + league.title} />
         <meta property="og:url" content={'https://www.sflultimate.com/' + url} />
-        <meta property="og:description" content={'Find out who is on your team for ' + league.title}/>
-        <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg"/>
+        <meta
+          property="og:description"
+          content={teams.length > 0 ? `Find out who is on your team for ${league.title}` : `Curious to see who's registered for ${league.title}? Find out!`}
+        />
+        {
+          league.registrationShareImage && league.registrationShareImage.publicUrl && (
+            <meta property="og:image" content={league.registrationShareImage.publicUrl}/>
+          )
+        }
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
       </Head>
