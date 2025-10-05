@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 import { HeaderNavigation } from './Navigation'
 import { FormCheckbox, FormInput, FormSelect } from './FormElements'
-import Head from 'next/head'
 
 const locals = {}
 locals.formatDate = function (date) {

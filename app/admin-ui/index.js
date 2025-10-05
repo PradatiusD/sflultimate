@@ -10,8 +10,6 @@ const ExportCSVButton = () => {
   const { list } = listData
   const firstRecord = listData.listData && listData.listData.items && listData.listData.items[0]
   const queriedFields = firstRecord && Object.keys(firstRecord).filter(f => typeof firstRecord[f] !== 'object')
-  console.log(queriedFields)
-
   const exportCsv = async () => {
     const fieldsToQuery = list.fields.filter(f => f.path !== 'image' && !f.config.many && queriedFields.includes(f.path))
     const queryName = `all${list.key}s`

@@ -46,14 +46,20 @@ export const getServerSideProps = async (context) => {
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league, context)
-  const token = await generateGatewayClientToken()
-  const queryString = context.req.query
+
+  let braintreeToken = null
+  try {
+    braintreeToken = await generateGatewayClientToken()
+  } catch (e) {
+    console.error(e)
+  }
+  const query = context.req.query
   const players = results.data.allPlayers
   return {
     props: {
       league,
-      braintreeToken: token,
-      query: queryString,
+      braintreeToken,
+      query,
       players
     }
   }
