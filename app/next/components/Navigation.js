@@ -127,6 +127,9 @@ function FooterNavigation (props) {
                 <a href="https://www.instagram.com/sflultimate/" target="_blank" rel="noopener noreferrer">
                   <i className="fa fa-instagram"></i>
                 </a>
+                <a href="https://www.youtube.com/sflultimate/" target="_blank" rel="noopener noreferrer">
+                  <i className="fa fa-youtube-play"></i>
+                </a>
                 <a href="https://www.facebook.com/sflultimate/" target="_blank" rel="noopener noreferrer">
                   <i className="fa fa-facebook"></i>
                 </a>

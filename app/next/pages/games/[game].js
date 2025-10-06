@@ -5,7 +5,7 @@ import { HeaderNavigation } from '../../components/Navigation'
 import { showDate, showHourMinute } from '../../lib/utils'
 import Standings from '../../components/Standings'
 import { buildPlayerUrl } from '../../components/PlayerLink'
-import LeagueUtils from "../../lib/league-utils";
+import LeagueUtils from '../../lib/league-utils'
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -103,7 +103,7 @@ export const getServerSideProps = async (context) => {
       }
     `,
     variables: {
-      teamIds: teamIds
+      teamIds
     }
   })
 
@@ -124,7 +124,7 @@ export const getServerSideProps = async (context) => {
       const stat = playerMap[player.id]
       if (stat) {
         const newStat = {
-          player: player,
+          player,
           assists: stat.assists || 0,
           scores: stat.scores || 0,
           defenses: stat.defenses || 0,
@@ -150,10 +150,10 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       league,
-      game: game,
+      game,
       games: seasonResults.data.seasonGames,
-      teams: teams,
-      isGamePreview: isGamePreview
+      teams,
+      isGamePreview
     }
   }
 }
@@ -172,11 +172,13 @@ export default function GamePage (props) {
       </Head>
       <HeaderNavigation league={league} />
       <div className="container">
-        {isGamePreview ? (
-          <p className="h1 text-center">Preview</p>
-        ) : (
-          <p className="h1 text-center">Recap</p>
-        )}
+        {isGamePreview
+          ? (
+            <p className="h1 text-center">Preview</p>
+            )
+          : (
+            <p className="h1 text-center">Recap</p>
+            )}
         <p className="lead text-center">
           <strong>{game.league.title}</strong>
           <br/> {showDate(game.scheduledTime)} - {showHourMinute(game.scheduledTime)}
@@ -197,38 +199,41 @@ export default function GamePage (props) {
                 {!isGamePreview && <p className="h1">{team.score}</p>}
                 <h2>{team.name}</h2>
               </div>
-              {isGamePreview ? (
-                <>
-                  <p><em>Note: Below are season-wide stats.</em></p>
-                  <GameStatTable team={team} isGamePreview={isGamePreview} />
-                </>
-              ) : (
-                <>
-                  {
-                    team.stats.length > 0 && (
-                      <>
-                        <h3>Attended</h3>
-                        <GameStatTable team={team} isGamePreview={isGamePreview} />
-                      </>
-                    )
-                  }
-                  <h3>{team.stats.length > 0 ? 'Missing' : 'Stats Pending'}</h3>
-                  <table className="table table-striped">
-                    <thead>
+              {isGamePreview
+                ? (
+                  <>
+                    <p><em>Note: Below are season-wide stats.</em></p>
+                    <GameStatTable team={team} isGamePreview={isGamePreview} />
+                  </>
+                  )
+                : (
+                  <>
+                    {
+                      team.stats.length > 0 && (
+                        <>
+                          <h3>Attended</h3>
+                          <GameStatTable team={team} isGamePreview={isGamePreview} />
+                        </>
+                      )
+                    }
+                    <h3>{team.stats.length > 0 ? 'Missing' : 'Stats Pending'}</h3>
+                    <table className="table table-striped">
+                      <thead>
                       <tr>
                         <th>Name</th>
                       </tr>
-                    </thead>
-                    <tbody>
+                      </thead>
+                      <tbody>
                       {team.stats?.filter(stat => !stat.attended).map((stat, index) => (
                         <tr key={index}>
                           <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
                         </tr>
                       ))}
-                    </tbody>
-                  </table>
-                </>
-              )}
+                      </tbody>
+                    </table>
+                  </>
+                  )
+              }
             </div>
           ))}
         </div>
@@ -242,42 +247,42 @@ function GameStatTable (props) {
   return (
     <table className="table table-striped">
       <thead>
-        <tr>
-          <th>Name</th>
-          <th>Assists</th>
-          <th>Scores</th>
-          <th>Defenses</th>
-          <th>Total</th>
-        </tr>
+      <tr>
+        <th>Name</th>
+        <th>Assists</th>
+        <th>Scores</th>
+        <th>Defenses</th>
+        <th>Total</th>
+      </tr>
       </thead>
       <tbody>
-        {team.stats.length > 0 && team.stats.filter(s => isGamePreview ? true : s.attended || s.total > 0).map((stat, index) => (
-          <tr key={index}>
-            <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
-            <td>{stat.assists}</td>
-            <td>{stat.scores}</td>
-            <td>{stat.defenses}</td>
-            <td>{stat.total}</td>
-          </tr>
-        ))}
-        {team.stats.length === 0 && team.players.map((player, index) => (
-          <tr key={index}>
-            <td><a href={buildPlayerUrl(player)}>{player.firstName} {player.lastName}</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        ))}
+      {team.stats.length > 0 && team.stats.filter(s => isGamePreview ? true : s.attended || s.total > 0).map((stat, index) => (
+        <tr key={index}>
+          <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
+          <td>{stat.assists}</td>
+          <td>{stat.scores}</td>
+          <td>{stat.defenses}</td>
+          <td>{stat.total}</td>
+        </tr>
+      ))}
+      {team.stats.length === 0 && team.players.map((player, index) => (
+        <tr key={index}>
+          <td><a href={buildPlayerUrl(player)}>{player.firstName} {player.lastName}</a></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      ))}
       </tbody>
       <tfoot>
-        <tr>
-          <th>Total</th>
-          <th>{team.stats.reduce((a, s) => a + s.assists, 0)}</th>
-          <th>{team.stats.reduce((a, s) => a + s.scores, 0)}</th>
-          <th>{team.stats.reduce((a, s) => a + s.defenses, 0)}</th>
-          <th>{team.stats.reduce((a, s) => a + s.total, 0)}</th>
-        </tr>
+      <tr>
+        <th>Total</th>
+        <th>{team.stats.reduce((a, s) => a + s.assists, 0)}</th>
+        <th>{team.stats.reduce((a, s) => a + s.scores, 0)}</th>
+        <th>{team.stats.reduce((a, s) => a + s.defenses, 0)}</th>
+        <th>{team.stats.reduce((a, s) => a + s.total, 0)}</th>
+      </tr>
       </tfoot>
     </table>
   )

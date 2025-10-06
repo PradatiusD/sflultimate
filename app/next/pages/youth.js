@@ -37,7 +37,7 @@ export default function YouthPage () {
         <meta property="og:title" content="SFLUltimate: Youth Programs" />
         <meta property="og:url" content="https://www.sflultimate.com/youth" />
         <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
-        <meta property="og:description" content="Learn more about our youth ultimate programs, including summer camps, clinics, and programming." />
+        <meta property="og:description" content="Learn more about our youth ultimate programs, including summer camps, clinics, and other programming." />
       </Head>
       <HeaderNavigation />
 
@@ -54,19 +54,22 @@ export default function YouthPage () {
               <div className="col-md-4">
                 <br/>
                 <br/>
-                <img className="img-responsive img-circle" src="https://d137pw2ndt5u9c.cloudfront.net/keystone/68d4a37d2747d60029c57b07-lina-fonseca.jpg" alt="Coach Aguiar coaching youth ultimate frisbee" />
+                <img
+                  className="img-responsive img-circle"
+                  src="https://d137pw2ndt5u9c.cloudfront.net/keystone/68d4a37d2747d60029c57b07-lina-fonseca.jpg"
+                  alt="Lina Fonseca headshot" />
               </div>
               <div className="col-md-8">
-                <h2>Our Coach: Lina Fonseca</h2>
+                <h2>Our Youth Director: Lina Fonseca</h2>
                 <p>
-                  Lina Fonseca, started playing ultimate with the local women's team Soul Lions at the age of 13 , the city team from Ibagué, Colombia.  From that experience and her talent, she received a full scholarship at the University of Tolima - Ibagué.  In 2019 she moved to South Florida, playing with Fire Ultimate, Rocket, Fiasco Women's Ultimate team, reaching to the heights of USAU Nationals with Spanglish in Colorado.   She serves as the Youth Director, and is certified by USAU for Safe Sport Training, CDC Heads Up, and Youth Coach.
+                  Lina Fonseca, started playing ultimate with the local women's team Soul Lions at the age of 13, the city team from Ibagué, Colombia.  From that experience and her talent, she received a full scholarship at the University of Tolima - Ibagué.  In 2019 she moved to South Florida, playing with Fire Ultimate, Rocket, Fiasco Women's Ultimate team, reaching to the heights of USAU Nationals with Spanglish in Colorado.   She serves as the Youth Director, and is certified by USAU for Safe Sport Training, CDC Heads Up, and Youth Coach.
                   She deeply appreciated the community, the structure, the discipline, and the values that Ultimate shared to her, and that is why she wishes to share that same passion and joy with kids
                 </p>
               </div>
             </div>
             <h4>Coaching Experience</h4>
             <p>
-              With years of coaching experience, Coach Aguiar brings a wide variety of strategies and tactics from all around the world. As a club player, he understands the technical aspects of the sport and is skilled at breaking down complex concepts into simple terms for the athletes.
+              With years of coaching experience, we brings a wide variety of strategies and tactics from all around the world. As club players, we understand the technical aspects of the sport and is skilled at breaking down complex concepts into simple terms for the athletes.
             </p>
             <div className="row">
               <div className="col-md-6">
@@ -90,11 +93,11 @@ export default function YouthPage () {
           <div className="container">
             <h4>Development</h4>
             <p>
-              Beyond the Xs and Os of the game, Coach Aguiar prioritizes the development of his players, helping their confidence, leadership skills, and sense of belonging within the ultimate frisbee community. He serves as a mentor and role model, inspiring young athletes to reach their full potential both on and off the field.
+              Beyond the Xs and Os of the game, we prioritizes the development of our players, helping their confidence, leadership skills, and sense of belonging within the ultimate frisbee community. Our goal is to serve as a mentor and role model, inspiring young athletes to reach their full potential both on and off the field.
             </p>
             <h4>Let&#39;s Play</h4>
             <p>
-              With Coach Aguiar at the wheel, players not only improve their athletic abilities but also cultivate lifelong friendships, memories, and a deep appreciation for the sport of ultimate frisbee. His passion, dedication, and commitment to excellence make him a valued leader and mentor for youth ultimate frisbee players everywhere.
+              Players not only improve their athletic abilities but also cultivate lifelong friendships, memories, and a deep appreciation for the sport of ultimate frisbee. His passion, dedication, and commitment to excellence make him a valued leader and mentor for youth ultimate frisbee players everywhere.
             </p>
           </div>
         </div>

@@ -10,8 +10,8 @@ export default function LeagueTeamsPage (props) {
   return (
     <>
       <Head>
-        <title>{teams.length > 0 ? league.title + ' Teams' : league.title + ' Current Signups'}</title>
-        <meta property="og:title" content={'League ' + league.title} />
+        <title>{teams.length > 0 ? `${league.title} Teams` : `${league.title} Current Signups`}</title>
+        <meta property="og:title" content={`League ${league.title}`} />
         <meta property="og:url" content={'https://www.sflultimate.com/' + url} />
         <meta
           property="og:description"
