@@ -1,5 +1,5 @@
-import {gql} from '@apollo/client'
-import {addLeagueToVariables} from '../../../../lib/utils'
+import { gql } from '@apollo/client'
+import { addLeagueToVariables } from '../../../../lib/utils'
 import GraphqlClient from '../../../../lib/graphql-client'
 
 export const getServerSideProps = async (context) => {

@@ -335,7 +335,9 @@ export default function Draftboard (props) {
               <th>Attendance</th>
               <th>Will Attend Finals?</th>
               <th>Partner</th>
-              <th>Comments</th>
+              {
+                user && <th>Comments</th>
+              }
               {
                 !isDraftMode && <th>Would Captain?</th>
               }
@@ -372,9 +374,14 @@ export default function Draftboard (props) {
                             {teamMap[player.team].name}
                           </span>
                       )}
-                      <small>
-                        {player.comments}
-                      </small>
+                      {
+                        user && (
+                          <small>
+                            {player.comments}
+                          </small>
+                        )
+                      }
+                      
                     </td>
                     {
                       !isDraftMode && <td>{player.wouldCaptain ? 'Yes' : ''}</td>
