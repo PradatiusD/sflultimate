@@ -222,6 +222,7 @@ export default function Draftboard (props) {
   }
 
   const isDraftMode = activeData.mode === 'draft'
+  const showComments = user && query.show_comments === 'true'
 
   return (
     <>
@@ -336,7 +337,7 @@ export default function Draftboard (props) {
               <th>Will Attend Finals?</th>
               <th>Partner</th>
               {
-                user && <th>Comments</th>
+                showComments && <th>Comments</th>
               }
               {
                 !isDraftMode && <th>Would Captain?</th>
@@ -375,13 +376,12 @@ export default function Draftboard (props) {
                           </span>
                       )}
                       {
-                        user && (
+                        showComments && (
                           <small>
                             {player.comments}
                           </small>
                         )
                       }
-                      
                     </td>
                     {
                       !isDraftMode && <td>{player.wouldCaptain ? 'Yes' : ''}</td>
