@@ -18,7 +18,6 @@ class SFLUltimateDocument extends NextDocument {
       </>
     }
 
-    const section = ''
     return (
       <Html lang="en">
         <Head>

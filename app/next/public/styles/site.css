@@ -7419,7 +7419,7 @@ button.close {
 .team-list article {
   break-inside: avoid-column;
 }
-@media screen and (max-width: 786px) {
+@media screen and (max-width: 1024px) {
   .team-list {
     column-count: 2;
   }
@@ -7428,6 +7428,14 @@ button.close {
   .team-list {
     column-count: 1;
   }
+}
+.team-list h3 {
+  margin: 0;
+}
+.team-list table img {
+  display: inline;
+  width: 36px;
+  border-radius: 100%;
 }
 
 .team-color {
@@ -7548,8 +7556,8 @@ button.close {
 
 .pending-team-grid {
   display: grid;
-  grid-column-gap: 0;
-  grid-row-gap: 0;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
 }

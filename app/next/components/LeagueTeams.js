@@ -36,6 +36,9 @@ export const getLeagueTeamsData = async (context) => {
             gender
             firstName
             lastName
+            profileImage {
+              publicUrl
+            }
           }
         }
       }`,
@@ -63,26 +66,33 @@ export const getLeagueTeamsData = async (context) => {
   return { props: { league, teams, url: context.req.url, players } }
 }
 
+function PlayerImage (props) {
+  const { player } = props
+  const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://placehold.co/200x200?text=Image+Pending'
+  return (
+    <img src={srcUrl} className="img-responsive img-rounded" />
+  )
+}
+
+function PlayerImageWithName (props) {
+  const { player } = props
+  return (
+    <div key={player.id}>
+      <PlayerImage player={player} />
+      <PlayerLink player={player} />
+    </div>
+  )
+}
+
 function PlayerGallery (props) {
   const { players } = props
-  console.log(players)
   return (
-    <div className="container">
-      <div className="pending-team-grid">
-        {
-          players.map((player) => {
-            const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://placehold.co/200x200?text=Image+Pending'
-            return (
-              <div key={player.id} className="pending-team">
-                {
-                  srcUrl && <img src={srcUrl} className="img-responsive img-rounded" />
-                }
-                <PlayerLink player={player} />
-              </div>
-            )
-          })
-        }
-      </div>
+    <div className="pending-team-grid">
+      {
+        players.map((player) => {
+          return <PlayerImageWithName key={player} player={player} className="pending-team" />
+        })
+      }
     </div>
   )
 }
@@ -105,7 +115,9 @@ export default function LeagueTeams (props) {
   return (
     <>
       <div className="container">
-        <h1>{league.title} Teams</h1>
+        <h1>{league.title}</h1>
+        <h2>Teams</h2>
+        <hr/>
         <div className="team-list">
           <section>
             {
@@ -125,16 +137,22 @@ export default function LeagueTeams (props) {
                   <article key={team.id}>
                     <h3><span className="team-color" style={{ backgroundColor: team.color }}></span>{team.name}</h3>
                     <p className="lead">
-                      <span>Captain{team.captains.length > 1 ? 's' : ''}: </span>
                       {
-                        team.captains.map((captain, index) => {
-                          return (
-                            <span
-                              key={index}>{captain.firstName} {captain.lastName}{index < team.captains.length - 1 ? ', ' : ''}</span>
-                          )
-                        })
+                        team.captains.length > 0 && (
+                          <>
+                            <span>Captain{team.captains.length > 1 ? 's' : ''}: </span>
+                            {
+                              team.captains.map((captain, index) => {
+                                return (
+                                  <span
+                                    key={index}>{captain.firstName} {captain.lastName}{index < team.captains.length - 1 ? ', ' : ''}</span>
+                                )
+                              })
+                            }
+                            <br/>
+                          </>
+                        )
                       }
-                      <br/>
                       <small className="text-muted">{womenTotal} women, {menTotal} men</small>
                     </p>
                     <table className="table table-striped table-bordered">
@@ -144,7 +162,7 @@ export default function LeagueTeams (props) {
                           const gender = player?.gender?.charAt(0)
                           return (
                             <tr key={player.id}>
-                              <td>{index + 1}. {gender} - <PlayerLink player={player} /></td>
+                              <td>{index + 1}. <PlayerImage player={player} /> {gender} - <PlayerLink player={player} /></td>
                             </tr>
                           )
                         })
@@ -158,8 +176,11 @@ export default function LeagueTeams (props) {
           </section>
         </div>
       </div>
-      <hr />
-      <PlayerGallery {...props} />
+      <div className="container">
+        <h2>Players</h2>
+        <hr/>
+        <PlayerGallery {...props} />
+      </div>
     </>
   )
 }

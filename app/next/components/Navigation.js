@@ -1,5 +1,4 @@
 import Notification from './Notification'
-
 let navLinks = []
 
 const evergreenLinks = [
@@ -30,6 +29,7 @@ function HeaderNavigation (props) {
   ])
 
   const leagueNames = [
+    'Fall League 2025 - Mixed Division',
     'Spring League 2025',
     'Winter Beach League 2025',
     'Fall League 2024',
@@ -74,18 +74,24 @@ function HeaderNavigation (props) {
                   <li className="hidden-sm hidden-md hidden-lg">
                     <a href="/">Home</a>
                   </li>
-                  {headerNavLinks.map((link) => {
-                    if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
-                      return (
+                  {
+                    headerNavLinks.map((link) => {
+                      const dropdownId = link.key + '-dropdown-menu'
+                      if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
+                        return (
                         <li className="dropdown" key={link.key}>
-                          <a className="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          <a className="dropdown-toggle" type="button" id={dropdownId} data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             {link.label} {' '}
                             <span className="caret"></span>
                           </a>
-                          <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                          <ul className="dropdown-menu" aria-labelledby={dropdownId}>
                             {
                               leagueNames.map((name) => {
-                                const leagueUrl = `/leagues/${name.toLowerCase().replace(/ /g, '-')}/${link.key}`
+                                const slug = name.toLowerCase()
+                                  .replace(/\s+-+/g, '')
+                                  .replace(/\s/g, '-')
+
+                                const leagueUrl = `/leagues/${slug}/${link.key}`
                                 return (
                                   <li key={name}>
                                     <a href={leagueUrl}>{name}</a>
@@ -95,14 +101,14 @@ function HeaderNavigation (props) {
                             }
                           </ul>
                         </li>
-                      )
-                    }
-                    return (
+                        )
+                      }
+                      return (
                       <li key={link.key} className={section === link.key ? 'active' : null}>
                         <a href={link.href}>{link.label} {link.key === 'register' && <span className="badge text-success" style={{ background: 'green' }}>OPEN</span>}</a>
                       </li>
-                    )
-                  })}
+                      )
+                    })}
                 </ul>
               </div>
             </div>
