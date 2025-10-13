@@ -65,7 +65,7 @@ function createPlayerRecord (payload) {
   const mutationData = {
     createdAt: new Date(),
     updatedAt: new Date(),
-    // name: payload.firstName + ' ' + payload.lastName,
+    name: payload.firstName + ' ' + payload.lastName,
     firstName: payload.firstName,
     lastName: payload.lastName,
     gender: payload.gender,

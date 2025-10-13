@@ -151,8 +151,8 @@ const amelia = ['61829b0cc4b6e2000457897f']
 const ives = ['6236877d28f3fe0004fc5f95']
 const holiday = ['6416b3cfe511210002ed4795', '641ae1c2fb9ec80002096f85', '641ae1ccfb9ec80002096f86']
 insertSchedule({
-  locations: holiday,
-  startDate: '2025-03-30T20:00:00Z',
+  locations: amelia,
+  startDate: '2025-10-16T20:00:00Z',
   endDate: '2025-04-27T20:00:00Z',
   write: true,
   skipDate: '2025-03-13T08:00:00.000Z'

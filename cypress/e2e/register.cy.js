@@ -2,11 +2,12 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
   let testUrl = 'http://localhost:3000/leagues/fall-league-2025-mens-division/register'
+  testUrl = new URL(testUrl)
   if (disablePayment) {
-    const url = new URL(testUrl)
-    url.searchParams.set('disable_payment', 'true')
-    testUrl = url.toString()
+    testUrl.searchParams.set('disable_payment', 'true')
   }
+  testUrl.searchParams.set('force_form', 'true')
+  testUrl = testUrl.toString()
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')

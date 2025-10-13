@@ -2,7 +2,7 @@
 /*
  * This script builds lists of email/phone numbers per team.
  * To run this, have a copy of the database and run:
- * mongo sflultimate scripts/create-email-lists.js
+ * mongo sflultimateV5 scripts/create-email-lists.js
  */
 
 const leagues = db.leagues.find({ isActive: true }).toArray()

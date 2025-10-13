@@ -9,6 +9,11 @@ const fields = {
     type: DateTime,
     isRequired: true
   },
+  /* For Relationship Searches */
+  name: {
+    type: Text,
+    isRequired: true
+  },
   firstName: {
     type: Text,
     isRequired: true
