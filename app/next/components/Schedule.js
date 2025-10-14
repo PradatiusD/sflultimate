@@ -67,13 +67,13 @@ export const getScheduleData = async function (context) {
   const teams = results.data.allTeams
   const events = results.data.allEvents.filter(event => event.startTime && new Date(event.startTime).getTime() > Date.now())
   LeagueUtils.addLeagueStatus(league)
-  return { league, games, teams, events, isArchivedLeague: context.req.url.startsWith('/leagues/') }
+  return { league, games, teams, events }
 }
 
 export const Schedule = function (props) {
-  const { league, games, teams, events, isArchivedLeague } = props
+  const { league, games, teams, events } = props
 
-  const finalsStartDate = new Date(league.finalsTournamentStartDate)
+  const finalsStartDate = league.finalsTournamentStartDate && new Date(league.finalsTournamentStartDate)
 
   const gamesAndEvents = games.concat(events)
   gamesAndEvents.sort((a, b) => {
@@ -85,7 +85,7 @@ export const Schedule = function (props) {
       <div className="container">
         <div className="schedule">
           <section>
-            <h1>{league.title} {isArchivedLeague ? 'Archived ': ''}Schedule</h1>
+            <h1>{league.title} Schedule</h1>
             <p className="lead">
               Pick your color to filter schedule by your team.<br/>
               {
@@ -175,13 +175,17 @@ export const Schedule = function (props) {
                     )
                   })
                 }
-                <tr>
-                  <td>{showDate(finalsStartDate)}</td>
-                  <td></td>
-                  <td>{showHourMinute(finalsStartDate)} - {showHourMinute(league.finalsTournamentEndDate)}</td>
-                  <td style={{ maxWidth: '529px' }} dangerouslySetInnerHTML={{ __html: league.finalsTournamentDescription }}></td>
-                  <td>{league.finalsTournamentLocation?.name}</td>
-                </tr>
+                {
+                  finalsStartDate && (
+                    <tr>
+                      <td>{showDate(finalsStartDate)}</td>
+                      <td></td>
+                      <td>{showHourMinute(finalsStartDate)} - {showHourMinute(league.finalsTournamentEndDate)}</td>
+                      <td style={{ maxWidth: '529px' }} dangerouslySetInnerHTML={{ __html: league.finalsTournamentDescription }}></td>
+                      <td>{league.finalsTournamentLocation?.name}</td>
+                    </tr>
+                  )
+                }
               </tbody>
             </table>
           </section>
