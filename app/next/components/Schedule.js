@@ -168,7 +168,7 @@ export const Schedule = function (props) {
                       <tr key={gameOrEvent.id}>
                         <td>{showDate(gameOrEvent.startTime)}</td>
                         <td>{showHourMinute(gameOrEvent.startTime)}</td>
-                        <td><span className="badge">Event</span> {gameOrEvent.name}</td>
+                        <td colSpan={2}><span className="badge">Event</span> {gameOrEvent.name}</td>
                         <td>{gameOrEvent.location}</td>
                         <td><a target="_blank" href={gameOrEvent.moreInformationUrl}>More Information</a></td>
                       </tr>
