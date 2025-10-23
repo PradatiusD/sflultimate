@@ -1,15 +1,17 @@
-import GraphqlClient from '../lib/graphql-client'
+import GraphqlClient from '../../../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { useState } from 'react'
+import { addLeagueToVariables } from '../../../lib/utils'
 
 export async function getServerSideProps (context) {
+  const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
     query: gql`
-      query {
-        allLeagues(where:{isActive: true}) {
+      query($leagueCriteria: LeagueWhereInput) {
+        allLeagues(where:$leagueCriteria) {
           title
         }
-        allGames(where: {league: {isActive: true}}, sortBy: scheduledTime_ASC) {
+        allGames(where: {league: $leagueCriteria}, sortBy: scheduledTime_ASC) {
           id
           scheduledTime
           homeTeam {
@@ -21,7 +23,7 @@ export async function getServerSideProps (context) {
             name
           }
         }
-        allTeams(where: {league: {isActive: true}}) {
+        allTeams(where: {league: $leagueCriteria}) {
           id
           name
           color
@@ -38,7 +40,8 @@ export async function getServerSideProps (context) {
             lastName
           }
         }
-      }`
+      }`,
+    variables,
   })
   const league = results.data.allLeagues[0]
   const teams = results.data.allTeams
@@ -62,7 +65,7 @@ export async function getServerSideProps (context) {
   if (context.query.date) {
     const forcedDate = context.query.date
     games = games.filter(function (game) {
-      return new Date(game.scheduledTime).toISOString().split('T')[0] === forcedDate
+      return new Date(game.scheduledTime).toLocaleDateString('en-CA') === forcedDate
     })
   } else {
     const now = Date.now()
@@ -96,7 +99,7 @@ export async function getServerSideProps (context) {
     }
   })
 
-  statResults.data.allPlayerGameStats.forEach(function (playerGameStats) {
+  statResults.data.allPlayerGameStats?.forEach(function (playerGameStats) {
     if (!initPlayerMap[playerGameStats.player.id]) {
       initPlayerMap[playerGameStats.player.id] = {}
     }
@@ -127,7 +130,7 @@ export async function getServerSideProps (context) {
       if (!initPlayerMap[player.id]) {
         initPlayerMap[player.id] = {}
       }
-      teamsToGamesMap[team.id].forEach(gameId => {
+      teamsToGamesMap[team.id]?.forEach(gameId => {
         if (!initPlayerMap[player.id][gameId]) {
           initPlayerMap[player.id][gameId] = {
             assists: 0,
@@ -214,7 +217,7 @@ function Sheets (props) {
           }
         `
         params = {
-          mutation: mutation,
+          mutation,
           variables: {
             id: statId,
             data: statDataVariable
@@ -241,7 +244,7 @@ function Sheets (props) {
           }
         `
         params = {
-          mutation: mutation,
+          mutation,
           variables: {
             data: statDataVariable
           }

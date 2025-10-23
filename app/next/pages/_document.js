@@ -8,7 +8,7 @@ class SFLUltimateDocument extends NextDocument {
   }
 
   render (props) {
-    if (this.props.pathname === '/sheets') {
+    if (this.props.pathname.includes('/sheets')) {
       return <>
         <Html lang="en">
           <Head />

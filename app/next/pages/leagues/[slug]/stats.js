@@ -40,17 +40,18 @@ export default function ArchivedStatsPage (props) {
       <div className="container">
         <h1>{league.title} Stats</h1>
         {
-          playerGameStats.length > 0 ? (
+          playerGameStats.length > 0
+            ? (
             <>
               <h2>Leaderboard</h2>
               <StatTable players={players} awards={awards} startRowNumber={1} statKeysToCompare={statKeysToCompare} />
             </>
-          )
+              )
             : (
               <>
                 <p className="alert alert-info">We're awaiting stats information for this leaderboard to update.  Check back later!</p>
               </>
-            )
+              )
         }
       </div>
     </>
