@@ -6,20 +6,6 @@ import Standings from '../components/Standings'
 import { createSummary, showDate } from '../lib/utils'
 import Image from 'next/image'
 
-// const { getStandings } = require('./../stat-utils')
-//
-//   const currentLeague = res.locals.league ? res.locals.league : null
-//
-//   locals.standings = await getStandings({
-//     currentLeague
-//   })
-//
-//   locals.hallOfFameImages =
-//   if (req.query.f === 'json') {
-//     res.json(locals.standings)
-//     return
-//   }
-
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -39,7 +25,7 @@ export const getServerSideProps = async () => {
             publicUrl
           }
         }
-        allPosts(sortBy: publishedDate_DESC, first: 2) {
+        allPosts(sortBy: publishedDate_DESC, first: 3) {
           id
           title
           slug
@@ -109,6 +95,8 @@ export default function Homepage (props) {
     'league-champions-2014-spring.jpg',
     'league-champions-2013-spring.jpg'
   ]
+  
+  const showSignupLeague = false
 
   return (
     <>
@@ -156,6 +144,36 @@ export default function Homepage (props) {
 
       <div className="container">
         <div className="row">
+          <div className="col-md-8">
+            <h3>Current Standings</h3>
+            <p>Here you can see the current standings for the current league!</p>
+            <Standings games={games} />
+            {
+              showSignupLeague && (
+                <>
+                  <h3>Active Leagues</h3>
+                  {
+                    leagues.map((league) => {
+                      const href = `/leagues/${league.slug}/register`
+                      return (
+                        <div key={league.id} style={{ marginBottom: '1rem' }}>
+                          {
+                            league.registrationShareImage && league.registrationShareImage.publicUrl && (
+                              <a href={href}>
+                                <Image className="img-responsive img-rounded " src={league.registrationShareImage.publicUrl} height={630} width={1200} />
+                              </a>
+                            )
+                          }
+                          <a href={href}><strong>{league.title}</strong></a>
+                          <div dangerouslySetInnerHTML={{ __html: league.summary }}></div>
+                        </div>
+                      )
+                    })
+                  }
+                </>
+              )
+            }
+          </div>
           <div className="col-md-4">
             <h3>Upcoming Events</h3>
             {
@@ -186,53 +204,34 @@ export default function Homepage (props) {
               })
             }
           </div>
-          <div className="col-md-4">
-            <h3>Active Leagues</h3>
-            {
-              leagues.map((league) => {
-                const href = `/leagues/${league.slug}/register`
-                return (
-                  <div key={league.id} style={{ marginBottom: '1rem' }}>
-                    {
-                      league.registrationShareImage && league.registrationShareImage.publicUrl && (
-                        <a href={href}>
-                          <Image className="img-responsive img-rounded " src={league.registrationShareImage.publicUrl} height={630} width={1200} />
-                        </a>
-                      )
-                    }
-                    <a href={href}><strong>{league.title}</strong></a>
-                    <div dangerouslySetInnerHTML={{ __html: league.summary }}></div>
+        </div>
+        <div className="row">
+
+          <h3>News</h3>
+          {
+            news.map((post) => {
+              const href = '/news/' + post.slug
+              return (
+                <div key={post.id} className="homepage-news-card col-md-4">
+                  {
+                    post.image && post.image.publicUrl && (
+                      <a href={href}>
+                        <img className="img-responsive img-rounded" src={post.image.publicUrl} />
+                      </a>
+                    )
+                  }
+                  <a href={href}><strong>{post.title}</strong></a>
+                  <div>
+                    <small className="text-muted">{showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</small>
                   </div>
-                )
-              })
-            }
-          </div>
-          <div className="col-md-4">
-            <h3>News</h3>
-            {
-              news.map((post) => {
-                const href = '/news/' + post.slug
-                return (
-                  <div key={post.id} className="homepage-news-card">
-                    {
-                      post.image && post.image.publicUrl && (
-                        <a href={href}>
-                          <img className="img-responsive img-rounded" src={post.image.publicUrl} />
-                        </a>
-                      )
-                    }
-                    <a href={href}><strong>{post.title}</strong></a>
-                    <div>
-                      <small className="text-muted">{showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</small>
-                    </div>
-                    <div dangerouslySetInnerHTML={{ __html: createSummary(post.summary, 140) }}></div>
-                  </div>
-                )
-              })
-            }
-          </div>
+                  <div dangerouslySetInnerHTML={{ __html: createSummary(post.summary, 140) }}></div>
+                </div>
+              )
+            })
+          }
         </div>
       </div>
+      
 
       {
         keyTakeaways.map((takeaway, index) => {
@@ -269,19 +268,6 @@ export default function Homepage (props) {
         </div>
       </div>
 
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            <h3>Current Standings</h3>
-            <p>Here you can see the current standings for the current league!</p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-12 table-responsive">
-            <Standings games={games} />
-          </div>
-        </div>
-      </div>
       <hr/>
       <section className="champions">
         <aside className="text-center">

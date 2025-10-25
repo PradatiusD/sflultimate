@@ -138,8 +138,6 @@ export default function EventsPage (props) {
           style={{ height: '980px', display: 'none' }}
         ></iframe>
 
-        <hr/>
-
         <h1>Past Events</h1>
         <p className="lead">Here you can find our list of past events.</p>
 

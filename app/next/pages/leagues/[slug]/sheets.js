@@ -41,7 +41,7 @@ export async function getServerSideProps (context) {
           }
         }
       }`,
-    variables,
+    variables
   })
   const league = results.data.allLeagues[0]
   const teams = results.data.allTeams
@@ -65,7 +65,7 @@ export async function getServerSideProps (context) {
   if (context.query.date) {
     const forcedDate = context.query.date
     games = games.filter(function (game) {
-      return new Date(game.scheduledTime).toLocaleDateString('en-CA', {timeZone: 'America/New_York'}) === forcedDate
+      return new Date(game.scheduledTime).toLocaleDateString('en-CA', { timeZone: 'America/New_York' }) === forcedDate
     })
   } else {
     const now = Date.now()
