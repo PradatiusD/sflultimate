@@ -44,7 +44,9 @@ export default function ArchivedStatsPage (props) {
             ? (
             <>
               <h2>Leaderboard</h2>
-              <StatTable players={players} awards={awards} startRowNumber={1} statKeysToCompare={statKeysToCompare} />
+              <StatTable players={players} awards={awards} startRowNumber={1} endRowNumber={10} statKeysToCompare={statKeysToCompare} />
+              <h2>Rising Contenders</h2>
+              <StatTable players={players} awards={awards} startRowNumber={11} statKeysToCompare={statKeysToCompare} />
             </>
               )
             : (

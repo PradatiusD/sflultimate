@@ -2,18 +2,10 @@ import { gql } from '@apollo/client'
 import LeagueUtils from './league-utils'
 import GraphqlClient from './graphql-client'
 import { buildPlayerUrl } from '../components/PlayerLink'
+import { addLeagueToVariables } from './utils'
 
 export async function getLeagueStats (context) {
-  const variables = {}
-  if (context && context.req.url.startsWith('/leagues/')) {
-    variables.leagueCriteria = {
-      title_i: context.req.url.split('/')[2].replace(/-/g, ' ')
-    }
-  } else {
-    variables.leagueCriteria = {
-      isActive: true
-    }
-  }
+  const variables = addLeagueToVariables(context)
   const results = await GraphqlClient.query({
     query: gql`
       query($leagueCriteria: LeagueWhereInput) {
@@ -49,7 +41,7 @@ export async function getLeagueStats (context) {
           }
         }
       }`,
-    variables: variables
+    variables
   })
 
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
@@ -58,7 +50,7 @@ export async function getLeagueStats (context) {
   const awards = { Male: {}, Female: {}, Other: {} }
   const statKeysToCompare = ['assists', 'scores', 'defenses', 'overall']
 
-  const playerGameStats = JSON.parse(JSON.stringify(results.data.allPlayerGameStats))
+  const playerGameStats = results.data.allPlayerGameStats
   for (const stat of playerGameStats) {
     let o
     if (statsGroupedByPlayer[stat.player.id]) {

@@ -1,6 +1,6 @@
 'use server'
 export default function StatTable (props) {
-  const { players, awards, startRowNumber, statKeysToCompare } = props
+  const { players, awards, startRowNumber, statKeysToCompare, endRowNumber } = props
   return (
     <table className="table table-striped">
       <thead>
@@ -17,7 +17,7 @@ export default function StatTable (props) {
       </thead>
       <tbody>
         {
-          players.map((player, index) => {
+          players.slice(startRowNumber - 1, endRowNumber || players.length).map((player, index) => {
             return (
               <tr key={player.id}>
                 <td>{startRowNumber + index}</td>
