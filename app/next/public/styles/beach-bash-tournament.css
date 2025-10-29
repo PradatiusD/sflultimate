@@ -64,4 +64,21 @@
   background-color: #90c4cf;
 }
 
+.team-list-tournament {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 30px;
+  grid-row-gap: 20px;
+}
+@media (max-width: 768px) {
+  .team-list-tournament {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 500px) {
+  .team-list-tournament {
+    grid-template-columns: 1fr;
+  }
+}
+
 /*# sourceMappingURL=beach-bash-tournament.css.map */
