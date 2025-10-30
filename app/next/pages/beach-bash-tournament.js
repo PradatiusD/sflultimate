@@ -103,7 +103,7 @@ export default function BeachBashTournament (props) {
         <div className="container-fluid beach-bash-hero-container">
           <br/>
           <div className="jumbotron text-center">
-            <img src="/images/beach-bash-logo.png" alt=""/>
+            <img src="/images/beach-bash-2025-logo.svg" alt="Beach Bash Logo"/>
             <p className="tagline">Come down to sunny Ft. Lauderdale for our beach ultimate championship on <strong>February 21-22 2026</strong>!</p>
             <p>
               <a className="btn btn-primary btn-lg" target="_blank"
@@ -119,18 +119,18 @@ export default function BeachBashTournament (props) {
         </div>
       </section>
       <div className="beach-bash-content-container container-fluid">
-        <div className="row">
+        <div className="row bird-wing-background">
           <div className="col-lg-2 col-md-12 col-lg-offset-1">
-            <h2>Beach Bash is back!</h2>
+            <h2>Beach Bash is Back!</h2>
           </div>
           <div className="col-lg-8 col-md-12">
             <h3>Time to soak some sun in Florida</h3>
             <p>Welcome to the Beach Bash Ultimate Tournament. Florida’s newest and highest level beach ultimate
               frisbee tournament.</p>
-            <p>We are playing in the heart of the pristine Ft Lauderdale Beach the weekend of February 21-22 2026 in Fort Lauderdale.
-              The format is 4v4 USA Ultimate rules with a 2:2 gender ratio. We will have lined fields for a guaranteed
-              4 games of Saturday pool play and at least 3 games of Sunday bracket play.</p>
-            <p>Cost: $500 gets you a 10 person team. Up to 4 additional people can be added for $50 per player. 14 players maximum per roster.</p>
+            <p>We are playing in the <strong>heart of the pristine Ft Lauderdale Beach the weekend of February 21-22 2026</strong>.</p>
+              <p>The format is 4v4 USA Ultimate rules with a 2:2 gender ratio. We will have lined fields for a guaranteed
+                4 games of Saturday pool play and at least 3 games of Sunday bracket play.</p>
+            <p>Cost: <strong>$500 gets you a 10-person team</strong>. Up to 4 additional people can be added for $50 per player. 14 players maximum per roster.</p>
             <p>Showers, restrooms, bars, restaurants, and convenient stores all within walking distance of the
               beach!</p>
             <p>We will be having a Friday night registration party in Ft Lauderdale and a Saturday night tournament
@@ -141,7 +141,7 @@ export default function BeachBashTournament (props) {
             </div>
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1690.3133871864395!2d-80.10470750573026!3d26.110114190972915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d90184490da219%3A0x1a08e5d36463b739!2sOcean%20Rescue%20Tower%20%231!5e1!3m2!1sen!2sus!4v1696989472039!5m2!1sen!2sus"
-              width="100%" height="450" style={{border: 0}} allowfullscreen="" loading="lazy"
+              width="100%" height="450" style={{ border: 0 }} allowfullscreen="" loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
@@ -163,7 +163,7 @@ export default function BeachBashTournament (props) {
                       <small className="text-muted">{team['Team Hometown']}</small><br/>
                       {
                         !team.in_state &&
-                        <span className="badge" style={{background: '#217f92', fontWeight: 400, padding: '5px 10px'}}>Out of State</span>
+                        <span className="badge" style={{ background: '#217f92', fontWeight: 400, padding: '5px 10px' }}>Out of State</span>
                       }
                     </div>
                     <div className="panel-body">
@@ -180,7 +180,7 @@ export default function BeachBashTournament (props) {
 
       <hr/>
 
-      <div className="row">
+      <div className="row bird-wing-background">
         <div className="col-md-2 col-md-offset-1">
           <h2>Frequently Asked Questions</h2>
           <p>Find here all your tourney information.</p>

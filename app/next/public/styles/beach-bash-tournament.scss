@@ -21,14 +21,15 @@
 
 .beach-bash-hero-container {
   position: relative;
-  padding-top: 1em;
   .jumbotron {
     background: none;
     color: white;
+    padding-top: 0;
   }
 
   img {
-    max-width: 80%;
+    max-width: 60%;
+    max-height: 500px;
   }
 
   .tagline {
@@ -50,8 +51,8 @@
 
 
 .btn-primary, .credits {
-  background-color: #90c4cf;
-  border-color: #1c515d;
+  background-color: #f240ae;
+  border-color: darken(#f240ae, 10%);
 }
 
 .btn-primary:hover {
@@ -64,7 +65,7 @@
     color: #1c515d;
   }
   .fa {
-    background-color: #90c4cf;
+    background-color: #f240ae;
   }
 }
 
@@ -80,4 +81,19 @@
   @media (max-width: 500px) {
     grid-template-columns: 1fr;
   }
+}
+
+.bird-wing-background{
+  &:before {
+    content: "";
+    position: absolute;
+    background-image: url('/images/beach-bash-2025-logo-bird.svg');
+    opacity: 0.1;
+    background-size: 100% auto;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    left: -62%;
+  }
+  position: relative;
 }
