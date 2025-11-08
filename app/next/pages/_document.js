@@ -68,7 +68,7 @@ class SFLUltimateDocument extends NextDocument {
             // <!-- End MailerLite Universal -->
           }
         </Head>
-        <body>
+        <body className={'page' + this.props.pathname.replace('/', '-')}>
           <Main/>
           <NextScript/>
           <FooterNavigation/>

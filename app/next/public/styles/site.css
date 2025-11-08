@@ -7356,6 +7356,9 @@ button.close {
 .site-header {
   margin-bottom: 100px;
 }
+.page-youth .site-header {
+  margin-bottom: 0;
+}
 
 .site-footer {
   margin-top: 30px;
@@ -7597,6 +7600,27 @@ button.close {
   padding: 1rem;
   font-weight: bold;
   text-align: center;
+}
+
+.video-background-youth {
+  position: relative;
+}
+.video-background-youth video {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  min-height: 600px;
+  max-height: 50vh;
+}
+.video-background-youth h2 {
+  position: absolute;
+  color: white;
+  bottom: 10%;
+  background: rgba(0, 0, 0, 0.5019607843);
+  padding: 1rem 2rem;
+  font-style: italic;
+  font-size: 6rem;
+  letter-spacing: 3px;
 }
 
 /*# sourceMappingURL=site.css.map */

@@ -244,6 +244,9 @@
 
 .site-header {
   margin-bottom: 100px;
+  .page-youth & {
+    margin-bottom: 0;
+  }
 }
 
 .site-footer {
@@ -502,4 +505,25 @@
   padding: 1rem;
   font-weight: bold;
   text-align: center;
+}
+
+.video-background-youth {
+  position: relative;
+  video {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    min-height: 600px;
+    max-height: 50vh;
+  }
+  h2 {
+    position: absolute;
+    color: white;
+    bottom: 10%;
+    background: #00000080;
+    padding: 1rem 2rem;
+    font-style: italic;
+    font-size: 6rem;
+    letter-spacing: 3px;
+  }
 }

@@ -3,26 +3,11 @@ import { HeaderNavigation } from '../components/Navigation'
 
 function VideoBackground (props) {
   return (
-    <div style={{ position: 'relative' }}>
-      <video autoPlay muted loop style={{
-        width: '100%',
-        height: 'auto',
-        objectFit: 'cover',
-        minHeight: '400px',
-        maxHeight: '50vh'
-      }}>
+    <div className="video-background-youth">
+      <video autoPlay muted loop>
         <source src={props.src} type="video/mp4" />
       </video>
-      <h2 style={{
-        position: 'absolute',
-        color: 'white',
-        bottom: '10%',
-        background: '#00000080',
-        padding: '1rem 2rem',
-        fontStyle: 'italic',
-        fontSize: '6rem',
-        letterSpacing: '3px'
-      }}>
+      <h2>
         {props.text}
       </h2>
     </div>
@@ -42,7 +27,7 @@ export default function YouthPage () {
       <HeaderNavigation />
 
       <VideoBackground
-        src={'https://d137pw2ndt5u9c.cloudfront.net/youth-playing.mp4'}
+        src={'https://d137pw2ndt5u9c.cloudfront.net/youth-video.mp4'}
         text={'About Youth Ultimate'}
       />
 
@@ -56,6 +41,7 @@ export default function YouthPage () {
                 <br/>
                 <img
                   className="img-responsive img-circle"
+                  style={{ maxWidth: '200px' }}
                   src="https://d137pw2ndt5u9c.cloudfront.net/keystone/68d4a37d2747d60029c57b07-lina-fonseca.jpg"
                   alt="Lina Fonseca headshot" />
               </div>
