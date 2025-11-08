@@ -24,6 +24,9 @@ const fields = {
     type: Text,
     isRequired: true
   },
+  summary: {
+    type: Wysiwyg
+  },
   description: {
     type: Wysiwyg,
     isRequired: true

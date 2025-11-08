@@ -3,11 +3,6 @@ const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
 const storage = require('./file-storage-adapter')
 const CustomDateTime = require('../custom-fields/CustomDateTime')
 
-// const Post = new keystone.List('Post', {
-//   map: { name: 'title' },
-//   autokey: { path: 'slug', from: 'title', unique: true }
-// })
-
 const fields = {
   title: {
     type: Text,
@@ -61,6 +56,6 @@ module.exports = {
   fields,
   labelResolver: item => item.title,
   adminConfig: {
-    defaultColumns: 'name'
+    defaultColumns: 'name, publishedDate, summary'
   }
 }
