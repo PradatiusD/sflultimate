@@ -210,9 +210,7 @@ export default function BeachBashTournament (props) {
               <div className="panel-heading">
                 <div className="panel-title">How much is the bid fee?</div>
               </div>
-              <div className="panel-body">It's <strong>$400</strong>, we use this for field permits and tournament
-                drinks/snacks. Plus if your team captain has played South Florida league, you'll get a $50 discount. 🎉
-              </div>
+              <div className="panel-body">It's <strong>$500</strong>, we use this for field permits and tournament drinks/snacks.</div>
             </div>
             <div className="panel panel-default">
               <div className="panel-heading">
