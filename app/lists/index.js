@@ -11,6 +11,7 @@ const PlayerGameStat = require('./PlayerGameStat')
 const Post = require('./Post')
 const Team = require('./Team')
 const User = require('./User')
+const TournamentTeam = require('./TournamentTeam')
 
 module.exports = {
   BoardMember,
@@ -20,10 +21,11 @@ module.exports = {
   Game,
   League,
   Location,
+  Pickup,
   Player,
   PlayerGameStat,
   Post,
   Team,
-  Pickup,
+  TournamentTeam,
   User
 }

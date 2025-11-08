@@ -1,33 +1,43 @@
-const keystone = require('keystone')
-const { Types } = keystone.Field
-const { Schema } = keystone.mongoose
+const { Text, Select, File } = require('@keystonejs/fields')
+const { Color } = require('@keystonejs/fields-color')
+const storage = require('./file-storage-adapter')
 
-/**
- * Tournament Team Model
- * =========================
- */
-
-const TournamentTeam = new keystone.List('TournamentTeam', {})
-
-TournamentTeam.add({
-  organizer_name: {
-    type: Types.Name,
-    initial: true,
-    required: true,
+const fields = {
+  name: {
+    type: Text,
+    isRequired: true,
     index: true
   },
-  organizer_email: {
-    type: Types.Email,
-    initial: true,
-    required: true,
+  color: {
+    type: Color
+  },
+  email: {
+    type: Text
+  },
+  captainNames: {
+    type: Text,
+    isRequired: true,
     index: true
+  },
+  locationName: {
+    type: Text,
+    isRequired: true,
+    index: true
+  },
+  competitionName: {
+    type: Select,
+    options: ['Pro', 'Club', 'Recreation'],
+    isRequired: true
+  },
+  image: {
+    type: File,
+    adapter: storage
   }
-})
+}
 
-TournamentTeam.schema.add({
-  players: {
-    type: Schema.Types.Mixed
+module.exports = {
+  fields,
+  adminConfig: {
+    defaultColumns: 'name, captainNames, locationName, competitionName'
   }
-})
-
-TournamentTeam.register()
+}

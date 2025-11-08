@@ -2,86 +2,65 @@ import Head from 'next/head'
 export default function BeachBashTournament (props) {
   const teams = [
     {
-      'Team Name': 'Birthday Suit',
-      'Captain Name': 'Mark S.',
-      'Team Hometown': 'St. Petersburg, FL',
-      'Competitive Level': 'Club',
-      in_state: true
+      teamName: 'Party C',
+      captains: 'Megan B. & Carlos M.',
+      location: 'Fort Lauderdale, Florida',
+      competitionLevel: 'Recreation',
+      inState: true
     },
     {
-      'Team Name': 'Party Wave',
-      'Captain Name': 'Andrea J.',
-      'Team Hometown': 'Miami, FL',
-      'Competitive Level': 'Pro',
-      in_state: true
+      teamName: 'Cakti',
+      captains: 'Chris G.',
+      location: 'Canton, Ohio',
+      competitionLevel: 'Pro',
+      inState: false
     },
     {
-      'Team Name': 'Tbd',
-      'Captain Name': 'Lucas A.',
-      'Team Hometown': 'Weston, FL',
-      'Competitive Level': 'Club',
-      in_state: true
+      teamName: 'Hammered at the Beach',
+      captains: 'Lian',
+      location: 'Miami, Florida',
+      competitionLevel: 'Club',
+      inState: true
     },
     {
-      'Team Name': 'Party B',
-      'Captain Name': 'Megan B.',
-      'Team Hometown': 'Fort Lauderdale, FL',
-      'Competitive Level': 'Club',
-      in_state: true
+      teamName: 'Florida Sand-Spurs',
+      captains: 'Garrett Knobel',
+      location: 'Tampa, Florida',
+      competitionLevel: 'Club',
+      inState: true
     },
     {
-      'Team Name': 'Savage',
-      'Captain Name': 'Lina F.',
-      'Team Hometown': 'Miami, FL & West Palm Beach, FL',
-      'Competitive Level': 'Club',
-      in_state: true
+      teamName: 'La Chancla Voladora',
+      captains: 'María José G. Santiago A.',
+      location: 'Fort Lauderdale',
+      competitionLevel: 'Club',
+      inState: true
     },
     {
-      'Team Name': 'Dumb Beaches',
-      'Captain Name': 'Bryan R.',
-      'Team Hometown': 'Melbourne, FL',
-      'Competitive Level': 'Club',
-      in_state: true
+      teamName: 'Cowabunga',
+      captains: 'Ally C.',
+      location: 'Davie, Florida',
+      competitionLevel: 'Recreation',
+      inState: true
     },
     {
-      'Team Name': 'Latin Power',
-      'Captain Name': 'Daniel Z.',
-      'Team Hometown': 'Fort Myers, FL',
-      'Competitive Level': 'Club',
-      in_state: true
+      teamName: 'Ultimate Playas',
+      captains: 'Sofia W.',
+      location: 'Fort Lauderdale, Florida',
+      competitionLevel: 'Club',
+      inState: true
     },
     {
-      'Team Name': 'SOUP Szn',
-      'Captain Name': 'Xin Xin T.',
-      'Team Hometown': 'Hershey, PA',
-      'Competitive Level': 'Club',
-      in_state: false
-    },
-    {
-      'Team Name': 'Sky’s out Thighs out',
-      'Captain Name': 'Chris S.',
-      'Team Hometown': 'Jacksonville, FL',
-      'Competitive Level': 'Club',
-      in_state: true
-    },
-    {
-      'Team Name': 'Unicorn Country',
-      'Captain Name': 'Torre S.',
-      'Team Hometown': 'Scranton, PA',
-      'Competitive Level': 'College',
-      in_state: false
-    },
-    {
-      'Team Name': 'Latin Power',
-      'Captain Name': 'Daren',
-      'Team Hometown': 'Florida',
-      'Competitive Level': 'Club',
-      in_state: true
+      teamName: 'Rocket',
+      captains: 'Andrea P. & Patrick',
+      location: 'Miami ',
+      competitionLevel: 'Club',
+      inState: true
     }
   ].map(function (event) {
     return event
   }).sort(function (a, b) {
-    return a['Team Name'].localeCompare(b['Team Name'])
+    return a.teamName.localeCompare(b.teamName)
   })
 
   const content = {
@@ -166,19 +145,19 @@ export default function BeachBashTournament (props) {
           {
             teams.map((team) => {
               return (
-                <div key={team['Team Name']}>
+                <div key={team.teamName}>
                   <div className="panel panel-default text-center">
                     <div className="panel-heading">
-                      <h3 className="panel-title">{team['Team Name']}</h3>
-                      <small className="text-muted">{team['Team Hometown']}</small><br/>
+                      <h3 className="panel-title">{team.teamName}</h3>
+                      <small className="text-muted">{team.location}</small><br/>
                       {
-                        !team.in_state &&
+                        !team.inState &&
                         <span className="badge" style={{ background: '#217f92', fontWeight: 400, padding: '5px 10px' }}>Out of State</span>
                       }
                     </div>
                     <div className="panel-body">
-                      Level: {team['Competitive Level']}<br/>
-                      Captain: {team['Captain Name']}
+                      Level: {team.competitionLevel}<br/>
+                      Captain: {team.captains}
                     </div>
                   </div>
                 </div>
