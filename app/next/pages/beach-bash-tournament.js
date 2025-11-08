@@ -95,38 +95,49 @@ export default function BeachBashTournament (props) {
         <meta property="og:description"
               content="Beach Bash is Back! A 4 on 4 Beach Ultimate tournament February 21-22 2026 in Fort Lauderdale!"/>
         <link rel="stylesheet" href="/styles/beach-bash-tournament.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet"/>
       </Head>
       <section className="bash-video-background">
-        <video autoPlay="true" muted="true" loop="true">
-          <source src="https://d137pw2ndt5u9c.cloudfront.net/sfl-beach-bash-tournament-with-play-v1.mp4" type="video/mp4"/>
+        <video autoPlay="true" muted loop>
+          <source src="https://d137pw2ndt5u9c.cloudfront.net/sfl-beach-bash-tournament-with-play-v1.mp4"
+                  type="video/mp4"/>
         </video>
         <div className="container-fluid beach-bash-hero-container">
           <br/>
           <div className="jumbotron text-center">
             <img src="/images/beach-bash-2025-logo.svg" alt="Beach Bash Logo"/>
-            <p className="tagline">Come down to sunny Ft. Lauderdale for our beach ultimate championship on <strong>February 21-22 2026</strong>!</p>
-            <p>
-              <a className="btn btn-primary btn-lg" target="_blank"
-                 href="https://docs.google.com/forms/d/e/1FAIpQLSffQliLEhIRV28WWFQM3A0HCaQ2XcWjPiJ5a98h5jlRdU8XFQ/viewform"> Submit
-                a Bid
-              </a>
-              <a className="btn btn-primary btn-lg free-agent-btn" target="_blank"
-                 href="https://docs.google.com/forms/d/e/1FAIpQLSdUOlXM7J7iG102OCFgXAyvz2MYW5qNgJt8r65nyUqgOu7fkg/viewform?usp=sf_link"> Free
-                Agent Sign Up
-              </a>
-            </p>
           </div>
         </div>
       </section>
+      <div className="photo-bg-container">
+        <div className="photo-bg">
+        </div>
+        <div className="photo-copy">
+          <h2>Beach Bash is Back!</h2>
+          <p>Florida’s <strong>newest</strong> and <strong>highest-level</strong> beach ultimate
+            frisbee tournament.</p>
+          <h3>February 21-22, 2026<br/>Ft. Lauderdale Beach</h3>
+          <div className="cta-container">
+            <a className="btn btn-primary btn-lg" target="_blank"
+               href="https://docs.google.com/forms/d/e/1FAIpQLSffQliLEhIRV28WWFQM3A0HCaQ2XcWjPiJ5a98h5jlRdU8XFQ/viewform"> Submit
+              a Bid
+            </a>
+            <a className="btn btn-primary btn-lg free-agent-btn" target="_blank"
+               href="https://docs.google.com/forms/d/e/1FAIpQLSdUOlXM7J7iG102OCFgXAyvz2MYW5qNgJt8r65nyUqgOu7fkg/viewform?usp=sf_link"> Free
+              Agent Sign Up
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div className="beach-bash-content-container container-fluid">
         <div className="row bird-wing-background">
           <div className="col-lg-2 col-md-12 col-lg-offset-1">
-            <h2>Beach Bash is Back!</h2>
           </div>
           <div className="col-lg-8 col-md-12">
-            <h3>Time to soak some sun in Florida</h3>
-            <p>Welcome to the Beach Bash Ultimate Tournament. Florida’s newest and highest level beach ultimate
-              frisbee tournament.</p>
+
             <p>We are playing in the <strong>heart of the pristine Ft Lauderdale Beach the weekend of February 21-22 2026</strong>.</p>
               <p>The format is 4v4 USA Ultimate rules with a 2:2 gender ratio. We will have lined fields for a guaranteed
                 4 games of Saturday pool play and at least 3 games of Sunday bracket play.</p>
@@ -141,7 +152,7 @@ export default function BeachBashTournament (props) {
             </div>
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1690.3133871864395!2d-80.10470750573026!3d26.110114190972915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d90184490da219%3A0x1a08e5d36463b739!2sOcean%20Rescue%20Tower%20%231!5e1!3m2!1sen!2sus!4v1696989472039!5m2!1sen!2sus"
-              width="100%" height="450" style={{ border: 0 }} allowfullscreen="" loading="lazy"
+              width="100%" height="450" style={{ border: 0 }} allowFullScreen={true} loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
@@ -149,7 +160,7 @@ export default function BeachBashTournament (props) {
 
       <hr/>
       <h2 className="text-center">Last Year's Teams</h2>
-      <p className="text-center lead">Use the below to get a sense of the competition thate came to join us in Fort.
+      <p className="text-center lead">Use the below to get a sense of the competition that came to join us in Fort.
         Lauderdale!</p>
       <div className="container-fluid">
         <section className="team-list-tournament">
@@ -180,35 +191,37 @@ export default function BeachBashTournament (props) {
 
       <hr/>
 
-      <div className="row bird-wing-background">
-        <div className="col-md-2 col-md-offset-1">
-          <h2>Frequently Asked Questions</h2>
-          <p>Find here all your tourney information.</p>
-        </div>
-        <div className="col-md-8">
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <div className="panel-title">How many teams will this be?</div>
-            </div>
-            <div className="panel-body">
-              We're set on inviting <strong>12 teams</strong> from Florida as well as from around the USA (and
-              hopefully the world).
-            </div>
+      <div className="container">
+        <div className="row bird-wing-background">
+          <div className="col-md-2 col-md-offset-1">
+            <h2>Frequently Asked Questions</h2>
+            <p>Find here all your tourney information.</p>
           </div>
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <div className="panel-title">How much is the bid fee?</div>
+          <div className="col-md-8">
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <div className="panel-title">How many teams will this be?</div>
+              </div>
+              <div className="panel-body">
+                We're set on inviting <strong>12 teams</strong> from Florida as well as from around the USA (and
+                hopefully the world).
+              </div>
             </div>
-            <div className="panel-body">It's <strong>$400</strong>, we use this for field permits and tournament
-              drinks/snacks. Plus if your team captain has played South Florida league, you'll get a $50 discount. 🎉
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <div className="panel-title">How much is the bid fee?</div>
+              </div>
+              <div className="panel-body">It's <strong>$400</strong>, we use this for field permits and tournament
+                drinks/snacks. Plus if your team captain has played South Florida league, you'll get a $50 discount. 🎉
+              </div>
             </div>
-          </div>
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <div className="panel-title">What's the gender ratio? How many players?</div>
-            </div>
-            <div className="panel-body">This will be a 2:2 mixed beach tournament, with a minimum of 4 players and a
-              maximum of 14 players per team.
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <div className="panel-title">What's the gender ratio? How many players?</div>
+              </div>
+              <div className="panel-body">This will be a 2:2 mixed beach tournament, with a minimum of 4 players and a
+                maximum of 14 players per team.
+              </div>
             </div>
           </div>
         </div>

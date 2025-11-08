@@ -1,18 +1,35 @@
+body {
+  font-size: 18px;
+}
+
+html, body {
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, .btn {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
 .bash-video-background {
   position: relative;
+  overflow: hidden;
   video {
     position: absolute;
     top: 0;
     left: -50%;
     @media screen and (min-width: 855px) {
       left: 0;
+      height: 100%;
+    }
+    @media screen and (min-width: 1073px) {
       width: 100%;
+      height: auto;
     }
   }
-}
-
-.free-agent-btn {
-  margin-left: 1em;
 }
 
 .site-header {
@@ -96,4 +113,71 @@
     left: -62%;
   }
   position: relative;
+}
+
+.photo-bg-container {
+  display: flex;
+  flex-wrap: nowrap;
+  background-image: url(https://d137pw2ndt5u9c.cloudfront.net/keystone/690f5e33dd11300029e40cb3-690f5defdd11300029e40c54-FBS00185%202.jpg);
+  background-size: cover;
+  background-position: center center;
+  
+  .free-agent-btn {
+    margin-left: 1rem;
+    @media (max-width: 768px) {
+      margin-left: 0;
+    }
+  }
+  .btn {
+    background: #e91e6391;
+    border: 1px solid pink;
+    margin-bottom: 1rem;
+    @media (max-width: 768px) {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
+.cta-container {
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.photo-copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(321deg, rgba(242, 64, 174, 0.95), rgba(23, 210, 224, 0.84));
+  color: white;
+  h2 {
+    font-size: 3em;
+  }
+  h3 {
+    margin-top: 0;
+    font-size: 2em;
+  }
+  strong {
+    border-bottom: 4px solid #17d2e0;
+  }
+  @media screen and (max-width: 600px) {
+    flex: 2;
+  }
+}
+
+.photo-bg {
+  flex: 1;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  @media screen and (min-width: 700px) {
+    height: 700px;
+  }
 }

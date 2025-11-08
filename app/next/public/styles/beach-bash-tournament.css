@@ -1,5 +1,22 @@
+body {
+  font-size: 18px;
+}
+
+html, body {
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, .btn {
+  font-family: "Oswald", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+}
+
 .bash-video-background {
   position: relative;
+  overflow: hidden;
 }
 .bash-video-background video {
   position: absolute;
@@ -9,12 +26,14 @@
 @media screen and (min-width: 855px) {
   .bash-video-background video {
     left: 0;
-    width: 100%;
+    height: 100%;
   }
 }
-
-.free-agent-btn {
-  margin-left: 1em;
+@media screen and (min-width: 1073px) {
+  .bash-video-background video {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .site-header {
@@ -95,6 +114,80 @@
   width: 100%;
   z-index: 0;
   left: -62%;
+}
+
+.photo-bg-container {
+  display: flex;
+  flex-wrap: nowrap;
+  background-image: url(https://d137pw2ndt5u9c.cloudfront.net/keystone/690f5e33dd11300029e40cb3-690f5defdd11300029e40c54-FBS00185%202.jpg);
+  background-size: cover;
+  background-position: center center;
+}
+.photo-bg-container .free-agent-btn {
+  margin-left: 1rem;
+}
+@media (max-width: 768px) {
+  .photo-bg-container .free-agent-btn {
+    margin-left: 0;
+  }
+}
+.photo-bg-container .btn {
+  background: rgba(233, 30, 99, 0.568627451);
+  border: 1px solid pink;
+  margin-bottom: 1rem;
+}
+@media (max-width: 768px) {
+  .photo-bg-container .btn {
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .cta-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.photo-copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(321deg, rgba(242, 64, 174, 0.95), rgba(23, 210, 224, 0.84));
+  color: white;
+}
+.photo-copy h2 {
+  font-size: 3em;
+}
+.photo-copy h3 {
+  margin-top: 0;
+  font-size: 2em;
+}
+.photo-copy strong {
+  border-bottom: 4px solid #17d2e0;
+}
+@media screen and (max-width: 600px) {
+  .photo-copy {
+    flex: 2;
+  }
+}
+
+.photo-bg {
+  flex: 1;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+@media screen and (min-width: 700px) {
+  .photo-bg {
+    height: 700px;
+  }
 }
 
 /*# sourceMappingURL=beach-bash-tournament.css.map */
