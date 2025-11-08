@@ -88,15 +88,40 @@ h1, h2, h3, h4, h5, h6, .btn {
 
 .team-list-tournament {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 30px;
-  grid-row-gap: 20px;
-  @media (max-width: 768px) {
+  grid-template-columns: repeat(1, 1fr);
+  @media (min-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
   }
+  @media (min-width: 1000px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  article {
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    display: flex;
+    min-height: 400px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+}
 
-  @media (max-width: 500px) {
-    grid-template-columns: 1fr;
+.team-copy-container {
+  width: 100%;
+  background: #E91E63;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  mix-blend-mode: hard-light;
+  h3 {
+    margin: 0;
+    font-size: 3rem;
   }
 }
 

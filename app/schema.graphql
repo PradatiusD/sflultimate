@@ -1565,6 +1565,24 @@ type Mutation {
   """ Delete multiple Location items by ID. """
   deleteLocations(ids: [ID!]): [Location]
 
+  """ Create a single Pickup item. """
+  createPickup(data: PickupCreateInput): Pickup
+
+  """ Create multiple Pickup items. """
+  createPickups(data: [PickupsCreateInput]): [Pickup]
+
+  """ Update a single Pickup item by ID. """
+  updatePickup(id: ID!, data: PickupUpdateInput): Pickup
+
+  """ Update multiple Pickup items by ID. """
+  updatePickups(data: [PickupsUpdateInput]): [Pickup]
+
+  """ Delete a single Pickup item by ID. """
+  deletePickup(id: ID!): Pickup
+
+  """ Delete multiple Pickup items by ID. """
+  deletePickups(ids: [ID!]): [Pickup]
+
   """ Create a single Player item. """
   createPlayer(data: PlayerCreateInput): Player
 
@@ -1637,23 +1655,23 @@ type Mutation {
   """ Delete multiple Team items by ID. """
   deleteTeams(ids: [ID!]): [Team]
 
-  """ Create a single Pickup item. """
-  createPickup(data: PickupCreateInput): Pickup
+  """ Create a single TournamentTeam item. """
+  createTournamentTeam(data: TournamentTeamCreateInput): TournamentTeam
 
-  """ Create multiple Pickup items. """
-  createPickups(data: [PickupsCreateInput]): [Pickup]
+  """ Create multiple TournamentTeam items. """
+  createTournamentTeams(data: [TournamentTeamsCreateInput]): [TournamentTeam]
 
-  """ Update a single Pickup item by ID. """
-  updatePickup(id: ID!, data: PickupUpdateInput): Pickup
+  """ Update a single TournamentTeam item by ID. """
+  updateTournamentTeam(id: ID!, data: TournamentTeamUpdateInput): TournamentTeam
 
-  """ Update multiple Pickup items by ID. """
-  updatePickups(data: [PickupsUpdateInput]): [Pickup]
+  """ Update multiple TournamentTeam items by ID. """
+  updateTournamentTeams(data: [TournamentTeamsUpdateInput]): [TournamentTeam]
 
-  """ Delete a single Pickup item by ID. """
-  deletePickup(id: ID!): Pickup
+  """ Delete a single TournamentTeam item by ID. """
+  deleteTournamentTeam(id: ID!): TournamentTeam
 
-  """ Delete multiple Pickup items by ID. """
-  deletePickups(ids: [ID!]): [Pickup]
+  """ Delete multiple TournamentTeam items by ID. """
+  deleteTournamentTeams(ids: [ID!]): [TournamentTeam]
 
   """ Create a single User item. """
   createUser(data: UserCreateInput): User
@@ -2070,6 +2088,7 @@ type Player {
   id: ID!
   createdAt: DateTime
   updatedAt: DateTime
+  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
@@ -2100,6 +2119,7 @@ type Player {
 input PlayerCreateInput {
   createdAt: DateTime
   updatedAt: DateTime
+  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
@@ -2318,6 +2338,7 @@ input PlayersUpdateInput {
 input PlayerUpdateInput {
   createdAt: DateTime
   updatedAt: DateTime
+  name: String
   firstName: String
   lastName: String
   gender: PlayerGenderType
@@ -2367,6 +2388,24 @@ input PlayerWhereInput {
   updatedAt_gte: DateTime
   updatedAt_in: [DateTime]
   updatedAt_not_in: [DateTime]
+  name: String
+  name_not: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  name_i: String
+  name_not_i: String
+  name_contains_i: String
+  name_not_contains_i: String
+  name_starts_with_i: String
+  name_not_starts_with_i: String
+  name_ends_with_i: String
+  name_not_ends_with_i: String
+  name_in: [String]
+  name_not_in: [String]
   firstName: String
   firstName_not: String
   firstName_contains: String
@@ -2820,6 +2859,19 @@ type Query {
   """ Retrieve the meta-data for the Location list. """
   _LocationsMeta: _ListMeta
 
+  """ Search for all Pickup items which match the where clause. """
+  allPickups(where: PickupWhereInput, search: String, sortBy: [SortPickupsBy!], orderBy: String, first: Int, skip: Int): [Pickup]
+
+  """ Search for the Pickup item with the matching ID. """
+  Pickup(where: PickupWhereUniqueInput!): Pickup
+
+  """ Perform a meta-query on all Pickup items which match the where clause. 
+  """
+  _allPickupsMeta(where: PickupWhereInput, search: String, sortBy: [SortPickupsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the Pickup list. """
+  _PickupsMeta: _ListMeta
+
   """ Search for all Player items which match the where clause. """
   allPlayers(where: PlayerWhereInput, search: String, sortBy: [SortPlayersBy!], orderBy: String, first: Int, skip: Int): [Player]
 
@@ -2870,18 +2922,18 @@ type Query {
   """ Retrieve the meta-data for the Team list. """
   _TeamsMeta: _ListMeta
 
-  """ Search for all Pickup items which match the where clause. """
-  allPickups(where: PickupWhereInput, search: String, sortBy: [SortPickupsBy!], orderBy: String, first: Int, skip: Int): [Pickup]
+  """ Search for all TournamentTeam items which match the where clause. """
+  allTournamentTeams(where: TournamentTeamWhereInput, search: String, sortBy: [SortTournamentTeamsBy!], orderBy: String, first: Int, skip: Int): [TournamentTeam]
 
-  """ Search for the Pickup item with the matching ID. """
-  Pickup(where: PickupWhereUniqueInput!): Pickup
+  """ Search for the TournamentTeam item with the matching ID. """
+  TournamentTeam(where: TournamentTeamWhereUniqueInput!): TournamentTeam
 
-  """ Perform a meta-query on all Pickup items which match the where clause. 
+  """ Perform a meta-query on all TournamentTeam items which match the where clause. 
   """
-  _allPickupsMeta(where: PickupWhereInput, search: String, sortBy: [SortPickupsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+  _allTournamentTeamsMeta(where: TournamentTeamWhereInput, search: String, sortBy: [SortTournamentTeamsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
 
-  """ Retrieve the meta-data for the Pickup list. """
-  _PickupsMeta: _ListMeta
+  """ Retrieve the meta-data for the TournamentTeam list. """
+  _TournamentTeamsMeta: _ListMeta
 
   """ Search for all User items which match the where clause. """
   allUsers(where: UserWhereInput, search: String, sortBy: [SortUsersBy!], orderBy: String, first: Int, skip: Int): [User]
@@ -3143,6 +3195,8 @@ enum SortPlayersBy {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  name_ASC
+  name_DESC
   firstName_ASC
   firstName_DESC
   lastName_ASC
@@ -3221,6 +3275,23 @@ enum SortTeamsBy {
   league_DESC
   draftOrder_ASC
   draftOrder_DESC
+}
+
+enum SortTournamentTeamsBy {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  color_ASC
+  color_DESC
+  email_ASC
+  email_DESC
+  captainNames_ASC
+  captainNames_DESC
+  locationName_ASC
+  locationName_DESC
+  competitionName_ASC
+  competitionName_DESC
 }
 
 enum SortUsersBy {
@@ -3363,6 +3434,172 @@ input TeamWhereInput {
 }
 
 input TeamWhereUniqueInput {
+  id: ID!
+}
+
+""" A keystone list """
+type TournamentTeam {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the TournamentTeam List config, or
+   2. As an alias to the field set on 'labelField' in the TournamentTeam List config, or
+   3. As an alias to a 'name' field on the TournamentTeam List (if one exists), or
+   4. As an alias to the 'id' field on the TournamentTeam List.
+  """
+  _label_: String
+  id: ID!
+  name: String
+  color: String
+  email: String
+  captainNames: String
+  locationName: String
+  competitionName: TournamentTeamCompetitionNameType
+  image: File
+}
+
+enum TournamentTeamCompetitionNameType {
+  Pro
+  Club
+  Recreation
+}
+
+input TournamentTeamCreateInput {
+  name: String
+  color: String
+  email: String
+  captainNames: String
+  locationName: String
+  competitionName: TournamentTeamCompetitionNameType
+  image: Upload
+}
+
+input TournamentTeamsCreateInput {
+  data: TournamentTeamCreateInput
+}
+
+input TournamentTeamsUpdateInput {
+  id: ID!
+  data: TournamentTeamUpdateInput
+}
+
+input TournamentTeamUpdateInput {
+  name: String
+  color: String
+  email: String
+  captainNames: String
+  locationName: String
+  competitionName: TournamentTeamCompetitionNameType
+  image: Upload
+}
+
+input TournamentTeamWhereInput {
+  AND: [TournamentTeamWhereInput]
+  OR: [TournamentTeamWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  name: String
+  name_not: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  name_i: String
+  name_not_i: String
+  name_contains_i: String
+  name_not_contains_i: String
+  name_starts_with_i: String
+  name_not_starts_with_i: String
+  name_ends_with_i: String
+  name_not_ends_with_i: String
+  name_in: [String]
+  name_not_in: [String]
+  color: String
+  color_not: String
+  color_contains: String
+  color_not_contains: String
+  color_starts_with: String
+  color_not_starts_with: String
+  color_ends_with: String
+  color_not_ends_with: String
+  color_i: String
+  color_not_i: String
+  color_contains_i: String
+  color_not_contains_i: String
+  color_starts_with_i: String
+  color_not_starts_with_i: String
+  color_ends_with_i: String
+  color_not_ends_with_i: String
+  color_in: [String]
+  color_not_in: [String]
+  email: String
+  email_not: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  email_i: String
+  email_not_i: String
+  email_contains_i: String
+  email_not_contains_i: String
+  email_starts_with_i: String
+  email_not_starts_with_i: String
+  email_ends_with_i: String
+  email_not_ends_with_i: String
+  email_in: [String]
+  email_not_in: [String]
+  captainNames: String
+  captainNames_not: String
+  captainNames_contains: String
+  captainNames_not_contains: String
+  captainNames_starts_with: String
+  captainNames_not_starts_with: String
+  captainNames_ends_with: String
+  captainNames_not_ends_with: String
+  captainNames_i: String
+  captainNames_not_i: String
+  captainNames_contains_i: String
+  captainNames_not_contains_i: String
+  captainNames_starts_with_i: String
+  captainNames_not_starts_with_i: String
+  captainNames_ends_with_i: String
+  captainNames_not_ends_with_i: String
+  captainNames_in: [String]
+  captainNames_not_in: [String]
+  locationName: String
+  locationName_not: String
+  locationName_contains: String
+  locationName_not_contains: String
+  locationName_starts_with: String
+  locationName_not_starts_with: String
+  locationName_ends_with: String
+  locationName_not_ends_with: String
+  locationName_i: String
+  locationName_not_i: String
+  locationName_contains_i: String
+  locationName_not_contains_i: String
+  locationName_starts_with_i: String
+  locationName_not_starts_with_i: String
+  locationName_ends_with_i: String
+  locationName_not_ends_with_i: String
+  locationName_in: [String]
+  locationName_not_in: [String]
+  competitionName: TournamentTeamCompetitionNameType
+  competitionName_not: TournamentTeamCompetitionNameType
+  competitionName_in: [TournamentTeamCompetitionNameType]
+  competitionName_not_in: [TournamentTeamCompetitionNameType]
+  image: String
+  image_not: String
+  image_in: [String]
+  image_not_in: [String]
+}
+
+input TournamentTeamWhereUniqueInput {
   id: ID!
 }
 

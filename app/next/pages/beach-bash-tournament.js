@@ -1,67 +1,31 @@
 import Head from 'next/head'
-export default function BeachBashTournament (props) {
-  const teams = [
-    {
-      teamName: 'Party C',
-      captains: 'Megan B. & Carlos M.',
-      location: 'Fort Lauderdale, Florida',
-      competitionLevel: 'Recreation',
-      inState: true
-    },
-    {
-      teamName: 'Cakti',
-      captains: 'Chris G.',
-      location: 'Canton, Ohio',
-      competitionLevel: 'Pro',
-      inState: false
-    },
-    {
-      teamName: 'Hammered at the Beach',
-      captains: 'Lian',
-      location: 'Miami, Florida',
-      competitionLevel: 'Club',
-      inState: true
-    },
-    {
-      teamName: 'Florida Sand-Spurs',
-      captains: 'Garrett Knobel',
-      location: 'Tampa, Florida',
-      competitionLevel: 'Club',
-      inState: true
-    },
-    {
-      teamName: 'La Chancla Voladora',
-      captains: 'María José G. Santiago A.',
-      location: 'Fort Lauderdale',
-      competitionLevel: 'Club',
-      inState: true
-    },
-    {
-      teamName: 'Cowabunga',
-      captains: 'Ally C.',
-      location: 'Davie, Florida',
-      competitionLevel: 'Recreation',
-      inState: true
-    },
-    {
-      teamName: 'Ultimate Playas',
-      captains: 'Sofia W.',
-      location: 'Fort Lauderdale, Florida',
-      competitionLevel: 'Club',
-      inState: true
-    },
-    {
-      teamName: 'Rocket',
-      captains: 'Andrea P. & Patrick',
-      location: 'Miami ',
-      competitionLevel: 'Club',
-      inState: true
-    }
-  ].map(function (event) {
-    return event
-  }).sort(function (a, b) {
-    return a.teamName.localeCompare(b.teamName)
+import { gql } from '@apollo/client'
+import GraphqlClient from '../lib/graphql-client'
+
+export const getServerSideProps = async () => {
+  const results = await GraphqlClient.query({
+    query: gql`
+      query {
+        allTournamentTeams(sortBy: [name_ASC]) {
+          id
+          name
+          image {
+            publicUrl
+          }
+          captainNames
+          competitionName
+          locationName
+        }
+      }`
   })
+  return {
+    props: {
+      teams: results.data.allTournamentTeams
+    }
+  }
+}
+export default function BeachBashTournament (props) {
+  const { teams } = props
 
   const content = {
     seoTitle: 'South Florida Ultimate • Beach Bash 2025',
@@ -131,7 +95,7 @@ export default function BeachBashTournament (props) {
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1690.3133871864395!2d-80.10470750573026!3d26.110114190972915!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d90184490da219%3A0x1a08e5d36463b739!2sOcean%20Rescue%20Tower%20%231!5e1!3m2!1sen!2sus!4v1696989472039!5m2!1sen!2sus"
               width="100%" height="450" style={{ border: 0 }} allowFullScreen={true} loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
+              referrerPolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
       </div>
@@ -140,32 +104,24 @@ export default function BeachBashTournament (props) {
       <h2 className="text-center">Last Year's Teams</h2>
       <p className="text-center lead">Use the below to get a sense of the competition that came to join us in Fort.
         Lauderdale!</p>
-      <div className="container-fluid">
-        <section className="team-list-tournament">
-          {
-            teams.map((team) => {
-              return (
-                <div key={team.teamName}>
-                  <div className="panel panel-default text-center">
-                    <div className="panel-heading">
-                      <h3 className="panel-title">{team.teamName}</h3>
-                      <small className="text-muted">{team.location}</small><br/>
-                      {
-                        !team.inState &&
-                        <span className="badge" style={{ background: '#217f92', fontWeight: 400, padding: '5px 10px' }}>Out of State</span>
-                      }
-                    </div>
-                    <div className="panel-body">
-                      Level: {team.competitionLevel}<br/>
-                      Captain: {team.captains}
-                    </div>
-                  </div>
+      <section className="team-list-tournament">
+        {
+          teams.map((team) => {
+            const imgStyle = {}
+            if (team.image) {
+              imgStyle.backgroundImage = 'url(' + team.image.publicUrl + ')'
+            }
+            return (
+              <article key={team.name} style={imgStyle}>
+                <div className="team-copy-container">
+                  <h3>{team.name}</h3>
+                  <small>{team.locationName} • {team.competitionName} • {team.captainNames}</small>
                 </div>
-              )
-            })
-          }
-        </section>
-      </div>
+              </article>
+            )
+          })
+        }
+      </section>
 
       <hr/>
 
