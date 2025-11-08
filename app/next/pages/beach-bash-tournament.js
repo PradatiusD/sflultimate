@@ -84,11 +84,17 @@ export default function BeachBashTournament (props) {
     return a['Team Name'].localeCompare(b['Team Name'])
   })
 
+  const content = {
+    seoTitle: 'South Florida Ultimate • Beach Bash 2025',
+    registrationLink: 'https://docs.google.com/forms/d/e/1FAIpQLSeu6GPwqcvLgxDn7vq-cOfApIEeIaiUI3Z1lLj6ppcti2upFQ/viewform?usp=publish-editor',
+    freeAgentLink: 'https://docs.google.com/forms/d/1mU4130RrsMuAooBZDhUW6hyZQIH619XJHy3vcvbU5_c'
+  }
+
   return (
     <>
       <Head>
         <title>South Florida Ultimate • Beach Bash 2025</title>
-        <meta property="og:title" content="South Florida Ultimate • Beach Bash 2025"/>
+        <meta property="og:title" content={content.seoTitle}/>
         <meta property="og:url" content="https://www.sflultimate.com/beach-bash-tournament"/>
         <meta property="og:image"
               content="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg"/>
@@ -118,16 +124,10 @@ export default function BeachBashTournament (props) {
           <h2>Beach Bash is Back!</h2>
           <p>Florida’s <strong>newest</strong> and <strong>highest-level</strong> beach ultimate
             frisbee tournament.</p>
-          <h3>February 21-22, 2026<br/>Ft. Lauderdale Beach</h3>
+          <h3>February 21-22, 2026<br/>@ Ft. Lauderdale Beach</h3>
           <div className="cta-container">
-            <a className="btn btn-primary btn-lg" target="_blank"
-               href="https://docs.google.com/forms/d/e/1FAIpQLSffQliLEhIRV28WWFQM3A0HCaQ2XcWjPiJ5a98h5jlRdU8XFQ/viewform"> Submit
-              a Bid
-            </a>
-            <a className="btn btn-primary btn-lg free-agent-btn" target="_blank"
-               href="https://docs.google.com/forms/d/e/1FAIpQLSdUOlXM7J7iG102OCFgXAyvz2MYW5qNgJt8r65nyUqgOu7fkg/viewform?usp=sf_link"> Free
-              Agent Sign Up
-            </a>
+            <a className="btn btn-primary btn-lg" target="_blank" href={content.registrationLink}> Submit a Bid</a>
+            <a className="btn btn-primary btn-lg free-agent-btn" target="_blank" href={content.freeAgentLink}> Free Agent Sign Up</a>
           </div>
         </div>
       </div>
@@ -137,7 +137,6 @@ export default function BeachBashTournament (props) {
           <div className="col-lg-2 col-md-12 col-lg-offset-1">
           </div>
           <div className="col-lg-8 col-md-12">
-
             <p>We are playing in the <strong>heart of the pristine Ft Lauderdale Beach the weekend of February 21-22 2026</strong>.</p>
               <p>The format is 4v4 USA Ultimate rules with a 2:2 gender ratio. We will have lined fields for a guaranteed
                 4 games of Saturday pool play and at least 3 games of Sunday bracket play.</p>
