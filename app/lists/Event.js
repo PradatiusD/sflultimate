@@ -44,6 +44,6 @@ module.exports = {
     return `${startTime} - ${item.name}`
   },
   adminConfig: {
-    defaultColumns: 'name, order, active, description, image'
+    defaultColumns: 'name, startTime, endTime, active, description, image'
   }
 }

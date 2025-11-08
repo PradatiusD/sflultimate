@@ -145,8 +145,7 @@ export default function Homepage (props) {
       <div className="container">
         <div className="row">
           <div className="col-md-8">
-            <h3>Current Standings</h3>
-            <p>Here you can see the current standings for the current league!</p>
+            <h3>Latest Standings</h3>
             <Standings games={games} />
             {
               showSignupLeague && (
