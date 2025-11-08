@@ -38,6 +38,8 @@ export const getServerSideProps = async () => {
         allEvents {
           id
           name
+          summary
+          category
           description
           startTime
           image {
@@ -95,7 +97,7 @@ export default function Homepage (props) {
     'league-champions-2014-spring.jpg',
     'league-champions-2013-spring.jpg'
   ]
-  
+
   const showSignupLeague = false
 
   return (
@@ -146,7 +148,9 @@ export default function Homepage (props) {
         <div className="row">
           <div className="col-md-8">
             <h3>Latest Standings</h3>
-            <Standings games={games} />
+            <div className="standings">
+              <Standings games={games} />
+            </div>
             {
               showSignupLeague && (
                 <>
@@ -179,24 +183,24 @@ export default function Homepage (props) {
               events.map((event) => {
                 return (
                   <div key={event.id} className="homepage-news-card">
-                    <div className="row">
-                      <div className="col-xs-3">
+                    <div className="homepage-news-card-header">
+                      <div>
                         {
                           event.image && event.image.publicUrl && (
                             <img className="img-responsive img-circle" src={event.image.publicUrl} style={{ aspectRatio: '1' }} />
                           )
                         }
                       </div>
-                      <div className="col-xs-9">
+                      <div>
                         <a href="/events">
-                          <strong>{event.name}</strong>
+                          <strong>{event.name}</strong><br/>
                         </a>
                         <div>
-                          <small className="text-muted">{showDate(event.startTime, { month: 'long', day: 'numeric', year: 'numeric' })}</small>
+                          <small className="text-muted">{event.category} • {showDate(event.startTime, { month: 'long', day: 'numeric', year: 'numeric', weekday: 'short' })}</small>
                         </div>
-                        <div dangerouslySetInnerHTML={{ __html: createSummary(event.description, 140) }}></div>
                       </div>
                     </div>
+                    <div dangerouslySetInnerHTML={{ __html: createSummary(event, 140) }}></div>
                     <hr />
                   </div>
                 )
@@ -223,14 +227,13 @@ export default function Homepage (props) {
                   <div>
                     <small className="text-muted">{showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</small>
                   </div>
-                  <div dangerouslySetInnerHTML={{ __html: createSummary(post.summary, 140) }}></div>
+                  <div dangerouslySetInnerHTML={{ __html: createSummary(post, 140) }}></div>
                 </div>
               )
             })
           }
         </div>
       </div>
-      
 
       {
         keyTakeaways.map((takeaway, index) => {

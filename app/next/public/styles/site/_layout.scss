@@ -328,6 +328,10 @@
   }
 }
 
+.standings {
+  overflow-x: scroll;
+}
+
 .team-color {
   border-radius: 100%;
   border: 1px solid gray;
@@ -454,8 +458,27 @@
   }
 }
 
+.homepage-news-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  > div:first-child {
+    flex: 1;
+    @media screen and (max-width: 768px) {
+      max-width: 100px;
+    }
+  }
+  > div:nth-child(2) {
+    padding-left: 10px;
+    flex: 3;
+  }
+}
+
 .homepage-news-card {
+  font-size: 1.5rem;
   img {
+    border: 1px solid #edecec;
+    box-shadow: 1px 1px 4px #0000003b;
     aspect-ratio: 2;
     object-fit: cover;
     margin-bottom: 0.5rem;

@@ -699,6 +699,7 @@ type Event {
   startTime: DateTime
   endTime: DateTime
   location: String
+  summary: String
   description: String
   image: File
   moreInformationUrl: String
@@ -710,6 +711,7 @@ input EventCreateInput {
   startTime: DateTime
   endTime: DateTime
   location: String
+  summary: String
   description: String
   image: Upload
   moreInformationUrl: String
@@ -730,6 +732,7 @@ input EventUpdateInput {
   startTime: DateTime
   endTime: DateTime
   location: String
+  summary: String
   description: String
   image: Upload
   moreInformationUrl: String
@@ -812,6 +815,24 @@ input EventWhereInput {
   location_not_ends_with_i: String
   location_in: [String]
   location_not_in: [String]
+  summary: String
+  summary_not: String
+  summary_contains: String
+  summary_not_contains: String
+  summary_starts_with: String
+  summary_not_starts_with: String
+  summary_ends_with: String
+  summary_not_ends_with: String
+  summary_i: String
+  summary_not_i: String
+  summary_contains_i: String
+  summary_not_contains_i: String
+  summary_starts_with_i: String
+  summary_not_starts_with_i: String
+  summary_ends_with_i: String
+  summary_not_ends_with_i: String
+  summary_in: [String]
+  summary_not_in: [String]
   description: String
   description_not: String
   description_contains: String
@@ -3025,6 +3046,8 @@ enum SortEventsBy {
   endTime_DESC
   location_ASC
   location_DESC
+  summary_ASC
+  summary_DESC
   description_ASC
   description_DESC
   moreInformationUrl_ASC

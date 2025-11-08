@@ -47,9 +47,12 @@ function addLeagueToVariables (context, variables = {}) {
   return variables
 }
 
-function createSummary (string, numCharsLimit) {
+function createSummary (entry, numCharsLimit) {
+  if (entry.summary) {
+    return entry.summary
+  }
   // remove html tags
-  string = string.replace(/<.*?>/g, '')
+  const string = entry.description.replace(/<.*?>/g, '')
 
   // split into words
   const arr = string.split(/\s/g)

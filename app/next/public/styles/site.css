@@ -7438,6 +7438,10 @@ button.close {
   border-radius: 100%;
 }
 
+.standings {
+  overflow-x: scroll;
+}
+
 .team-color {
   border-radius: 100%;
   border: 1px solid gray;
@@ -7545,10 +7549,31 @@ button.close {
   font-weight: 400;
 }
 
+.homepage-news-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.homepage-news-card-header > div:first-child {
+  flex: 1;
+}
+@media screen and (max-width: 768px) {
+  .homepage-news-card-header > div:first-child {
+    max-width: 100px;
+  }
+}
+.homepage-news-card-header > div:nth-child(2) {
+  padding-left: 10px;
+  flex: 3;
+}
+
 .homepage-news-card {
+  font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 .homepage-news-card img {
+  border: 1px solid #edecec;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.231372549);
   aspect-ratio: 2;
   object-fit: cover;
   margin-bottom: 0.5rem;
