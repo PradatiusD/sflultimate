@@ -21,7 +21,7 @@ export default function YouthPage () {
         <title>SFLUltimate: Youth Programs</title>
         <meta property="og:title" content="SFLUltimate: Youth Programs" />
         <meta property="og:url" content="https://www.sflultimate.com/youth" />
-        <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
+        <meta property="og:image" content="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fca0052551268b0637ba1-images-data%20(1).jpg" />
         <meta property="og:description" content="Learn more about our youth ultimate programs, including summer camps, clinics, and other programming." />
       </Head>
       <HeaderNavigation />
