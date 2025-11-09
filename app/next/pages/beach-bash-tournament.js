@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
+import Countdown from "react-countdown";
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -49,7 +50,7 @@ export default function BeachBashTournament (props) {
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet"/>
       </Head>
       <section className="bash-video-background">
-        <video autoPlay="true" muted loop>
+        <video autoPlay muted loop>
           <source src="https://d137pw2ndt5u9c.cloudfront.net/sfl-beach-bash-tournament-with-play-v1.mp4"
                   type="video/mp4"/>
         </video>
@@ -57,6 +58,23 @@ export default function BeachBashTournament (props) {
           <br/>
           <div className="jumbotron text-center">
             <img src="/images/beach-bash-2025-logo.svg" alt="Beach Bash Logo"/>
+            <div>
+              <Countdown
+                date={new Date('2026-02-22T14:00:00.000Z').getTime()}
+                intervalDelay={1000}
+                precision={0}
+                renderer={(props) => {
+                  return (
+                    <div className="beach-countdown">
+                      <span><strong>{props.days}</strong> days</span>
+                      <span><strong>{props.hours}</strong> hours</span>
+                      <span><strong>{props.minutes}</strong> minutes</span>
+                      <span><strong>{props.seconds}</strong> seconds</span>
+                    </div>
+                  )
+                }}
+              />
+            </div>
           </div>
         </div>
       </section>
