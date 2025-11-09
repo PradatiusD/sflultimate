@@ -1,7 +1,22 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
-import Countdown from "react-countdown";
+import Countdown from 'react-countdown'
+
+function Spanify (props) {
+  const words = props.text.split(' ')
+  return (
+    <span>
+        {
+          words.map((w, i) => {
+            return (
+              <><span key={i}>{w}</span>{" "}</>
+            )
+          })
+        }
+      </span>
+  )
+}
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -29,7 +44,7 @@ export default function BeachBashTournament (props) {
   const { teams } = props
 
   const content = {
-    seoTitle: 'South Florida Ultimate • Beach Bash 2025',
+    seoTitle: 'South Florida Ultimate • Beach Bash 2026',
     registrationLink: 'https://docs.google.com/forms/d/e/1FAIpQLSeu6GPwqcvLgxDn7vq-cOfApIEeIaiUI3Z1lLj6ppcti2upFQ/viewform?usp=publish-editor',
     freeAgentLink: 'https://docs.google.com/forms/d/1mU4130RrsMuAooBZDhUW6hyZQIH619XJHy3vcvbU5_c'
   }
@@ -37,7 +52,7 @@ export default function BeachBashTournament (props) {
   return (
     <>
       <Head>
-        <title>South Florida Ultimate • Beach Bash 2025</title>
+        <title>{content.seoTitle}</title>
         <meta property="og:title" content={content.seoTitle}/>
         <meta property="og:url" content="https://www.sflultimate.com/beach-bash-tournament"/>
         <meta property="og:image"
@@ -82,9 +97,9 @@ export default function BeachBashTournament (props) {
         <div className="photo-bg">
         </div>
         <div className="photo-copy">
-          <h2>Beach Bash is Back!</h2>
-          <p>Florida’s <strong>newest</strong> and <strong>highest-level</strong> beach ultimate
-            frisbee tournament.</p>
+          <h2><Spanify text="Beach Bash is Back!" /></h2>
+          <p>Florida’s <strong>newest</strong> and <strong>highest-level</strong> Beach Ultimate
+            Championship.</p>
           <h3>February 21-22, 2026<br/>@ Ft. Lauderdale Beach</h3>
           <div className="cta-container">
             <a className="btn btn-primary btn-lg" target="_blank" href={content.registrationLink}> Submit a Bid</a>

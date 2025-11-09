@@ -190,6 +190,14 @@ h1, h2, h3, h4, h5, h6, .btn {
 }
 .photo-copy h2 {
   font-size: 3em;
+  color: black;
+}
+.photo-copy h2 span span {
+  border-bottom: rgba(242, 65, 175, 0.8588235294) 7px solid;
+  display: inline-block;
+}
+.photo-copy h2 > span > span:last-child {
+  font-style: italic;
 }
 .photo-copy h3 {
   margin-top: 0;
@@ -198,6 +206,7 @@ h1, h2, h3, h4, h5, h6, .btn {
 }
 .photo-copy strong {
   border-bottom: 4px solid #17d2e0;
+  color: black;
 }
 @media screen and (max-width: 600px) {
   .photo-copy {
@@ -212,7 +221,7 @@ h1, h2, h3, h4, h5, h6, .btn {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: black;
 }
 @media screen and (min-width: 700px) {
   .photo-bg {

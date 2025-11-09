@@ -182,6 +182,14 @@ h1, h2, h3, h4, h5, h6, .btn {
   color: white;
   h2 {
     font-size: 3em;
+    color: black;
+    span span {
+      border-bottom: #f241afdb 7px solid;
+      display: inline-block;
+    }
+    > span > span:last-child {
+      font-style: italic;
+    }
   }
   h3 {
     margin-top: 0;
@@ -190,6 +198,7 @@ h1, h2, h3, h4, h5, h6, .btn {
   }
   strong {
     border-bottom: 4px solid #17d2e0;
+    color: black;
   }
   @media screen and (max-width: 600px) {
     flex: 2;
@@ -203,7 +212,7 @@ h1, h2, h3, h4, h5, h6, .btn {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: black;
   @media screen and (min-width: 700px) {
     height: 700px;
   }
