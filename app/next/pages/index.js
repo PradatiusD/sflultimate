@@ -38,6 +38,7 @@ export const getServerSideProps = async () => {
         allEvents {
           id
           name
+          slug
           summary
           category
           description
@@ -192,7 +193,7 @@ export default function Homepage (props) {
                         }
                       </div>
                       <div>
-                        <a href="/events">
+                        <a href={"/events/" + event.slug}>
                           <strong>{event.name}</strong><br/>
                         </a>
                         <div>

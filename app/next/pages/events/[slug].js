@@ -3,6 +3,8 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/graphql-client'
 import { HeaderNavigation } from '../../components/Navigation'
 import LeagueUtils from '../../lib/league-utils'
+import NotFound from 'next/error'
+import {createSummary} from "../../lib/utils";
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -38,7 +40,7 @@ export const getServerSideProps = async (context) => {
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league)
 
-  const event = results.data.allEvents.map(function (event) {
+  const events = results.data.allEvents.map(function (event) {
     event = JSON.parse(JSON.stringify(event))
     event.links = []
     if (event.moreInformationUrl) {
@@ -62,22 +64,45 @@ export const getServerSideProps = async (context) => {
     return event
   })
 
-  return { props: { event, league } }
+  return { props: { event: events[0] || null, league } }
 }
 
 export default function EventItemPage (props) {
   const { event, league } = props
-  console.log(event)
+
+  if (!event) {
+    return <NotFound statusCode={404} />
+  }
+
   return (
     <>
       <Head>
-        <title>South Florida Events</title>
+        <title>Event: {event.name}</title>
         <meta property="og:title" content="South Florida Events"/>
-        <meta property="og:url" content="https://www.sflultimate.com/events"/>
-        <meta property="og:description" content="See what events are local to the South Florida area!"/>
+        <meta property="og:url" content={'https://www.sflultimate.com/events/' + event.slug}/>
+        <meta property="og:description" content={createSummary(event, 140)}/>
+        <meta property="og:image" content={event.image.publicUrl} />
       </Head>
       <HeaderNavigation league={league} />
-      <p>test</p>
+
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6 col-md-offset-3">
+            <img src={event.image.publicUrl} className="img-responsive" alt=""/>
+            <h1>{event.name}</h1>
+            <small className="text-muted">{event.category}</small>
+            <p className="lead">{event.startTimeFormatted}<br/> <small>{event.location}</small></p>
+            <div dangerouslySetInnerHTML={{ __html: event.description }}/>
+            {
+              event.links.map((link, i) => {
+                return (
+                  <a className="btn btn-block btn-primary" href={link.url} key={link.url} target="_blank">{link.label}</a>
+                )
+              })
+            }
+          </div>
+        </div>
+      </div>
     </>
   )
 };

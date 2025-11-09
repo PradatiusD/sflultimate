@@ -49,7 +49,7 @@ function addLeagueToVariables (context, variables = {}) {
 
 function createSummary (entry, numCharsLimit) {
   if (entry.summary) {
-    return entry.summary
+    return entry.summary.replace(/<.*?>/g, '')
   }
   // remove html tags
   const string = entry.description.replace(/<.*?>/g, '')

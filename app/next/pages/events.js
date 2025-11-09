@@ -20,6 +20,7 @@ export const getServerSideProps = async () => {
             }
             allEvents(sortBy: startTime_DESC) {
               id
+              slug
               image {
                 publicUrl
               }
@@ -80,7 +81,7 @@ function EventItem (props) {
           }
         </div>
         <div className="col-sm-9">
-          <h2>{event.name}</h2>
+          <h2><a href={'/events/' + event.slug}>{event.name}</a></h2>
           <p>
             <strong>{event.startTimeFormatted}</strong>
             <br/>
