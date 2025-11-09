@@ -8,6 +8,10 @@ const fields = {
     type: Text,
     isRequired: true
   },
+  slug: {
+    type: Text,
+    initial: true
+  },
   category: {
     type: Text,
     initial: true

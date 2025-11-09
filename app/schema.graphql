@@ -695,6 +695,7 @@ type Event {
   _label_: String
   id: ID!
   name: String
+  slug: String
   category: String
   startTime: DateTime
   endTime: DateTime
@@ -707,6 +708,7 @@ type Event {
 
 input EventCreateInput {
   name: String
+  slug: String
   category: String
   startTime: DateTime
   endTime: DateTime
@@ -728,6 +730,7 @@ input EventsUpdateInput {
 
 input EventUpdateInput {
   name: String
+  slug: String
   category: String
   startTime: DateTime
   endTime: DateTime
@@ -763,6 +766,24 @@ input EventWhereInput {
   name_not_ends_with_i: String
   name_in: [String]
   name_not_in: [String]
+  slug: String
+  slug_not: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
+  slug_i: String
+  slug_not_i: String
+  slug_contains_i: String
+  slug_not_contains_i: String
+  slug_starts_with_i: String
+  slug_not_starts_with_i: String
+  slug_ends_with_i: String
+  slug_not_ends_with_i: String
+  slug_in: [String]
+  slug_not_in: [String]
   category: String
   category_not: String
   category_contains: String
@@ -3038,6 +3059,8 @@ enum SortEventsBy {
   id_DESC
   name_ASC
   name_DESC
+  slug_ASC
+  slug_DESC
   category_ASC
   category_DESC
   startTime_ASC
