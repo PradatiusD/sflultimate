@@ -137,12 +137,20 @@ h1, h2, h3, h4, h5, h6, .btn {
   content: "";
   position: absolute;
   background-image: url("/images/beach-bash-2025-logo-bird.svg");
+  background-repeat: no-repeat;
   opacity: 0.1;
   background-size: 100% auto;
   height: 100%;
   width: 100%;
   z-index: 0;
   left: -62%;
+}
+@media (max-width: 768px) {
+  .bird-wing-background:before {
+    left: 0;
+    background-size: cover;
+    background-position: center center;
+  }
 }
 
 .photo-bg-container {
@@ -151,6 +159,12 @@ h1, h2, h3, h4, h5, h6, .btn {
   background-image: url(https://d137pw2ndt5u9c.cloudfront.net/keystone/690f5e33dd11300029e40cb3-690f5defdd11300029e40c54-FBS00185%202.jpg);
   background-size: cover;
   background-position: center center;
+}
+@media screen and (max-width: 768px) {
+  .photo-bg-container {
+    flex-wrap: wrap;
+    background: none;
+  }
 }
 .photo-bg-container .free-agent-btn {
   margin-left: 1rem;
@@ -179,6 +193,30 @@ h1, h2, h3, h4, h5, h6, .btn {
   }
 }
 
+.photo-bg {
+  flex: 1;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: black;
+}
+@media (max-width: 768px) {
+  .photo-bg {
+    order: 2;
+    flex: 100%;
+    background-image: url(https://d137pw2ndt5u9c.cloudfront.net/keystone/690f5e33dd11300029e40cb3-690f5defdd11300029e40c54-FBS00185%202.jpg);
+    background-size: cover;
+    background-position: center center;
+  }
+}
+@media screen and (min-width: 769px) {
+  .photo-bg {
+    height: 700px;
+  }
+}
+
 .photo-copy {
   display: flex;
   flex-direction: column;
@@ -199,33 +237,31 @@ h1, h2, h3, h4, h5, h6, .btn {
 .photo-copy h2 > span > span:last-child {
   font-style: italic;
 }
-.photo-copy h3 {
-  margin-top: 0;
-  font-size: 2.5em;
-  margin-bottom: 1rem;
+@media screen and (max-width: 768px) {
+  .photo-copy h2 {
+    font-size: 2em;
+  }
 }
 .photo-copy strong {
   border-bottom: 4px solid #17d2e0;
   color: black;
 }
+.photo-copy h3 {
+  margin-top: 0;
+  font-size: 2.5em;
+  margin-bottom: 1rem;
+}
+.photo-copy h3 strong {
+  border-bottom: none;
+}
+@media screen and (max-width: 768px) {
+  .photo-copy h3 {
+    font-size: 1.5em;
+  }
+}
 @media screen and (max-width: 600px) {
   .photo-copy {
     flex: 2;
-  }
-}
-
-.photo-bg {
-  flex: 1;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: black;
-}
-@media screen and (min-width: 700px) {
-  .photo-bg {
-    height: 700px;
   }
 }
 

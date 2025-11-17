@@ -26,7 +26,7 @@ class SFLUltimateDocument extends NextDocument {
           <meta property="og:type" content="website"/>
           <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
           <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,700i|Roboto:300,400,400i,700"/>
+          <link rel="stylesheet" crossOrigin="true" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,700i|Roboto:300,400,400i,700"/>
           <link rel="stylesheet" href="/styles/site.css"/>
           <script dangerouslySetInnerHTML={{
             __html: `

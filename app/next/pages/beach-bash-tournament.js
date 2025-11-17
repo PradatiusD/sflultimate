@@ -98,9 +98,9 @@ export default function BeachBashTournament (props) {
         </div>
         <div className="photo-copy">
           <h2><Spanify text="Beach Bash is Back!" /></h2>
-          <p>Florida’s <strong>newest</strong> and <strong>highest-level</strong> Beach Ultimate
+          <p>Florida’s <strong>highest-level</strong> Beach Ultimate
             Championship.</p>
-          <h3>February 21-22, 2026<br/>@ Ft. Lauderdale Beach</h3>
+          <h3>February 21-22, 2026<br/>@ <strong>Ft. Lauderdale Beach</strong></h3>
           <div className="cta-container">
             <a className="btn btn-primary btn-lg" target="_blank" href={content.registrationLink}> Submit a Bid</a>
             <a className="btn btn-primary btn-lg free-agent-btn" target="_blank" href={content.freeAgentLink}> Free Agent Sign Up</a>
@@ -114,13 +114,11 @@ export default function BeachBashTournament (props) {
           </div>
           <div className="col-lg-8 col-md-12">
             <p>We are playing in the <strong>heart of the pristine Ft Lauderdale Beach the weekend of February 21-22 2026</strong>.</p>
-              <p>The format is 4v4 USA Ultimate rules with a 2:2 gender ratio. We will have lined fields for a guaranteed
+              <p>The format is <strong>4v4 USA Ultimate rules with a 2:2 gender ratio</strong>. We will have <strong>lined fields</strong> for a guaranteed
                 4 games of Saturday pool play and at least 3 games of Sunday bracket play.</p>
             <p>Cost: <strong>$500 gets you a 10-person team</strong>. Up to 4 additional people can be added for $50 per player. 14 players maximum per roster.</p>
-            <p>Showers, restrooms, bars, restaurants, and convenient stores all within walking distance of the
-              beach!</p>
-            <p>We will be having a Friday night registration party in Ft Lauderdale and a Saturday night tournament
-              party location tbd.</p>
+            <p>Showers, restrooms, bars, restaurants, and convenient stores <strong>all within walking distance of the beach!</strong></p>
+            <p>We will be having a Saturday night tournament party with location TBD.</p>
             <p>Come join the hottest beach ultimate community in Florida! See you in December!</p>
             <div className="alert alert-info">
               <p><strong>Free Agents:</strong> don’t have a team, but want to play? You can register as a free agent. While it’s not a guarantee we will find you a team, we will do our best to get you on a squad. If you do land on a team, or we have enough free agents to make a full team, you’ll be required to pay a $50 entry fee and will get full participation in the tournament festivities.</p>
