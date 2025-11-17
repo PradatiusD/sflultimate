@@ -6,7 +6,17 @@ import Standings from '../components/Standings'
 import { createSummary, showDate } from '../lib/utils'
 import Image from 'next/image'
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
+  const host = context.req.headers.host
+  if (host === 'beachbash.sflultimate.com') {
+    return {
+      redirect: {
+        destination: 'https://www.sflultimate.com/beach-bash-tournament',
+        permanent: false
+      }
+    }
+  }
+
   const results = await GraphqlClient.query({
     query: gql`
       query {
@@ -193,7 +203,7 @@ export default function Homepage (props) {
                         }
                       </div>
                       <div>
-                        <a href={"/events/" + event.slug}>
+                        <a href={'/events/' + event.slug}>
                           <strong>{event.name}</strong><br/>
                         </a>
                         <div>
