@@ -1,4 +1,4 @@
-var keystone = require('keystone')
+var keystone = require('old/keystone')
 
 /**
  * PostCategory Model

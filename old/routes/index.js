@@ -18,7 +18,7 @@
  * http://expressjs.com/api.html#app.VERB
  */
 
-const keystone = require('keystone')
+const keystone = require('old/keystone')
 const middleware = require('./middleware')
 const importRoutes = keystone.importer(__dirname)
 

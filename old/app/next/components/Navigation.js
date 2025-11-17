@@ -52,7 +52,7 @@ function HeaderNavigation (props) {
     <>
       <header id="header" className="site-header">
         <div className="navbar-brand-container hidden-sm hidden-md hidden-lg mobile-logo">
-          <a href="/">
+          <a href="/old/app/next/public">
             <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
           </a>
         </div>
@@ -68,12 +68,12 @@ function HeaderNavigation (props) {
               <div className="collapse navbar-collapse">
                 <ul className="nav navbar-nav navbar-left">
                   <li className="navbar-brand-container hidden-xs">
-                    <a href="/" className="navbar-brand">
+                    <a href="/old/app/next/public" className="navbar-brand">
                       <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
                     </a>
                   </li>
                   <li className="hidden-sm hidden-md hidden-lg">
-                    <a href="/">Home</a>
+                    <a href="/old/app/next/public">Home</a>
                   </li>
                   {
                     headerNavLinks.map((link) => {

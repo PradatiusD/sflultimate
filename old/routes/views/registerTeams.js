@@ -1,4 +1,4 @@
-const keystone = require('keystone')
+const keystone = require('old/keystone')
 const TournamentTeam = keystone.list('TournamentTeam')
 const { validateRecaptchaToken, setBaseRegistrationLocals, createSale } = require('./../utils')
 

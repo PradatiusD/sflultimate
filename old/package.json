@@ -54,9 +54,9 @@
         "dev": "cd app && cross-env NODE_ENV=development DISABLE_LOGGING=true keystone dev",
         "build": "cd app && cross-env NODE_ENV=production keystone build",
         "start": "cd app && cross-env NODE_ENV=production keystone start",
-        "create-tables": "cross-env keystone create-tables",
+        "create-tables": "../node_modules/.bin/cross-env keystone create-tables",
         "cypress": "npx cypress open",
-        "restore": "grunt restore",
+        "restore": "../node_modules/.bin/grunt restore",
         "build-schema": "get-graphql-schema http://localhost:3000/admin/api/ > app/schema.graphql",
         "custom-fields": "npx babel app/custom-fields/CustomDateTime/src/views/*.js --out-dir app/custom-fields/CustomDateTime/views"
     },

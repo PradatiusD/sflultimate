@@ -2,8 +2,8 @@ import GraphqlClient from '../../lib/graphql-client'
 import LeagueUtils from '../../lib/league-utils'
 const nodemailer = require('nodemailer')
 const { gql } = require('@apollo/client')
-const GraphQlClient = require('./../../lib/graphql-client')
-const PaymentUtils = require('./../../lib/payment-utils')
+const GraphQlClient = require('../../lib/graphql-client')
+const PaymentUtils = require('../../lib/payment-utils')
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',

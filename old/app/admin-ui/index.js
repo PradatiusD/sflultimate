@@ -2,7 +2,7 @@ import React from 'react'
 import { CreateItem, useList } from '@keystonejs/app-admin-ui/components'
 import { saveAs } from 'file-saver'
 import { gql } from '@apollo/client'
-import client from './../next/lib/graphql-client'
+import client from '../next/lib/graphql-client'
 import styles from './ExportCSVButton.module.css'
 
 const ExportCSVButton = () => {

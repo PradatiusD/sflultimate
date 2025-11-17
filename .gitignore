@@ -29,7 +29,6 @@ node_modules
 
 # Ignore .DS_Store files on OS X
 .DS_Store
-
 # Ignore tmp directory
 tmp
 dump
@@ -52,3 +51,6 @@ dist
 
 # Ignore next
 .next
+.keystone/
+keystone.db
+*.log

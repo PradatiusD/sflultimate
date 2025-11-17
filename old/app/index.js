@@ -5,7 +5,7 @@ const { PasswordAuthStrategy } = require('@keystonejs/auth-password')
 const { NextApp } = require('@keystonejs/app-next')
 const PROJECT_NAME = 'SFLUltimate'
 const keystone = require('./keystone')
-const contentListSchemas = require('./lists/index')
+const contentListSchemas = require('./lists')
 
 for (const listName in contentListSchemas) {
   const schema = contentListSchemas[listName]

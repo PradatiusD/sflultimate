@@ -1,4 +1,4 @@
-const keystone = require('keystone')
+const keystone = require('old/keystone')
 
 /**
  * Gallery Model
