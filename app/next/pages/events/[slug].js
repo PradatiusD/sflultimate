@@ -4,7 +4,8 @@ import GraphqlClient from '../../lib/graphql-client'
 import { HeaderNavigation } from '../../components/Navigation'
 import LeagueUtils from '../../lib/league-utils'
 import NotFound from 'next/error'
-import {createSummary} from "../../lib/utils";
+import { createSummary } from '../../lib/utils'
+import { AddToCalendar } from '../../components/AddToCalendar'
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -91,7 +92,10 @@ export default function EventItemPage (props) {
             <img src={event.image.publicUrl} className="img-responsive" alt=""/>
             <h1>{event.name}</h1>
             <small className="text-muted">{event.category}</small>
-            <p className="lead">{event.startTimeFormatted}<br/> <small>{event.location}</small></p>
+            <p className="lead" style={{ marginBottom: 0 }}>{event.startTimeFormatted}<br/><small>{event.location}</small></p>
+            <div style={{ marginBottom: '1rem' }}>
+              <AddToCalendar event={event} />
+            </div>
             <div dangerouslySetInnerHTML={{ __html: event.description }}/>
             {
               event.links.map((link, i) => {

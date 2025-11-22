@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
+import { AddToCalendar } from '../components/AddToCalendar'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -67,7 +68,9 @@ export const getServerSideProps = async () => {
 
 function EventItem (props) {
   const { event, status } = props
-  const containerClass = 'row ' + (status === 'past' ? ' text-muted' : '')
+  const isPast = status === 'past'
+  const containerClass = 'row ' + (isPast ? ' text-muted' : '')
+  const eventUrl = '/events/' + event.slug
   return (
     <>
       <div className={containerClass}>
@@ -81,7 +84,7 @@ function EventItem (props) {
           }
         </div>
         <div className="col-sm-9">
-          <h2><a href={'/events/' + event.slug}>{event.name}</a></h2>
+          <h2><a href={eventUrl}>{event.name}</a></h2>
           <p>
             <strong>{event.startTimeFormatted}</strong>
             <br/>
@@ -90,13 +93,18 @@ function EventItem (props) {
 
           <div dangerouslySetInnerHTML={{ __html: event.description }}/>
           <ul className="list-inline" style={{ marginTop: '1rem' }}>
-            {event.links.map((link, linkIndex) => (
-              <li key={linkIndex}>
-                <a className="btn btn-default" href={link.url} target="_blank" rel="noopener noreferrer">
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            <li>
+              <a className="btn btn-default event-btn" href={eventUrl}>
+                View Event
+              </a>
+            </li>
+            <li>
+              {
+                !isPast && (
+                  <AddToCalendar event={event} />
+                )
+              }
+            </li>
           </ul>
         </div>
       </div>
@@ -115,7 +123,7 @@ export default function EventsPage (props) {
   return (
     <>
       <Head>
-        <title>South Florida Events</title>
+        <title>South Florida Ultimate • Upcoming & Past Events</title>
         <meta property="og:title" content="South Florida Events"/>
         <meta property="og:url" content="https://www.sflultimate.com/events"/>
         <meta property="og:description" content="See what events are local to the South Florida area!"/>
