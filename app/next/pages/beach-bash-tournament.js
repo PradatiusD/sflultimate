@@ -54,6 +54,7 @@ export default function BeachBashTournament (props) {
       <Head>
         <title>{content.seoTitle}</title>
         <meta property="og:title" content={content.seoTitle}/>
+        <meta name="description" content={"Florida's highest-level 4v4 2:2 mixed Beach Ultimate Championship on February 21-22, 2026 at Ft. Lauderdale Beach."} />
         <meta property="og:url" content="https://www.sflultimate.com/beach-bash-tournament"/>
         <meta property="og:image"
               content="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg"/>
