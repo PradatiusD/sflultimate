@@ -51,7 +51,9 @@ export default function PickupsPage (props) {
     <>
       <Head>
         <title>SFLUltimate: {pickup.title}</title>
-        <meta property="og:title" content={pickup.description}/>
+        <meta property="description" content={pickup.description} />
+
+        <meta property="og:title" content={pickup.title}/>
         <meta property="og:url" content={'https://www.sflultimate.com/pickups/' + pickup.slug}/>
         <meta property="og:description" content={pickup.description}/>
         <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
