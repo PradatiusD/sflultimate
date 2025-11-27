@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import { gql } from '@apollo/client'
-import GraphqlClient from '../lib/graphql-client'
-import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from '../lib/league-utils'
-export const getServerSideProps = async () => {
+import GraphqlClient from '../../lib/graphql-client'
+import { HeaderNavigation } from '../../components/Navigation'
+import LeagueUtils from '../../lib/league-utils'
+export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
@@ -16,8 +16,9 @@ export const getServerSideProps = async () => {
               lateRegistrationStart
               lateRegistrationEnd
             }
-            allPickups(where: {isActive: true}, sortBy: order_ASC) {
+            allPickups(where: {isActive: true, slug: "${context.params.slug}"}, sortBy: order_ASC) {
               id
+              updatedAt
               slug
               title
               order
@@ -41,31 +42,25 @@ export const getServerSideProps = async () => {
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league)
-  const pickups = results.data.allPickups
-  return { props: { pickups, league } }
+  const pickup = results.data.allPickups[0]
+  return { props: { pickup, league } }
 }
 export default function PickupsPage (props) {
-  const { pickups, league } = props
+  const { pickup, league } = props
   return (
     <>
       <Head>
-        <title>Local Broward, Palm Beach, & Miami-Dade County Pickups</title>
-        <meta property="og:title" content="Local Broward, Palm Beach, & Miami-Dade County Pickups"/>
-        <meta property="og:url" content="https://www.sflultimate.com/pickups"/>
-        <meta property="og:description"
-          content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!"/>
+        <title>SFLUltimate: {pickup.title}</title>
+        <meta property="og:title" content={pickup.description}/>
+        <meta property="og:url" content={'https://www.sflultimate.com/pickups/' + pickup.slug}/>
+        <meta property="og:description" content={pickup.description}/>
         <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
       </Head>
       <HeaderNavigation league={league} />
 
       <div className="container pickup-listing-page">
-        <section>
-          <h1>Our Ultimate Community</h1>
-          <p className="lead">Read below to find all the local pickups taking place in the Broward, Palm Beach, &
-            Miami-Dade County areas.</p>
-        </section>
         <div className="alert alert-info" role="alert">
-          <strong>How is this pickup list generated/updated?</strong><br/> We try our best to keep an accurate,
+          <strong>How is this pickup information generated/updated?</strong><br/> We try our best to keep an accurate,
           up-to-date list, but as pickups grow and fade out we do sometimes not reflect the most up to date data. Have a
           suggestion or correction? Email <a href="mailto:sflultimate@gmail.com">sflultimate@gmail.com</a> with your
           suggestion and we'll take care of updating it.
@@ -77,48 +72,30 @@ export default function PickupsPage (props) {
           to get confirmation from the pickup organizer before heading there to play.
         </div>
 
-        <h2>Local Map</h2>
+        <article className="col-md-6">
+          <h1>{pickup.title}</h1>
+          <span className="badge">{pickup.locationType}</span>
+          <p className="lead">{pickup.day} at {pickup.time}</p>
+          <p>{pickup.description}</p>
 
-        <section id="pickup-listing-map" style={{ height: '400px' }} dangerouslySetInnerHTML={{
-          __html: ''
-        }}></section>
-
-        <h2>Full List</h2>
-        {
-          pickups.map((pickup, pickupIndex) => {
-            return (
-              <article key={pickup.id}>
-                <hr/>
-                <div className="row">
-                  <div className="col-sm-8">
-                    <h3><a href={'/pickups/' + pickup.slug}>{pickup.title}</a></h3>
-                    <span className="badge">{pickup.locationType}</span>
-                    <br/>
-                    <small>{pickup.day} at {pickup.time}</small>
-                    <p>{pickup.description}</p>
-                  </div>
-                  <div className="col-sm-4">
-                    <address>
-                      <strong>{pickup.locationName}</strong><br/>
-                      {pickup.locationAddressStreet}<br/>
-                      {pickup.locationAddressCity}, {pickup.locationAddressState}, {pickup.locationAddressZipCode}<br/>
-                    </address>
-                    <div className="btn-group">
-                      {pickup.contactWhatsapp && <a className="btn btn-sm btn-default" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
-                      {pickup.contactUrl && <a className="btn btn-sm btn-default" href={pickup.contactUrl} target="_blank">View Website</a>}
-                      {pickup.contactEmail && <a className="btn btn-sm btn-default" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
-                      {pickup.contactPhone && <a className="btn btn-sm btn-default" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-                      <a className="btn btn-sm btn-default" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
-                    </div>
-                    {
-                      pickupIndex + 1 > pickups.length && <hr/>
-                    }
-                  </div>
-                </div>
-              </article>
-            )
-          })
-        }
+          <address>
+            <strong>{pickup.locationName}</strong><br/>
+            {pickup.locationAddressStreet}<br/>
+            {pickup.locationAddressCity}, {pickup.locationAddressState}, {pickup.locationAddressZipCode}<br/>
+          </address>
+          <div className="btn-group">
+            {pickup.contactWhatsapp && <a className="btn btn-sm btn-default" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
+            {pickup.contactUrl && <a className="btn btn-sm btn-default" href={pickup.contactUrl} target="_blank">View Website</a>}
+            {pickup.contactEmail && <a className="btn btn-sm btn-default" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
+            {pickup.contactPhone && <a className="btn btn-sm btn-default" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
+            <a className="btn btn-sm btn-default" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
+          </div>
+        </article>
+        <div class="col-md-6">
+          <section id="pickup-listing-map" style={{ height: '400px' }} dangerouslySetInnerHTML={{
+            __html: ''
+          }}></section>
+        </div>
       </div>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDld-_TKoN-4PGLgQ1-JwN607eT4RfAMSQ" />
       <script dangerouslySetInnerHTML={{
@@ -133,7 +110,7 @@ export default function PickupsPage (props) {
         
         var infoWindows = []
         
-        const pickups = ${JSON.stringify(pickups)}
+        const pickups = ${JSON.stringify([pickup])}
       
         pickups.forEach(function (game) {
           const contentString = '' +
@@ -160,9 +137,7 @@ export default function PickupsPage (props) {
             },
             title: game.title
           }
-        
-          console.log(markerOptions, game)
-        
+          
           const marker = new google.maps.Marker(markerOptions)
         
           marker.addListener('click', function () {

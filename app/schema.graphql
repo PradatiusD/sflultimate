@@ -1770,6 +1770,8 @@ type Pickup {
   locationLatitude: Float
   locationLongitude: Float
   description: String
+  updatedAt: DateTime
+  slug: String
 }
 
 input PickupCreateInput {
@@ -1792,6 +1794,8 @@ input PickupCreateInput {
   locationLatitude: Float
   locationLongitude: Float
   description: String
+  updatedAt: DateTime
+  slug: String
 }
 
 enum PickupLocationTypeType {
@@ -1830,6 +1834,8 @@ input PickupUpdateInput {
   locationLatitude: Float
   locationLongitude: Float
   description: String
+  updatedAt: DateTime
+  slug: String
 }
 
 input PickupWhereInput {
@@ -2111,6 +2117,32 @@ input PickupWhereInput {
   description_not_ends_with_i: String
   description_in: [String]
   description_not_in: [String]
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  updatedAt_in: [DateTime]
+  updatedAt_not_in: [DateTime]
+  slug: String
+  slug_not: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
+  slug_i: String
+  slug_not_i: String
+  slug_contains_i: String
+  slug_not_contains_i: String
+  slug_starts_with_i: String
+  slug_not_starts_with_i: String
+  slug_ends_with_i: String
+  slug_not_ends_with_i: String
+  slug_in: [String]
+  slug_not_in: [String]
 }
 
 input PickupWhereUniqueInput {
@@ -3205,6 +3237,10 @@ enum SortPickupsBy {
   locationLongitude_DESC
   description_ASC
   description_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  slug_ASC
+  slug_DESC
 }
 
 enum SortPlayerGameStatsBy {

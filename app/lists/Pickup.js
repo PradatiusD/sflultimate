@@ -1,4 +1,4 @@
-const { Text, Integer, Float, Select, Checkbox, Relationship, File } = require('@keystonejs/fields')
+const { Text, Integer, Float, Select, Checkbox, DateTime } = require('@keystonejs/fields')
 
 const fields = {
   title: {
@@ -19,13 +19,13 @@ const fields = {
   day: {
     type: Text,
     initial: true,
-    required: true,
+    isRequired: true,
     label: 'Day(s) Played'
   },
   time: {
     type: Text,
     initial: true,
-    required: true,
+    isRequired: true,
     label: 'Start Time'
   },
   contactName: {
@@ -53,55 +53,69 @@ const fields = {
   locationName: {
     type: Text,
     initial: true,
-    required: true
+    isRequired: true
   },
   locationType: {
     type: Select,
     options: ['grass', 'turf', 'beach', 'indoor'],
     initial: true,
-    required: true,
+    isRequired: true,
     label: 'Field Type'
   },
   locationAddressStreet: {
     type: Text,
     initial: true,
-    required: true,
+    isRequired: true,
     label: 'Street Address'
   },
   locationAddressCity: {
     type: Text,
     initial: true,
-    required: true,
+    isRequired: true,
     label: 'City'
   },
   locationAddressState: {
     type: Text,
     initial: true,
-    required: true,
+    isRequired: true,
     label: 'State'
   },
   locationAddressZipCode: {
     type: Integer,
     initial: true,
-    required: true,
+    isRequired: true,
     label: 'Zip Code'
   },
   locationLatitude: {
     type: Float,
     initial: false,
-    required: false,
+    isRequired: false,
     label: 'Latitude'
   },
   locationLongitude: {
     type: Float,
     initial: false,
-    required: false,
+    isRequired: false,
     label: 'Longitude'
   },
   description: {
     type: Text,
     initial: true,
-    required: true
+    isRequired: true
+  },
+  updatedAt: {
+    type: DateTime,
+    initial: false,
+    isRequired: false,
+    defaultValue: () => new Date().toISOString(),
+    adminConfig: {
+      isReadOnly: true
+    }
+  },
+  slug: {
+    type: Text,
+    initial: true,
+    isRequired: true
   }
 }
 
@@ -110,5 +124,14 @@ module.exports = {
   labelResolver: item => item.title,
   adminConfig: {
     defaultColumns: 'isActive, order, title, locationName, day, time, locationType'
+  },
+  hooks: {
+    resolveInput: ({ resolvedData, existingItem, context }) => {
+      // On update (existingItem != undefined), set updatedAt
+      if (existingItem) {
+        resolvedData.updatedAt = new Date().toISOString()
+      }
+      return resolvedData
+    }
   }
 }
