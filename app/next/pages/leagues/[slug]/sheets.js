@@ -461,7 +461,6 @@ function Sheets (props) {
                   <th>Team</th>
                   <th className="text-center">Game 1</th>
                   <th className="text-center">Game 2</th>
-                  <th className="text-center">Game 3</th>
                 </tr>
               </thead>
               <tbody>
@@ -470,12 +469,10 @@ function Sheets (props) {
                   <td><strong>{team.name}</strong> Scores</td>
                   <td style={{ minWidth: '175px' }}></td>
                   <td style={{ minWidth: '175px' }}></td>
-                  <td style={{ minWidth: '175px' }}></td>
                 </tr>
                 <tr>
                   <td>{team.game && new Date(team.game.scheduledTime).toLocaleTimeString()}</td>
                   <td>Opponent Scores</td>
-                  <td></td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -484,12 +481,10 @@ function Sheets (props) {
                   <td>Timeouts Used</td>
                   <td></td>
                   <td></td>
-                  <td></td>
                 </tr>
                 <tr>
                   <td></td>
                   <td>Spirit Scores (1-5, 1 bad, 5 great)</td>
-                  <td></td>
                   <td></td>
                   <td></td>
                 </tr>
@@ -506,9 +501,6 @@ function Sheets (props) {
                 <th>G2 Assists</th>
                 <th>G2 Scores</th>
                 <th>G2 Defenses</th>
-                <th>G3 Assists</th>
-                <th>G3 Scores</th>
-                <th>G3 Defenses</th>
               </tr>
               </thead>
               <tbody>
@@ -517,9 +509,6 @@ function Sheets (props) {
                   return (
                     <tr key={player.firstName + player.lastName}>
                       <td>{player.firstName + '  ' + player.lastName.charAt(0).toUpperCase() + '.'}</td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
                       <td></td>
                       <td></td>
                       <td></td>
