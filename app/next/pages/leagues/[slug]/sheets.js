@@ -45,7 +45,9 @@ export async function getServerSideProps (context) {
   })
   const league = results.data.allLeagues[0]
   const teams = results.data.allTeams
-  let games = results.data.allGames.map(function (game) {
+  let games = results.data.allGames.filter(function (item) {
+    return !!(item.homeTeam && item.awayTeam)
+  }).map(function (game) {
     const g = Object.assign({}, game)
     const awayTeam = teams.find((team) => team.id === game.awayTeam.id)
     const homeTeam = teams.find((team) => team.id === game.homeTeam.id)
@@ -149,7 +151,8 @@ export async function getServerSideProps (context) {
       teams,
       games,
       queryParams: context.req.query,
-      initPlayerMap
+      initPlayerMap,
+      url: context.req.url
     }
   }
 }
@@ -168,9 +171,9 @@ function SpiritOfTheGameText () {
 }
 
 function Sheets (props) {
-  const { teams, games, queryParams, initPlayerMap } = props
+  const { teams, games, queryParams, initPlayerMap, url } = props
   const editor = queryParams.editor
-  const isTournament = false
+  const isTournament = url.indexOf('isTournament') !== -1
   const today = new Date()
 
   const handleSave = function (game, team) {
@@ -470,7 +473,7 @@ function Sheets (props) {
                   <td style={{ minWidth: '175px' }}></td>
                 </tr>
                 <tr>
-                  <td>{new Date(team.game.scheduledTime).toLocaleTimeString()}</td>
+                  <td>{team.game && new Date(team.game.scheduledTime).toLocaleTimeString()}</td>
                   <td>Opponent Scores</td>
                   <td></td>
                   <td></td>
@@ -490,6 +493,44 @@ function Sheets (props) {
                   <td></td>
                   <td></td>
                 </tr>
+              </tbody>
+            </table>
+            <table className="table table-bordered table-striped">
+              <thead>
+              <tr>
+                <th>Player Name</th>
+                <th>Attended</th>
+                <th>G1 Assists</th>
+                <th>G1 Scores</th>
+                <th>G1 Defenses</th>
+                <th>G2 Assists</th>
+                <th>G2 Scores</th>
+                <th>G2 Defenses</th>
+                <th>G3 Assists</th>
+                <th>G3 Scores</th>
+                <th>G3 Defenses</th>
+              </tr>
+              </thead>
+              <tbody>
+              {
+                team.players.map((player) => {
+                  return (
+                    <tr key={player.firstName + player.lastName}>
+                      <td>{player.firstName + ' ' + player.lastName}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  )
+                })
+              }
               </tbody>
             </table>
             <SpiritOfTheGameText/>

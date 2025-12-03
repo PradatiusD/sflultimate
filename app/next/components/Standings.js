@@ -2,7 +2,11 @@
 export default function Standings (props) {
   const { games, teamsFilter } = props
   const teamMap = {}
+  console.log(games)
   games.forEach(game => {
+    if (!game.homeTeam || !game.awayTeam) {
+      return
+    }
     ['homeTeam', 'awayTeam'].forEach((type) => {
       const id = game[type].id
       const name = game[type].name
@@ -18,6 +22,9 @@ export default function Standings (props) {
 
   const standingsMap = {}
   for (const game of games) {
+    if (!game.homeTeam || !game.awayTeam) {
+      continue
+    }
     const homeTeam = {
       id: game.homeTeam.id,
       score: game.homeTeamScore,
