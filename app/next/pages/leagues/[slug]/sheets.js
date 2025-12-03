@@ -516,7 +516,7 @@ function Sheets (props) {
                 team.players.map((player) => {
                   return (
                     <tr key={player.firstName + player.lastName}>
-                      <td>{player.firstName + ' ' + player.lastName}</td>
+                      <td>{player.firstName + '  ' + player.lastName.charAt(0).toUpperCase() + '.'}</td>
                       <td></td>
                       <td></td>
                       <td></td>
