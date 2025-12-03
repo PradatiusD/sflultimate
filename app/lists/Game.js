@@ -46,6 +46,10 @@ const fields = {
     type: Relationship,
     ref: 'Location',
     initial: true
+  },
+  showNameOnSchedule: {
+    type: Checkbox,
+    default: false
   }
 }
 

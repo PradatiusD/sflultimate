@@ -1,4 +1,4 @@
-import {addLeagueToVariables, showDate, showHourMinute, showWeekday} from '../lib/utils'
+import { addLeagueToVariables, showDate, showHourMinute, showWeekday } from '../lib/utils'
 import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
@@ -27,6 +27,8 @@ export const getScheduleData = async function (context) {
         }
         allGames(where: {league: $leagueCriteria}, sortBy: scheduledTime_ASC) {
           id
+          name
+          showNameOnSchedule
           scheduledTime
           homeTeam {
             name
@@ -58,7 +60,7 @@ export const getScheduleData = async function (context) {
           color
         }
       }`,
-    variables: variables
+    variables
   })
   const league = results.data.allLeagues[0]
   const games = Array.from(results.data.allGames).sort((a, b) => {
@@ -107,8 +109,9 @@ export const Schedule = function (props) {
               }
 
             </p>
-            <table className="table table-striped table-bordered">
-              <thead>
+            <div className="table-responsive">
+              <table className="table table-striped table-bordered">
+                <thead>
                 <tr>
                   <th>Date</th>
                   <th>Weekday</th>
@@ -117,60 +120,71 @@ export const Schedule = function (props) {
                   <th>Field</th>
                   <th>Preview/Recap</th>
                 </tr>
-              </thead>
-              <tbody>
+                </thead>
+                <tbody>
                 {
                   activeGames.map((gameOrEvent) => {
-                    if (gameOrEvent.__typename === 'Game') {
+                    const game = gameOrEvent.__typename === 'Game' ? gameOrEvent : null
+                    const event = !game ? gameOrEvent : null
+                    if (game) {
                       const inPast = new Date(gameOrEvent.scheduledTime).getTime() < Date.now()
+                      const hasTeams = gameOrEvent.homeTeam && gameOrEvent.awayTeam
+                      const showGameName = gameOrEvent.showNameOnSchedule || !hasTeams
                       return (
-                        <tr key={gameOrEvent.id} className={inPast ? 'text-muted' : ''}>
-                          {
-
-                          }
-                          <td>{showDate(gameOrEvent.scheduledTime)}</td>
-                          <td>{showWeekday(gameOrEvent.scheduledTime)}</td>
-                          <td>{showHourMinute(gameOrEvent.scheduledTime)}</td>
+                        <tr key={game.id} className={inPast ? 'text-muted' : ''}>
+                          <td>{showDate(game.scheduledTime)}</td>
+                          <td>{showWeekday(game.scheduledTime)}</td>
+                          <td>{showHourMinute(game.scheduledTime)}</td>
                           <td>
-                            <span><span
-                              style={{ borderBottom: '3px solid ' + gameOrEvent.homeTeam.color }}>{gameOrEvent.homeTeam.name}</span> vs. <span
-                              style={{ borderBottom: '3px solid ' + gameOrEvent.awayTeam.color }}>{gameOrEvent.awayTeam.name}</span></span>
                             {
-                              (gameOrEvent.homeTeamScore > 0 || gameOrEvent.awayTeamScore > 0) && (!gameOrEvent.homeTeamForfeit && !gameOrEvent.homeTeamForfeit) && (
-                                <span> ({gameOrEvent.homeTeamScore}-{gameOrEvent.awayTeamScore})</span>
+                              showGameName && <div>{game.name}</div>
+                            }
+                            {
+                              hasTeams && (
+                                <div>
+                                  <span style={{ borderBottom: '3px solid ' + game.homeTeam.color }}>{game.homeTeam.name}</span>
+                                    {' '}vs.{' '}
+                                  <span style={{ borderBottom: '3px solid ' + game.awayTeam.color }}>{game.awayTeam.name}</span>
+                                </div>
                               )
                             }
                             {
-                              gameOrEvent.homeTeamForfeit && (
+                              (game.homeTeamScore > 0 || game.awayTeamScore > 0) && (!game.homeTeamForfeit && !game.homeTeamForfeit) && (
+                                <span> ({game.homeTeamScore}-{game.awayTeamScore})</span>
+                              )
+                            }
+                            {
+                              game.homeTeamForfeit && (
                                 <span>
-                                  <br/> {gameOrEvent.homeTeam.name} forfeited
+                                  <br/> {game.homeTeam.name} forfeited
                                 </span>
                               )
                             }
                             {
-                              gameOrEvent.awayTeamForfeit && (
+                              game.awayTeamForfeit && (
                                 <span>
-                                  <br/> {gameOrEvent.awayTeam.name} forfeited
+                                  <br/> {game.awayTeam.name} forfeited
                                 </span>
                               )
                             }
                           </td>
-                          <td>{gameOrEvent?.location?.name}</td>
+                          <td>{game?.location?.name}</td>
                           <td>
-                            <a href={'/games/' + gameOrEvent.id}>
-                              {new Date(gameOrEvent.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}
+                            <a href={'/games/' + game.id}>
+                              {new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}
                             </a>
                           </td>
                         </tr>
                       )
                     }
                     return (
-                      <tr key={gameOrEvent.id}>
-                        <td>{showDate(gameOrEvent.startTime)}</td>
-                        <td>{showHourMinute(gameOrEvent.startTime)}</td>
-                        <td colSpan={2}><span className="badge">Event</span> {gameOrEvent.name}</td>
-                        <td>{gameOrEvent.location}</td>
-                        <td><a target="_blank" href={gameOrEvent.moreInformationUrl}>More Information</a></td>
+                      <tr key={event.id}>
+                        <td>{showDate(event.startTime)}</td>
+                        <td>{showWeekday(event.startTime)}</td>
+                        <td>{showHourMinute(event.startTime)}</td>
+                        <td><span className="badge">Event</span> {event.name}</td>
+                        <td>{event.location}</td>
+                        <td><a target="_blank" href={event.moreInformationUrl}>More Information</a></td>
                       </tr>
                     )
                   })
@@ -186,8 +200,9 @@ export const Schedule = function (props) {
                     </tr>
                   )
                 }
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </section>
         </div>
       </div>
