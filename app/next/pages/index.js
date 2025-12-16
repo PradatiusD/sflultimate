@@ -109,7 +109,7 @@ export default function Homepage (props) {
     'league-champions-2013-spring.jpg'
   ]
 
-  const showSignupLeague = false
+  const showSignupLeague = true
 
   return (
     <>
@@ -158,10 +158,16 @@ export default function Homepage (props) {
       <div className="container">
         <div className="row">
           <div className="col-md-8">
-            <h3>Latest Standings</h3>
-            <div className="standings">
-              <Standings games={games} />
-            </div>
+            {
+              !showSignupLeague && (
+                <>
+                  <h3>Latest Standings</h3>
+                  <div className="standings">
+                    <Standings games={games} />
+                  </div>
+                </>
+              )
+            }
             {
               showSignupLeague && (
                 <>

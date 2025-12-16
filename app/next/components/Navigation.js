@@ -22,7 +22,7 @@ function HeaderNavigation (props) {
   const { section } = props
 
   let headerNavLinks = navLinks.slice()
-  headerNavLinks.push({ label: 'Register', key: 'register', href: '/register' })
+  headerNavLinks.unshift({ label: 'Register', key: 'register', href: '/register' })
   headerNavLinks = headerNavLinks.concat([
     // { label: 'Teams', key: 'teams', href: '/teams' },
     // { label: 'Schedule', key: 'schedule', href: '/schedule' },
