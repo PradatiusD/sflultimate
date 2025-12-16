@@ -6,8 +6,9 @@ const evergreenLinks = [
   { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
   { label: 'Our Board', key: 'board', href: '/board' },
   { label: 'Events', key: 'events', href: '/events' },
-  { label: 'News', key: 'news', href: '/news' }
-  // { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
+  { label: 'News', key: 'news', href: '/news' },
+  { label: 'Youth', key: 'youth', href: '/youth' },
+  { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
 ]
 
 navLinks = navLinks.concat(evergreenLinks)
@@ -21,12 +22,11 @@ function HeaderNavigation (props) {
   const { section } = props
 
   let headerNavLinks = navLinks.slice()
-  // headerNavLinks.push({ label: 'Register', key: 'register', href: '/register' })
+  headerNavLinks.push({ label: 'Register', key: 'register', href: '/register' })
   headerNavLinks = headerNavLinks.concat([
-    { label: 'Youth', key: 'youth', href: '/youth' },
-    { label: 'Teams', key: 'teams', href: '/teams' },
-    { label: 'Schedule', key: 'schedule', href: '/schedule' },
-    { label: 'Stats', key: 'stats', href: '/stats' }
+    // { label: 'Teams', key: 'teams', href: '/teams' },
+    // { label: 'Schedule', key: 'schedule', href: '/schedule' },
+    // { label: 'Stats', key: 'stats', href: '/stats' }
   ])
 
   const leagueNames = [

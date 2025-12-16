@@ -30,7 +30,7 @@ function PlayerAmountAlert (props) {
       {
         playersPerGender.Male < 48 && (
           <div className="alert alert-info">
-            <span><strong>For men registrations: </strong>At the time of loading this page only <strong>{48 - playersPerGender.Male} guy spots left</strong>, and once filled we will move you to play the men's league, unless a player from the mixed team should drop.</span>
+            <span><strong>For men registrations: </strong>At the time of loading this page only <strong>{48 - playersPerGender.Male} guy spots left</strong>, and once filled we will move you to play the men&apos;s league, unless a player from the mixed team should drop.</span>
           </div>
         )
       }
@@ -71,6 +71,7 @@ export default function RegisterPage (props) {
     <>
       <Head>
         <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
+        <meta name="description" content={activeLeague.summary || ''}/>
         <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
         <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
         <meta property="og:description" content={activeLeague.summary || ''}/>
@@ -83,7 +84,7 @@ export default function RegisterPage (props) {
         <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
         <script dangerouslySetInnerHTML={{ __html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';` }}></script>
       </Head>
-      <HeaderNavigation league={activeLeague} />
+      <HeaderNavigation league={activeLeague}/>
     </>
   )
 

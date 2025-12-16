@@ -64,8 +64,15 @@ export default function LeagueRegisterPage (props) {
       </Head>
       <HeaderNavigation league={activeLeague} />
       <div className="container">
-        <h1>Pick Your League</h1>
-        <p className="lead">We now offer multiple types of leagues, all at the same location.</p>
+        {
+          props.leagues.length > 1 && (
+            <>
+              <h1>Pick Your League</h1>
+              <p className="lead">We now offer multiple types of leagues, all at the same location.</p>
+            </>
+          )
+        }
+
         <div className="row">
           {
             props.leagues.map(function (league) {
@@ -73,9 +80,13 @@ export default function LeagueRegisterPage (props) {
               return (
                 <div key={league.id} className="col-md-6">
                   <h2>{league.title.replace('Fall League 2025 -', '')}</h2>
-                  <a href={href}>
-                    <img className="img-responsive league-logo" src={league.registrationShareImage.publicUrl} alt={league.title + ' thumbnail'} />
-                  </a>
+                  {
+                    league.registrationShareImage && (
+                      <a href={href}>
+                        <img className="img-responsive league-logo" src={league.registrationShareImage.publicUrl} alt={league.title + ' thumbnail'} />
+                      </a>
+                    )
+                  }
                   <p>
                     {league.summary}
                   </p>
