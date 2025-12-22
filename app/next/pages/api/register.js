@@ -239,9 +239,9 @@ export default async function handler (req, res) {
     // Donation
     const donationTiers = {
       tier_0: 0,
-      tier_1: 40,
-      tier_2: 80,
-      tier_3: 160
+      tier_1: league.pricingRegularAdult * 0.5,
+      tier_2: league.pricingRegularAdult,
+      tier_3: league.pricingRegularAdult * 2
     }
 
     const donationAmount = donationTiers[sanitizedPayload.donationLevel] || 0

@@ -419,10 +419,10 @@ export default function RegisterPage (props) {
             />
 
             <div className="alert alert-success">
-              <strong>FYI: </strong>Captains get a <strong>$15 discount</strong> on their league entry!
+              <strong>FYI: </strong>Captains get a <strong>$10 discount</strong> on their league entry!
               <br />
               <br />
-              Also be sure to come to our <strong>DRAFT PARTY</strong> on October 8th, location/time TBD, come get hype about the league and watch the captains select teams for both divisions, hosted by league commissioners <strong>Franco Benito</strong> and <strong>Emiliano Castillo</strong>. Get to know your new teammates and see friendly faces too!
+              Also be sure to come to our <strong>DRAFT PARTY</strong> location/time TBD, come get hype about the league and watch the captains select teams. Get to know your new teammates and see friendly faces too!
             </div>
 
             <h3>General Waiver</h3>
@@ -506,9 +506,9 @@ export default function RegisterPage (props) {
                   required
                   options={[
                     { value: 'tier_0', label: '$0' },
-                    { value: 'tier_1', label: '$40 - sponsor 1/2 a player' },
-                    { value: 'tier_2', label: '$80 - sponsor a player' },
-                    { value: 'tier_3', label: '$160 - sponsor two players' }
+                    { value: 'tier_1', label: `$${activeLeague.pricingRegularAdult * 0.5} - sponsor 1/2 a player` },
+                    { value: 'tier_2', label: `$${activeLeague.pricingRegularAdult} - sponsor a player` },
+                    { value: 'tier_3', label: `$${activeLeague.pricingRegularAdult * 2} - sponsor two players` }
                   ]}
                   onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
                 />
