@@ -4,7 +4,7 @@ const { AdminUIApp } = require('@keystonejs/app-admin-ui')
 const { PasswordAuthStrategy } = require('@keystonejs/auth-password')
 const { NextApp } = require('@keystonejs/app-next')
 const PROJECT_NAME = 'SFLUltimate'
-const keystone = require('.`/keystone')
+const keystone = require('./keystone')
 const contentListSchemas = require('./lists/index')
 
 for (const listName in contentListSchemas) {
