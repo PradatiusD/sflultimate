@@ -12076,7 +12076,7 @@ textarea.form-control-lg {
 }
 .navbar .navbar-brand img {
   position: absolute;
-  top: 0;
+  top: -27px;
   width: 200px;
   display: block;
   max-width: 100%;
