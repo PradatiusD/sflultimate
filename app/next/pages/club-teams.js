@@ -87,7 +87,7 @@ export default function ClubTeamsPage (props) {
                     <img
                       src={team.image.publicUrl}
                       alt={team.name}
-                      className="img-responsive"
+                      className="img-fluid"
                       style={{ margin: '0 auto' }}
                     />
                   )}

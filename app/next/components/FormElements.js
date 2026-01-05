@@ -3,12 +3,13 @@ import { useState } from 'react'
 export function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
   const [inputStateClass, setInputStateClass] = useState(['form-group'])
 
-  const inputClasses = ['input-lg', 'form-control']
+  const inputClasses = ['form-control-lg', 'form-control']
   return <>
     <div className={inputStateClass.join(' ')}>
-      <label className="control-label" htmlFor={name}>{label}</label>
+      <label className="form-label" htmlFor={name}>{label}</label>
       {
-        type === 'textarea' ? (
+        type === 'textarea'
+          ? (
           <textarea
             id={name}
             className={inputClasses.join(' ')}
@@ -18,7 +19,8 @@ export function FormInput ({ label, type, name, placeholder, required, helpText,
             onChange={onChange}
             rows={3}
           />
-        ) : <input
+            )
+          : <input
           id={name}
           className={inputClasses.join(' ')}
           type={type}
@@ -38,7 +40,7 @@ export function FormInput ({ label, type, name, placeholder, required, helpText,
           }}
         />
       }
-      <p className="help-block">{helpText}</p>
+      <p className="form-text">{helpText}</p>
     </div>
   </>
 }
@@ -47,10 +49,10 @@ export function FormSelect ({ label, name, options, required, helpText, onChange
   const [inputStateClass, setInputStateClass] = useState(['form-group'])
   return <>
     <div className={inputStateClass.join(' ')}>
-      <label className="control-label" htmlFor={name}>{label}</label>
+      <label className="form-label" htmlFor={name}>{label}</label>
       <select
         id={name}
-        className="input-lg form-control"
+        className="form-control-lg form-control"
         name={name}
         required={required}
         onChange={(e) => {
@@ -74,19 +76,20 @@ export function FormSelect ({ label, name, options, required, helpText, onChange
 }
 
 export function FormCheckbox ({ label, id, required }) {
-  const [inputStateClass, setInputStateClass] = useState(['checkbox'])
+  const [inputStateClass, setInputStateClass] = useState(['form-check'])
 
   return (
     <div className={inputStateClass.join(' ')}>
-      <label>
-        <input
-          id={id}
-          type="checkbox"
-          required={required}
-          onInvalid={(e) => {
-            setInputStateClass([...inputStateClass, 'has-error'])
-          }}
-        />
+      <input
+        id={id}
+        type="checkbox"
+        className="form-check-input"
+        required={required}
+        onInvalid={(e) => {
+          setInputStateClass([...inputStateClass, 'has-error'])
+        }}
+      />
+      <label className="form-check-label" htmlFor={id}>
         {label}
       </label>
     </div>

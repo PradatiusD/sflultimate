@@ -169,7 +169,7 @@ export default function Quiz () {
 
   if (state.completedQuestionIds.length === rules.length) {
     return (
-      <div className={'text-center jumbotron'}>
+      <div className="text-center p-5 mb-4 bg-light rounded-3">
         <h1>Congrats!</h1>
         <p className="tagline">You now know your hand signals!</p>
       </div>
@@ -181,7 +181,7 @@ export default function Quiz () {
       <h1>Quiz {state.completedQuestionIds.length}/{rules.length}</h1>
       <img
         src={'https://d137pw2ndt5u9c.cloudfront.net/quiz/hand-signals-' + state.activeRule.id + '.svg'}
-        className="img-responsive"
+        className="img-fluid"
         style={{
           height: '250px',
           width: '250px',

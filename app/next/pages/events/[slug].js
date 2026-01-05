@@ -88,8 +88,8 @@ export default function EventItemPage (props) {
 
       <div className="container">
         <div className="row">
-          <div className="col-md-6 col-md-offset-3">
-            <img src={event.image.publicUrl} className="img-responsive" alt=""/>
+          <div className="col-md-6 offset-md-3">
+            <img src={event.image.publicUrl} className="img-fluid" alt=""/>
             <h1>{event.name}</h1>
             <small className="text-muted">{event.category}</small>
             <p className="lead" style={{ marginBottom: 0 }}>{event.startTimeFormatted}<br/><small>{event.location}</small></p>

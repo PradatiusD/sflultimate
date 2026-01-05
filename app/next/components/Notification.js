@@ -9,7 +9,7 @@ export default function Notification () {
   return (
     <div className="container">
       <div className="alert alert-info" role="alert">
-        <span className="glyphicon glyphicon-info-sign" style={{ position: 'relative', top: '2px' }}></span>{' '}
+        <i className="fa fa-info-circle me-2" aria-hidden="true"></i>
         <strong><a href="/register">Fall League Registration</a> closes soon:</strong>
         {' '} only{' '}
         <Countdown

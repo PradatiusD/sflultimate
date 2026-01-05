@@ -13,7 +13,7 @@ export default function Privacy () {
       <HeaderNavigation />
       <div className="container">
         <div className="row">
-          <div className="col-sm-8 col-sm-offset-2">
+          <div className="col-sm-8 offset-sm-2">
             <h1>Privacy Policy</h1>
 
             <p> This privacy policy discloses the privacy practices for sflultimate.com. This privacy policy applies solely to information collected by this web site. It will notify you of the following:</p>

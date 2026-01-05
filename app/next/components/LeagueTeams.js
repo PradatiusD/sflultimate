@@ -70,7 +70,7 @@ function PlayerImage (props) {
   const { player } = props
   const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://placehold.co/200x200?text=Image+Pending'
   return (
-    <img src={srcUrl} className="img-responsive img-rounded" />
+    <img src={srcUrl} className="img-fluid rounded" />
   )
 }
 

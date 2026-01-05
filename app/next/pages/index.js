@@ -180,7 +180,7 @@ export default function Homepage (props) {
                           {
                             league.registrationShareImage && league.registrationShareImage.publicUrl && (
                               <a href={href}>
-                                <Image className="img-responsive img-rounded " src={league.registrationShareImage.publicUrl} height={630} width={1200} />
+                                <Image className="img-fluid rounded " src={league.registrationShareImage.publicUrl} height={630} width={1200} />
                               </a>
                             )
                           }
@@ -204,7 +204,7 @@ export default function Homepage (props) {
                       <div>
                         {
                           event.image && event.image.publicUrl && (
-                            <img className="img-responsive img-circle" src={event.image.publicUrl} style={{ aspectRatio: '1' }} />
+                            <img className="img-fluid rounded-circle" src={event.image.publicUrl} style={{ aspectRatio: '1' }} />
                           )
                         }
                       </div>
@@ -236,7 +236,7 @@ export default function Homepage (props) {
                   {
                     post.image && post.image.publicUrl && (
                       <a href={href}>
-                        <img className="img-responsive img-rounded" src={post.image.publicUrl} />
+                        <img className="img-fluid rounded" src={post.image.publicUrl} />
                       </a>
                     )
                   }

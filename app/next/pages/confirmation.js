@@ -73,7 +73,7 @@ export default function ConfirmationPage (props) {
       <title>Your Order for {league.title} is Confirmed!</title>
     </Head>
     <HeaderNavigation league={league} />
-    <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-responsive" alt="" style={{
+    <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-fluid" alt="" style={{
       maxHeight: '480px',
       margin: '1rem auto',
       borderRadius: '1rem'

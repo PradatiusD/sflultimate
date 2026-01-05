@@ -78,7 +78,7 @@ function EventItem (props) {
           {
             event.image && (
               <a href={event.image.publicUrl} target="_blank" rel="noopener noreferrer">
-                <img src={event.image.publicUrl} className="img-responsive img-rounded" alt={event.name}/>
+                <img src={event.image.publicUrl} className="img-fluid rounded" alt={event.name}/>
               </a>
             )
           }
@@ -94,7 +94,7 @@ function EventItem (props) {
           <div dangerouslySetInnerHTML={{ __html: event.description }}/>
           <ul className="list-inline" style={{ marginTop: '1rem' }}>
             <li>
-              <a className="btn btn-default event-btn" href={eventUrl}>
+              <a className="btn btn-secondary event-btn" href={eventUrl}>
                 View Event
               </a>
             </li>

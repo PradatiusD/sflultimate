@@ -81,7 +81,7 @@ export default function BoardPage (props) {
         <meta property="og:image:height" content="630"/>
       </Head>
       <HeaderNavigation league={league} />
-      <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/682db0ce069a32002858c125-frisbee_final-417-o.jpg" alt="League Finals 2025" className="img-responsive"/>
+      <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/682db0ce069a32002858c125-frisbee_final-417-o.jpg" alt="League Finals 2025" className="img-fluid"/>
       <div className="container">
         <h1>Board</h1>
         <h2>Our Positions</h2>
@@ -136,7 +136,7 @@ export default function BoardPage (props) {
                     <img
                       src={member.image.publicUrl}
                       alt={`${member.firstName} ${member.lastName}`}
-                      className="img-responsive img-rounded"
+                      className="img-fluid rounded"
                       style={{ margin: '0 auto' }}
                     />
                   )}

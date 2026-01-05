@@ -67,10 +67,10 @@ export default function PostsPage (props) {
       <HeaderNavigation league={league} />
       <div className="container">
         <div className="row">
-          <div className="col-md-8 col-md-offset-2">
+          <div className="col-md-8 offset-md-2">
             {
               post.image && (
-                <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" style={{ margin: '1rem auto', maxHeight: '500px' }} />
+                <img src={post.image.publicUrl} alt={post.title} className="img-fluid rounded" style={{ margin: '1rem auto', maxHeight: '500px' }} />
               )
             }
             <h1>{post.title}</h1>

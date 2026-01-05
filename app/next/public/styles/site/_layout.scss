@@ -1,4 +1,8 @@
-@import "./../../../../../node_modules/sass-mediaqueries/media-queries";
+@mixin max-screen($width) {
+  @media (max-width: $width) {
+    @content;
+  }
+}
 
 @keyframes fadein {
   from { opacity: 0; transform: translateY(100%)}
@@ -112,7 +116,7 @@
     font-family: $headings-font-family;
     text-transform: uppercase;
     padding: 0.5em 1.5em;
-    border-bottom: 3px solid darken($brand-primary, 25%);
+    border-bottom: 3px solid darken($primary, 25%);
     font-size: 1.3em;
     animation-delay: 4s;
   }
@@ -217,11 +221,11 @@
   }
 }
 
-.navbar-fixed-top {
+.fixed-top {
   //z-index: 99999;
 }
 
-.container-fluid a.navbar-brand {
+.navbar .navbar-brand {
   float: none;
   max-width: 300px;
   margin: 0 auto !important;
@@ -259,7 +263,7 @@
 
   .fa {
     color: #FFF;
-    background: $brand-primary;
+    background: $primary;
     display: inline-block;
     width: 45px;
     height: 45px;
@@ -386,11 +390,11 @@
     color: #15698c;
   }
 
-  .navbar-inverse .navbar-nav > .active > a {
+  .navbar-dark .navbar-nav .nav-link.active {
     background-color: #17688a;
   }
 
-  .navbar-inverse .navbar-collapse {
+  .navbar-dark .navbar-collapse {
     border-color: #ffffff2e !important;
   }
 
@@ -398,23 +402,23 @@
     background-color: #26abe3;
   }
 
-  .navbar-inverse, .credits, .btn-lg {
+  .navbar-dark, .credits, .btn-lg {
     background-color: #26abe3;
     border-color: #15698c;
   }
 
-  .navbar-inverse .navbar-nav > li > a {
+  .navbar-dark .navbar-nav .nav-link {
     color: white;
   }
 }
 
 .credits {
-  background: $brand-primary;
+  background: $primary;
   color: white;
   padding: 0.75em 0 1em 0;
-  border-top: 4px solid darken($brand-primary, 12%);
+  border-top: 4px solid darken($primary, 12%);
   a {
-    color: lighten($brand-primary, 40%);
+    color: lighten($primary, 40%);
   }
 }
 
@@ -450,13 +454,13 @@
     text-transform: uppercase;
     font-style: italic;
     text-shadow: 4px 4px 0 #000000, 0 0 15px black;
-    font-size: 6rem;
+    font-size: 4rem;
   }
   p {
     background: rgb(0 0 0 / 60%);
     text-shadow: 0 0 20px black;
     padding: 1rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 400;
   }
 }
@@ -478,7 +482,6 @@
 }
 
 .homepage-news-card {
-  font-size: 1.5rem;
   img {
     border: 1px solid #edecec;
     box-shadow: 1px 1px 4px #0000003b;
