@@ -369,29 +369,35 @@ export default function Draftboard (props) {
                     <td>{player.participation}</td>
                     <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
                     <td>{player.partnerName}</td>
-                    <td>
-                      {player.team && (
-                        <span className="badge" style={getBadgeStyle(teamMap[player.team].color)}>
+                    {
+                      (player.team || showComments) && (
+                        <td>
+                          {
+                            player.team && (
+                              <span className="badge" style={getBadgeStyle(teamMap[player.team].color)}>
                             {teamMap[player.team].name}
                           </span>
-                      )}
-                      {
-                        showComments && (
-                          <small>
-                            {player.comments}
-                          </small>
-                        )
-                      }
-                    </td>
+                            )
+                          }
+                          {
+                            showComments && (
+                              <small>
+                                {player.comments}
+                              </small>
+                            )
+                          }
+                        </td>
+                      )
+                    }
                     {
                       !isDraftMode && <td>{player.wouldCaptain ? 'Yes' : ''}</td>
                     }
                     {
                       !isDraftMode && <td>{player.wouldSponsor ? 'Yes' : ''}</td>
                     }
-                    <td>
-                      {
-                        user && isDraftMode && (
+                    {
+                      user && isDraftMode && (
+                        <td>
                           <div style={{ minWidth: '400px' }}>
                             {!player.team && teams.map((team, index) => {
                               return (
@@ -406,9 +412,9 @@ export default function Draftboard (props) {
                               )
                             })}
                           </div>
-                        )
-                      }
-                    </td>
+                        </td>
+                      )
+                    }
                   </tr>
                 )
               })
