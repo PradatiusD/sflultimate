@@ -12,6 +12,7 @@ const Post = require('./Post')
 const Team = require('./Team')
 const User = require('./User')
 const TournamentTeam = require('./TournamentTeam')
+const PlayerSubstitution = require('./PlayerSubstitution')
 
 module.exports = {
   BoardMember,
@@ -27,5 +28,6 @@ module.exports = {
   Post,
   Team,
   TournamentTeam,
+  PlayerSubstitution,
   User
 }

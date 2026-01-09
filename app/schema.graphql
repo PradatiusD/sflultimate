@@ -931,6 +931,7 @@ type Game {
   awayTeamScore: Int
   awayTeamForfeit: Boolean
   location: Location
+  showNameOnSchedule: Boolean
 }
 
 input GameCreateInput {
@@ -944,6 +945,7 @@ input GameCreateInput {
   awayTeamScore: Int
   awayTeamForfeit: Boolean
   location: LocationRelateToOneInput
+  showNameOnSchedule: Boolean
 }
 
 input GameRelateToOneInput {
@@ -973,6 +975,7 @@ input GameUpdateInput {
   awayTeamScore: Int
   awayTeamForfeit: Boolean
   location: LocationRelateToOneInput
+  showNameOnSchedule: Boolean
 }
 
 input GameWhereInput {
@@ -1036,6 +1039,8 @@ input GameWhereInput {
   awayTeamForfeit_not: Boolean
   location: LocationWhereInput
   location_is_null: Boolean
+  showNameOnSchedule: Boolean
+  showNameOnSchedule_not: Boolean
 }
 
 input GameWhereUniqueInput {
@@ -1058,6 +1063,7 @@ type League {
   """
   _label_: String
   id: ID!
+  name: String
   title: String
   slug: String
   summary: String
@@ -1088,6 +1094,7 @@ type League {
 }
 
 input LeagueCreateInput {
+  name: String
   title: String
   slug: String
   summary: String
@@ -1141,6 +1148,7 @@ input LeaguesUpdateInput {
 }
 
 input LeagueUpdateInput {
+  name: String
   title: String
   slug: String
   summary: String
@@ -1177,6 +1185,24 @@ input LeagueWhereInput {
   id_not: ID
   id_in: [ID]
   id_not_in: [ID]
+  name: String
+  name_not: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  name_i: String
+  name_not_i: String
+  name_contains_i: String
+  name_not_contains_i: String
+  name_starts_with_i: String
+  name_not_starts_with_i: String
+  name_ends_with_i: String
+  name_not_ends_with_i: String
+  name_in: [String]
+  name_not_in: [String]
   title: String
   title_not: String
   title_contains: String
@@ -1714,6 +1740,24 @@ type Mutation {
 
   """ Delete multiple TournamentTeam items by ID. """
   deleteTournamentTeams(ids: [ID!]): [TournamentTeam]
+
+  """ Create a single PlayerSubstitution item. """
+  createPlayerSubstitution(data: PlayerSubstitutionCreateInput): PlayerSubstitution
+
+  """ Create multiple PlayerSubstitution items. """
+  createPlayerSubstitutions(data: [PlayerSubstitutionsCreateInput]): [PlayerSubstitution]
+
+  """ Update a single PlayerSubstitution item by ID. """
+  updatePlayerSubstitution(id: ID!, data: PlayerSubstitutionUpdateInput): PlayerSubstitution
+
+  """ Update multiple PlayerSubstitution items by ID. """
+  updatePlayerSubstitutions(data: [PlayerSubstitutionsUpdateInput]): [PlayerSubstitution]
+
+  """ Delete a single PlayerSubstitution item by ID. """
+  deletePlayerSubstitution(id: ID!): PlayerSubstitution
+
+  """ Delete multiple PlayerSubstitution items by ID. """
+  deletePlayerSubstitutions(ids: [ID!]): [PlayerSubstitution]
 
   """ Create a single User item. """
   createUser(data: UserCreateInput): User
@@ -2404,6 +2448,218 @@ enum PlayerShirtSizeType {
   XXXL
 }
 
+""" A keystone list """
+type PlayerSubstitution {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the PlayerSubstitution List config, or
+   2. As an alias to the field set on 'labelField' in the PlayerSubstitution List config, or
+   3. As an alias to a 'name' field on the PlayerSubstitution List (if one exists), or
+   4. As an alias to the 'id' field on the PlayerSubstitution List.
+  """
+  _label_: String
+  id: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  firstName: String
+  lastName: String
+  name: String
+  gender: PlayerSubstitutionGenderType
+  email: String
+  league: League
+  team: Team
+  comments: String
+  phoneNumber: String
+}
+
+input PlayerSubstitutionCreateInput {
+  createdAt: DateTime
+  updatedAt: DateTime
+  firstName: String
+  lastName: String
+  name: String
+  gender: PlayerSubstitutionGenderType
+  email: String
+  league: LeagueRelateToOneInput
+  team: TeamRelateToOneInput
+  comments: String
+  phoneNumber: String
+}
+
+enum PlayerSubstitutionGenderType {
+  Male
+  Female
+  Other
+}
+
+input PlayerSubstitutionsCreateInput {
+  data: PlayerSubstitutionCreateInput
+}
+
+input PlayerSubstitutionsUpdateInput {
+  id: ID!
+  data: PlayerSubstitutionUpdateInput
+}
+
+input PlayerSubstitutionUpdateInput {
+  createdAt: DateTime
+  updatedAt: DateTime
+  firstName: String
+  lastName: String
+  name: String
+  gender: PlayerSubstitutionGenderType
+  email: String
+  league: LeagueRelateToOneInput
+  team: TeamRelateToOneInput
+  comments: String
+  phoneNumber: String
+}
+
+input PlayerSubstitutionWhereInput {
+  AND: [PlayerSubstitutionWhereInput]
+  OR: [PlayerSubstitutionWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  createdAt_in: [DateTime]
+  createdAt_not_in: [DateTime]
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  updatedAt_in: [DateTime]
+  updatedAt_not_in: [DateTime]
+  firstName: String
+  firstName_not: String
+  firstName_contains: String
+  firstName_not_contains: String
+  firstName_starts_with: String
+  firstName_not_starts_with: String
+  firstName_ends_with: String
+  firstName_not_ends_with: String
+  firstName_i: String
+  firstName_not_i: String
+  firstName_contains_i: String
+  firstName_not_contains_i: String
+  firstName_starts_with_i: String
+  firstName_not_starts_with_i: String
+  firstName_ends_with_i: String
+  firstName_not_ends_with_i: String
+  firstName_in: [String]
+  firstName_not_in: [String]
+  lastName: String
+  lastName_not: String
+  lastName_contains: String
+  lastName_not_contains: String
+  lastName_starts_with: String
+  lastName_not_starts_with: String
+  lastName_ends_with: String
+  lastName_not_ends_with: String
+  lastName_i: String
+  lastName_not_i: String
+  lastName_contains_i: String
+  lastName_not_contains_i: String
+  lastName_starts_with_i: String
+  lastName_not_starts_with_i: String
+  lastName_ends_with_i: String
+  lastName_not_ends_with_i: String
+  lastName_in: [String]
+  lastName_not_in: [String]
+  name: String
+  name_not: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  name_i: String
+  name_not_i: String
+  name_contains_i: String
+  name_not_contains_i: String
+  name_starts_with_i: String
+  name_not_starts_with_i: String
+  name_ends_with_i: String
+  name_not_ends_with_i: String
+  name_in: [String]
+  name_not_in: [String]
+  gender: PlayerSubstitutionGenderType
+  gender_not: PlayerSubstitutionGenderType
+  gender_in: [PlayerSubstitutionGenderType]
+  gender_not_in: [PlayerSubstitutionGenderType]
+  email: String
+  email_not: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  email_i: String
+  email_not_i: String
+  email_contains_i: String
+  email_not_contains_i: String
+  email_starts_with_i: String
+  email_not_starts_with_i: String
+  email_ends_with_i: String
+  email_not_ends_with_i: String
+  email_in: [String]
+  email_not_in: [String]
+  league: LeagueWhereInput
+  league_is_null: Boolean
+  team: TeamWhereInput
+  team_is_null: Boolean
+  comments: String
+  comments_not: String
+  comments_contains: String
+  comments_not_contains: String
+  comments_starts_with: String
+  comments_not_starts_with: String
+  comments_ends_with: String
+  comments_not_ends_with: String
+  comments_i: String
+  comments_not_i: String
+  comments_contains_i: String
+  comments_not_contains_i: String
+  comments_starts_with_i: String
+  comments_not_starts_with_i: String
+  comments_ends_with_i: String
+  comments_not_ends_with_i: String
+  comments_in: [String]
+  comments_not_in: [String]
+  phoneNumber: String
+  phoneNumber_not: String
+  phoneNumber_contains: String
+  phoneNumber_not_contains: String
+  phoneNumber_starts_with: String
+  phoneNumber_not_starts_with: String
+  phoneNumber_ends_with: String
+  phoneNumber_not_ends_with: String
+  phoneNumber_i: String
+  phoneNumber_not_i: String
+  phoneNumber_contains_i: String
+  phoneNumber_not_contains_i: String
+  phoneNumber_starts_with_i: String
+  phoneNumber_not_starts_with_i: String
+  phoneNumber_ends_with_i: String
+  phoneNumber_not_ends_with_i: String
+  phoneNumber_in: [String]
+  phoneNumber_not_in: [String]
+}
+
+input PlayerSubstitutionWhereUniqueInput {
+  id: ID!
+}
+
 input PlayersUpdateInput {
   id: ID!
   data: PlayerUpdateInput
@@ -3009,6 +3265,20 @@ type Query {
   """ Retrieve the meta-data for the TournamentTeam list. """
   _TournamentTeamsMeta: _ListMeta
 
+  """ Search for all PlayerSubstitution items which match the where clause. 
+  """
+  allPlayerSubstitutions(where: PlayerSubstitutionWhereInput, search: String, sortBy: [SortPlayerSubstitutionsBy!], orderBy: String, first: Int, skip: Int): [PlayerSubstitution]
+
+  """ Search for the PlayerSubstitution item with the matching ID. """
+  PlayerSubstitution(where: PlayerSubstitutionWhereUniqueInput!): PlayerSubstitution
+
+  """ Perform a meta-query on all PlayerSubstitution items which match the where clause. 
+  """
+  _allPlayerSubstitutionsMeta(where: PlayerSubstitutionWhereInput, search: String, sortBy: [SortPlayerSubstitutionsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the PlayerSubstitution list. """
+  _PlayerSubstitutionsMeta: _ListMeta
+
   """ Search for all User items which match the where clause. """
   allUsers(where: UserWhereInput, search: String, sortBy: [SortUsersBy!], orderBy: String, first: Int, skip: Int): [User]
 
@@ -3132,11 +3402,15 @@ enum SortGamesBy {
   awayTeamForfeit_DESC
   location_ASC
   location_DESC
+  showNameOnSchedule_ASC
+  showNameOnSchedule_DESC
 }
 
 enum SortLeaguesBy {
   id_ASC
   id_DESC
+  name_ASC
+  name_DESC
   title_ASC
   title_DESC
   slug_ASC
@@ -3325,6 +3599,33 @@ enum SortPlayersBy {
   preferredPositions_DESC
   compedRegistration_ASC
   compedRegistration_DESC
+}
+
+enum SortPlayerSubstitutionsBy {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  firstName_ASC
+  firstName_DESC
+  lastName_ASC
+  lastName_DESC
+  name_ASC
+  name_DESC
+  gender_ASC
+  gender_DESC
+  email_ASC
+  email_DESC
+  league_ASC
+  league_DESC
+  team_ASC
+  team_DESC
+  comments_ASC
+  comments_DESC
+  phoneNumber_ASC
+  phoneNumber_DESC
 }
 
 enum SortPostsBy {

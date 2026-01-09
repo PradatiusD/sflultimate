@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client'
-import Head from 'next/head'
 import GraphqlClient from '../../../lib/graphql-client'
 import { generateGatewayClientToken } from '../../../lib/payment-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
@@ -47,6 +46,13 @@ export const getServerSideProps = async (context) => {
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league, context)
+  league.canRegister = true
+  league.pricingEarlyStudent = 10
+  league.pricingRegularStudent = 10
+  league.pricingLateStudent = 10
+  league.pricingEarlyAdult = 10
+  league.pricingRegularAdult = 10
+  league.pricingLateAdult = 10
 
   let braintreeToken = null
   try {
@@ -62,28 +68,13 @@ export const getServerSideProps = async (context) => {
       braintreeToken,
       query,
       players,
-      postUrl: '/apis/register'
+      postUrl: '/api/substitutions'
     }
   }
 }
 
-export default function LeagueRegisterPage (props) {
-  const { league: activeLeague } = props
+export default function LeagueSubPage (props) {
   return (
-    <>
-      <Head>
-        <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
-        <meta name="description" content={activeLeague.summary || ''}/>
-        <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
-        <meta property="og:description" content={activeLeague.summary || ''}/>
-        {
-          activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
-            <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
-          )
-        }
-      </Head>
-      <RegisterPage {...props} />
-    </>
+    <RegisterPage {...props} />
   )
 }

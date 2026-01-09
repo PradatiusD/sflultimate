@@ -7,6 +7,7 @@ import Head from 'next/head'
 
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context)
+
   const results = await GraphqlClient.query({
     query: gql`
       query($leagueCriteria: LeagueWhereInput) {
@@ -21,7 +22,13 @@ export const getServerSideProps = async (context) => {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        Player(where: {id: "${context.query.id}"}) {
+        allPlayers(where: {id: "${context.query.id}"}) {
+          id
+          firstName
+          lastName
+          email
+        }
+        allPlayerSubstitutions(where: {id: "${context.query.id}"}) {
           id
           firstName
           lastName
@@ -39,7 +46,7 @@ export const getServerSideProps = async (context) => {
     props: {
       league,
       referer,
-      player: results.data.Player
+      player: results.data.allPlayers[0] || results.data.allPlayerSubstitutions[0]
     }
   }
 }
@@ -47,7 +54,11 @@ export const getServerSideProps = async (context) => {
 export default function ConfirmationPage (props) {
   const { league, referer, player } = props
   const parsedURL = new URL(referer)
-  const validPathNames = ['/register-team', '/leagues/' + league.slug + '/register']
+  const validPathNames = [
+    '/register-team',
+    '/leagues/' + league.slug + '/register',
+    '/leagues/' + league.slug + '/substitutions'
+  ]
 
   function ErrorState () {
     return (

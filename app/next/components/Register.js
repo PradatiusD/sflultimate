@@ -62,7 +62,7 @@ export default function RegisterPage (props) {
   } else if (activeLeague.isRegistrationPeriod) {
     studentPrice = activeLeague.pricingRegularStudent
     adultPrice = activeLeague.pricingRegularAdult
-  } else if (activeLeague.isLateRegistrationPeriod || forceForm) {
+  } else if (activeLeague.isLateRegistrationPeriod || forceForm || props.postUrl === '/api/substitutions') {
     studentPrice = activeLeague.pricingLateStudent
     adultPrice = activeLeague.pricingLateAdult
   }
@@ -70,16 +70,6 @@ export default function RegisterPage (props) {
   const headerHtml = (
     <>
       <Head>
-        <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
-        <meta name="description" content={activeLeague.summary || ''}/>
-        <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
-        <meta property="og:description" content={activeLeague.summary || ''}/>
-        {
-          activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
-            <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
-          )
-        }
         <script src="https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js"/>
         <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
         <script dangerouslySetInnerHTML={{ __html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';` }}></script>
@@ -152,7 +142,7 @@ export default function RegisterPage (props) {
 
       <div className="row">
         <div className="col-md-12">
-          <form id="registration" method="POST" action="/api/register">
+          <form id="registration" method="POST" action={props.postUrl}>
             <input type="hidden" name="leagueId" value={activeLeague.id}/>
             <input type="hidden" name="paymentMethodNonce" id="nonce"/>
             <input type="hidden" name="recaptchaToken" id="recaptcha"/>

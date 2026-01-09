@@ -1,53 +1,36 @@
-import GraphqlClient from '../../lib/graphql-client'
+import { gql } from '@apollo/client'
+import PaymentUtils from '../../lib/payment-utils'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
-const { gql } = require('@apollo/client')
-const GraphQlClient = require('./../../lib/graphql-client')
-const PaymentUtils = require('./../../lib/payment-utils')
+import GraphQlClient from '../../lib/graphql-client'
 
-const CREATE_PLAYER_MUTATION = gql`
-  mutation CreatePlayer($data: PlayerCreateInput!) {
-    createPlayer(data: $data) {
+const CREATE_PLAYER_SUBSTITUTION = gql`
+  mutation CreatePlayerSubstitution($data: PlayerSubstitutionCreateInput!) {
+    createPlayerSubstitution(data: $data) {
       id
       email
     }
   }
 `
 
-function createPlayerRecord (payload) {
+function createSubstitutionRecord (payload) {
   const mutationData = {
     createdAt: new Date(),
     updatedAt: new Date(),
-    name: payload.firstName + ' ' + payload.lastName,
     firstName: payload.firstName,
     lastName: payload.lastName,
+    name: payload.firstName + ' ' + payload.lastName,
     gender: payload.gender,
     email: payload.email,
-    age: payload.age,
-    athleticismLevel: payload.athleticismLevel,
-    experienceLevel: payload.experienceLevel,
-    throwsLevel: payload.throwsLevel,
-    registrationLevel: payload.registrationLevel,
-    preferredPositions: Array.isArray(payload.preferredPositions) ? payload.preferredPositions.join(', ') : '',
-    participation: payload.participation,
     comments: payload.comments,
-    phoneNumber: payload.phoneNumber,
-    partnerName: payload.partnerName,
-    shirtSize: payload.shirtSize,
-    wouldSponsor: payload.wouldSponsor,
-    willAttendFinals: payload.willAttendFinals,
-    wouldCaptain: payload.wouldCaptain,
-    donationAmount: payload.donationAmount,
-    compedRegistration: payload.compedRegistration || false,
-    leagues: {
-      connect: [{ id: payload.leagueId }]
-    }
+    league: { connect: { id: payload.leagueId } },
+    phoneNumber: payload.phoneNumber
   }
 
-  console.log('Creating player record with data:', mutationData.leagues)
+  console.log('Creating player substitution with data:', mutationData.leagues)
 
   return GraphQlClient.mutate({
-    mutation: CREATE_PLAYER_MUTATION,
+    mutation: CREATE_PLAYER_SUBSTITUTION,
     variables: {
       data: mutationData
     }
@@ -71,7 +54,7 @@ export default async function handler (req, res) {
 
     const disablePayment = req.headers.referer.includes('disable_payment=true')
 
-    const results = await GraphqlClient.query({
+    const results = await GraphQlClient.query({
       query: gql`
         query($leagueId: ID) {
           allLeagues(where: {id: $leagueId}) {
@@ -131,15 +114,7 @@ export default async function handler (req, res) {
       sanitizedPayload.preferredPositions = []
     }
 
-    let amount = 0
-    const registrationLevel = sanitizedPayload.registrationLevel
-    if (league.isEarlyRegistrationPeriod) {
-      amount = registrationLevel === 'Student' ? league.pricingEarlyStudent : league.pricingEarlyAdult
-    } else if (league.isRegistrationPeriod) {
-      amount = registrationLevel === 'Student' ? league.pricingRegularStudent : league.pricingRegularAdult
-    } else if (league.isLateRegistrationPeriod) {
-      amount = registrationLevel === 'Student' ? league.pricingLateStudent : league.pricingLateAdult
-    }
+    let amount = 10
 
     // Donation
     const donationTiers = {
@@ -160,7 +135,7 @@ export default async function handler (req, res) {
     }
 
     const paymentResult = disablePayment ? null : await processPayment(sanitizedPayload, amount)
-    const dbCreateResult = await createPlayerRecord(sanitizedPayload)
+    const dbCreateResult = await createSubstitutionRecord(sanitizedPayload)
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
     if (process.env.NODE_ENV === 'development') {
       console.log(paymentResult)
@@ -169,10 +144,10 @@ export default async function handler (req, res) {
       // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
     }
 
-    res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayer.id + '&leagueId=' + sanitizedPayload.leagueId)
+    res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayerSubstitution.id + '&leagueId=' + sanitizedPayload.leagueId)
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
-    res.redirect('/leagues/' + league.slug + '/register?error=' + encodeURIComponent(e.message))
+    res.redirect('/leagues/' + league.slug + '/substitutions?error=' + encodeURIComponent(e.message))
   }
 }
