@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from './../lib/graphql-client'
 import { addLeagueToVariables } from '../lib/utils'
+import LeagueUtils from '../lib/league-utils'
 import { HeaderNavigation } from '../components/Navigation'
 import Head from 'next/head'
 export const getServerSideProps = async (context) => {
@@ -40,8 +41,13 @@ export const getServerSideProps = async (context) => {
       }`,
     variables
   })
+  
+  const leagues = results.data.allLeagues.map(league => {
+    LeagueUtils.addLeagueStatus(league, context)
+    return league
+  })
 
-  return { props: { leagues: results.data.allLeagues } }
+  return { props: { leagues } }
 }
 
 export default function LeagueRegisterPage (props) {
@@ -76,7 +82,8 @@ export default function LeagueRegisterPage (props) {
         <div className="row">
           {
             props.leagues.map(function (league) {
-              const href = '/leagues/' + league.slug + '/register'
+              const route = league.canRegister ? 'register' : 'substitutions'
+              const href = `/leagues/${league.slug}/${route}`
               return (
                 <div key={league.id} className="col-md-6">
                   <h2>{league.title.replace('Fall League 2025 -', '')}</h2>
@@ -90,7 +97,7 @@ export default function LeagueRegisterPage (props) {
                   <p>
                     {league.summary}
                   </p>
-                  <a href={href} className="btn btn-primary btn-block">Sign Up</a>
+                  <a href={href} className="btn btn-primary btn-block">{league.canRegister ? "Sign Up": "Become a Substitution"}</a>
                 </div>
               )
             })
