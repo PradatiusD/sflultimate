@@ -25,12 +25,13 @@ function HeaderNavigation (props) {
   let headerNavLinks = navLinks.slice()
   headerNavLinks.unshift({ label: 'Register', key: 'register', href: '/register' })
   headerNavLinks = headerNavLinks.concat([
-    // { label: 'Teams', key: 'teams', href: '/teams' },
-    // { label: 'Schedule', key: 'schedule', href: '/schedule' },
-    // { label: 'Stats', key: 'stats', href: '/stats' }
+    { label: 'Teams', key: 'teams', href: '/teams' },
+    { label: 'Schedule', key: 'schedule', href: '/schedule' },
+    { label: 'Stats', key: 'stats', href: '/stats' }
   ])
 
   const leagueNames = [
+    'Winter Beach League 2026',
     'Fall League 2025 - Mixed Division',
     'Spring League 2025',
     'Winter Beach League 2025',
