@@ -5,21 +5,12 @@ import Head from 'next/head'
 import { showDate } from '../../lib/utils'
 import LeagueUtils from '../../lib/league-utils'
 import { parse } from 'node-html-parser'
+import {updateWithGlobalServerSideProps} from "../../lib/global-server-side-props";
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
         query {
-          allLeagues(where:{isActive: true}) {
-            id
-            title
-            earlyRegistrationStart
-            earlyRegistrationEnd
-            registrationStart
-            registrationEnd
-            lateRegistrationStart
-            lateRegistrationEnd
-          }
           allPosts(where: {slug: "${context.params.slug}"}) {
             id
             title
@@ -35,13 +26,13 @@ export const getServerSideProps = async (context) => {
   })
 
   const post = JSON.parse(JSON.stringify(results.data.allPosts[0]))
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
-  return { props: { post, league } }
+  const props = { post }
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 
 export default function PostsPage (props) {
-  const { post, league } = props
+  const { post, leagues } = props
   const parsedBody = parse(post.body)
   parsedBody.getElementsByTagName('table').forEach(table => {
     const $thead = parse('<thead></thead>').firstElementChild
@@ -64,7 +55,7 @@ export default function PostsPage (props) {
         <meta property="og:image" content={post.image.publicUrl} />
         <meta property="og:description" content={post.summary.replace(/<[^>]*>/g, '')} />
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">
           <div className="col-md-8 col-md-offset-2">

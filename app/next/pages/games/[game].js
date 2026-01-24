@@ -5,20 +5,11 @@ import { HeaderNavigation } from '../../components/Navigation'
 import { showDate, showHourMinute } from '../../lib/utils'
 import Standings from '../../components/Standings'
 import { buildPlayerUrl } from '../../components/PlayerLink'
-import LeagueUtils from '../../lib/league-utils'
+import {updateWithGlobalServerSideProps} from "../../lib/global-server-side-props";
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
-        allLeagues(where:{isActive: true}) {
-          title
-          earlyRegistrationStart
-          earlyRegistrationEnd
-          registrationStart
-          registrationEnd
-          lateRegistrationStart
-          lateRegistrationEnd
-        },
         currentGame: allGames(where: {id: "${context.params.game}"}) {
           id
           scheduledTime
@@ -106,10 +97,6 @@ export const getServerSideProps = async (context) => {
       teamIds
     }
   })
-
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
-
   const stats = statsResults.data.allPlayerGameStats
 
   const playerMap = {}
@@ -146,20 +133,22 @@ export const getServerSideProps = async (context) => {
 
     return newTeam
   })
+  
+  const props = {
+    game,
+    games: seasonResults.data.seasonGames,
+    teams,
+    isGamePreview
+  }
 
+  await updateWithGlobalServerSideProps(props, context)
   return {
-    props: {
-      league,
-      game,
-      games: seasonResults.data.seasonGames,
-      teams,
-      isGamePreview
-    }
+    props
   }
 }
 
 export default function GamePage (props) {
-  const { game, teams, league, isGamePreview, games } = props
+  const { game, teams, leagues, isGamePreview, games } = props
   const title = game.league.title + ' ' + 'Matchup: ' + game.homeTeam.name + ' vs ' + game.awayTeam.name
   const seoDescriptionSuffix = teams[0].name + ' vs ' + teams[1].name + ' - ' + showDate(game.scheduledTime)
   return (
@@ -170,7 +159,7 @@ export default function GamePage (props) {
         <meta property="og:url" content={'https://www.sflultimate.com/game/' + game._id} />
         <meta property="og:description" content={(isGamePreview ? 'Game Preview' : 'Game Recap') + ': ' + seoDescriptionSuffix } />
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation league={leagues} />
       <div className="container">
         {isGamePreview
           ? (

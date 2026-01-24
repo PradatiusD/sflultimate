@@ -3,6 +3,7 @@ import GraphqlClient from '../lib/graphql-client'
 import LeagueUtils from '../lib/league-utils'
 import { gql } from '@apollo/client'
 import { addLeagueToVariables } from '../lib/utils'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getLeagueTeamsData = async (context) => {
   const variables = addLeagueToVariables(context, {})
@@ -80,7 +81,9 @@ export const getLeagueTeamsData = async (context) => {
   })
   const players = playersRegistered.data.allPlayers
   LeagueUtils.addLeagueStatus(league)
-  return { props: { league, teams, url: context.req.url, players } }
+  const props = { league, teams, url: context.req.url, players }
+  await updateWithGlobalServerSideProps(props, context)
+  return { props }
 }
 
 function PlayerImage (props) {

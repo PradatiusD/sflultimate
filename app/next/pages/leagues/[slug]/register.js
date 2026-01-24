@@ -5,6 +5,7 @@ import { generateGatewayClientToken } from '../../../lib/payment-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'
 import RegisterPage from '../../../components/Register'
+import {updateWithGlobalServerSideProps} from "../../../lib/global-server-side-props";
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -56,14 +57,16 @@ export const getServerSideProps = async (context) => {
   }
   const query = context.req.query
   const players = results.data.allPlayers
+  const props = {
+    league,
+    braintreeToken,
+    query,
+    players,
+    postUrl: '/apis/register'
+  }
+  await updateWithGlobalServerSideProps(props, context)
   return {
-    props: {
-      league,
-      braintreeToken,
-      query,
-      players,
-      postUrl: '/apis/register'
-    }
+    props
   }
 }
 

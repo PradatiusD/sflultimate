@@ -6,6 +6,7 @@ import { PlayerLink } from '../../../components/PlayerLink'
 import { HeaderNavigation } from '../../../components/Navigation'
 import LeagueUtils from '../../../lib/league-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
+import {updateWithGlobalServerSideProps} from "../../../lib/global-server-side-props";
 
 const getBadgeStyle = function (color) {
   let badgeColor
@@ -104,19 +105,22 @@ export async function getServerSideProps (context) {
   if (query && query.draft_mode === 'true') {
     players = sortByGenderThenSkillFn(players)
   }
+
+  const props = {
+    league,
+    teams,
+    teamMap,
+    players,
+    query,
+    user: context.req.user ? context.req.user : null
+  }
+  await updateWithGlobalServerSideProps(props)
   return {
-    props: {
-      league,
-      teams,
-      teamMap,
-      players,
-      query,
-      user: context.req.user ? context.req.user : null
-    }
+    props
   }
 }
 export default function Draftboard (props) {
-  const { league, user, teams, teamMap, players, query } = props
+  const { league, user, teams, teamMap, players, query, leagues } = props
 
   const [activeData, setActiveData] = useState({
     players,
@@ -224,12 +228,13 @@ export default function Draftboard (props) {
   const isDraftMode = activeData.mode === 'draft'
   const showComments = user && query.show_comments === 'true'
 
+
   return (
     <>
       <Head>
         <title>{league?.title} Draftboard</title>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container-fluid">
         <h1>{league?.title} Draftboard</h1>
         <div id="draftboard">

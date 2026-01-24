@@ -46,7 +46,7 @@ function PlayerAmountAlert (props) {
 }
 
 export default function RegisterPage (props) {
-  const { league: activeLeague, braintreeToken, query, players } = props
+  const { league: activeLeague, braintreeToken, query, players, leagues } = props
   const [player, setPlayer] = useState({})
   const forceForm = query.force_form === 'true'
   const disablePayment = query.disable_payment === 'true'
@@ -74,7 +74,7 @@ export default function RegisterPage (props) {
         <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
         <script dangerouslySetInnerHTML={{ __html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';` }}></script>
       </Head>
-      <HeaderNavigation league={activeLeague}/>
+      <HeaderNavigation leagues={leagues}/>
     </>
   )
 

@@ -3,21 +3,12 @@ import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
-        allLeagues(where:{isActive: true}) {
-          id
-          title
-          earlyRegistrationStart
-          earlyRegistrationEnd
-          registrationStart
-          registrationEnd
-          lateRegistrationStart
-          lateRegistrationEnd
-        }
         allBoardMembers(sortBy: order_ASC) {
           id
           firstName
@@ -43,20 +34,18 @@ export const getServerSideProps = async () => {
       }`
   })
 
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
-
+  const props = {
+    boardMembers: results.data.allBoardMembers,
+    positions: JSON.parse(JSON.stringify(results.data.allBoardPositions))
+  }
+  await updateWithGlobalServerSideProps(props)
   return {
-    props: {
-      boardMembers: results.data.allBoardMembers,
-      positions: JSON.parse(JSON.stringify(results.data.allBoardPositions)),
-      league
-    }
+    props
   }
 }
 
 export default function BoardPage (props) {
-  const { positions, boardMembers, league } = props
+  const { positions, boardMembers, leagues } = props
 
   const links = [
     {
@@ -80,7 +69,7 @@ export default function BoardPage (props) {
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/682db0ce069a32002858c125-frisbee_final-417-o.jpg" alt="League Finals 2025" className="img-responsive"/>
       <div className="container">
         <h1>Board</h1>

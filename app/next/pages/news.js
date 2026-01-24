@@ -3,22 +3,12 @@ import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
 import Head from 'next/head'
 import { showDate } from '../lib/utils'
-import LeagueUtils from '../lib/league-utils'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
-        allLeagues(where:{isActive: true}) {
-          id
-          title
-          earlyRegistrationStart
-          earlyRegistrationEnd
-          registrationStart
-          registrationEnd
-          lateRegistrationStart
-          lateRegistrationEnd
-        }
         allPosts(sortBy: publishedDate_DESC) {
           id
           title
@@ -33,13 +23,13 @@ export const getServerSideProps = async () => {
   })
 
   const posts = JSON.parse(JSON.stringify(results.data.allPosts))
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
-  return { props: { posts, league } }
+  const props = {posts}
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 
 export default function PostsPage (props) {
-  const { posts, league } = props
+  const { posts, leagues } = props
   return (
     <>
       <Head>
@@ -48,7 +38,7 @@ export default function PostsPage (props) {
         <meta property="og:url" content="https://www.sflultimate.com/news" />
         <meta property="og:description" content="Find out local news from your South Florida Ultimate Area" />
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>Posts</h1>
         {

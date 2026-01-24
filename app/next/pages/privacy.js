@@ -1,7 +1,17 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
-export default function Privacy () {
+export async function getServerSideProps(context) {
+  const props = {}
+  await updateWithGlobalServerSideProps(props, context)
+  return {
+    props
+  }
+}
+
+export default function Privacy (props) {
+  const { leagues } = props
   return (
     <>
       <Head>
@@ -10,7 +20,7 @@ export default function Privacy () {
         <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
         <meta property="og:description" content="View our privacy policy" />
       </Head>
-      <HeaderNavigation />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">
           <div className="col-sm-8 col-sm-offset-2">

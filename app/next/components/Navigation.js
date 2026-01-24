@@ -20,7 +20,7 @@ const footerLinks = [
 ].concat(evergreenLinks)
 
 function HeaderNavigation (props) {
-  const { section } = props
+  const { section, leagues } = props
 
   let headerNavLinks = navLinks.slice()
   headerNavLinks.unshift({ label: 'Register', key: 'register', href: '/register' })
@@ -29,26 +29,6 @@ function HeaderNavigation (props) {
     { label: 'Schedule', key: 'schedule', href: '/schedule' },
     { label: 'Stats', key: 'stats', href: '/stats' }
   ])
-
-  const leagueNames = [
-    'Winter Beach League 2026',
-    'Fall League 2025 - Mixed Division',
-    'Spring League 2025',
-    'Winter Beach League 2025',
-    'Fall League 2024',
-    'Spring League 2024',
-    'Winter Beach League 2024',
-    'Fall League 2023',
-    'Spring League 2023',
-    'Mini-Beach League 2023',
-    'Fall League 2022',
-    'Spring League 2022',
-    'Fall League 2021',
-    'Spring League 2017',
-    'Fall League 2017',
-    'Spring League 2016',
-    'Fall League 2016'
-  ]
 
   return (
     <>
@@ -81,6 +61,10 @@ function HeaderNavigation (props) {
                     headerNavLinks.map((link) => {
                       const dropdownId = link.key + '-dropdown-menu'
                       if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
+                        if (!leagues) {
+                          return <></>
+                        }
+
                         return (
                         <li className="dropdown" key={link.key}>
                           <a className="dropdown-toggle" type="button" id={dropdownId} data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -89,15 +73,11 @@ function HeaderNavigation (props) {
                           </a>
                           <ul className="dropdown-menu" aria-labelledby={dropdownId}>
                             {
-                              leagueNames.map((name) => {
-                                const slug = name.toLowerCase()
-                                  .replace(/\s+-+/g, '')
-                                  .replace(/\s/g, '-')
-
+                              leagues.map(({slug, title}) => {
                                 const leagueUrl = `/leagues/${slug}/${link.key}`
                                 return (
-                                  <li key={name}>
-                                    <a href={leagueUrl}>{name}</a>
+                                  <li key={title}>
+                                    <a href={leagueUrl}>{title}</a>
                                   </li>
                                 )
                               })

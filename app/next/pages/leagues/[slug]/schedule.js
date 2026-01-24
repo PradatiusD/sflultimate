@@ -9,7 +9,7 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function ArchivedSchedule (props) {
-  const { league } = props
+  const { league, leagues } = props
   return (
     <>
       <Head>
@@ -21,7 +21,7 @@ export default function ArchivedSchedule (props) {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <Schedule {...props} />
     </>
   )

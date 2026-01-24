@@ -4,6 +4,7 @@ import { addLeagueToVariables } from '../lib/utils'
 import LeagueUtils from '../lib/league-utils'
 import { HeaderNavigation } from '../components/Navigation'
 import Head from 'next/head'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -42,24 +43,26 @@ export const getServerSideProps = async (context) => {
     variables
   })
   
-  const leagues = results.data.allLeagues.map(league => {
+  const activeLeagues = results.data.allLeagues.map(league => {
     LeagueUtils.addLeagueStatus(league, context)
     return league
   })
-
-  return { props: { leagues } }
+  
+  const props = { activeLeagues }
+  
+  await updateWithGlobalServerSideProps(props, {})
+  return { props: props }
 }
 
 export default function LeagueRegisterPage (props) {
-  const activeLeague = props.leagues[0]
+  const {activeLeagues, leagues} = props
   return (
     <div>
       <Head>
-        <title>{'Register now for the SFL Ultimate Fall League'}</title>
-        <meta property="og:title" content={'Register now for the new SFL Ultimate Fall League!'}/>
+        <title>{'Register now SFLUltimate leagues'}</title>
+        <meta property="og:title" content={'Register now for SFL Ultimate leagues'}/>
         <meta property="og:url" content={'https://www.sflultimate.com/register'}/>
-        <meta property="og:description" content={'We are back at Amelia Earhart park, but this time with new league formats/playoffs, lined fields, draft party, end of season party, and more!'}/>
-        <meta property="og:image" content={'https://d137pw2ndt5u9c.cloudfront.net/keystone/68ab30f3e54b7536052f20fe-sflultimate-fall-league-2025-both-divisions.png'}/>
+        <meta property="og:description" content={'Find here a list of active leagues for you to play or be a sub at.'}/>
         <style>{`
         .league-logo {
             border: 1px solid #cfcfcf;
@@ -68,20 +71,20 @@ export default function LeagueRegisterPage (props) {
             margin-bottom: 1rem;
         }`}</style>
       </Head>
-      <HeaderNavigation league={activeLeague} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         {
-          props.leagues.length > 1 && (
+          activeLeagues.length > 1 && (
             <>
               <h1>Pick Your League</h1>
-              <p className="lead">We now offer multiple types of leagues, all at the same location.</p>
+              <p className="lead">We now offer multiple types of leagues.</p>
             </>
           )
         }
 
         <div className="row">
           {
-            props.leagues.map(function (league) {
+            activeLeagues.map(function (league) {
               const route = league.canRegister ? 'register' : 'substitutions'
               const href = `/leagues/${league.slug}/${route}`
               return (
@@ -97,7 +100,7 @@ export default function LeagueRegisterPage (props) {
                   <p>
                     {league.summary}
                   </p>
-                  <a href={href} className="btn btn-primary btn-block">{league.canRegister ? "Sign Up": "Become a Substitution"}</a>
+                  <a href={href} className="btn btn-primary btn-block">{league.canRegister ? "Sign Up": "Play a Game as a Sub"}</a>
                 </div>
               )
             })

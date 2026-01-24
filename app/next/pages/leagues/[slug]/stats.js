@@ -4,13 +4,13 @@ import { getLeagueStats } from '../../../lib/stat-utils'
 import StatTable from '../../../components/StatsTable'
 
 export const getServerSideProps = async (context) => {
-  const statsInfo = getLeagueStats(context)
-  statsInfo.url = context.req.url
+  const statsInfo = await getLeagueStats(context)
+  statsInfo.props.url = context.req.url
   return statsInfo
 }
 
 export default function ArchivedStatsPage (props) {
-  const { league, players, awards, statKeysToCompare, playerGameStats, url } = props
+  const { league, players, leagues, awards, statKeysToCompare, playerGameStats, url } = props
   return (
     <>
       <Head>
@@ -36,7 +36,7 @@ export default function ArchivedStatsPage (props) {
 
         </style>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>{league.title} Stats</h1>
         {

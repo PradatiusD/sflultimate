@@ -4,6 +4,7 @@ import { HeaderNavigation } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
 import { addLeagueToVariables } from '../lib/utils'
 import Head from 'next/head'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context)
@@ -42,17 +43,19 @@ export const getServerSideProps = async (context) => {
   LeagueUtils.addLeagueStatus(league)
 
   const referer = context.req.headers.referer || null
+  const props = {
+    league,
+    referer,
+    player: results.data.allPlayers[0] || results.data.allPlayerSubstitutions[0] || null
+  }
+  await updateWithGlobalServerSideProps(props, context)
   return {
-    props: {
-      league,
-      referer,
-      player: results.data.allPlayers[0] || results.data.allPlayerSubstitutions[0]
-    }
+    props
   }
 }
 
 export default function ConfirmationPage (props) {
-  const { league, referer, player } = props
+  const { league, referer, player, leagues } = props
   const parsedURL = new URL(referer)
   const validPathNames = [
     '/register-team',
@@ -63,7 +66,7 @@ export default function ConfirmationPage (props) {
   function ErrorState () {
     return (
       <>
-        <HeaderNavigation league={league} />
+        <HeaderNavigation leagues={leagues} />
         <div className="container">
           <h1>Error</h1>
           <p>The referrer for this request was not valid.</p>
@@ -83,7 +86,7 @@ export default function ConfirmationPage (props) {
     <Head>
       <title>Your Order for {league.title} is Confirmed!</title>
     </Head>
-    <HeaderNavigation league={league} />
+    <HeaderNavigation leagues={leagues} />
     <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-responsive" alt="" style={{
       maxHeight: '480px',
       margin: '1rem auto',

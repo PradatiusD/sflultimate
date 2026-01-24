@@ -5,6 +5,7 @@ import { HeaderNavigation } from '../components/Navigation'
 import Standings from '../components/Standings'
 import { createSummary, showDate } from '../lib/utils'
 import Image from 'next/image'
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getServerSideProps = async (context) => {
   const host = context.req.headers.host
@@ -80,19 +81,23 @@ export const getServerSideProps = async (context) => {
   }).sort(function (a, b) {
     return new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   })
+  
+  const props = {
+    activeLeagues: results.data.allLeagues,
+    games: results.data.allGames,
+    events: activeEvents,
+    news: results.data.allPosts
+  }
+  
+  await updateWithGlobalServerSideProps(props)
 
   return {
-    props: {
-      leagues: results.data.allLeagues,
-      games: results.data.allGames,
-      events: activeEvents,
-      news: results.data.allPosts
-    }
+    props
   }
 }
 
 export default function Homepage (props) {
-  const { games, leagues, events, news } = props
+  const { games, leagues, events, news, activeLeagues } = props
 
   const keyTakeaways = getKeyTakeawaysData()
   keyTakeaways.pop()
@@ -127,7 +132,7 @@ export default function Homepage (props) {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
         <link rel="stylesheet" href="/styles/site.css"/>
       </Head>
-      <HeaderNavigation />
+      <HeaderNavigation leagues={leagues} />
       {/* <div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}> */}
       {/* <div className="video-full-screen"> */}
       {/*  <video autoPlay={true} muted={true} loop={true}> */}
@@ -173,7 +178,7 @@ export default function Homepage (props) {
                 <>
                   <h3>Active Leagues</h3>
                   {
-                    leagues.map((league) => {
+                    activeLeagues.map((league) => {
                       const href = `/leagues/${league.slug}/register`
                       return (
                         <div key={league.id} style={{ marginBottom: '1rem' }}>
