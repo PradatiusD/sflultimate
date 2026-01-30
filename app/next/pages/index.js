@@ -6,6 +6,7 @@ import Standings from '../components/Standings'
 import { createSummary, showDate } from '../lib/utils'
 import Image from 'next/image'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import LeagueUtils from '../lib/league-utils'
 
 export const getServerSideProps = async (context) => {
   const host = context.req.headers.host
@@ -81,14 +82,17 @@ export const getServerSideProps = async (context) => {
   }).sort(function (a, b) {
     return new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   })
-  
+
   const props = {
-    activeLeagues: results.data.allLeagues,
+    activeLeagues: results.data.allLeagues.map(function (league) {
+      LeagueUtils.addLeagueStatus(league, context)
+      return league
+    }),
     games: results.data.allGames,
     events: activeEvents,
     news: results.data.allPosts
   }
-  
+  console.log(props)
   await updateWithGlobalServerSideProps(props)
 
   return {
@@ -179,7 +183,8 @@ export default function Homepage (props) {
                   <h3>Active Leagues</h3>
                   {
                     activeLeagues.map((league) => {
-                      const href = `/leagues/${league.slug}/register`
+                      const route = league.canRegister ? 'register' : 'substitutions'
+                      const href = `/leagues/${league.slug}/${route}`
                       return (
                         <div key={league.id} style={{ marginBottom: '1rem' }}>
                           {

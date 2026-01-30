@@ -4,7 +4,7 @@ import { HeaderNavigation } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
 import { addLeagueToVariables } from '../lib/utils'
 import Head from 'next/head'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context)

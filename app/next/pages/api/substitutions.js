@@ -96,7 +96,7 @@ export default async function handler (req, res) {
       participation: parseInt(req.body.participation),
       comments: req.body.comments,
       phoneNumber: req.body.phoneNumber,
-      partnerName: req.body.partnerName.trim(),
+      partnerName: (req.body.partnerName || '').trim(),
       shirtSize: req.body.shirtSize,
       wouldSponsor: req.body.wouldSponsor === 'on',
       wouldCaptain: req.body.wouldCaptain === 'Yes',

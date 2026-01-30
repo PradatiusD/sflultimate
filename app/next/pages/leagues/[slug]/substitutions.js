@@ -79,7 +79,7 @@ export const getServerSideProps = async (context) => {
 
 export default function LeagueSubPage (props) {
   const { league: activeLeague } = props
-  const description = "Fill in the form below to sign up as a substitute player for " + activeLeague.title + ". We'll reach out to you when a team needs subs!";
+  const description = `Fill in the form below to sign up as a substitute player for ${activeLeague.title}. We'll reach out to you when a team needs subs!`;
   return (
     <>
       <Head>
