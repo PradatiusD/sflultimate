@@ -371,6 +371,14 @@
   margin-bottom: 0;
 }
 
+.register .form-label, .register #payment-form .braintree-form__label {
+  font-weight: 700;
+}
+
+.braintree-form__notice-of-collection {
+  flex: 100%;
+}
+
 .page-register-tournament {
 
   .call-to-action {

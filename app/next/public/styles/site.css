@@ -103,7 +103,7 @@
   --bs-highlight-bg: #fff3cd;
   --bs-border-width: 1px;
   --bs-border-style: solid;
-  --bs-border-color: #dee2e6;
+  --bs-border-color: #9696a5;
   --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
   --bs-border-radius: 0.375rem;
   --bs-border-radius-sm: 0.25rem;
@@ -12206,6 +12206,14 @@ textarea.form-control-lg {
 
 #header > .navbar {
   margin-bottom: 0;
+}
+
+.register .form-label, .register #payment-form .braintree-form__label {
+  font-weight: 700;
+}
+
+.braintree-form__notice-of-collection {
+  flex: 100%;
 }
 
 .page-register-tournament .call-to-action {

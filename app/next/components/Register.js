@@ -345,7 +345,7 @@ export default function RegisterPage (props) {
             }
 
             <div>
-              <label htmlFor="willAttendFinals">Finals attendance</label>
+              <label htmlFor="willAttendFinals" className="form-label">Finals attendance</label>
               <div className="checkbox">
                 <label htmlFor="willAttendFinals"><input id="willAttendFinals" type="checkbox"
                                                          name="willAttendFinals"/> I expect to be able to attend finals.</label>

@@ -290,7 +290,7 @@ h1, h2, h3, h4, h5, h6, .btn {
   }
 }
 .beach-countdown strong {
-  font-size: 8rem;
+  font-size: 5rem;
   line-height: 1;
 }
 @media screen and (max-width: 600px) {

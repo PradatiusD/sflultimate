@@ -437,7 +437,7 @@ function Sheets (props) {
                 </tbody>
               </table>
 
-              <div className="form-group">
+              <div>
                 <label style={{ fontWeight: 'normal' }}>Please write here any spirit feedback you would like the
                     organizers to note:</label>
                 <textarea className="form-control" style={{ marginBottom: '10px' }} rows={1}></textarea>

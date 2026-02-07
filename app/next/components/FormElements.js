@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export function FormInput ({ label, type, name, placeholder, required, helpText, onChange }) {
-  const [inputStateClass, setInputStateClass] = useState(['form-group'])
+  const [inputStateClass, setInputStateClass] = useState([])
 
   const inputClasses = ['form-control-lg', 'form-control']
   return <>
@@ -46,7 +46,7 @@ export function FormInput ({ label, type, name, placeholder, required, helpText,
 }
 
 export function FormSelect ({ label, name, options, required, helpText, onChange }) {
-  const [inputStateClass, setInputStateClass] = useState(['form-group'])
+  const [inputStateClass, setInputStateClass] = useState([])
   return <>
     <div className={inputStateClass.join(' ')}>
       <label className="form-label" htmlFor={name}>{label}</label>
@@ -70,7 +70,7 @@ export function FormSelect ({ label, name, options, required, helpText, onChange
         <option value="">Please Select</option>
         {options.map((option, i) => <option key={i} value={option.value}>{option.label}</option>)}
       </select>
-      <p className="help-block">{helpText}</p>
+      <p className="form-text">{helpText}</p>
     </div>
   </>
 }
