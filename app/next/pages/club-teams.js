@@ -77,7 +77,7 @@ export default function ClubTeamsPage (props) {
                     <img
                       src={team.image.publicUrl}
                       alt={team.name}
-                      className="img-responsive"
+                      className="img-fluid"
                       style={{ margin: '0 auto' }}
                     />
                   )}
@@ -88,15 +88,13 @@ export default function ClubTeamsPage (props) {
                     <strong>{team.category}</strong>
                   </p>
                   <p>{team.description}</p>
-                  <ul className="list-inline">
+                  <div className="btn-group">
                     {team?.links?.map((link, i) => (
-                      <li key={i}>
-                        <a href={link.url} target="_blank" rel="noopener noreferrer">
-                          {link.label}
-                        </a>
-                      </li>
+                      <a key={i} className="btn btn-outline-primary" href={link.url} target="_blank" rel="noopener noreferrer">
+                        {link.label}
+                      </a>
                     ))}
-                  </ul>
+                  </div>
                 </div>
                 <hr/>
               </div>

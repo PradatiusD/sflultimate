@@ -110,7 +110,7 @@ class SFLUltimateDocument extends NextDocument {
           }}/>
 
           <script src="/js/jquery/jquery-1.11.3.min.js" />
-          <script src="/js/bootstrap/bootstrap-3.3.5.min.js"/>
+          <script src="/js/bootstrap/bootstrap.bundle.min.js"/>
         </body>
       </Html>
     )

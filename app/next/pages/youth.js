@@ -43,7 +43,7 @@ export default function YouthPage (props) {
 
       <div className="container">
         <div className="row">
-          <div className="col-md-8 col-md-offset-2">
+          <div className="col-md-8 offset-md-2">
             <h1>Youth Ultimate Clinics</h1>
             <p><strong>South Florida Ultimate, Inc., a 501c(3) non-profit dedicated to growing the sport of ultimate frisbee</strong> hosts ultimate clinics that are open to all youth who are interested in learning how to play this exciting sport.</p>
             <p>These clinics are designed to help participants to <strong>develop their skills in Ultimate while also providing a fun and engaging environment</strong>.</p>
@@ -75,9 +75,9 @@ export default function YouthPage (props) {
       />
       <div className="container">
         <div className="row">
-          <div className="col-md-8 col-md-offset-2">
+          <div className="col-md-8 offset-md-2">
             <img
-              className="img-responsive img-circle"
+              className="img-fluid rounded-circle"
               style={{ maxWidth: '200px', margin: '0 auto' }}
               src="https://d137pw2ndt5u9c.cloudfront.net/keystone/68d4a37d2747d60029c57b07-lina-fonseca.jpg"
               alt="Lina Fonseca headshot" />
@@ -112,7 +112,7 @@ export default function YouthPage (props) {
           </div>
         </div>
       </div>
-      <img className="img-responsive" style={{margin: '0 auto'}} src="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fc69647c54d00296d1dad-youth-clinic.webp" alt=""/>
+      <img className="img-fluid" style={{margin: '0 auto'}} src="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fc69647c54d00296d1dad-youth-clinic.webp" alt=""/>
     </div>
   )
 }

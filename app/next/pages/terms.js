@@ -23,7 +23,7 @@ export default function TermsPage (props) {
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">
-          <div className="col-sm-8 col-sm-offset-2">
+          <div className="col-sm-8 offset-sm-2">
             <h1>Terms & Conditions</h1>
             <p> South Florida Ultimate Inc. is a 501(c)3 non-profit run by a volunteer board, below referred to as SFLUltimate.  As part of participating in any events, you agree to the following</p>
             <p> 1. In consideration for receiving permission to participate in SFLUltimate events I hereby <strong>release, waive, discharge, and convent not to sue</strong>, their officers, agents, or employees (hereinafter referred to as <strong>releasees</strong>) from any and all liability, claims, demands, actions, and causes of action whatsoever arising out of or related to any loss, damage, or injury, including death, that may be sustained by me, or to any property belonging to me, while participating in such activity, while in, on or upon the premises where the activities are being conducted, <strong>regardless of whether such loss is caused by the negligence of the releasees</strong>, or otherwise and regardless of whether such liability arises in tort, contract, strict liability, or otherwise, to the fullest extent allowed by law.</p>

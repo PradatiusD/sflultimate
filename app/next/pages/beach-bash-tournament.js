@@ -72,7 +72,7 @@ export default function BeachBashTournament (props) {
         </video>
         <div className="container-fluid beach-bash-hero-container">
           <br/>
-          <div className="jumbotron text-center">
+          <div className="beach-bash-hero text-center py-5">
             <img src="/images/beach-bash-2025-logo.svg" alt="Beach Bash Logo"/>
             <div>
               <Countdown
@@ -111,7 +111,7 @@ export default function BeachBashTournament (props) {
 
       <div className="beach-bash-content-container container-fluid">
         <div className="row bird-wing-background">
-          <div className="col-lg-2 col-md-12 col-lg-offset-1">
+          <div className="col-lg-2 col-md-12 offset-lg-1">
           </div>
           <div className="col-lg-8 col-md-12">
             <p>We are playing in the <strong>heart of the pristine Ft Lauderdale Beach the weekend of February 21-22 2026</strong>.</p>
@@ -159,31 +159,31 @@ export default function BeachBashTournament (props) {
 
       <div className="container">
         <div className="row bird-wing-background">
-          <div className="col-md-2 col-md-offset-1">
+          <div className="col-md-2 offset-md-1">
             <h2>Frequently Asked Questions</h2>
             <p>Find here all your tourney information.</p>
           </div>
           <div className="col-md-8">
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <div className="panel-title">How many teams will this be?</div>
+            <div className="card mb-3">
+              <div className="card-header">
+                <h3 className="card-title h6 mb-0">How many teams will this be?</h3>
               </div>
-              <div className="panel-body">
+              <div className="card-body">
                 We're set on inviting <strong>12 teams</strong> from Florida as well as from around the USA (and
                 hopefully the world).
               </div>
             </div>
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <div className="panel-title">How much is the bid fee?</div>
+            <div className="card mb-3">
+              <div className="card-header">
+                <h3 className="card-title h6 mb-0">How much is the bid fee?</h3>
               </div>
-              <div className="panel-body">It's <strong>$500</strong>, we use this for field permits and tournament drinks/snacks.</div>
+              <div className="card-body">It's <strong>$500</strong>, we use this for field permits and tournament drinks/snacks.</div>
             </div>
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <div className="panel-title">What's the gender ratio? How many players?</div>
+            <div className="card mb-3">
+              <div className="card-header">
+                <h3 className="card-title h6 mb-0">What's the gender ratio? How many players?</h3>
               </div>
-              <div className="panel-body">This will be a 2:2 mixed beach tournament, with a minimum of 4 players and a
+              <div className="card-body">This will be a 2:2 mixed beach tournament, with a minimum of 4 players and a
                 maximum of 14 players per team.
               </div>
             </div>

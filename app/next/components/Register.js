@@ -282,30 +282,30 @@ export default function RegisterPage (props) {
               <label htmlFor="skillLevel">Preferred Player Positions</label>
               <p className="help-block">This is to help captains draft, especially in cases where we captains might not
                 know you. Check all that apply. You must pick one.</p>
-              <div className="checkbox">
-                <label>
-                  <input id="playerPositionHandler" type="checkbox" name="preferredPositions" value="handler"/>
+              <div className="form-check">
+                <input className="form-check-input" id="playerPositionHandler" type="checkbox" name="preferredPositions" value="handler"/>
+                <label className="form-check-label">
                   <strong>Handler</strong>: I'm confident/patient with my throws and know how to move the disc around
                   the field in the wind or against the zone.
                 </label>
               </div>
-              <div className="checkbox">
-                <label>
-                  <input id="playerPositionCutter" type="checkbox" name="preferredPositions" value="cutter"/>
+              <div className="form-check">
+                <input className="form-check-input" id="playerPositionCutter" type="checkbox" name="preferredPositions" value="cutter"/>
+                <label className="form-check-label">
                   <strong>Cutter</strong>: I love getting open constantly on offense, whether it is in the short game or
                   cutting deep for a big throw.
                 </label>
               </div>
-              <div className="checkbox">
-                <label>
-                  <input id="playerPositionHybrid" type="checkbox" name="preferredPositions" value="hybrid"/>
+              <div className="form-check">
+                <input className="form-check-input" id="playerPositionHybrid" type="checkbox" name="preferredPositions" value="hybrid"/>
+                <label className="form-check-label">
                   <strong>Hybrid</strong>: I feel comfortable handling the disc or cutting on offense, and can play on
                   either depending on what the team needs.
                 </label>
               </div>
-              <div className="checkbox">
-                <label>
-                  <input id="playerPositionDefense" type="checkbox" name="preferredPositions" value="defense"/>
+              <div className="form-check">
+                <input className="form-check-input" id="playerPositionDefense" type="checkbox" name="preferredPositions" value="defense"/>
+                <label className="form-check-label">
                   <strong>Defense</strong>: I love playing hard on defense and really enjoy covering great
                   cutters/handlers.
                 </label>
@@ -352,7 +352,7 @@ export default function RegisterPage (props) {
               </div>
             </div>
 
-            {/* /img.img-responsive(src=locals.league.jerseyDesign.url style="max-width: 300px") */}
+            {/* /img.img-fluid(src=locals.league.jerseyDesign.url style="max-width: 300px") */}
             {/*            //                         if locals.league.jerseyDesign
             //                             p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 */}
@@ -562,7 +562,7 @@ export default function RegisterPage (props) {
               href="/board" target="_blank">board page</a> to get in touch.</p>
             <p className="text-center"><strong>THANK YOU FOR YOUR SUPPORT AND SEE YOU ON THE FIELDS!</strong></p>
             <div className="text-center">
-              <button className="btn btn-default btn-lg btn-primary" type="submit" id="submitButton">
+              <button className="btn btn-primary btn-lg" type="submit" id="submitButton">
                 Submit
               </button>
             </div>

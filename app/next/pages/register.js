@@ -93,7 +93,7 @@ export default function LeagueRegisterPage (props) {
                   {
                     league.registrationShareImage && (
                       <a href={href}>
-                        <img className="img-responsive league-logo" src={league.registrationShareImage.publicUrl} alt={league.title + ' thumbnail'} />
+                        <img className="img-fluid league-logo" src={league.registrationShareImage.publicUrl} alt={league.title + ' thumbnail'} />
                       </a>
                     )
                   }

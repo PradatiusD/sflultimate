@@ -276,7 +276,7 @@ export default function Draftboard (props) {
                                         {player.firstName} {player.lastName} ({player.gender?.charAt(0)}{player.skillLevel} {player.athleticismLevel + 'A ' + player.experienceLevel + 'E ' + player.throwsLevel + 'T'})
                                       </span>
                                     <button
-                                      className="btn btn-default btn-xs"
+                                      className="btn btn-secondary btn-sm"
                                       onClick={() => modifyRoster(team, player, 'remove')}>
                                       <i className="fa fa-close"></i>
                                     </button>
@@ -315,11 +315,11 @@ export default function Draftboard (props) {
           <p className="lead">There are {players.length} players registered.</p>
 
           <div className="btn-group">
-            <button className="btn btn-default" onClick={sortPlayersByRecency}>Sort By Recent</button>
-            <button className="btn btn-default" onClick={sortByGenderThenSkill}>Sort By Gender, Then Skill</button>
-            <button className="btn btn-default" onClick={showOnlyCaptains}>Show Only Captains</button>
-            <button className="btn btn-default" onClick={showOnlySponsors}>Show Only Sponsors</button>
-            <button className="btn btn-default" onClick={showDraftMode}>Draft Mode</button>
+            <button className="btn btn-secondary" onClick={sortPlayersByRecency}>Sort By Recent</button>
+            <button className="btn btn-secondary" onClick={sortByGenderThenSkill}>Sort By Gender, Then Skill</button>
+            <button className="btn btn-secondary" onClick={showOnlyCaptains}>Show Only Captains</button>
+            <button className="btn btn-secondary" onClick={showOnlySponsors}>Show Only Sponsors</button>
+            <button className="btn btn-secondary" onClick={showDraftMode}>Draft Mode</button>
           </div>
 
           <table className="table table-hover table-striped">
@@ -408,7 +408,7 @@ export default function Draftboard (props) {
                               return (
                                 <button
                                   key={index}
-                                  className="btn btn-default btn-xs"
+                                  className="btn btn-secondary btn-sm"
                                   onClick={() => {
                                     modifyRoster(team, player, 'add')
                                   }}>

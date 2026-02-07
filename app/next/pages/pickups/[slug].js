@@ -86,11 +86,11 @@ export default function PickupsPage (props) {
             {pickup.locationAddressCity}, {pickup.locationAddressState}, {pickup.locationAddressZipCode}<br/>
           </address>
           <div className="btn-group">
-            {pickup.contactWhatsapp && <a className="btn btn-sm btn-default" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
-            {pickup.contactUrl && <a className="btn btn-sm btn-default" href={pickup.contactUrl} target="_blank">View Website</a>}
-            {pickup.contactEmail && <a className="btn btn-sm btn-default" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
-            {pickup.contactPhone && <a className="btn btn-sm btn-default" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-            <a className="btn btn-sm btn-default" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
+            {pickup.contactWhatsapp && <a className="btn btn-sm btn-secondary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
+            {pickup.contactUrl && <a className="btn btn-sm btn-secondary" href={pickup.contactUrl} target="_blank">View Website</a>}
+            {pickup.contactEmail && <a className="btn btn-sm btn-secondary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
+            {pickup.contactPhone && <a className="btn btn-sm btn-secondary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
+            <a className="btn btn-sm btn-secondary" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
           </div>
         </article>
         <div class="col-md-6">

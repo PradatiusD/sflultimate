@@ -49,7 +49,7 @@ export default function PostsPage (props) {
                 <div key={post.id} className="row">
                   <div className="col-md-3">
                     <a href={postUrl}>
-                      <img src={post.image.publicUrl} alt={post.title} className="img-responsive img-rounded" />
+                      <img src={post.image.publicUrl} alt={post.title} className="img-fluid rounded" />
                     </a>
                   </div>
                   <div className="col-md-9">

@@ -2,8 +2,7 @@ import Head from 'next/head'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from '../lib/league-utils'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -125,7 +124,7 @@ export default function BoardPage (props) {
                     <img
                       src={member.image.publicUrl}
                       alt={`${member.firstName} ${member.lastName}`}
-                      className="img-responsive img-rounded"
+                      className="img-fluid rounded"
                       style={{ margin: '0 auto' }}
                     />
                   )}

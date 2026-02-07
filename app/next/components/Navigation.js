@@ -33,70 +33,78 @@ function HeaderNavigation (props) {
   return (
     <>
       <header id="header" className="site-header">
-        <div className="navbar-brand-container hidden-sm hidden-md hidden-lg mobile-logo">
+        <div className="navbar-brand-container d-block d-sm-none mobile-logo">
           <a href="/">
             <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
           </a>
         </div>
-        <div role="navigation" className="navbar navbar-inverse navbar-fixed-top">
+        <nav className="navbar navbar-dark bg-dark fixed-top navbar-expand-xl" role="navigation">
           <div className="container-fluid">
-            <div className="navbar-header">
-              <button className="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-                <span className="sr-only">Toggle navigation</span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
-              </button>
-              <div className="collapse navbar-collapse">
-                <ul className="nav navbar-nav navbar-left">
-                  <li className="navbar-brand-container hidden-xs">
-                    <a href="/" className="navbar-brand">
-                      <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
-                    </a>
-                  </li>
-                  <li className="hidden-sm hidden-md hidden-lg">
-                    <a href="/">Home</a>
-                  </li>
-                  {
-                    headerNavLinks.map((link) => {
-                      const dropdownId = link.key + '-dropdown-menu'
-                      if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
-                        if (!leagues) {
-                          return <></>
-                        }
-
-                        return (
-                        <li className="dropdown" key={link.key}>
-                          <a className="dropdown-toggle" type="button" id={dropdownId} data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            {link.label} {' '}
-                            <span className="caret"></span>
+            <a href="/" className="navbar-brand d-none d-sm-flex navbar-brand-container">
+              <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
+            </a>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#primaryNav"
+              aria-controls="primaryNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="primaryNav">
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                <li className="nav-item d-block d-sm-none">
+                  <a className="nav-link" href="/">Home</a>
+                </li>
+                {
+                  headerNavLinks.map((link) => {
+                    const dropdownId = link.key + '-dropdown-menu'
+                    if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
+                      if (!leagues) {
+                        return <></>
+                      }
+                      return (
+                        <li className="nav-item dropdown" key={link.key}>
+                          <a
+                            className="nav-link dropdown-toggle"
+                            href="#"
+                            id={dropdownId}
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            {link.label}
                           </a>
                           <ul className="dropdown-menu" aria-labelledby={dropdownId}>
                             {
-                              leagues.map(({slug, title}) => {
+                              leagues.map(({ slug, title }) => {
                                 const leagueUrl = `/leagues/${slug}/${link.key}`
                                 return (
                                   <li key={title}>
-                                    <a href={leagueUrl}>{title}</a>
+                                    <a className="dropdown-item" href={leagueUrl}>{title}</a>
                                   </li>
                                 )
                               })
                             }
                           </ul>
                         </li>
-                        )
-                      }
-                      return (
-                      <li key={link.key} className={section === link.key ? 'active' : null}>
-                        <a href={link.href}>{link.label} {link.key === 'register' && <span className="badge text-success" style={{ background: 'green' }}>OPEN</span>}</a>
-                      </li>
                       )
-                    })}
-                </ul>
-              </div>
+                    }
+                    return (
+                      <li key={link.key} className="nav-item">
+                        <a href={link.href} className={`nav-link${section === link.key ? ' active' : ''}`}>
+                          {link.label} {link.key === 'register' && <span className="badge bg-success">OPEN</span>}
+                        </a>
+                      </li>
+                    )
+                  })}
+              </ul>
             </div>
           </div>
-        </div>
+        </nav>
       </header>
       <Notification />
     </>
