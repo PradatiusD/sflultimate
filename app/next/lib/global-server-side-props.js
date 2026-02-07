@@ -1,6 +1,6 @@
-import {query} from "./graphql-client";
-import {gql} from "@apollo/client";
-export async function updateWithGlobalServerSideProps(originalProps, context) {
+import { query } from './graphql-client'
+import { gql } from '@apollo/client'
+export async function updateWithGlobalServerSideProps (originalProps, context) {
   const results = await query({
     query: gql`
       query {

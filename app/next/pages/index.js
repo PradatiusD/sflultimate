@@ -92,9 +92,8 @@ export const getServerSideProps = async (context) => {
     events: activeEvents,
     news: results.data.allPosts
   }
-  console.log(props)
-  await updateWithGlobalServerSideProps(props)
 
+  await updateWithGlobalServerSideProps(props)
   return {
     props
   }
