@@ -2,20 +2,11 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from '../lib/league-utils'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
-            allLeagues(where:{isActive: true}) {
-              title
-              earlyRegistrationStart
-              earlyRegistrationEnd
-              registrationStart
-              registrationEnd
-              lateRegistrationStart
-              lateRegistrationEnd
-            }
             allPickups(where: {isActive: true}, sortBy: order_ASC) {
               id
               slug
@@ -39,13 +30,15 @@ export const getServerSideProps = async () => {
             }
         }`
   })
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
-  const pickups = results.data.allPickups
-  return { props: { pickups, league } }
+  
+  const props = {
+    pickups: results.data.allPickups
+  }
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 export default function PickupsPage (props) {
-  const { pickups, league } = props
+  const { pickups, leagues } = props
   return (
     <>
       <Head>
@@ -56,7 +49,7 @@ export default function PickupsPage (props) {
           content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!"/>
         <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
 
       <div className="container pickup-listing-page">
         <section>
@@ -104,11 +97,11 @@ export default function PickupsPage (props) {
                       {pickup.locationAddressCity}, {pickup.locationAddressState}, {pickup.locationAddressZipCode}<br/>
                     </address>
                     <div className="btn-group">
-                      {pickup.contactWhatsapp && <a className="btn btn-sm btn-secondary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
-                      {pickup.contactUrl && <a className="btn btn-sm btn-secondary" href={pickup.contactUrl} target="_blank">View Website</a>}
-                      {pickup.contactEmail && <a className="btn btn-sm btn-secondary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
-                      {pickup.contactPhone && <a className="btn btn-sm btn-secondary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-                      <a className="btn btn-sm btn-secondary" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
+                      {pickup.contactWhatsapp && <a className="btn btn-sm btn-outline-primary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
+                      {pickup.contactUrl && <a className="btn btn-sm btn-outline-primary" href={pickup.contactUrl} target="_blank">View Website</a>}
+                      {pickup.contactEmail && <a className="btn btn-sm btn-outline-primary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
+                      {pickup.contactPhone && <a className="btn btn-sm btn-outline-primary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
+                      <a className="btn btn-sm btn-outline-primary" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
                     </div>
                     {
                       pickupIndex + 1 > pickups.length && <hr/>

@@ -1,4 +1,4 @@
-![SFL Ultimate Logo](public/images/logo-circled.png)
+![SFL Ultimate Logo](app/next/public/images/sflultimate-logo-pink-flamingo.png)
 
 # South Florida Ultimate
 

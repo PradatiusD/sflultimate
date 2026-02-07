@@ -57,7 +57,7 @@ function StatTable (props) {
 }
 
 export default function StatsPage (props) {
-  const { league, players, awards, statKeysToCompare, playerGameStats } = props
+  const { league, players, awards, statKeysToCompare, playerGameStats, leagues } = props
   return (
     <>
       <Head>
@@ -83,7 +83,7 @@ export default function StatsPage (props) {
 
         </style>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>{league.title} Stats</h1>
         {

@@ -4,9 +4,11 @@ import { HeaderNavigation } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
 import { addLeagueToVariables } from '../lib/utils'
 import Head from 'next/head'
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context)
+
   const results = await GraphqlClient.query({
     query: gql`
       query($leagueCriteria: LeagueWhereInput) {
@@ -21,7 +23,13 @@ export const getServerSideProps = async (context) => {
           lateRegistrationStart
           lateRegistrationEnd
         }
-        Player(where: {id: "${context.query.id}"}) {
+        allPlayers(where: {id: "${context.query.id}"}) {
+          id
+          firstName
+          lastName
+          email
+        }
+        allPlayerSubstitutions(where: {id: "${context.query.id}"}) {
           id
           firstName
           lastName
@@ -35,24 +43,30 @@ export const getServerSideProps = async (context) => {
   LeagueUtils.addLeagueStatus(league)
 
   const referer = context.req.headers.referer || null
+  const props = {
+    league,
+    referer,
+    player: results.data.allPlayers[0] || results.data.allPlayerSubstitutions[0] || null
+  }
+  await updateWithGlobalServerSideProps(props, context)
   return {
-    props: {
-      league,
-      referer,
-      player: results.data.Player
-    }
+    props
   }
 }
 
 export default function ConfirmationPage (props) {
-  const { league, referer, player } = props
+  const { league, referer, player, leagues } = props
   const parsedURL = new URL(referer)
-  const validPathNames = ['/register-team', '/leagues/' + league.slug + '/register']
+  const validPathNames = [
+    '/register-team',
+    '/leagues/' + league.slug + '/register',
+    '/leagues/' + league.slug + '/substitutions'
+  ]
 
   function ErrorState () {
     return (
       <>
-        <HeaderNavigation league={league} />
+        <HeaderNavigation leagues={leagues} />
         <div className="container">
           <h1>Error</h1>
           <p>The referrer for this request was not valid.</p>
@@ -72,8 +86,8 @@ export default function ConfirmationPage (props) {
     <Head>
       <title>Your Order for {league.title} is Confirmed!</title>
     </Head>
-    <HeaderNavigation league={league} />
-    <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-fluid" alt="" style={{
+    <HeaderNavigation leagues={leagues} />
+    <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-responsive" alt="" style={{
       maxHeight: '480px',
       margin: '1rem auto',
       borderRadius: '1rem'

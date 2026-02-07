@@ -1,6 +1,17 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
-export default function TermsPage () {
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+
+export const getServerSideProps = async () => {
+  const props = {}
+  await updateWithGlobalServerSideProps(props)
+  return {
+    props
+  }
+}
+
+export default function TermsPage (props) {
+  const {leagues} = props
   return (
     <div>
       <Head>
@@ -9,7 +20,7 @@ export default function TermsPage () {
         <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
         <meta property="og:description" content="Here you can find our terms as they relate to participating in SFUltimate events" />
       </Head>
-      <HeaderNavigation />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">
           <div className="col-sm-8 offset-sm-2">

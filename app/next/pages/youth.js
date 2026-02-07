@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 function VideoBackground (props) {
   return (
@@ -14,7 +15,16 @@ function VideoBackground (props) {
   )
 }
 
-export default function YouthPage () {
+export async function getServerSideProps () {
+  const props = {}
+  await updateWithGlobalServerSideProps(props)
+  return {
+    props
+  }
+}
+
+export default function YouthPage (props) {
+  const { leagues } = props
   return (
     <div>
       <Head>
@@ -24,7 +34,7 @@ export default function YouthPage () {
         <meta property="og:image" content="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fca0052551268b0637ba1-images-data%20(1).jpg" />
         <meta property="og:description" content="Learn more about our youth ultimate programs, including summer camps, clinics, and other programming." />
       </Head>
-      <HeaderNavigation />
+      <HeaderNavigation leagues={leagues} />
 
       <VideoBackground
         src={'https://d137pw2ndt5u9c.cloudfront.net/youth-video.mp4'}

@@ -46,11 +46,12 @@ function PlayerAmountAlert (props) {
 }
 
 export default function RegisterPage (props) {
-  const { league: activeLeague, braintreeToken, query, players } = props
+  const { league: activeLeague, braintreeToken, query, players, leagues } = props
   const [player, setPlayer] = useState({})
   const forceForm = query.force_form === 'true'
   const disablePayment = query.disable_payment === 'true'
   const errorMessage = query.error
+  const isSubstitution = props.postUrl === '/api/substitutions'
 
   let adultPrice, studentPrice
   if (disablePayment) {
@@ -62,7 +63,7 @@ export default function RegisterPage (props) {
   } else if (activeLeague.isRegistrationPeriod) {
     studentPrice = activeLeague.pricingRegularStudent
     adultPrice = activeLeague.pricingRegularAdult
-  } else if (activeLeague.isLateRegistrationPeriod || forceForm) {
+  } else if (activeLeague.isLateRegistrationPeriod || forceForm || isSubstitution) {
     studentPrice = activeLeague.pricingLateStudent
     adultPrice = activeLeague.pricingLateAdult
   }
@@ -70,21 +71,11 @@ export default function RegisterPage (props) {
   const headerHtml = (
     <>
       <Head>
-        <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
-        <meta name="description" content={activeLeague.summary || ''}/>
-        <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
-        <meta property="og:description" content={activeLeague.summary || ''}/>
-        {
-          activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
-            <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
-          )
-        }
         <script src="https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js"/>
         <script src="https://www.google.com/recaptcha/api.js?render=6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w"/>
         <script dangerouslySetInnerHTML={{ __html: `var BRAINTREE_CLIENT_TOKEN = '${braintreeToken}';` }}></script>
       </Head>
-      <HeaderNavigation league={activeLeague}/>
+      <HeaderNavigation leagues={leagues}/>
     </>
   )
 
@@ -152,7 +143,7 @@ export default function RegisterPage (props) {
 
       <div className="row">
         <div className="col-md-12">
-          <form id="registration" method="POST" action="/api/register">
+          <form id="registration" method="POST" action={props.postUrl}>
             <input type="hidden" name="leagueId" value={activeLeague.id}/>
             <input type="hidden" name="paymentMethodNonce" id="nonce"/>
             <input type="hidden" name="recaptchaToken" id="recaptcha"/>
@@ -391,13 +382,17 @@ export default function RegisterPage (props) {
                   )
             }
 
-            <FormInput
-              label="Partner Name"
-              id="partnerName"
-              name="partnerName"
-              helpText={'Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can\'t guarantee this.'}
-              onChange={(e) => setPlayer({ ...player, partnerName: e.target.value })}
-            />
+            {
+              !isSubstitution && (
+                <FormInput
+                  label="Partner Name"
+                  id="partnerName"
+                  name="partnerName"
+                  helpText={'Type the name of the person you would like to partner with.  The captains during the draft will make every effort to accommodate this request, but we can\'t guarantee this.'}
+                  onChange={(e) => setPlayer({ ...player, partnerName: e.target.value })}
+                />
+              )
+            }
 
             <FormInput
               label="Comments"
@@ -406,24 +401,30 @@ export default function RegisterPage (props) {
               type="textarea"
               helpText={'Type here any additional comments you may have (if you can\'t attend certain weeks, really don\'t want to play with a specific person, or want to give captains some idea of who you are go ahead).  The captains and organizers will use this information during the player draft.'}/>
 
-            <FormSelect
-              label="Would you like to be a captain or co-captain?"
-              id="wouldCaptain"
-              name="wouldCaptain"
-              required
-              options={[
-                { value: 'Yes', label: 'Yes' },
-                { value: 'No', label: 'No' }
-              ]}
-              helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
-            />
+            {
+              !isSubstitution && (
+                <>
+                  <FormSelect
+                    label="Would you like to be a captain or co-captain?"
+                    id="wouldCaptain"
+                    name="wouldCaptain"
+                    required
+                    options={[
+                      { value: 'Yes', label: 'Yes' },
+                      { value: 'No', label: 'No' }
+                    ]}
+                    helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
+                  />
+                  <div className="alert alert-success">
+                    <strong>FYI: </strong>Captains get a <strong>$10 discount</strong> on their league entry!
+                    <br />
+                    <br />
+                    Also be sure to come to our <strong>DRAFT PARTY</strong> location/time TBD, come get hype about the league and watch the captains select teams. Get to know your new teammates and see friendly faces too!
+                  </div>
+                </>
+              )
+            }
 
-            <div className="alert alert-success">
-              <strong>FYI: </strong>Captains get a <strong>$10 discount</strong> on their league entry!
-              <br />
-              <br />
-              Also be sure to come to our <strong>DRAFT PARTY</strong> location/time TBD, come get hype about the league and watch the captains select teams. Get to know your new teammates and see friendly faces too!
-            </div>
 
             <h3>General Waiver</h3>
             <FormCheckbox
@@ -450,7 +451,7 @@ export default function RegisterPage (props) {
             }
 
             {
-              activeLeague.requestSponsorship
+              !isSubstitution && activeLeague.requestSponsorship
                 ? (
                   <div>
                     <h3>Sponsorship</h3>
@@ -492,26 +493,26 @@ export default function RegisterPage (props) {
               label={<span>I am aware that any egregious or repeated violations of the above agreement <strong>may result in suspension/removal</strong> from SFLUltimate events.</span>}
               required
             />
-
-            <h3>Sponsor a Player</h3>
-            <p><span>Want to give back to the community? Help a new player get to play frisbee? You can sponsor a player for their league or clinic fees by selecting here. 100% of your tax-deductible donation goes toward sponsored player fees. You can directly sponsor a player of your choosing, or trust that it will go to a qualified applicant as selected by the SFU Board.
-                <br/><br/>We all know how special ultimate is. From making lifelong friends, staying fit and enjoying the outdoors, throwing that perfect throw to your teammate, or chasing down that plastic, ultimate can be life changing. YOU can give that gift to another player who cannot afford to play. Please donate any amount HERE, or when you sign up for your next league. </span></p>
-
             {
-              !disablePayment && (
-                <FormSelect
-                  label="Sponsor a Player"
-                  id="donationLevel"
-                  name="donationLevel"
-                  required
-                  options={[
-                    { value: 'tier_0', label: '$0' },
-                    { value: 'tier_1', label: `$${activeLeague.pricingRegularAdult * 0.5} - sponsor 1/2 a player` },
-                    { value: 'tier_2', label: `$${activeLeague.pricingRegularAdult} - sponsor a player` },
-                    { value: 'tier_3', label: `$${activeLeague.pricingRegularAdult * 2} - sponsor two players` }
-                  ]}
-                  onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
-                />
+              !disablePayment && !isSubstitution && (
+                <>
+                  <h3>Sponsor a Player</h3>
+                  <p><span>Want to give back to the community? Help a new player get to play frisbee? You can sponsor a player for their league or clinic fees by selecting here. 100% of your tax-deductible donation goes toward sponsored player fees. You can directly sponsor a player of your choosing, or trust that it will go to a qualified applicant as selected by the SFU Board.
+                <br/><br/>We all know how special ultimate is. From making lifelong friends, staying fit and enjoying the outdoors, throwing that perfect throw to your teammate, or chasing down that plastic, ultimate can be life changing. YOU can give that gift to another player who cannot afford to play. Please donate any amount HERE, or when you sign up for your next league. </span></p>
+                  <FormSelect
+                    label="Sponsor a Player"
+                    id="donationLevel"
+                    name="donationLevel"
+                    required
+                    options={[
+                      { value: 'tier_0', label: '$0' },
+                      { value: 'tier_1', label: `$${activeLeague.pricingRegularAdult * 0.5} - sponsor 1/2 a player` },
+                      { value: 'tier_2', label: `$${activeLeague.pricingRegularAdult} - sponsor a player` },
+                      { value: 'tier_3', label: `$${activeLeague.pricingRegularAdult * 2} - sponsor two players` }
+                    ]}
+                    onChange={(e) => setPlayer({ ...player, donationLevel: e.target.value })}
+                  />
+                </>
               )
             }
 

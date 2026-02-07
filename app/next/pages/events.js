@@ -2,23 +2,13 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from '../lib/league-utils'
 import { AddToCalendar } from '../components/AddToCalendar'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
-            allLeagues(where:{isActive: true}) {
-              id
-              title
-              earlyRegistrationStart
-              earlyRegistrationEnd
-              registrationStart
-              registrationEnd
-              lateRegistrationStart
-              lateRegistrationEnd
-            }
             allEvents(sortBy: startTime_DESC) {
               id
               slug
@@ -35,9 +25,6 @@ export const getServerSideProps = async () => {
             }
         }`
   })
-
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
 
   const events = results.data.allEvents.map(function (event) {
     event = JSON.parse(JSON.stringify(event))
@@ -63,7 +50,9 @@ export const getServerSideProps = async () => {
     return event
   })
 
-  return { props: { events, league } }
+  const props = {events}
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 
 function EventItem (props) {
@@ -114,7 +103,7 @@ function EventItem (props) {
 }
 
 export default function EventsPage (props) {
-  const { events, league } = props
+  const { events, leagues } = props
 
   const upcomingEvents = events.filter((event) => event.active)
   upcomingEvents.sort((a, b) => {
@@ -128,7 +117,7 @@ export default function EventsPage (props) {
         <meta property="og:url" content="https://www.sflultimate.com/events"/>
         <meta property="og:description" content="See what events are local to the South Florida area!"/>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
 
         <h1>Upcoming Events</h1>

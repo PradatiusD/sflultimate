@@ -6,7 +6,7 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function LeagueTeamsPage (props) {
-  const { league } = props
+  const { league, leagues } = props
   return (
     <>
       <Head>
@@ -18,7 +18,7 @@ export default function LeagueTeamsPage (props) {
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
       </Head>
-      <HeaderNavigation league={league}/>
+      <HeaderNavigation leagues={leagues}/>
       <LeagueTeams {...props} />
     </>
   )

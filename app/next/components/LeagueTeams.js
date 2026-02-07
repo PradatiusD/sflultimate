@@ -3,6 +3,7 @@ import GraphqlClient from '../lib/graphql-client'
 import LeagueUtils from '../lib/league-utils'
 import { gql } from '@apollo/client'
 import { addLeagueToVariables } from '../lib/utils'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getLeagueTeamsData = async (context) => {
   const variables = addLeagueToVariables(context, {})
@@ -41,6 +42,13 @@ export const getLeagueTeamsData = async (context) => {
             }
           }
         }
+        allPlayers(where: {profileImage_not: null}) {
+          firstName
+          lastName
+          profileImage {
+            publicUrl
+          }
+        }
       }`,
     variables
   })
@@ -61,9 +69,21 @@ export const getLeagueTeamsData = async (context) => {
         }`,
     variables
   })
+  const profileMap = {}
+  for (const player of results.data.allPlayers) {
+    profileMap[player.firstName.toLowerCase() + ' ' + player.lastName.toLowerCase()] = player.profileImage.publicUrl
+  }
+  playersRegistered.data.allPlayers.forEach(player => {
+    const key = player.firstName.toLowerCase() + ' ' + player.lastName.toLowerCase()
+    if (profileMap[key]) {
+      player.profileImage = { publicUrl: profileMap[key] }
+    }
+  })
   const players = playersRegistered.data.allPlayers
   LeagueUtils.addLeagueStatus(league)
-  return { props: { league, teams, url: context.req.url, players } }
+  const props = { league, teams, url: context.req.url, players }
+  await updateWithGlobalServerSideProps(props, context)
+  return { props }
 }
 
 function PlayerImage (props) {
@@ -106,8 +126,8 @@ export default function LeagueTeams (props) {
         <div className="container">
           <h1>Teams Pending...</h1>
           <p className="lead">Players haven&#39;t been drafted yet, but here is who we have signed up so far!</p>
+          <PlayerGallery {...props} />
         </div>
-        <PlayerGallery {...props} />
       </>
     )
   }

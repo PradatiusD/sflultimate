@@ -1,13 +1,14 @@
-async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disablePayment }) {
+async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disablePayment, registrationPath }) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
-  let testUrl = 'http://localhost:3000/leagues/fall-league-2025-mens-division/register'
+  let testUrl = 'http://localhost:3000/leagues/fall-league-2025-mens-division' + registrationPath
   testUrl = new URL(testUrl)
   if (disablePayment) {
     testUrl.searchParams.set('disable_payment', 'true')
   }
   testUrl.searchParams.set('force_form', 'true')
   testUrl = testUrl.toString()
+  const isSubstitution = registrationPath === '/substitutions'
   cy.visit(testUrl)
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
@@ -19,7 +20,9 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   cy.get('#throwsLevel').select('3')
   cy.get('#participation').select('50')
   cy.get('#shirtSize').select('M')
-  cy.get('#partnerName').type('Test Friend')
+  if (!isSubstitution) {
+    cy.get('#partnerName').type('Test Friend')
+  }
   cy.get('#willAttendFinals').check()
   const $body = await cy.get('body')
   const $noUnderstandsLateFeeElement = $body.find('#no-understandsLateFee')
@@ -28,7 +31,9 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   }
   cy.get('#comments').type('A random comment about me when registering for the draft')
   cy.get('#phoneNumber').type('9543055611')
-  cy.get('#wouldCaptain').select('Yes')
+  if (!isSubstitution) {
+    cy.get('#wouldCaptain').select('Yes')
+  }
   cy.get('#termsConditions').check()
 
   const $noSponsorElement = await $body.find('#no-requestSponsorship')
@@ -49,7 +54,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
 
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')
-  if (!disablePayment) {
+  if (!disablePayment && !isSubstitution) {
     cy.get('#donationLevel').select('tier_2')
   }
 
@@ -81,7 +86,9 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
 
 describe('Registration', () => {
   it('Should allow regular registration with payment', () => {
-    shouldHandlePaymentWithNumber({})
+    shouldHandlePaymentWithNumber({
+      registrationPath: '/register'
+    })
   })
 
   // it('Should handle failed transaction', () => {
@@ -92,7 +99,14 @@ describe('Registration', () => {
   // })
   it('Should allow comped registration', () => {
     shouldHandlePaymentWithNumber({
-      disablePayment: true
+      disablePayment: true,
+      registrationPath: '/register'
+    })
+  })
+
+  it.only('Should allow substitution registration', () => {
+    shouldHandlePaymentWithNumber({
+      registrationPath: '/substitutions'
     })
   })
 })

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import LeagueUtils from '../lib/league-utils'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getScheduleData = async function (context) {
   const variables = addLeagueToVariables(context, {})
@@ -69,7 +70,9 @@ export const getScheduleData = async function (context) {
   const teams = results.data.allTeams
   const events = results.data.allEvents.filter(event => event.startTime && new Date(event.startTime).getTime() > Date.now())
   LeagueUtils.addLeagueStatus(league)
-  return { league, games, teams, events }
+  const props = { league, games, teams, events }
+  await updateWithGlobalServerSideProps(props)
+  return props
 }
 
 export const Schedule = function (props) {

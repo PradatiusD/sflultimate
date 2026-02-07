@@ -2,22 +2,12 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
-import LeagueUtils from '../lib/league-utils'
+import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
-        allLeagues(where:{isActive: true}) {
-          id
-          title
-          earlyRegistrationStart
-          earlyRegistrationEnd
-          registrationStart
-          registrationEnd
-          lateRegistrationStart
-          lateRegistrationEnd
-        }
         allClubTeams {
           id
           name
@@ -59,13 +49,13 @@ export const getServerSideProps = async () => {
     return team
   })
 
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
-  return { props: { clubTeams, league } }
+  const props = { clubTeams }
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 
 export default function ClubTeamsPage (props) {
-  const { clubTeams, league } = props
+  const { clubTeams, leagues } = props
   return (
     <>
       <Head>
@@ -74,7 +64,7 @@ export default function ClubTeamsPage (props) {
         <meta property="og:url" content="https://www.sflultimate.com/club-teams" />
         <meta property="og:description" content="See what teams are local to the South Florida area!" />
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>Club Teams</h1>
         <p className="lead">South Florida has several local club teams that compete at a state and national level.</p>
@@ -98,15 +88,13 @@ export default function ClubTeamsPage (props) {
                     <strong>{team.category}</strong>
                   </p>
                   <p>{team.description}</p>
-                  <ul className="list-inline">
+                  <div className="btn-group">
                     {team?.links?.map((link, i) => (
-                      <li key={i}>
-                        <a href={link.url} target="_blank" rel="noopener noreferrer">
-                          {link.label}
-                        </a>
-                      </li>
+                      <a key={i} className="btn btn-outline-primary" href={link.url} target="_blank" rel="noopener noreferrer">
+                        {link.label}
+                      </a>
                     ))}
-                  </ul>
+                  </div>
                 </div>
                 <hr/>
               </div>

@@ -6,6 +6,7 @@ import { PlayerLink } from '../../../components/PlayerLink'
 import { HeaderNavigation } from '../../../components/Navigation'
 import LeagueUtils from '../../../lib/league-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
+import {updateWithGlobalServerSideProps} from "../../../lib/global-server-side-props";
 
 const getBadgeStyle = function (color) {
   let badgeColor
@@ -104,19 +105,22 @@ export async function getServerSideProps (context) {
   if (query && query.draft_mode === 'true') {
     players = sortByGenderThenSkillFn(players)
   }
+
+  const props = {
+    league,
+    teams,
+    teamMap,
+    players,
+    query,
+    user: context.req.user ? context.req.user : null
+  }
+  await updateWithGlobalServerSideProps(props)
   return {
-    props: {
-      league,
-      teams,
-      teamMap,
-      players,
-      query,
-      user: context.req.user ? context.req.user : null
-    }
+    props
   }
 }
 export default function Draftboard (props) {
-  const { league, user, teams, teamMap, players, query } = props
+  const { league, user, teams, teamMap, players, query, leagues } = props
 
   const [activeData, setActiveData] = useState({
     players,
@@ -224,12 +228,13 @@ export default function Draftboard (props) {
   const isDraftMode = activeData.mode === 'draft'
   const showComments = user && query.show_comments === 'true'
 
+
   return (
     <>
       <Head>
         <title>{league?.title} Draftboard</title>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container-fluid">
         <h1>{league?.title} Draftboard</h1>
         <div id="draftboard">
@@ -369,29 +374,35 @@ export default function Draftboard (props) {
                     <td>{player.participation}</td>
                     <td>{player.willAttendFinals ? 'Yes' : 'No'}</td>
                     <td>{player.partnerName}</td>
-                    <td>
-                      {player.team && (
-                        <span className="badge" style={getBadgeStyle(teamMap[player.team].color)}>
+                    {
+                      (player.team || showComments) && (
+                        <td>
+                          {
+                            player.team && (
+                              <span className="badge" style={getBadgeStyle(teamMap[player.team].color)}>
                             {teamMap[player.team].name}
                           </span>
-                      )}
-                      {
-                        showComments && (
-                          <small>
-                            {player.comments}
-                          </small>
-                        )
-                      }
-                    </td>
+                            )
+                          }
+                          {
+                            showComments && (
+                              <small>
+                                {player.comments}
+                              </small>
+                            )
+                          }
+                        </td>
+                      )
+                    }
                     {
                       !isDraftMode && <td>{player.wouldCaptain ? 'Yes' : ''}</td>
                     }
                     {
                       !isDraftMode && <td>{player.wouldSponsor ? 'Yes' : ''}</td>
                     }
-                    <td>
-                      {
-                        user && isDraftMode && (
+                    {
+                      user && isDraftMode && (
+                        <td>
                           <div style={{ minWidth: '400px' }}>
                             {!player.team && teams.map((team, index) => {
                               return (
@@ -406,9 +417,9 @@ export default function Draftboard (props) {
                               )
                             })}
                           </div>
-                        )
-                      }
-                    </td>
+                        </td>
+                      )
+                    }
                   </tr>
                 )
               })

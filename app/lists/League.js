@@ -4,6 +4,10 @@ const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
 const storage = require('./file-storage-adapter')
 
 const fields = {
+  name: {
+    type: Text,
+    isRequired: true
+  },
   title: {
     type: Text,
     initial: true,
