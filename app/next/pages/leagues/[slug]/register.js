@@ -62,7 +62,7 @@ export const getServerSideProps = async (context) => {
     braintreeToken,
     query,
     players,
-    postUrl: '/apis/register'
+    postUrl: '/api/register'
   }
   await updateWithGlobalServerSideProps(props, context)
   return {

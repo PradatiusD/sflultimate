@@ -153,6 +153,10 @@ export default async function handler (req, res) {
     amount += donationAmount
     sanitizedPayload.donationAmount = amount
 
+    if (sanitizedPayload.shirtSize === 'NA') {
+      amount -= 15
+    }
+
     if (disablePayment) {
       amount = 0
       sanitizedPayload.donationAmount = donationAmount

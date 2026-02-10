@@ -1,7 +1,7 @@
 async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disablePayment, registrationPath }) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
-  let testUrl = 'http://localhost:3000/leagues/fall-league-2025-mens-division' + registrationPath
+  let testUrl = 'http://localhost:3000/leagues/spring-league-2026' + registrationPath
   testUrl = new URL(testUrl)
   if (disablePayment) {
     testUrl.searchParams.set('disable_payment', 'true')
@@ -19,7 +19,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   cy.get('#experienceLevel').select('4')
   cy.get('#throwsLevel').select('3')
   cy.get('#participation').select('50')
-  cy.get('#shirtSize').select('M')
+  cy.get('#shirtSize').select('NA')
   if (!isSubstitution) {
     cy.get('#partnerName').type('Test Friend')
   }
@@ -85,7 +85,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
 }
 
 describe('Registration', () => {
-  it('Should allow regular registration with payment', () => {
+  it.only('Should allow regular registration with payment', () => {
     shouldHandlePaymentWithNumber({
       registrationPath: '/register'
     })
@@ -104,7 +104,7 @@ describe('Registration', () => {
     })
   })
 
-  it.only('Should allow substitution registration', () => {
+  it('Should allow substitution registration', () => {
     shouldHandlePaymentWithNumber({
       registrationPath: '/substitutions'
     })

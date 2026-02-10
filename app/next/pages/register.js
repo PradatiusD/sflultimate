@@ -4,7 +4,7 @@ import { addLeagueToVariables } from '../lib/utils'
 import LeagueUtils from '../lib/league-utils'
 import { HeaderNavigation } from '../components/Navigation'
 import Head from 'next/head'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -42,20 +42,20 @@ export const getServerSideProps = async (context) => {
       }`,
     variables
   })
-  
+
   const activeLeagues = results.data.allLeagues.map(league => {
     LeagueUtils.addLeagueStatus(league, context)
     return league
   })
-  
+
   const props = { activeLeagues }
-  
+
   await updateWithGlobalServerSideProps(props, {})
-  return { props: props }
+  return { props }
 }
 
 export default function LeagueRegisterPage (props) {
-  const {activeLeagues, leagues} = props
+  const { activeLeagues, leagues } = props
   return (
     <div>
       <Head>
@@ -100,7 +100,7 @@ export default function LeagueRegisterPage (props) {
                   <p>
                     {league.summary}
                   </p>
-                  <a href={href} className="btn btn-primary btn-block">{league.canRegister ? "Sign Up": "Play a Game as a Sub"}</a>
+                  <a href={href} className="btn btn-primary btn-block">{league.canRegister ? 'Sign Up' : 'Play a Game as a Sub'}</a>
                 </div>
               )
             })

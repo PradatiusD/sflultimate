@@ -344,11 +344,11 @@ export default function RegisterPage (props) {
                 : <div id="no-requestAttendance"></div>
             }
 
-            <div>
+            <div className="mb-3">
               <label htmlFor="willAttendFinals" className="form-label">Finals attendance</label>
-              <div className="checkbox">
-                <label htmlFor="willAttendFinals"><input id="willAttendFinals" type="checkbox"
-                                                         name="willAttendFinals"/> I expect to be able to attend finals.</label>
+              <div className="form-check">
+                <label className="form-check-label" htmlFor="willAttendFinals">I expect to be able to attend finals.</label>
+                <input className="form-check-input" id="willAttendFinals" type="checkbox" name="willAttendFinals" />
               </div>
             </div>
 
@@ -371,7 +371,7 @@ export default function RegisterPage (props) {
                       { value: 'L', label: 'L' },
                       { value: 'XL', label: 'XL' },
                       { value: 'XXL', label: 'XXL' },
-                      { value: 'NA', label: 'I do not want a jersey' }
+                      { value: 'NA', label: 'I do not want a jersey, (save $15)' }
                     ]}
                     helpText="You’ll be able to rep SFU anytime you take the field with your custom jersey. It will be your team color for this season."
                     onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
@@ -425,7 +425,6 @@ export default function RegisterPage (props) {
               )
             }
 
-
             <h3>General Waiver</h3>
             <FormCheckbox
               id="termsConditions"
@@ -455,9 +454,9 @@ export default function RegisterPage (props) {
                 ? (
                   <div>
                     <h3>Sponsorship</h3>
-                    <div className="checkbox">
-                      <label htmlFor="wouldSponsor"><input id="wouldSponsor" name="wouldSponsor" type="checkbox"/>I am
-                        interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
+                    <div className="form-check">
+                      <input className="form-check-input" id="wouldSponsor" name="wouldSponsor" type="checkbox"/>
+                      <label className="form-check-label" htmlFor="wouldSponsor">I am interested in having my company logo on the SFLUltimate jersey and be a sponsor.</label>
                     </div>
                   </div>
                   )
@@ -496,7 +495,7 @@ export default function RegisterPage (props) {
             {
               !disablePayment && !isSubstitution && (
                 <>
-                  <h3>Sponsor a Player</h3>
+                  <h3 className="mt-3">Sponsor a Player</h3>
                   <p><span>Want to give back to the community? Help a new player get to play frisbee? You can sponsor a player for their league or clinic fees by selecting here. 100% of your tax-deductible donation goes toward sponsored player fees. You can directly sponsor a player of your choosing, or trust that it will go to a qualified applicant as selected by the SFU Board.
                 <br/><br/>We all know how special ultimate is. From making lifelong friends, staying fit and enjoying the outdoors, throwing that perfect throw to your teammate, or chasing down that plastic, ultimate can be life changing. YOU can give that gift to another player who cannot afford to play. Please donate any amount HERE, or when you sign up for your next league. </span></p>
                   <FormSelect
@@ -519,7 +518,7 @@ export default function RegisterPage (props) {
             {
               !disablePayment && (
                 <>
-                  <h4>Get Sponsored</h4>
+                  <h3>Get Sponsored</h3>
                   <p><span>Want to play ultimate but just can’t afford the fees right now? We want to help you get sponsored to play league. If you are interested in seeking sponsorship, please fill out <a
                     href="https://forms.gle/4PN68iK3FAU2iksT6" target="_blank">this application</a> by the applicable deadline. It will be reviewed by a portion of the SFU Board and you’ll be notified if you are a recipient. Sponsorships are not guaranteed, and all applications will be reviewed before each league.Partial and full sponsorships may be available. The recipient of any level sponsorship is expected to have reliable transportation and be able to attend at least 75% of the sponsored league.</span></p>
                 </>
@@ -533,8 +532,8 @@ export default function RegisterPage (props) {
               name="registrationLevel"
               required
               options={[
-                { value: 'Adult', label: `Adult - $${adultPrice}` },
-                { value: 'Student', label: `Student - $${studentPrice}` }
+                { value: 'Adult', label: activeLeague.requestShirtSize && player.shirtSize === 'NA' ? `Adult - $${adultPrice - 15} (without jersey)` : `Adult - $${adultPrice} (with jersey)` },
+                { value: 'Student', label: activeLeague.requestShirtSize && player.shirtSize === 'NA' ? `Student - $${studentPrice - 15} (without jersey)` : `Student - $${studentPrice} (with jersey)` }
               ]}
               onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
             />
