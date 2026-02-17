@@ -55,7 +55,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   cy.get('#age').type('25')
   cy.get('#registrationLevel').select('Student')
   if (!disablePayment && !isSubstitution) {
-    cy.get('#donationLevel').select('tier_2')
+    cy.get('#donationLevel').select('tier_0')
   }
 
   const $lateFeeCheckbox = await $body.find('#understandsLateFee')

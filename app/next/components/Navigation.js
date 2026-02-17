@@ -60,12 +60,9 @@ function HeaderNavigation (props) {
                   <a className="nav-link" href="/">Home</a>
                 </li>
                 {
-                  headerNavLinks.map((link) => {
+                  leagues && headerNavLinks.map((link) => {
                     const dropdownId = link.key + '-dropdown-menu'
                     if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
-                      if (!leagues) {
-                        return <></>
-                      }
                       return (
                         <li className="nav-item dropdown" key={link.key}>
                           <a
@@ -83,7 +80,7 @@ function HeaderNavigation (props) {
                               leagues.map(({ slug, title }) => {
                                 const leagueUrl = `/leagues/${slug}/${link.key}`
                                 return (
-                                  <li key={title}>
+                                  <li key={slug}>
                                     <a className="dropdown-item" href={leagueUrl}>{title}</a>
                                   </li>
                                 )

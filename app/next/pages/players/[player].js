@@ -134,6 +134,9 @@ export const getServerSideProps = async (context) => {
     if (foundTeamForLeague) {
       league.team = Object.assign({}, foundTeamForLeague)
       league.games = gameResults.data.allGames.reduce(function (acc, dbGame) {
+        if (!dbGame.homeTeam || !dbGame.awayTeam) {
+          return acc
+        }
         const isHomeTeam = dbGame.homeTeam.id === league.team.id
         const isAwayTeam = dbGame.awayTeam.id === league.team.id
         const isPlayersTeam = isHomeTeam || isAwayTeam
