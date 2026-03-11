@@ -6,6 +6,7 @@ import LeagueUtils from '../../lib/league-utils'
 import NotFound from 'next/error'
 import { createSummary } from '../../lib/utils'
 import { AddToCalendar } from '../../components/AddToCalendar'
+import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -65,11 +66,13 @@ export const getServerSideProps = async (context) => {
     return event
   })
 
-  return { props: { event: events[0] || null, league } }
+  const props = { event: events[0] || null, league }
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 
 export default function EventItemPage (props) {
-  const { event, league } = props
+  const { event, leagues } = props
 
   if (!event) {
     return <NotFound statusCode={404} />
@@ -84,8 +87,7 @@ export default function EventItemPage (props) {
         <meta property="og:description" content={createSummary(event, 140)}/>
         <meta property="og:image" content={event.image.publicUrl} />
       </Head>
-      <HeaderNavigation league={league} />
-
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">
           <div className="col-md-6 offset-md-3">

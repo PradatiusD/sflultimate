@@ -3,7 +3,7 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
 import { AddToCalendar } from '../components/AddToCalendar'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -50,7 +50,7 @@ export const getServerSideProps = async () => {
     return event
   })
 
-  const props = {events}
+  const props = { events }
   await updateWithGlobalServerSideProps(props)
   return { props }
 }
