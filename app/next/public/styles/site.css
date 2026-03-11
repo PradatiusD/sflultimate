@@ -12335,6 +12335,12 @@ textarea.form-control-lg {
     grid-template-rows: repeat(3, 1fr);
   }
 }
+@media screen and (max-width: 480px) {
+  .pending-team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+}
 
 .pending-team {
   padding: 1rem;
