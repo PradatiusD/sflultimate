@@ -8,6 +8,9 @@ export async function updateWithGlobalServerSideProps (originalProps, context) {
           title
           slug
           registrationStart
+          isActive
+          registrationEnd
+          slug
         }
       }
     `

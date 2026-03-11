@@ -103,7 +103,7 @@ function HeaderNavigation (props) {
           </div>
         </nav>
       </header>
-      <Notification />
+      <Notification leagues={leagues} />
     </>
   )
 }

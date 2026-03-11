@@ -2,27 +2,29 @@
 import Countdown from 'react-countdown'
 import { useEffect, useState } from 'react'
 
-export default function Notification () {
+export default function Notification (props) {
+  const { leagues } = props
   const [pathname, setPathname] = useState('')
   useEffect(() => {
     setPathname(window.location.pathname)
   }, [])
 
-  const config = {
-    title: 'Winter Beach League Registration',
-    url: '/leagues/winter-beach-league-2026/register'
-  }
-  const registrationCloseDate = new Date('2026-01-09T04:59:00.000Z')
-  if (registrationCloseDate.getTime() < Date.now() || pathname === config.url) {
+  const activeLeague = leagues.find((league) => {
+    return league.isActive
+  })
+
+  const destinationUrl = '/leagues/' + activeLeague.slug + '/register'
+
+  const registrationCloseDate = new Date(activeLeague.registrationEnd)
+  if (!activeLeague || registrationCloseDate.getTime() < Date.now() || pathname === destinationUrl) {
     return <></>
   }
   return (
     <div className="container">
       <div className="alert alert-info" role="alert">
         <i className="fa fa-info-circle me-2" aria-hidden="true"></i>
-        <strong><a href="/register">Fall League Registration</a> closes soon:</strong>
         <span className="glyphicon glyphicon-info-sign" style={{ position: 'relative', top: '2px' }}></span>{' '}
-        <strong><a href={config.url}></a>{config.title} closes <u>soon</u>:</strong>
+        <strong><a href={destinationUrl}>{activeLeague.title} registration</a><u> closes soon</u>:</strong>
         {' '} only{' '}
         <Countdown
           date={registrationCloseDate.getTime()}
@@ -42,7 +44,7 @@ export default function Notification () {
             )
           }}
         />
-        {' '}left before you can <a href={config.url}>sign up</a>!
+        {' '}left before you can <a href={destinationUrl} target="_blank">sign up</a>!
       </div>
     </div>
 
