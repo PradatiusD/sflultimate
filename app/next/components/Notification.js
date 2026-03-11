@@ -9,6 +9,10 @@ export default function Notification (props) {
     setPathname(window.location.pathname)
   }, [])
 
+  if (!leagues) {
+    return <></>
+  }
+
   const activeLeague = leagues.find((league) => {
     return league.isActive
   })
