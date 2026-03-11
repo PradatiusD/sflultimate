@@ -14,7 +14,7 @@ export default function LeagueTeamsPage (props) {
         <meta property="og:title" content="League Teams"/>
         <meta property="og:url" content="https://www.sflultimate.com/teams"/>
         <meta property="og:description" content={'Find out who is on your team for ' + league.title}/>
-        <meta property="og:image" content="https://d137pw2ndt5u9c.cloudfront.net/keystone/69b0c87a1c8d090028e057b3-league-teams.jpg"/>
+        <meta property="og:image" content="https://d137pw2ndt5u9c.cloudfront.net/keystone/69b0cdc048055400282f2dbb-league-teams%20(1).jpg"/>
         <meta property="og:image:width" content="1200"/>
         <meta property="og:image:height" content="630"/>
       </Head>
