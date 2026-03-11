@@ -502,7 +502,6 @@ export default function RegisterPage (props) {
                     label="Sponsor a Player"
                     id="donationLevel"
                     name="donationLevel"
-                    required
                     options={[
                       { value: 'tier_0', label: '$0' },
                       { value: 'tier_1', label: `$${activeLeague.pricingRegularAdult * 0.5} - sponsor 1/2 a player` },
