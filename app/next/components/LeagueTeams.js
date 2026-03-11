@@ -3,7 +3,7 @@ import GraphqlClient from '../lib/graphql-client'
 import LeagueUtils from '../lib/league-utils'
 import { gql } from '@apollo/client'
 import { addLeagueToVariables } from '../lib/utils'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getLeagueTeamsData = async (context) => {
   const variables = addLeagueToVariables(context, {})
@@ -86,20 +86,17 @@ export const getLeagueTeamsData = async (context) => {
   return { props }
 }
 
-function PlayerImage (props) {
+function PlayerImageWithName (props) {
   const { player } = props
   const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://placehold.co/200x200?text=Image+Pending'
   return (
-    <img src={srcUrl} className="img-fluid rounded" />
-  )
-}
-
-function PlayerImageWithName (props) {
-  const { player } = props
-  return (
     <div key={player.id}>
-      <PlayerImage player={player} />
-      <PlayerLink player={player} />
+      <div className="card">
+        <img src={srcUrl} className="card-img-top" alt={player.name + ' league profile photo'} />
+        <div className="card-body text-center">
+          <h5 className="card-title"><PlayerLink player={player}/></h5>
+        </div>
+      </div>
     </div>
   )
 }
@@ -110,7 +107,7 @@ function PlayerGallery (props) {
     <div className="pending-team-grid">
       {
         players.map((player) => {
-          return <PlayerImageWithName key={player} player={player} className="pending-team" />
+          return <PlayerImageWithName key={player} player={player} className="pending-team"/>
         })
       }
     </div>
