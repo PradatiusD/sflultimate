@@ -82,9 +82,9 @@ export default function EventItemPage (props) {
     <>
       <Head>
         <title>Event: {event.name}</title>
-        <meta property="og:title" content="South Florida Events"/>
-        <meta property="og:url" content={'https://www.sflultimate.com/events/' + event.slug}/>
-        <meta property="og:description" content={createSummary(event, 140)}/>
+        <meta property="og:title" content={event.name + ' | SFL Community Events'}/>
+        <meta property="og:url" content={'https://www.sflultimate.com/events/' + event.slug} />
+        <meta property="og:description" content={createSummary(event, 140)} />
         <meta property="og:image" content={event.image.publicUrl} />
       </Head>
       <HeaderNavigation leagues={leagues} />
