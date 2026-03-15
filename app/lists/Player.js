@@ -1,4 +1,4 @@
-const { Text, Relationship, DateTime, Integer, Checkbox, Select, File } = require('@keystonejs/fields')
+const { Text, Relationship, DateTime, Float, Checkbox, Select, File, Integer } = require('@keystonejs/fields')
 const storage = require('./file-storage-adapter')
 const fields = {
   createdAt: {
@@ -105,7 +105,7 @@ const fields = {
     isRequired: false
   },
   donationAmount: {
-    type: Integer
+    type: Float
   },
   preferredPositions: {
     type: Text
