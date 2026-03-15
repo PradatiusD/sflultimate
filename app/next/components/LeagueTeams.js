@@ -86,13 +86,25 @@ export const getLeagueTeamsData = async (context) => {
   return { props }
 }
 
-function PlayerImageWithName (props) {
+function PlayerImage (props) {
   const { player } = props
   const srcUrl = player.profileImage && player.profileImage.publicUrl ? player.profileImage.publicUrl : 'https://placehold.co/200x200?text=Image+Pending'
+  const imgClass = ['player-img']
+  if (props.className) {
+    imgClass.push(props.className)
+  }
+  return (
+    <img src={srcUrl} alt={player.name + ' league profile photo'} className={imgClass.join(' ')}/>
+  )
+}
+
+function PlayerImageWithName (props) {
+  const { player } = props
+  const playerImgProps = { ...props, className: 'card-img-top' }
   return (
     <div key={player.id}>
       <div className="card">
-        <img src={srcUrl} className="card-img-top" alt={player.name + ' league profile photo'} />
+        <PlayerImage {...playerImgProps} />
         <div className="card-body text-center">
           <h5 className="card-title"><PlayerLink player={player}/></h5>
         </div>
