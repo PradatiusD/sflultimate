@@ -4,6 +4,7 @@ import { HeaderNavigation } from '../../components/Navigation'
 import { getMongoTimestamp } from '../../lib/utils'
 import Head from 'next/head'
 import { buildPlayerUrl } from '../../components/PlayerLink'
+import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 
 export const getServerSideProps = async (context) => {
   const nameSplit = context.query.player.split('-')
@@ -44,7 +45,7 @@ export const getServerSideProps = async (context) => {
 
   // Build League Array
   const leagueIdList = []
-  const leagues = playerResults.data.allPlayers.reduce(function (acc, player) {
+  const leagueGameStatHistory = playerResults.data.allPlayers.reduce(function (acc, player) {
     player.leagues.forEach(function (league) {
       if (!leagueIdList.includes(league.id)) {
         leagueIdList.push(league.id)
@@ -115,11 +116,11 @@ export const getServerSideProps = async (context) => {
     assists: 0,
     scores: 0,
     defenses: 0,
-    leagues: leagues.length
+    leagues: leagueGameStatHistory.length
   }
 
   // Now add the team/games to the array of leagues
-  leagues.forEach(function (league) {
+  leagueGameStatHistory.forEach(function (league) {
     const foundTeamForLeague = gameResults.data.allTeams.find(function (team) {
       return team.league.id === league.id
     })
@@ -129,7 +130,9 @@ export const getServerSideProps = async (context) => {
       defenses: 0,
       playerTeamScore: 0,
       opponentTeamScore: 0,
-      outcomes: []
+      outcomes: [],
+      wins: 0,
+      losses: 0
     }
     if (foundTeamForLeague) {
       league.team = Object.assign({}, foundTeamForLeague)
@@ -168,6 +171,7 @@ export const getServerSideProps = async (context) => {
           })
 
           leagueGame.outcome = leagueGame.playerTeamScore > leagueGame.opponentTeamScore ? 'W' : 'L'
+          league.totals[leagueGame.outcome === 'W' ? 'wins' : 'losses']++
           acc.push(leagueGame)
         }
         return acc
@@ -175,24 +179,24 @@ export const getServerSideProps = async (context) => {
     }
   })
 
-  leagues.sort(function (a, b) {
+  leagueGameStatHistory.sort(function (a, b) {
     return getMongoTimestamp(b.id) - getMongoTimestamp(a.id)
   })
 
   const player = playerResults.data.allPlayers[0]
-  const league = JSON.parse(JSON.stringify(playerResults.data.allLeagues[0]))
+  const props = {
+    player,
+    allTimeTotals,
+    leagueGameStatHistory
+  }
+  await updateWithGlobalServerSideProps(props)
   return {
-    props: {
-      player,
-      allTimeTotals,
-      leagueGameStatHistory: leagues,
-      league
-    }
+    props
   }
 }
 
 export default function PlayerPage (props) {
-  const { player, leagueGameStatHistory, league, allTimeTotals } = props
+  const { player, leagueGameStatHistory, leagues, allTimeTotals } = props
   return (
     <div>
       <Head>
@@ -201,7 +205,7 @@ export default function PlayerPage (props) {
         <meta property="og:url" content={'https://www.sflultimate.com/players' + buildPlayerUrl(player)}/>
         <meta property="og:description" content={`See historical scores, assists, and defenses for ${player.firstName} ${player.lastName} across current and past SFLUltimate events`}/>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>{player.firstName} {player.lastName} Profile</h1>
         <div>
@@ -260,7 +264,7 @@ export default function PlayerPage (props) {
                     <td colSpan="2"><strong>Total</strong></td>
                     <td><strong>{league.totals.playerTeamScore}</strong></td>
                     <td><strong>{league.totals.opponentTeamScore}</strong></td>
-                    <td><strong>{league.totals.outcomes}</strong></td>
+                    <td><strong>{league.totals.wins}W-{league.totals.losses}L</strong></td>
                     <td><strong>{league.totals.assists}</strong></td>
                     <td><strong>{league.totals.scores}</strong></td>
                     <td><strong>{league.totals.defenses}</strong></td>

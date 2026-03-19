@@ -120,6 +120,10 @@ const fields = {
   },
   requestSponsorship: {
     type: Checkbox
+  },
+  champion: {
+    type: Relationship,
+    ref: 'Team'
   }
 }
 

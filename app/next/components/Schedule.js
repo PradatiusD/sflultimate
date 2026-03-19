@@ -185,7 +185,7 @@ export const Schedule = function (props) {
                         <td>{showDate(event.startTime)}</td>
                         <td>{showWeekday(event.startTime)}</td>
                         <td>{showHourMinute(event.startTime)}</td>
-                        <td><span className="badge">Event</span> {event.name}</td>
+                        <td><span className="badge text-bg-primary">Event</span> {event.name}</td>
                         <td>{event.location}</td>
                         <td><a target="_blank" href={event.moreInformationUrl}>More Information</a></td>
                       </tr>
