@@ -136,33 +136,6 @@ export default function Homepage (props) {
         <link rel="stylesheet" href="/styles/site.css"/>
       </Head>
       <HeaderNavigation leagues={leagues} />
-      {/* <div className="call-to-action" style={{height: '500px', backgroundImage: 'url("")'}}> */}
-      {/* <div className="video-full-screen"> */}
-      {/*  <video autoPlay={true} muted={true} loop={true}> */}
-      {/*    <source src="https://d137pw2ndt5u9c.cloudfront.net/SFL_Community_Beach_Hatter_2019.mp4" type={'video/mp4'}/> */}
-      {/*  </video> */}
-      {/* </div> */}
-      {/* </div> */}
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            {/*  if locals.league && locals.league.isRegistrationPeriod</p> */}
-            {/* if locals.league && locals.league.isRegistrationPeriod */}
-            {/* p Be sure to sign up for our locals.league.title */}
-            {/* else */}
-            {/* p We're working on our next league, while we wait go check out your local pick ups! */}
-          </div>
-        </div>
-        {/* <div className="row"> */}
-        {/*  <div className="col-md-12 text-center"> */}
-        {/*    { */}
-        {/*      league ? <a href="/register" className="btn btn-lg btn-primary">Register</a> : */}
-        {/*        <a href="/pickups" className="btn btn-lg btn-primary">Pick Ups</a> */}
-        {/*    } */}
-        {/*  </div> */}
-        {/* </div> */}
-      </div>
-
       <div className="container">
         <div className="row">
           <div className="col-md-8">

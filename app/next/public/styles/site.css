@@ -12377,4 +12377,8 @@ textarea.form-control-lg {
   bottom: 2px;
 }
 
+.draftboard-controls .btn {
+  margin-right: 0.5rem;
+}
+
 /*# sourceMappingURL=site.css.map */

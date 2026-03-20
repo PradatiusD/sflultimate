@@ -6,7 +6,7 @@ import { PlayerLink } from '../../../components/PlayerLink'
 import { HeaderNavigation } from '../../../components/Navigation'
 import LeagueUtils from '../../../lib/league-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
-import {updateWithGlobalServerSideProps} from "../../../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../../../lib/global-server-side-props'
 
 const getBadgeStyle = function (color) {
   let badgeColor
@@ -190,6 +190,15 @@ export default function Draftboard (props) {
       players: arrCopy
     })
   }
+
+  const sortByGenderThenRating = () => {
+    const arrCopy = sortByGenderThenSkillFn(props.players, true)
+    setActiveData({
+      ...activeData,
+      players: arrCopy
+    })
+  }
+
   const showOnlyCaptains = () => {
     const copy = props.players.filter(player => player.wouldCaptain)
     setActiveData({
@@ -227,7 +236,6 @@ export default function Draftboard (props) {
 
   const isDraftMode = activeData.mode === 'draft'
   const showComments = user && query.show_comments === 'true'
-
 
   return (
     <>
@@ -269,11 +277,18 @@ export default function Draftboard (props) {
                               if (!player) {
                                 return <td key={key}/>
                               }
+                              const newStats = []
+                              const categories = ['skillLevel', 'athleticismLevel', 'experienceLevel', 'throwsLevel']
+                              categories.forEach(function (category) {
+                                if (player[category]) {
+                                  newStats.push(player[category] + category.charAt(0).toUpperCase())
+                                }
+                              })
                               return (
                                 <td key={key}>
                                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                       <span>
-                                        {player.firstName} {player.lastName} ({player.gender?.charAt(0)}{player.skillLevel} {player.athleticismLevel + 'A ' + player.experienceLevel + 'E ' + player.throwsLevel + 'T'})
+                                        {player.firstName} {player.lastName} ({player.gender?.charAt(0)}{} {newStats.join(' ').trim()})
                                       </span>
                                     <button
                                       className="btn btn-secondary btn-sm"
@@ -314,12 +329,13 @@ export default function Draftboard (props) {
 
           <p className="lead">There are {players.length} players registered.</p>
 
-          <div className="btn-group">
-            <button className="btn btn-secondary" onClick={sortPlayersByRecency}>Sort By Recent</button>
-            <button className="btn btn-secondary" onClick={sortByGenderThenSkill}>Sort By Gender, Then Skill</button>
-            <button className="btn btn-secondary" onClick={showOnlyCaptains}>Show Only Captains</button>
-            <button className="btn btn-secondary" onClick={showOnlySponsors}>Show Only Sponsors</button>
-            <button className="btn btn-secondary" onClick={showDraftMode}>Draft Mode</button>
+          <div className="draftboard-controls">
+            <button className="btn btn-outline-primary" onClick={sortPlayersByRecency}>Sort By Recent</button>
+            <button className="btn btn-outline-primary" onClick={sortByGenderThenSkill}>Sort By Gender, Then Skill</button>
+            <button className="btn btn-outline-primary" onClick={sortByGenderThenRating}>Sort By Gender, Then Rating</button>
+            <button className="btn btn-outline-primary" onClick={showOnlyCaptains}>Show Only Captains</button>
+            <button className="btn btn-outline-primary" onClick={showOnlySponsors}>Show Only Sponsors</button>
+            <button className="btn btn-outline-primary" onClick={showDraftMode}>Draft Mode</button>
           </div>
 
           <table className="table table-hover table-striped">
@@ -334,7 +350,8 @@ export default function Draftboard (props) {
               <th>Age</th>
               <th>Shirt Size</th>
               <th>Positions</th>
-              <th>Skill (Old)</th>
+              <th>Rating</th>
+              <th>Score</th>
               <th>Athl.</th>
               <th>Exp.</th>
               <th>Thr.</th>
@@ -356,6 +373,13 @@ export default function Draftboard (props) {
             <tbody>
             {
               (activeData.mode === 'draft' ? activeData.players.filter(p => !p.team) : activeData.players).map((player, index) => {
+                let score
+                if (player.skillLevel) {
+                  score = player.skillLevel
+                } else {
+                  score = (player.athleticismLevel || 0) + (player.experienceLevel || 0) + (player.throwsLevel || 0)
+                  score = score * ((player.participation || 1) / 100)
+                }
                 return (
                   <tr key={player.id}>
                     <td>{index + 1}</td>
@@ -367,7 +391,7 @@ export default function Draftboard (props) {
                     <td>{player.age}</td>
                     <td>{player.shirtSize}</td>
                     <td>{player.preferredPositions}</td>
-                    <td>{player.skillLevel}</td>
+                    <td>{score.toFixed(1)}</td>
                     <td>{player.athleticismLevel}</td>
                     <td>{player.experienceLevel}</td>
                     <td>{player.throwsLevel}</td>
@@ -621,7 +645,7 @@ function AnalyticsTables (props) {
   )
 }
 
-function getSkillScore (player) {
+function getSkillScore (player, withParticipation) {
   if (!player) {
     return 0
   }
@@ -629,10 +653,15 @@ function getSkillScore (player) {
     return player.skillLevel
   }
 
-  return (player.athleticismLevel || 0) + (player.experienceLevel || 0) + (player.throwsLevel || 0)
+  const score = (player.athleticismLevel || 0) + (player.experienceLevel || 0) + (player.throwsLevel || 0)
+
+  if (!withParticipation) {
+    return score
+  }
+  return score * ((player.participation || 1) / 100)
 }
 
-function sortByGenderThenSkillFn (players) {
+function sortByGenderThenSkillFn (players, withParticipation) {
   const arrCopy = players.map(p => p)
   arrCopy.sort(function (a, b) {
     const aGender = a.gender === 'Female' ? 1 : 0
@@ -641,7 +670,7 @@ function sortByGenderThenSkillFn (players) {
     const genderDiff = bGender - aGender
 
     if (genderDiff === 0) {
-      return getSkillScore(b) - getSkillScore(a)
+      return getSkillScore(b, withParticipation) - getSkillScore(a, withParticipation)
     }
 
     return bGender - aGender
