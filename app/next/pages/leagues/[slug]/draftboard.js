@@ -428,18 +428,20 @@ export default function Draftboard (props) {
                       user && isDraftMode && (
                         <td>
                           <div style={{ minWidth: '400px' }}>
-                            {!player.team && teams.map((team, index) => {
-                              return (
-                                <button
-                                  key={index}
-                                  className="btn btn-secondary btn-sm"
-                                  onClick={() => {
-                                    modifyRoster(team, player, 'add')
-                                  }}>
-                                  <i className="fa fa-plus" style={{ fontSize: '1.2rem' }}></i> {team.name}
-                                </button>
-                              )
-                            })}
+                            {
+                              !player.team && teams.map((team, index) => {
+                                return (
+                                  <button
+                                    key={index}
+                                    className="btn btn-outline-secondary btn-sm me-2 mb-2"
+                                    onClick={() => {
+                                      modifyRoster(team, player, 'add')
+                                    }}>
+                                    <i className="fa fa-plus"></i> {team.name}
+                                  </button>
+                                )
+                              })
+                            }
                           </div>
                         </td>
                       )
