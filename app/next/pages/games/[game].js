@@ -5,7 +5,7 @@ import { HeaderNavigation } from '../../components/Navigation'
 import { showDate, showHourMinute } from '../../lib/utils'
 import Standings from '../../components/Standings'
 import { buildPlayerUrl } from '../../components/PlayerLink'
-import {updateWithGlobalServerSideProps} from "../../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -29,6 +29,9 @@ export const getServerSideProps = async (context) => {
               firstName
               lastName
             }
+            image {
+              publicUrl
+            }
           }
           awayTeamScore
           awayTeam {
@@ -38,6 +41,9 @@ export const getServerSideProps = async (context) => {
               id
               firstName
               lastName
+            }
+            image {
+              publicUrl
             }
           }
         }
@@ -133,7 +139,7 @@ export const getServerSideProps = async (context) => {
 
     return newTeam
   })
-  
+
   const props = {
     game,
     games: seasonResults.data.seasonGames,
@@ -159,7 +165,7 @@ export default function GamePage (props) {
         <meta property="og:url" content={'https://www.sflultimate.com/game/' + game._id} />
         <meta property="og:description" content={(isGamePreview ? 'Game Preview' : 'Game Recap') + ': ' + seoDescriptionSuffix } />
       </Head>
-      <HeaderNavigation league={leagues} />
+      <HeaderNavigation leagues={leagues} />
       <div className="container">
         {isGamePreview
           ? (
@@ -186,7 +192,16 @@ export default function GamePage (props) {
             <div className="col-sm-6" key={index}>
               <div className="text-center">
                 {!isGamePreview && <p className="h1">{team.score}</p>}
-                <h2>{team.name}</h2>
+                {
+                  team.image && team.image.publicUrl && (
+                    <img src={team.image.publicUrl} className="img-fluid rounded" alt={team.name} style={{ maxWidth: '400px', objectFit: 'contain' }}/>
+                  )
+                }
+                {
+                  (!team.image || !team.image.publicUrl) && (
+                    <h2>{team.name}</h2>
+                  )
+                }
               </div>
               {isGamePreview
                 ? (
