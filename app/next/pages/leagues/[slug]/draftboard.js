@@ -351,7 +351,6 @@ export default function Draftboard (props) {
               <th>Shirt Size</th>
               <th>Positions</th>
               <th>Rating</th>
-              <th>Score</th>
               <th>Athl.</th>
               <th>Exp.</th>
               <th>Thr.</th>
