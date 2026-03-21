@@ -28,6 +28,7 @@ export const getServerSideProps = async (context) => {
               id
               firstName
               lastName
+              preferredPositions
             }
             image {
               publicUrl
@@ -41,6 +42,7 @@ export const getServerSideProps = async (context) => {
               id
               firstName
               lastName
+              preferredPositions
             }
             image {
               publicUrl
@@ -188,58 +190,85 @@ export default function GamePage (props) {
             }}
           />
 
-          {teams.map((team, index) => (
-            <div className="col-sm-6" key={index}>
-              <div className="text-center">
-                {!isGamePreview && <p className="h1">{team.score}</p>}
-                {
-                  team.image && team.image.publicUrl && (
-                    <img src={team.image.publicUrl} className="img-fluid rounded" alt={team.name} style={{ maxWidth: '400px', objectFit: 'contain' }}/>
-                  )
-                }
-                {
-                  (!team.image || !team.image.publicUrl) && (
-                    <h2>{team.name}</h2>
-                  )
-                }
-              </div>
-              {isGamePreview
-                ? (
-                  <>
-                    <p><em>Note: Below are season-wide stats.</em></p>
-                    <GameStatTable team={team} isGamePreview={isGamePreview} />
-                  </>
-                  )
-                : (
-                  <>
+          {
+            teams.map(function (team, index) {
+              const positionMap = {}
+              team.players.forEach(player => {
+                player?.preferredPositions?.split(', ').forEach(position => {
+                  if (position) {
+                    positionMap[position] = positionMap[position] || 0
+                    positionMap[position]++
+                  }
+                })
+              })
+              console.log(positionMap, 'yay2')
+              return (
+                <div className="col-sm-6" key={index}>
+                  <div className="text-center">
+                    {!isGamePreview && <p className="h1">{team.score}</p>}
                     {
-                      team.stats.length > 0 && (
-                        <>
-                          <h3>Attended</h3>
-                          <GameStatTable team={team} isGamePreview={isGamePreview} />
-                        </>
+                      team.image && team.image.publicUrl && (
+                        <div style={{maxWidth: '400px', margin: '0 auto'}}>
+                          <img src={team.image.publicUrl} className="img-fluid rounded" alt={team.name} style={{ maxWidth: '100%', objectFit: 'contain' }}/>
+                        </div>
                       )
                     }
-                    <h3>{team.stats.length > 0 ? 'Missing' : 'Stats Pending'}</h3>
-                    <table className="table table-striped">
-                      <thead>
-                      <tr>
-                        <th>Name</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {team.stats?.filter(stat => !stat.attended).map((stat, index) => (
-                        <tr key={index}>
-                          <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
-                        </tr>
-                      ))}
-                      </tbody>
-                    </table>
-                  </>
-                  )
-              }
-            </div>
-          ))}
+                    {
+                      (!team.image || !team.image.publicUrl) && (
+                        <h2>{team.name}</h2>
+                      )
+                    }
+
+                    {
+                      Object.keys(positionMap).length > 0 && (
+                        <p className="lead d-flex justify-content-around">
+                          <span>Player Positions:</span>
+                          {
+                            Object.keys(positionMap).sort().map(position => <span key={position}><strong style={{fontWeight: 'bold'}}>{position.charAt(0).toUpperCase() + position.slice(1)}</strong>: {positionMap[position]}</span>)
+                          }
+                        </p>
+                      )
+                    }
+                  </div>
+                  {isGamePreview
+                    ? (
+                      <>
+                        <p><em>Note: Below are season-wide stats.</em></p>
+                        <GameStatTable team={team} isGamePreview={isGamePreview} />
+                      </>
+                      )
+                    : (
+                      <>
+                        {
+                          team.stats.length > 0 && (
+                            <>
+                              <h3>Attended</h3>
+                              <GameStatTable team={team} isGamePreview={isGamePreview} />
+                            </>
+                          )
+                        }
+                        <h3>{team.stats.length > 0 ? 'Missing' : 'Stats Pending'}</h3>
+                        <table className="table table-striped">
+                          <thead>
+                          <tr>
+                            <th>Name</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {team.stats?.filter(stat => !stat.attended).map((stat, index) => (
+                            <tr key={index}>
+                              <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
+                            </tr>
+                          ))}
+                          </tbody>
+                        </table>
+                      </>
+                      )
+                  }
+                </div>
+              )
+            })
+          }
         </div>
       </div>
     </>
