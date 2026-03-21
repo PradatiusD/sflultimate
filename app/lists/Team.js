@@ -1,5 +1,6 @@
-const { Text, Relationship, Integer } = require('@keystonejs/fields')
+const { Text, Relationship, Integer, File } = require('@keystonejs/fields')
 const { Color } = require('@keystonejs/fields-color')
+const storage = require('./file-storage-adapter')
 
 const fields = {
   name: {
@@ -27,6 +28,10 @@ const fields = {
   },
   draftOrder: {
     type: Integer
+  },
+  image: {
+    type: File,
+    adapter: storage
   }
 }
 
