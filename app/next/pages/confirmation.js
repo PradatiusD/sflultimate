@@ -90,7 +90,8 @@ export default function ConfirmationPage (props) {
     <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-fluid" alt="" style={{
       maxHeight: '480px',
       margin: '1rem auto',
-      borderRadius: '1rem'
+      borderRadius: '1rem',
+      display: 'block'
     }}/>
     <div className="container">
       <div className="row">
