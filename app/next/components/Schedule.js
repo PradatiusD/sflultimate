@@ -45,6 +45,7 @@ export const getScheduleData = async function (context) {
           awayTeamForfeit
           location {
             name
+            mapsLocationUrl
           }
           __typename
         }
@@ -171,7 +172,20 @@ export const Schedule = function (props) {
                               )
                             }
                           </td>
-                          <td>{game?.location?.name}</td>
+                          <td>
+                            {
+                              game.location?.mapsLocationUrl && (
+                                <a href={game.location.mapsLocationUrl} target="_blank" rel="noopener noreferrer">
+                                  {game?.location?.name}
+                                </a>
+                              )
+                            }
+                            {
+                              !game.location?.mapsLocationUrl && (
+                                <span>{game?.location?.name}</span>
+                              )
+                            }
+                          </td>
                           <td>
                             <a href={'/games/' + game.id}>
                               {new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}

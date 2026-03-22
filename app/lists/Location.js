@@ -1,10 +1,13 @@
-const { Text } = require('@keystonejs/fields')
+const { Text, Url } = require('@keystonejs/fields')
 const fields = {
   name: {
     type: Text,
     initial: true,
     required: true,
     index: true
+  },
+  mapsLocationUrl: {
+    type: Url
   }
 }
 
