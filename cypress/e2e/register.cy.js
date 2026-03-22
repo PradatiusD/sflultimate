@@ -18,12 +18,13 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   cy.get('#athleticismLevel').select('2')
   cy.get('#experienceLevel').select('4')
   cy.get('#throwsLevel').select('3')
-  cy.get('#participation').select('50')
-  cy.get('#shirtSize').select('NA')
   if (!isSubstitution) {
+    cy.get('#participation').select('50')
+    cy.get('#shirtSize').select('NA')
     cy.get('#partnerName').type('Test Friend')
+    cy.get('#willAttendFinals').check()
   }
-  cy.get('#willAttendFinals').check()
+
   const $body = await cy.get('body')
   const $noUnderstandsLateFeeElement = $body.find('#no-understandsLateFee')
   if (!$noUnderstandsLateFeeElement.length) {
@@ -85,7 +86,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
 }
 
 describe('Registration', () => {
-  it.only('Should allow regular registration with payment', () => {
+  it('Should allow regular registration with payment', () => {
     shouldHandlePaymentWithNumber({
       registrationPath: '/register'
     })
@@ -104,7 +105,7 @@ describe('Registration', () => {
     })
   })
 
-  it('Should allow substitution registration', () => {
+  it.only('Should allow substitution registration', () => {
     shouldHandlePaymentWithNumber({
       registrationPath: '/substitutions'
     })

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { HeaderNavigation } from './Navigation'
 import { FormCheckbox, FormInput, FormSelect } from './FormElements'
+import { is } from 'braintree/vendor/querystring.node.js.511d6a2/util'
 
 const locals = {}
 locals.formatDate = function (date) {
@@ -109,8 +110,8 @@ export default function RegisterPage (props) {
       document.querySelector('#submitButton').addEventListener('click', function (e) {
         e.preventDefault()
         instance.requestPaymentMethod(function (err, payload) {
-          document.querySelector('#nonce').value = payload.nonce
-          const form = document.querySelector('form')
+          document.body.querySelector('#nonce').value = payload.nonce
+          const form = document.body.querySelector('form')
           if (!form.checkValidity()) {
             return alert('Please scroll up and double-check that you have filled out all the required fields.')
           }
@@ -123,7 +124,7 @@ export default function RegisterPage (props) {
   return <>
     {headerHtml}
     <div className="container register">
-      <h1>{activeLeague.title} Sign Up</h1>
+      <h1>{activeLeague.title} {isSubstitution ? 'Substitutions' : 'Sign Up'}</h1>
       {
         errorMessage && (
           <div className="alert alert-danger"><strong>Error:</strong> {errorMessage}</div>
@@ -135,7 +136,12 @@ export default function RegisterPage (props) {
         )
       }
 
-      <div dangerouslySetInnerHTML={{ __html: activeLeague.description }}/>
+      {
+        !isSubstitution && (
+          <div dangerouslySetInnerHTML={{ __html: activeLeague.description }}/>
+        )
+      }
+
       <p>
         Regular registration is open <strong>as of {locals.formatDate(activeLeague.registrationStart)}</strong> and ends
         on <strong>{locals.formatDate(activeLeague.registrationEnd)}</strong>
@@ -316,7 +322,7 @@ export default function RegisterPage (props) {
             </div>
 
             {
-              activeLeague.requestAttendance
+              activeLeague.requestAttendance && !isSubstitution
                 ? (
                   <FormSelect
                     label="Expected Attendance"
@@ -344,20 +350,24 @@ export default function RegisterPage (props) {
                 : <div id="no-requestAttendance"></div>
             }
 
-            <div className="mb-3">
-              <label htmlFor="willAttendFinals" className="form-label">Finals attendance</label>
-              <div className="form-check">
-                <label className="form-check-label" htmlFor="willAttendFinals">I expect to be able to attend finals.</label>
-                <input className="form-check-input" id="willAttendFinals" type="checkbox" name="willAttendFinals" />
-              </div>
-            </div>
+            {
+              !isSubstitution && (
+                <div className="mb-3">
+                  <label htmlFor="willAttendFinals" className="form-label">Finals attendance</label>
+                  <div className="form-check">
+                    <label className="form-check-label" htmlFor="willAttendFinals">I expect to be able to attend finals.</label>
+                    <input className="form-check-input" id="willAttendFinals" type="checkbox" name="willAttendFinals" />
+                  </div>
+                </div>
+              )
+            }
 
             {/* /img.img-fluid(src=locals.league.jerseyDesign.url style="max-width: 300px") */}
             {/*            //                         if locals.league.jerseyDesign
             //                             p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 */}
             {
-              activeLeague.requestShirtSize
+              activeLeague.requestShirtSize && !isSubstitution
                 ? (
                   <FormSelect
                     label="Shirt Size"
