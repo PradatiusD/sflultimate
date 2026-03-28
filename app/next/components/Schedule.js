@@ -3,7 +3,7 @@ import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import LeagueUtils from '../lib/league-utils'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getScheduleData = async function (context) {
   const variables = addLeagueToVariables(context, {})
@@ -53,8 +53,13 @@ export const getScheduleData = async function (context) {
           id
           startTime
           name
+          slug
+          category
           location
           moreInformationUrl
+          image {
+            publicUrl
+          }
           __typename
         }
         allTeams(where: {league: $leagueCriteria}) {
@@ -121,11 +126,11 @@ export const Schedule = function (props) {
                   <th>Weekday</th>
                   <th>Time</th>
                   <th>Matchup / Event Name</th>
-                  <th>Field</th>
+                  <th>Location</th>
                   <th>Preview/Recap</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody style={{whiteSpace: 'nowrap'}}>
                 {
                   activeGames.map((gameOrEvent) => {
                     const game = gameOrEvent.__typename === 'Game' ? gameOrEvent : null
@@ -194,14 +199,32 @@ export const Schedule = function (props) {
                         </tr>
                       )
                     }
+
+                    const eventUrl = '/events/' + event.slug
                     return (
-                      <tr key={event.id}>
+                      <tr key={event.id} style={{ verticalAlign: 'middle' }}>
                         <td>{showDate(event.startTime)}</td>
                         <td>{showWeekday(event.startTime)}</td>
                         <td>{showHourMinute(event.startTime)}</td>
-                        <td><span className="badge text-bg-primary">Event</span> {event.name}</td>
+                        <td>
+                          <div className="d-flex">
+                            {
+                              event.image && (
+                                <a href={eventUrl} target="_blank">
+                                  <img className="rounded-circle me-2" src={event.image.publicUrl} alt={event.name + ' image'} style={{ width: '50px', height: '50px', objectFit: 'cover', display: 'inline' }} />
+                                </a>
+                              )
+                            }
+                            <div className="d-inline">
+                              <span className="badge text-bg-primary">{event.category || 'Event'}</span><br/>
+                              <a href={eventUrl} target="_blank">
+                                {event.name}
+                              </a>
+                            </div>
+                          </div>
+                        </td>
                         <td>{event.location}</td>
-                        <td><a target="_blank" href={event.moreInformationUrl}>More Information</a></td>
+                        <td><a target="_blank" href={eventUrl}>More Information</a></td>
                       </tr>
                     )
                   })
