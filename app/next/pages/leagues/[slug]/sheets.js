@@ -351,10 +351,10 @@ function Sheets (props) {
         {!isTournament && games.map((game) => (
           game.teams.map((team) => (
             <section key={team.currentTeam.id} className="stat-page-container">
-              <div className="d-flex">
+              <div className="d-flex align-items-center">
                 {
                   team.currentTeam.image && team.currentTeam.image.publicUrl && (
-                    <img className="d-inline" src={team.currentTeam.image.publicUrl} alt={team.currentTeam.name + ' logo'} style={{height: '125px'}} />
+                    <img className="d-inline" src={team.currentTeam.image.publicUrl} alt={team.currentTeam.name + ' logo'} style={{height: '115px'}} />
                   )
                 }
                 <table className="table table-bordered table-striped">
@@ -362,10 +362,10 @@ function Sheets (props) {
                   <tr>
                     <th style={{ minWidth: '90px' }}>Game Date</th>
                     <th style={{ minWidth: '140px' }}>Team</th>
-                    <th style={{ maxWidth: '60px' }}>Time-Outs Used</th>
+                    <th style={{ maxWidth: '80px', minWidth: '80px' }}>Timeouts Used</th>
                     <th>1<sup>st</sup> Half Points</th>
                     <th>2<sup>nd</sup> Half Points</th>
-                    <th style={{ maxWidth: '60px' }}>Most Spirited</th>
+                    <th style={{ maxWidth: '80px' }}>Most Spirited</th>
                   </tr>
                   </thead>
                   <tbody>
