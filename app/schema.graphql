@@ -1091,6 +1091,7 @@ type League {
   requestAttendance: Boolean
   requestShirtSize: Boolean
   requestSponsorship: Boolean
+  champion: Team
 }
 
 input LeagueCreateInput {
@@ -1122,6 +1123,7 @@ input LeagueCreateInput {
   requestAttendance: Boolean
   requestShirtSize: Boolean
   requestSponsorship: Boolean
+  champion: TeamRelateToOneInput
 }
 
 input LeagueRelateToManyInput {
@@ -1176,6 +1178,7 @@ input LeagueUpdateInput {
   requestAttendance: Boolean
   requestShirtSize: Boolean
   requestSponsorship: Boolean
+  champion: TeamRelateToOneInput
 }
 
 input LeagueWhereInput {
@@ -1431,6 +1434,8 @@ input LeagueWhereInput {
   requestShirtSize_not: Boolean
   requestSponsorship: Boolean
   requestSponsorship_not: Boolean
+  champion: TeamWhereInput
+  champion_is_null: Boolean
 }
 
 input LeagueWhereUniqueInput {
@@ -1449,10 +1454,12 @@ type Location {
   _label_: String
   id: ID!
   name: String
+  mapsLocationUrl: String
 }
 
 input LocationCreateInput {
   name: String
+  mapsLocationUrl: String
 }
 
 input LocationRelateToOneInput {
@@ -1473,6 +1480,7 @@ input LocationsUpdateInput {
 
 input LocationUpdateInput {
   name: String
+  mapsLocationUrl: String
 }
 
 input LocationWhereInput {
@@ -1500,6 +1508,24 @@ input LocationWhereInput {
   name_not_ends_with_i: String
   name_in: [String]
   name_not_in: [String]
+  mapsLocationUrl: String
+  mapsLocationUrl_not: String
+  mapsLocationUrl_contains: String
+  mapsLocationUrl_not_contains: String
+  mapsLocationUrl_starts_with: String
+  mapsLocationUrl_not_starts_with: String
+  mapsLocationUrl_ends_with: String
+  mapsLocationUrl_not_ends_with: String
+  mapsLocationUrl_i: String
+  mapsLocationUrl_not_i: String
+  mapsLocationUrl_contains_i: String
+  mapsLocationUrl_not_contains_i: String
+  mapsLocationUrl_starts_with_i: String
+  mapsLocationUrl_not_starts_with_i: String
+  mapsLocationUrl_ends_with_i: String
+  mapsLocationUrl_not_ends_with_i: String
+  mapsLocationUrl_in: [String]
+  mapsLocationUrl_not_in: [String]
 }
 
 input LocationWhereUniqueInput {
@@ -2228,7 +2254,7 @@ type Player {
   phoneNumber: String
   wouldSponsor: Boolean
   willAttendFinals: Boolean
-  donationAmount: Int
+  donationAmount: Float
   preferredPositions: String
   compedRegistration: Boolean
   profileImage: File
@@ -2258,7 +2284,7 @@ input PlayerCreateInput {
   phoneNumber: String
   wouldSponsor: Boolean
   willAttendFinals: Boolean
-  donationAmount: Int
+  donationAmount: Float
   preferredPositions: String
   compedRegistration: Boolean
   profileImage: Upload
@@ -2689,7 +2715,7 @@ input PlayerUpdateInput {
   phoneNumber: String
   wouldSponsor: Boolean
   willAttendFinals: Boolean
-  donationAmount: Int
+  donationAmount: Float
   preferredPositions: String
   compedRegistration: Boolean
   profileImage: Upload
@@ -2917,14 +2943,14 @@ input PlayerWhereInput {
   wouldSponsor_not: Boolean
   willAttendFinals: Boolean
   willAttendFinals_not: Boolean
-  donationAmount: Int
-  donationAmount_not: Int
-  donationAmount_lt: Int
-  donationAmount_lte: Int
-  donationAmount_gt: Int
-  donationAmount_gte: Int
-  donationAmount_in: [Int]
-  donationAmount_not_in: [Int]
+  donationAmount: Float
+  donationAmount_not: Float
+  donationAmount_lt: Float
+  donationAmount_lte: Float
+  donationAmount_gt: Float
+  donationAmount_gte: Float
+  donationAmount_in: [Float]
+  donationAmount_not_in: [Float]
   preferredPositions: String
   preferredPositions_not: String
   preferredPositions_contains: String
@@ -3461,6 +3487,8 @@ enum SortLeaguesBy {
   requestShirtSize_DESC
   requestSponsorship_ASC
   requestSponsorship_DESC
+  champion_ASC
+  champion_DESC
 }
 
 enum SortLocationsBy {
@@ -3468,6 +3496,8 @@ enum SortLocationsBy {
   id_DESC
   name_ASC
   name_DESC
+  mapsLocationUrl_ASC
+  mapsLocationUrl_DESC
 }
 
 enum SortPickupsBy {
@@ -3707,6 +3737,7 @@ type Team {
   _playersMeta(where: PlayerWhereInput, search: String, sortBy: [SortPlayersBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
   league: League
   draftOrder: Int
+  image: File
 }
 
 input TeamCreateInput {
@@ -3716,6 +3747,7 @@ input TeamCreateInput {
   players: PlayerRelateToManyInput
   league: LeagueRelateToOneInput
   draftOrder: Int
+  image: Upload
 }
 
 input TeamRelateToOneInput {
@@ -3741,6 +3773,7 @@ input TeamUpdateInput {
   players: PlayerRelateToManyInput
   league: LeagueRelateToOneInput
   draftOrder: Int
+  image: Upload
 }
 
 input TeamWhereInput {
@@ -3814,6 +3847,10 @@ input TeamWhereInput {
   draftOrder_gte: Int
   draftOrder_in: [Int]
   draftOrder_not_in: [Int]
+  image: String
+  image_not: String
+  image_in: [String]
+  image_not_in: [String]
 }
 
 input TeamWhereUniqueInput {

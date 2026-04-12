@@ -39,6 +39,9 @@ export async function getServerSideProps (context) {
             firstName
             lastName
           }
+          image {
+            publicUrl
+          }
         }
       }`,
     variables
@@ -348,8 +351,14 @@ function Sheets (props) {
         {!isTournament && games.map((game) => (
           game.teams.map((team) => (
             <section key={team.currentTeam.id} className="stat-page-container">
-              <table className="table table-bordered table-striped">
-                <thead>
+              <div className="d-flex">
+                {
+                  team.currentTeam.image && team.currentTeam.image.publicUrl && (
+                    <img className="d-inline" src={team.currentTeam.image.publicUrl} alt={team.currentTeam.name + ' logo'} style={{height: '125px'}} />
+                  )
+                }
+                <table className="table table-bordered table-striped">
+                  <thead>
                   <tr>
                     <th style={{ minWidth: '90px' }}>Game Date</th>
                     <th style={{ minWidth: '140px' }}>Team</th>
@@ -358,8 +367,8 @@ function Sheets (props) {
                     <th>2<sup>nd</sup> Half Points</th>
                     <th>Most Spirited</th>
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   <tr>
                     <td>{new Date(game.scheduledTime).toLocaleDateString()}</td>
                     <td><strong>{team.currentTeam.name}</strong></td>
@@ -376,9 +385,9 @@ function Sheets (props) {
                     <td></td>
                     <td></td>
                   </tr>
-                </tbody>
-              </table>
-
+                  </tbody>
+                </table>
+              </div>
               <table className="table table-bordered table-striped">
                 <thead>
                   <tr>
@@ -387,8 +396,8 @@ function Sheets (props) {
                     <th>Assists</th>
                     <th>Scores</th>
                     <th>Defenses</th>
-                    <th className="hidden">Throwaways</th>
-                    <th className="hidden">Drops</th>
+                    <th className="d-none">Throwaways</th>
+                    <th className="d-none">Drops</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -428,8 +437,8 @@ function Sheets (props) {
                           </td>
                           <td><input {...textInputProps} value={stats.scores} onChange={onChange('scores')} /></td>
                           <td><input {...textInputProps} value={stats.defenses} onChange={onChange('defenses')} /></td>
-                          <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                          <td className="hidden"><input type="number" min="0" step="1" disabled={!editor}/></td>
+                          <td className="d-none"><input type="number" min="0" step="1" disabled={!editor}/></td>
+                          <td className="d-none"><input type="number" min="0" step="1" disabled={!editor}/></td>
                         </tr>
                       )
                     })
@@ -531,56 +540,3 @@ function Sheets (props) {
 }
 
 export default Sheets
-//     (function () {
-//         // http://localhost:5000/sheets?is_tournament=true
-//         // http://localhost:5000/sheets?date=2022-10-11
-//         // http://localhost:5000/sheets?date=2022-10-11&editor=true
-//
-//         const urlParams = new URLSearchParams(window.location.search)
-//         $scope.isTournament = urlParams.get('is_tournament')
-//         const forcedDate = urlParams.get('date')
-//         $scope.today = forcedDate ? new Date(urlParams.get('date') + 'T12:00:00.000Z') : new Date()
-//         $scope.editor = urlParams.get('editor')
-//
-//         let teamsResponse
-//         let statsResponse
-//         $http.get(window.sflUtils.addLeagueOverride('/teams?f=json'))
-//           .then(function (response) {
-//             teamsResponse = response
-//             return $http.get(window.sflUtils.addLeagueOverride('/stats?f=json&raw=true'))
-//           }).then(function (response) {
-//           statsResponse = response
-//         }).then(function (response) {
-//           const teamsData = teamsResponse.data
-//           const teams = teamsData.teams
-//
-//           const statsMap = {}
-//           statsResponse.data.items.forEach(function (statEntry) {
-//             if (validGameIDs.indexOf(statEntry.game) > -1) {
-//               statsMap[statEntry.player] = statEntry
-//             }
-//           })
-//
-//           teamsData.players.forEach(function (player) {
-//             player.stats = statsMap[player._id] || {
-//               pointsPlayed: 0,
-//               defenses: 0,
-//               scores: 0,
-//               assists: 0,
-//               attended: false
-//             }
-//             playerMap[player._id] = player
-//           })
-//
-//           const teamMap = {}
-//           teams.forEach(function (team) {
-//             teamMap[team._id] = team
-//             team.players = team.players.map(function (playerId) {
-//               return playerMap[playerId]
-//             })
-//           })
-//
-
-//         })
-//       })
-//     })()

@@ -130,7 +130,7 @@ export const Schedule = function (props) {
                   <th>Preview/Recap</th>
                 </tr>
                 </thead>
-                <tbody style={{whiteSpace: 'nowrap'}}>
+                <tbody style={{ whiteSpace: 'nowrap' }}>
                 {
                   activeGames.map((gameOrEvent) => {
                     const game = gameOrEvent.__typename === 'Game' ? gameOrEvent : null
