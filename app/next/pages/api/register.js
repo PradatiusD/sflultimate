@@ -1,6 +1,7 @@
 import GraphqlClient from '../../lib/graphql-client'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
+import { notify } from '../../lib/slack'
 const { gql } = require('@apollo/client')
 const GraphQlClient = require('./../../lib/graphql-client')
 const PaymentUtils = require('./../../lib/payment-utils')
@@ -173,10 +174,12 @@ export default async function handler (req, res) {
       // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
     }
 
+    notify(`New registration for ${league.title}: ${sanitizedPayload.firstName} ${sanitizedPayload.lastName} (${sanitizedPayload.email}`)
     res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayer.id + '&leagueId=' + sanitizedPayload.leagueId)
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
+    notify(`Error processing registration: ${e.message}`)
     res.redirect('/leagues/' + league.slug + '/register?error=' + encodeURIComponent(e.message))
   }
 }

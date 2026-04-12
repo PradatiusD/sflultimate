@@ -3,6 +3,7 @@ import PaymentUtils from '../../lib/payment-utils'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
 import GraphQlClient from '../../lib/graphql-client'
+import {notify} from "../../lib/slack";
 
 const CREATE_PLAYER_SUBSTITUTION = gql`
   mutation CreatePlayerSubstitution($data: PlayerSubstitutionCreateInput!) {
@@ -143,11 +144,16 @@ export default async function handler (req, res) {
       console.log(emailResult)
       // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
     }
-
+    try {
+      notify(`New substitution for ${league.title}: ${sanitizedPayload.firstName} ${sanitizedPayload.lastName} (${sanitizedPayload.email})`)
+    } catch (err) {
+      console.log(err)
+    }
     res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayerSubstitution.id + '&leagueId=' + sanitizedPayload.leagueId)
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
+    notify(`Error processing substitution: ${e.message}`)
     res.redirect('/leagues/' + league.slug + '/substitutions?error=' + encodeURIComponent(e.message))
   }
 }

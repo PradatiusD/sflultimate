@@ -71,7 +71,7 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
       .type(cardNumber || '4111 1111 1111 1111')
 
     cy.iframe('#braintree-hosted-field-expirationDate')
-      .find('#expiration').type(expirationDate || '02 26')
+      .find('#expiration').type(expirationDate || '02 28')
 
     cy.iframe('#braintree-hosted-field-cvv')
       .find('#cvv')
