@@ -362,10 +362,10 @@ function Sheets (props) {
                   <tr>
                     <th style={{ minWidth: '90px' }}>Game Date</th>
                     <th style={{ minWidth: '140px' }}>Team</th>
-                    <th style={{ minWidth: '130px' }}>Time-Outs Used</th>
+                    <th style={{ maxWidth: '60px' }}>Time-Outs Used</th>
                     <th>1<sup>st</sup> Half Points</th>
                     <th>2<sup>nd</sup> Half Points</th>
-                    <th>Most Spirited</th>
+                    <th style={{ maxWidth: '60px' }}>Most Spirited</th>
                   </tr>
                   </thead>
                   <tbody>
