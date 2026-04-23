@@ -152,10 +152,10 @@ export default function Standings (props) {
                 pointDiffClass = 'danger text-danger'
               }
               return (
-                <tr key={team.id}>
+                <tr key={team.id} style={{ verticalAlign: 'middle' }}>
                   <td className="text-left">
-                    {teamMap[team.id].image && <img src={teamMap[team.id].image.publicUrl} alt={team.name} className="img-fluid" style={{ maxWidth: '50px' }} />}
-                    <span style={{ whiteSpace: 'nowrap' }}>{team.name}</span>
+                    {teamMap[team.id].image && <img src={teamMap[team.id].image.publicUrl} alt={team.name} className="img-fluid" style={{ maxWidth: '75px' }} />}
+                    {!teamMap[team.id].image && <span style={{ whiteSpace: 'nowrap' }}>{team.name}</span>}
                   </td>
                   <td>{team.wins}</td>
                   <td>{team.losses}</td>
