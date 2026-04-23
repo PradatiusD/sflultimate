@@ -1,8 +1,6 @@
-
 export default function Standings (props) {
   const { games, teamsFilter } = props
   const teamMap = {}
-  console.log(games)
   games.forEach(game => {
     if (!game.homeTeam || !game.awayTeam) {
       return
@@ -12,11 +10,11 @@ export default function Standings (props) {
       const name = game[type].name
       if (!teamMap[id]) {
         teamMap[id] = {
-          name: name,
+          name,
           games: []
         }
       }
-      teamMap[id].games.push(game)
+      teamMap[id].image = game[type].image
     })
   })
 
@@ -146,7 +144,7 @@ export default function Standings (props) {
         </thead>
         <tbody>
           {
-            standings.map((team, index) => {
+            standings.map((team) => {
               let pointDiffClass = ''
               if (team.pointDiff > 0) {
                 pointDiffClass = 'success text-success'
@@ -155,7 +153,10 @@ export default function Standings (props) {
               }
               return (
                 <tr key={team.id}>
-                  <td className="text-left">{team.name}</td>
+                  <td className="text-left">
+                    {teamMap[team.id].image && <img src={teamMap[team.id].image.publicUrl} alt={team.name} className="img-fluid" style={{ maxWidth: '50px' }} />}
+                    <span style={{ whiteSpace: 'nowrap' }}>{team.name}</span>
+                  </td>
                   <td>{team.wins}</td>
                   <td>{team.losses}</td>
                   <td>{team.forfeits}</td>
@@ -163,7 +164,7 @@ export default function Standings (props) {
                   <td>{team.pointsAllowed}</td>
                   <td>{team.avgPointsScoredPerGame}</td>
                   <td>{team.avgPointsAllowedPerGame}</td>
-                  <td className={pointDiffClass}>{team.pointDiff > 0 ? '+' + team.pointDiff: team.pointDiff}</td>
+                  <td className={pointDiffClass}>{team.pointDiff > 0 ? '+' + team.pointDiff : team.pointDiff}</td>
                 </tr>
               )
             })

@@ -64,10 +64,16 @@ export const getServerSideProps = async (context) => {
           homeTeam {
             id
             name
+            image {
+              publicUrl
+            }
           }
           awayTeam {
             id
             name
+            image {
+              publicUrl
+            }
           }
           homeTeamScore
           awayTeamScore
@@ -117,7 +123,7 @@ export default function Homepage (props) {
     'league-champions-2013-spring.jpg'
   ]
 
-  const showSignupLeague = true
+  const showSignupLeague = false
 
   return (
     <>
