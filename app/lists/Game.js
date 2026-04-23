@@ -1,5 +1,6 @@
-const { Text, Integer, Checkbox, Relationship } = require('@keystonejs/fields')
+const { Text, Integer, Checkbox, Relationship, File } = require('@keystonejs/fields')
 const CustomDateTime = require('../custom-fields/CustomDateTime')
+const storage = require('./file-storage-adapter')
 
 const fields = {
   name: {
@@ -50,6 +51,14 @@ const fields = {
   showNameOnSchedule: {
     type: Checkbox,
     default: false
+  },
+  homeTeamStatSheet: {
+    type: File,
+    adapter: storage
+  },
+  awayTeamStatSheet: {
+    type: File,
+    adapter: storage
   }
 }
 
