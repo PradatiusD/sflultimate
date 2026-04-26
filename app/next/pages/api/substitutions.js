@@ -3,7 +3,7 @@ import PaymentUtils from '../../lib/payment-utils'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
 import GraphQlClient from '../../lib/graphql-client'
-import {notify} from "../../lib/slack";
+import { notify } from '../../lib/slack'
 
 const CREATE_PLAYER_SUBSTITUTION = gql`
   mutation CreatePlayerSubstitution($data: PlayerSubstitutionCreateInput!) {

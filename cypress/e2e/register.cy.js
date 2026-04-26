@@ -107,7 +107,8 @@ describe('Registration', () => {
 
   it.only('Should allow substitution registration', () => {
     shouldHandlePaymentWithNumber({
-      registrationPath: '/substitutions'
+      registrationPath: '/substitutions',
+      cardNumber: '4000 1111 1111 1115'
     })
   })
 })

@@ -12,6 +12,7 @@ export const getServerSideProps = async (context) => {
       query {
         currentGame: allGames(where: {id: "${context.params.game}"}) {
           id
+          name
           scheduledTime
           league {
             id
@@ -52,8 +53,15 @@ export const getServerSideProps = async (context) => {
       }`
   })
   const game = results.data.currentGame[0]
-  game.awayTeam.score = game.awayTeamScore
-  game.homeTeam.score = game.homeTeamScore
+  let playerIds = []
+  const teamIds = []
+
+  if (game.homeTeam && game.awayTeam) {
+    game.awayTeam.score = game.awayTeamScore
+    game.homeTeam.score = game.homeTeamScore
+    playerIds = game.homeTeam.players.concat(game.awayTeam.players).map(player => player.id)
+    teamIds.push(game.homeTeam.id, game.awayTeam.id)
+  }
 
   const isGamePreview = new Date(game.scheduledTime).getTime() > Date.now()
 
@@ -76,13 +84,12 @@ export const getServerSideProps = async (context) => {
       }
     `,
     variables: {
-      playerIds: results.data.currentGame[0].homeTeam.players.concat(results.data.currentGame[0].awayTeam.players).map(player => player.id),
+      playerIds,
       gameSearch: isGamePreview ? {} : { id: game.id }
     }
   }
-  const statsResults = await GraphqlClient.query(statsQuery)
 
-  const teamIds = [game.homeTeam.id, game.awayTeam.id]
+  const statsResults = await GraphqlClient.query(statsQuery)
   const seasonResults = await GraphqlClient.query({
     query: gql`
       query($teamIds: [ID!]) {
@@ -112,7 +119,12 @@ export const getServerSideProps = async (context) => {
     playerMap[stat.player.id] = stat
   }
 
-  const teams = [game.homeTeam, game.awayTeam].map(function (team) {
+  let teams = []
+  if (game.homeTeam && game.awayTeam) {
+    teams.push(game.homeTeam, game.awayTeam)
+  }
+
+  teams = teams.map(function (team) {
     const newTeam = Object.assign({}, team)
     newTeam.stats = []
     team.players.forEach(player => {
@@ -157,8 +169,14 @@ export const getServerSideProps = async (context) => {
 
 export default function GamePage (props) {
   const { game, teams, leagues, isGamePreview, games } = props
-  const title = game.league.title + ' ' + 'Matchup: ' + game.homeTeam.name + ' vs ' + game.awayTeam.name
-  const seoDescriptionSuffix = teams[0].name + ' vs ' + teams[1].name + ' - ' + showDate(game.scheduledTime)
+  let title, seoDescriptionSuffix
+  if (game.homeTeam && game.awayTeam) {
+    title = `${game.league.title} Matchup: ${game.homeTeam.name} vs ${game.awayTeam.name}`
+    seoDescriptionSuffix = teams[0].name + ' vs ' + teams[1].name + ' - ' + showDate(game.scheduledTime)
+  } else {
+    title = `${game.league.title} ${game.name}`
+    seoDescriptionSuffix = `${game.league.title} ${game.name}`
+  }
   return (
     <>
       <Head>
@@ -178,6 +196,9 @@ export default function GamePage (props) {
             )}
         <p className="lead text-center">
           <strong>{game.league.title}</strong>
+          {
+            game.name && <><br/><strong>{game.name}</strong></>
+          }
           <br/> {showDate(game.scheduledTime)} - {showHourMinute(game.scheduledTime)}
           <br/> {game.location ? game.location.name : ''}
         </p>
@@ -208,7 +229,7 @@ export default function GamePage (props) {
                     {!isGamePreview && <p className="h1">{team.score}</p>}
                     {
                       team.image && team.image.publicUrl && (
-                        <div style={{maxWidth: '400px', margin: '0 auto'}}>
+                        <div style={{ maxWidth: '400px', margin: '0 auto' }}>
                           <img src={team.image.publicUrl} className="img-fluid rounded" alt={team.name} style={{ maxWidth: '100%', objectFit: 'contain' }}/>
                         </div>
                       )
@@ -224,7 +245,7 @@ export default function GamePage (props) {
                         <p className="lead d-flex justify-content-around">
                           <span>Player Positions:</span>
                           {
-                            Object.keys(positionMap).sort().map(position => <span key={position}><strong style={{fontWeight: 'bold'}}>{position.charAt(0).toUpperCase() + position.slice(1)}</strong>: {positionMap[position]}</span>)
+                            Object.keys(positionMap).sort().map(position => <span key={position}><strong style={{ fontWeight: 'bold' }}>{position.charAt(0).toUpperCase() + position.slice(1)}</strong>: {positionMap[position]}</span>)
                           }
                         </p>
                       )

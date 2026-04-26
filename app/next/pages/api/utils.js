@@ -34,7 +34,16 @@ export async function processPayment (payload, amount) {
 
   if (!paymentResult.success) {
     console.error({ purchase, paymentResult })
-    throw new Error('Payment failed')
+    let errorMessage
+    if (payload.firstName && payload.lastName && payload.email) {
+      errorMessage = `Payment failed for ${payload.firstName} ${payload.lastName} (${payload.email})`
+    } else {
+      errorMessage = 'Payment failed'
+    }
+    if (paymentResult.transaction && paymentResult.transaction.status) {
+      errorMessage = ': ' + paymentResult.transaction.status
+    }
+    throw new Error(errorMessage)
   }
 
   return paymentResult
