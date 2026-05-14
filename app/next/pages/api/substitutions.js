@@ -153,7 +153,7 @@ export default async function handler (req, res) {
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
-    notify(`Error processing substitution: ${e.message}`)
+    notify(`Error processing player substitution: ${e.message} ${e.stack || ''}`)
     res.redirect('/leagues/' + league.slug + '/substitutions?error=' + encodeURIComponent(e.message))
   }
 }

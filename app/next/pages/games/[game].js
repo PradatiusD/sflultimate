@@ -222,7 +222,6 @@ export default function GamePage (props) {
                   }
                 })
               })
-              console.log(positionMap, 'yay2')
               return (
                 <div className="col-sm-6" key={index}>
                   <div className="text-center">
