@@ -5,7 +5,7 @@ import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'
 import RegisterPage from '../../../components/Register'
 import Head from 'next/head'
-import {updateWithGlobalServerSideProps} from "../../../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../../../lib/global-server-side-props'
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -79,7 +79,7 @@ export const getServerSideProps = async (context) => {
 
 export default function LeagueSubPage (props) {
   const { league: activeLeague } = props
-  const description = `Fill in the form below to sign up as a substitute player for ${activeLeague.title}. We'll reach out to you when a team needs subs!`;
+  const description = `Fill in the form below to sign up as a substitute player for ${activeLeague.title}. We'll reach out to you when a team needs subs!`
   return (
     <>
       <Head>

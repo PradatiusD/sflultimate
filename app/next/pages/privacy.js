@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps (context) {
   const props = {}
   await updateWithGlobalServerSideProps(props, context)
   return {

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 function VideoBackground (props) {
   return (
@@ -112,7 +112,7 @@ export default function YouthPage (props) {
           </div>
         </div>
       </div>
-      <img className="img-fluid" style={{margin: '0 auto'}} src="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fc69647c54d00296d1dad-youth-clinic.webp" alt=""/>
+      <img className="img-fluid" style={{ margin: '0 auto' }} src="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fc69647c54d00296d1dad-youth-clinic.webp" alt=""/>
     </div>
   )
 }

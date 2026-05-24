@@ -44,7 +44,7 @@ module.exports = {
       name: PROJECT_NAME,
       enableDefaultRoute: false,
       schemaName: 'public',
-      authStrategy: authStrategy
+      authStrategy
     }),
     new NextApp({ dir: 'next' })
   ]

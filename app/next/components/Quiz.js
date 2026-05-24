@@ -160,7 +160,7 @@ export default function Quiz () {
   }
 
   const [state, setState] = useState({
-    rules: rules,
+    rules,
     activeRule: initialRule,
     answerState: null,
     completedQuestionIds: [],

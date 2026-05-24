@@ -87,19 +87,20 @@ export default function StatsPage (props) {
       <div className="container">
         <h1>{league.title} Stats</h1>
         {
-          playerGameStats.length > 0 ? (
+          playerGameStats.length > 0
+            ? (
             <>
               <h2>Leaderboard</h2>
               <StatTable players={players.slice(0, 10)} awards={awards} startRowNumber={1} statKeysToCompare={statKeysToCompare} />
               <h2>Rising Contenders</h2>
               <StatTable players={players.slice(10)} awards={awards} startRowNumber={11} statKeysToCompare={statKeysToCompare} />
             </>
-          )
+              )
             : (
               <>
                 <p className="alert alert-info">We're awaiting stats information for this leaderboard to update.  Check back later!</p>
               </>
-            )
+              )
         }
       </div>
     </>

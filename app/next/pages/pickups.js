@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -30,7 +30,7 @@ export const getServerSideProps = async () => {
             }
         }`
   })
-  
+
   const props = {
     pickups: results.data.allPickups
   }

@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { showDate } from '../../lib/utils'
 import LeagueUtils from '../../lib/league-utils'
 import { parse } from 'node-html-parser'
-import {updateWithGlobalServerSideProps} from "../../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({

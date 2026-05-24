@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
-import {Schedule, getScheduleData} from '../components/Schedule'
+import { Schedule, getScheduleData } from '../components/Schedule'
 
 export const getServerSideProps = async (context) => {
   return {

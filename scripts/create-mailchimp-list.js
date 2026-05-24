@@ -57,10 +57,10 @@ MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, clie
       if (hasEmail) {
         console.log(player.email + ' already exists')
         await addTagsToPlayer({
-          player: player,
+          player,
           record: emailMap.get(player.email),
-          leagues: leagues,
-          leagueMap: leagueMap
+          leagues,
+          leagueMap
         })
       } else {
         console.log(player.email + ' is being added')

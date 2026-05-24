@@ -2,9 +2,9 @@
  * mongo sflultimate scripts/create-email-list-of-not-registered.js
  */
 
-var activeLeague = db.leagues.findOne({ isActive: true })
+const activeLeague = db.leagues.findOne({ isActive: true })
 
-var registeredPlayers = db.players.find({
+const registeredPlayers = db.players.find({
   leagues: {
     $in: [activeLeague._id]
   }
@@ -12,8 +12,8 @@ var registeredPlayers = db.players.find({
   return player
 })
 
-var playerIDsOnTeams = []
-var teams = db.teams.find({
+const playerIDsOnTeams = []
+const teams = db.teams.find({
   league: activeLeague._id
 }).toArray().forEach(function (team) {
   team.players.forEach(function (player) {
@@ -26,7 +26,7 @@ var teams = db.teams.find({
 // var combinedPlayers = allPlayers.filter(function (email, index, self) {
 //   return registeredEmails.indexOf(email) === -1 && self.indexOf(email) === index
 // })
-var playersNotOnTeams = registeredPlayers.filter(function (player) {
+const playersNotOnTeams = registeredPlayers.filter(function (player) {
   return playerIDsOnTeams.indexOf(player._id.valueOf()) === -1
 }).map(function (player) {
   return player.email

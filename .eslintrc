@@ -10,6 +10,11 @@
   "globals": {
     "cy": "readonly",
     "db": "readonly",
-    "printjson": "readonly"
-  }
+    "printjson": "readonly",
+    "ObjectId": "readonly"
+  },
+  "ignorePatterns": [
+    "app/next/public/js/jquery/*",
+    "app/next/public/js/bootstrap/*"
+  ]
 }

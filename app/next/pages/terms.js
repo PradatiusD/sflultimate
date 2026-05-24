@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
-import {updateWithGlobalServerSideProps} from "../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 export const getServerSideProps = async () => {
   const props = {}
@@ -11,7 +11,7 @@ export const getServerSideProps = async () => {
 }
 
 export default function TermsPage (props) {
-  const {leagues} = props
+  const { leagues } = props
   return (
     <div>
       <Head>

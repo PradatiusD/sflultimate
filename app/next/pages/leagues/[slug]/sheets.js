@@ -354,7 +354,7 @@ function Sheets (props) {
               <div className="d-flex align-items-center">
                 {
                   team.currentTeam.image && team.currentTeam.image.publicUrl && (
-                    <img className="d-inline" src={team.currentTeam.image.publicUrl} alt={team.currentTeam.name + ' logo'} style={{height: '115px'}} />
+                    <img className="d-inline" src={team.currentTeam.image.publicUrl} alt={team.currentTeam.name + ' logo'} style={{ height: '115px' }} />
                   )
                 }
                 <table className="table table-bordered table-striped">

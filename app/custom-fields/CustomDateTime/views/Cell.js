@@ -1,15 +1,15 @@
-"use strict";
+'use strict'
 
-Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, '__esModule', {
   value: true
-});
-exports["default"] = void 0;
-var CustomDateTimeCell = function CustomDateTimeCell(props) {
+})
+exports.default = void 0
+const CustomDateTimeCell = function CustomDateTimeCell (props) {
   if (!props.data) {
-    return null;
+    return null
   }
   return new Date(props.data).toLocaleString('en-US', {
     timeZone: 'America/New_York'
-  });
-};
-var _default = exports["default"] = CustomDateTimeCell;
+  })
+}
+const _default = exports.default = CustomDateTimeCell

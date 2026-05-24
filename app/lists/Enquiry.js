@@ -54,7 +54,7 @@ Enquiry.schema.methods.sendNotificationEmail = function (callback) {
         email: 'contact@sflultimate.com'
       },
       subject: 'New Enquiry for SFLUltimate',
-      enquiry: enquiry
+      enquiry
     }, callback)
   })
 }

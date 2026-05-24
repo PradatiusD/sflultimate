@@ -3,7 +3,7 @@ import LeagueUtils from './league-utils'
 import GraphqlClient from './graphql-client'
 import { buildPlayerUrl } from '../components/PlayerLink'
 import { addLeagueToVariables } from './utils'
-import {updateWithGlobalServerSideProps} from "./global-server-side-props";
+import { updateWithGlobalServerSideProps } from './global-server-side-props'
 
 export async function getLeagueStats (context) {
   const variables = addLeagueToVariables(context)
@@ -97,7 +97,7 @@ export async function getLeagueStats (context) {
   }).sort(function (a, b) {
     return b.overall - a.overall
   })
-  
+
   const props = { league, players, statKeysToCompare, awards, playerGameStats }
   await updateWithGlobalServerSideProps(props, context)
   return { props }

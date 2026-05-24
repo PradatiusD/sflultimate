@@ -5,7 +5,7 @@ import { generateGatewayClientToken } from '../../../lib/payment-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'
 import RegisterPage from '../../../components/Register'
-import {updateWithGlobalServerSideProps} from "../../../lib/global-server-side-props";
+import { updateWithGlobalServerSideProps } from '../../../lib/global-server-side-props'
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({

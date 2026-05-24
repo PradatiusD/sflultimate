@@ -10,7 +10,7 @@ function Spanify (props) {
         {
           words.map((w, i) => {
             return (
-              <><span key={i}>{w}</span>{" "}</>
+              <><span key={i}>{w}</span>{' '}</>
             )
           })
         }
