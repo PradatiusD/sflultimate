@@ -16,7 +16,7 @@ You will need:
 - `heroku toolbelt`: For Heroku deployment 
 
 Additionally, you will need to install:
-- [JSHint](http://jshint.com/install/): Javascript lint tool.
+- [JSHint](http://jshint.com/install/): JavaScript lint tool.
 - [Nodemon](https://github.com/remy/nodemon): Tool to restarting the application on a server side file change (while in development mode only)
 - [Sass](http://sass-lang.com/install): Tool to convert scss and sass files into css files.
 
