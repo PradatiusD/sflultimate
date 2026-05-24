@@ -2,6 +2,12 @@ import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
+const coachFormUrl = 'https://docs.google.com/forms/d/1BPm-f2v4VwcRA6oDdE9rfNelEEbX5e7g1coJ7pGd9Uc/edit?pli=1'
+const pageUrl = 'https://www.sflultimate.com/youth'
+const seoTitle = 'Youth Ultimate Frisbee Programs in South Florida | SFL Ultimate'
+const seoDescription = 'Find youth ultimate frisbee clinics, camps, and coaching opportunities in South Florida for kids and teens in Miami-Dade, Broward, and Palm Beach counties.'
+const seoImage = 'https://d137pw2ndt5u9c.cloudfront.net/keystone/690fca0052551268b0637ba1-images-data%20(1).jpg'
+
 function VideoBackground (props) {
   return (
     <div className="video-background-youth">
@@ -28,11 +34,20 @@ export default function YouthPage (props) {
   return (
     <div>
       <Head>
-        <title>SFLUltimate: Youth Programs</title>
-        <meta property="og:title" content="SFLUltimate: Youth Programs" />
-        <meta property="og:url" content="https://www.sflultimate.com/youth" />
-        <meta property="og:image" content="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fca0052551268b0637ba1-images-data%20(1).jpg" />
-        <meta property="og:description" content="Learn more about our youth ultimate programs, including summer camps, clinics, and other programming." />
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <meta name="keywords" content="youth ultimate frisbee South Florida, youth ultimate frisbee programs, kids ultimate frisbee, ultimate frisbee clinics, ultimate frisbee camps, Miami ultimate frisbee youth, Broward ultimate frisbee youth, Palm Beach ultimate frisbee youth, youth sports South Florida" />
+        <link rel="canonical" href={pageUrl} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={seoImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:description" content={seoDescription} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={seoImage} />
       </Head>
       <HeaderNavigation leagues={leagues} />
 
@@ -48,7 +63,6 @@ export default function YouthPage (props) {
             <p><strong>South Florida Ultimate, Inc., a 501c(3) non-profit dedicated to growing the sport of ultimate frisbee</strong> hosts ultimate clinics that are open to all youth who are interested in learning how to play this exciting sport.</p>
             <p>These clinics are designed to help participants to <strong>develop their skills in Ultimate while also providing a fun and engaging environment</strong>.</p>
             <p>Whether you are new to Ultimate or looking to improve your abilities, these clinics offer a great opportunity to learn, grow, and enjoy the game with others who share your enthusiasm.</p>
-
             <p>A typical clinic is the following format:</p>
             <ul>
               <li>2 hours or more on how to play ultimate frisbee with walkthroughs, drills, and scrimmages that help develop athletes over the long-term</li>
@@ -56,6 +70,18 @@ export default function YouthPage (props) {
               <li>Group minimum: 14 kids</li>
               <li>We also strive to ensure that each kid is given their own disc as a gift from South Florida Ultimate</li>
             </ul>
+
+            <hr/>
+            <p className="text-center">
+              <a
+                className="btn btn-primary btn-lg"
+                href={coachFormUrl}
+                target="_blank"
+                rel="noopener noreferrer">
+                Become a Youth Coach
+              </a>
+            </p>
+            <hr/>
 
             <h2>Snapshot: Our 2025 Clinic</h2>
             <p>On July 15, 2025, we hosted our first Ultimate Frisbee clinic at the Sports Camp Director Christian Academy in Cooper City, Florida.</p>
@@ -83,23 +109,23 @@ export default function YouthPage (props) {
               alt="Lina Fonseca headshot" />
             <h2>Our Youth Director: Lina Fonseca</h2>
             <p>
-              <strong>Lina Fonseca</strong> started playing ultimate with the local women's team Soul Lions at the age of 13, the city team from Ibagué, Colombia.
+              <strong>Lina Fonseca</strong> started playing ultimate with the local women&#39;s team Soul Lions at the age of 13, the city team from Ibagué, Colombia.
             </p>
             <p>From that experience and her talent, she received a full scholarship at the University of Tolima - Ibagué.</p>
-            <p>In 2019 she moved to South Florida, playing with Fire Ultimate, Rocket, Fiasco Women's Ultimate team, reaching to the heights of USAU Nationals with Spanglish in Colorado.   She serves as the Youth Director, and is certified by USAU for Safe Sport Training, CDC Heads Up, and Youth Coach.</p>
+            <p>In 2019 she moved to South Florida, playing with Fire Ultimate, Rocket, Fiasco Women&#39;s Ultimate team, reaching to the heights of USAU Nationals with Spanglish in Colorado. She serves as the Youth Director, and is certified by USAU for Safe Sport Training, CDC Heads Up, and Youth Coach.</p>
             <p>
               She deeply appreciated the community, the structure, the discipline, and the values that Ultimate shared to her, and that is why she wishes to share that same passion and joy with kids
             </p>
             <h4>Coaching Experience</h4>
             <p>
-              With years of coaching experience, we brings a wide variety of strategies and tactics from all around the world. As club players, we understand the technical aspects of the sport and is skilled at breaking down complex concepts into simple terms for the athletes.
+              With years of coaching experience, we bring a wide variety of strategies and tactics from all around the world. As club players, we understand the technical aspects of the sport and are skilled at breaking down complex concepts into simple terms for the athletes.
             </p>
             <h4>Philosophy</h4>
             <p>
-              Our coaching philosophy centers around creating a positive and inclusive environment where players feel comfortable to take risks, make mistakes, and learn from each experience. He emphasizes skill development, strategy, and teamwork while explaining how important values such as sportsmanship, respect, and perseverance are in ultimate.
+              Our coaching philosophy centers around creating a positive and inclusive environment where players feel comfortable to take risks, make mistakes, and learn from each experience. We emphasize skill development, strategy, and teamwork while explaining how important values such as sportsmanship, respect, and perseverance are in ultimate.
             </p>
             <p>
-              Through engaging and dynamic training sessions, Coach Aguiar focuses on teaching fundamental skills such as throwing, catching, cutting, and defensive positioning, while also introducing more advanced tactics and game scenarios. He believes in adapting his coaching approach to meet the individual needs and abilities of each player, ensuring that everyone has the opportunity to succeed and thrive.
+              Through engaging and dynamic training sessions, our coaches focus on teaching fundamental skills such as throwing, catching, cutting, and defensive positioning, while also introducing more advanced tactics and game scenarios. We believe in adapting our coaching approach to meet the individual needs and abilities of each player, ensuring that everyone has the opportunity to succeed and thrive.
             </p>
             <h4>Development</h4>
             <p>
@@ -107,12 +133,21 @@ export default function YouthPage (props) {
             </p>
             <h4>Let&#39;s Play</h4>
             <p>
-              Players not only improve their athletic abilities but also cultivate lifelong friendships, memories, and a deep appreciation for the sport of ultimate frisbee. His passion, dedication, and commitment to excellence make him a valued leader and mentor for youth ultimate frisbee players everywhere.
+              Players not only improve their athletic abilities but also cultivate lifelong friendships, memories, and a deep appreciation for the sport of ultimate frisbee. Our passion, dedication, and commitment to excellence help us mentor youth ultimate frisbee players across South Florida.
+            </p>
+            <p>
+              <a
+                className="btn btn-primary"
+                href={coachFormUrl}
+                target="_blank"
+                rel="noopener noreferrer">
+                Coach Youth Ultimate
+              </a>
             </p>
           </div>
         </div>
       </div>
-      <img className="img-fluid" style={{ margin: '0 auto' }} src="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fc69647c54d00296d1dad-youth-clinic.webp" alt=""/>
+      <img className="img-fluid" style={{ margin: '0 auto', width: '100%' }} src="https://d137pw2ndt5u9c.cloudfront.net/keystone/690fc69647c54d00296d1dad-youth-clinic.webp" alt=""/>
     </div>
   )
 }
