@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
-import { Component } from 'react'
 
 const coachFormUrl = 'https://docs.google.com/forms/d/1BPm-f2v4VwcRA6oDdE9rfNelEEbX5e7g1coJ7pGd9Uc/edit?pli=1'
 const pageUrl = 'https://www.sflultimate.com/youth'

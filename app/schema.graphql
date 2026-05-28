@@ -932,6 +932,8 @@ type Game {
   awayTeamForfeit: Boolean
   location: Location
   showNameOnSchedule: Boolean
+  homeTeamStatSheet: File
+  awayTeamStatSheet: File
 }
 
 input GameCreateInput {
@@ -946,6 +948,8 @@ input GameCreateInput {
   awayTeamForfeit: Boolean
   location: LocationRelateToOneInput
   showNameOnSchedule: Boolean
+  homeTeamStatSheet: Upload
+  awayTeamStatSheet: Upload
 }
 
 input GameRelateToOneInput {
@@ -976,6 +980,8 @@ input GameUpdateInput {
   awayTeamForfeit: Boolean
   location: LocationRelateToOneInput
   showNameOnSchedule: Boolean
+  homeTeamStatSheet: Upload
+  awayTeamStatSheet: Upload
 }
 
 input GameWhereInput {
@@ -1041,6 +1047,14 @@ input GameWhereInput {
   location_is_null: Boolean
   showNameOnSchedule: Boolean
   showNameOnSchedule_not: Boolean
+  homeTeamStatSheet: String
+  homeTeamStatSheet_not: String
+  homeTeamStatSheet_in: [String]
+  homeTeamStatSheet_not_in: [String]
+  awayTeamStatSheet: String
+  awayTeamStatSheet_not: String
+  awayTeamStatSheet_in: [String]
+  awayTeamStatSheet_not_in: [String]
 }
 
 input GameWhereUniqueInput {
@@ -1454,12 +1468,28 @@ type Location {
   _label_: String
   id: ID!
   name: String
+  slug: String
   mapsLocationUrl: String
+  type: LocationTypeType
+  addressStreet: String
+  addressCity: String
+  addressState: String
+  addressZipCode: Int
+  latitude: Float
+  longitude: Float
 }
 
 input LocationCreateInput {
   name: String
+  slug: String
   mapsLocationUrl: String
+  type: LocationTypeType
+  addressStreet: String
+  addressCity: String
+  addressState: String
+  addressZipCode: Int
+  latitude: Float
+  longitude: Float
 }
 
 input LocationRelateToOneInput {
@@ -1478,9 +1508,24 @@ input LocationsUpdateInput {
   data: LocationUpdateInput
 }
 
+enum LocationTypeType {
+  grass
+  turf
+  beach
+  indoor
+}
+
 input LocationUpdateInput {
   name: String
+  slug: String
   mapsLocationUrl: String
+  type: LocationTypeType
+  addressStreet: String
+  addressCity: String
+  addressState: String
+  addressZipCode: Int
+  latitude: Float
+  longitude: Float
 }
 
 input LocationWhereInput {
@@ -1508,6 +1553,24 @@ input LocationWhereInput {
   name_not_ends_with_i: String
   name_in: [String]
   name_not_in: [String]
+  slug: String
+  slug_not: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
+  slug_i: String
+  slug_not_i: String
+  slug_contains_i: String
+  slug_not_contains_i: String
+  slug_starts_with_i: String
+  slug_not_starts_with_i: String
+  slug_ends_with_i: String
+  slug_not_ends_with_i: String
+  slug_in: [String]
+  slug_not_in: [String]
   mapsLocationUrl: String
   mapsLocationUrl_not: String
   mapsLocationUrl_contains: String
@@ -1526,6 +1589,88 @@ input LocationWhereInput {
   mapsLocationUrl_not_ends_with_i: String
   mapsLocationUrl_in: [String]
   mapsLocationUrl_not_in: [String]
+  type: LocationTypeType
+  type_not: LocationTypeType
+  type_in: [LocationTypeType]
+  type_not_in: [LocationTypeType]
+  addressStreet: String
+  addressStreet_not: String
+  addressStreet_contains: String
+  addressStreet_not_contains: String
+  addressStreet_starts_with: String
+  addressStreet_not_starts_with: String
+  addressStreet_ends_with: String
+  addressStreet_not_ends_with: String
+  addressStreet_i: String
+  addressStreet_not_i: String
+  addressStreet_contains_i: String
+  addressStreet_not_contains_i: String
+  addressStreet_starts_with_i: String
+  addressStreet_not_starts_with_i: String
+  addressStreet_ends_with_i: String
+  addressStreet_not_ends_with_i: String
+  addressStreet_in: [String]
+  addressStreet_not_in: [String]
+  addressCity: String
+  addressCity_not: String
+  addressCity_contains: String
+  addressCity_not_contains: String
+  addressCity_starts_with: String
+  addressCity_not_starts_with: String
+  addressCity_ends_with: String
+  addressCity_not_ends_with: String
+  addressCity_i: String
+  addressCity_not_i: String
+  addressCity_contains_i: String
+  addressCity_not_contains_i: String
+  addressCity_starts_with_i: String
+  addressCity_not_starts_with_i: String
+  addressCity_ends_with_i: String
+  addressCity_not_ends_with_i: String
+  addressCity_in: [String]
+  addressCity_not_in: [String]
+  addressState: String
+  addressState_not: String
+  addressState_contains: String
+  addressState_not_contains: String
+  addressState_starts_with: String
+  addressState_not_starts_with: String
+  addressState_ends_with: String
+  addressState_not_ends_with: String
+  addressState_i: String
+  addressState_not_i: String
+  addressState_contains_i: String
+  addressState_not_contains_i: String
+  addressState_starts_with_i: String
+  addressState_not_starts_with_i: String
+  addressState_ends_with_i: String
+  addressState_not_ends_with_i: String
+  addressState_in: [String]
+  addressState_not_in: [String]
+  addressZipCode: Int
+  addressZipCode_not: Int
+  addressZipCode_lt: Int
+  addressZipCode_lte: Int
+  addressZipCode_gt: Int
+  addressZipCode_gte: Int
+  addressZipCode_in: [Int]
+  addressZipCode_not_in: [Int]
+  latitude: Float
+  latitude_not: Float
+  latitude_lt: Float
+  latitude_lte: Float
+  latitude_gt: Float
+  latitude_gte: Float
+  latitude_in: [Float]
+  latitude_not_in: [Float]
+  longitude: Float
+  longitude_not: Float
+  longitude_lt: Float
+  longitude_lte: Float
+  longitude_gt: Float
+  longitude_gte: Float
+  longitude_in: [Float]
+  longitude_not_in: [Float]
 }
 
 input LocationWhereUniqueInput {
@@ -1831,17 +1976,10 @@ type Pickup {
   contactPhone: String
   contactUrl: String
   contactWhatsapp: String
-  locationName: String
-  locationType: PickupLocationTypeType
-  locationAddressStreet: String
-  locationAddressCity: String
-  locationAddressState: String
-  locationAddressZipCode: Int
-  locationLatitude: Float
-  locationLongitude: Float
   description: String
   updatedAt: DateTime
   slug: String
+  location: Location
 }
 
 input PickupCreateInput {
@@ -1855,24 +1993,10 @@ input PickupCreateInput {
   contactPhone: String
   contactUrl: String
   contactWhatsapp: String
-  locationName: String
-  locationType: PickupLocationTypeType
-  locationAddressStreet: String
-  locationAddressCity: String
-  locationAddressState: String
-  locationAddressZipCode: Int
-  locationLatitude: Float
-  locationLongitude: Float
   description: String
   updatedAt: DateTime
   slug: String
-}
-
-enum PickupLocationTypeType {
-  grass
-  turf
-  beach
-  indoor
+  location: LocationRelateToOneInput
 }
 
 input PickupsCreateInput {
@@ -1895,17 +2019,10 @@ input PickupUpdateInput {
   contactPhone: String
   contactUrl: String
   contactWhatsapp: String
-  locationName: String
-  locationType: PickupLocationTypeType
-  locationAddressStreet: String
-  locationAddressCity: String
-  locationAddressState: String
-  locationAddressZipCode: Int
-  locationLatitude: Float
-  locationLongitude: Float
   description: String
   updatedAt: DateTime
   slug: String
+  location: LocationRelateToOneInput
 }
 
 input PickupWhereInput {
@@ -2069,106 +2186,6 @@ input PickupWhereInput {
   contactWhatsapp_not_ends_with_i: String
   contactWhatsapp_in: [String]
   contactWhatsapp_not_in: [String]
-  locationName: String
-  locationName_not: String
-  locationName_contains: String
-  locationName_not_contains: String
-  locationName_starts_with: String
-  locationName_not_starts_with: String
-  locationName_ends_with: String
-  locationName_not_ends_with: String
-  locationName_i: String
-  locationName_not_i: String
-  locationName_contains_i: String
-  locationName_not_contains_i: String
-  locationName_starts_with_i: String
-  locationName_not_starts_with_i: String
-  locationName_ends_with_i: String
-  locationName_not_ends_with_i: String
-  locationName_in: [String]
-  locationName_not_in: [String]
-  locationType: PickupLocationTypeType
-  locationType_not: PickupLocationTypeType
-  locationType_in: [PickupLocationTypeType]
-  locationType_not_in: [PickupLocationTypeType]
-  locationAddressStreet: String
-  locationAddressStreet_not: String
-  locationAddressStreet_contains: String
-  locationAddressStreet_not_contains: String
-  locationAddressStreet_starts_with: String
-  locationAddressStreet_not_starts_with: String
-  locationAddressStreet_ends_with: String
-  locationAddressStreet_not_ends_with: String
-  locationAddressStreet_i: String
-  locationAddressStreet_not_i: String
-  locationAddressStreet_contains_i: String
-  locationAddressStreet_not_contains_i: String
-  locationAddressStreet_starts_with_i: String
-  locationAddressStreet_not_starts_with_i: String
-  locationAddressStreet_ends_with_i: String
-  locationAddressStreet_not_ends_with_i: String
-  locationAddressStreet_in: [String]
-  locationAddressStreet_not_in: [String]
-  locationAddressCity: String
-  locationAddressCity_not: String
-  locationAddressCity_contains: String
-  locationAddressCity_not_contains: String
-  locationAddressCity_starts_with: String
-  locationAddressCity_not_starts_with: String
-  locationAddressCity_ends_with: String
-  locationAddressCity_not_ends_with: String
-  locationAddressCity_i: String
-  locationAddressCity_not_i: String
-  locationAddressCity_contains_i: String
-  locationAddressCity_not_contains_i: String
-  locationAddressCity_starts_with_i: String
-  locationAddressCity_not_starts_with_i: String
-  locationAddressCity_ends_with_i: String
-  locationAddressCity_not_ends_with_i: String
-  locationAddressCity_in: [String]
-  locationAddressCity_not_in: [String]
-  locationAddressState: String
-  locationAddressState_not: String
-  locationAddressState_contains: String
-  locationAddressState_not_contains: String
-  locationAddressState_starts_with: String
-  locationAddressState_not_starts_with: String
-  locationAddressState_ends_with: String
-  locationAddressState_not_ends_with: String
-  locationAddressState_i: String
-  locationAddressState_not_i: String
-  locationAddressState_contains_i: String
-  locationAddressState_not_contains_i: String
-  locationAddressState_starts_with_i: String
-  locationAddressState_not_starts_with_i: String
-  locationAddressState_ends_with_i: String
-  locationAddressState_not_ends_with_i: String
-  locationAddressState_in: [String]
-  locationAddressState_not_in: [String]
-  locationAddressZipCode: Int
-  locationAddressZipCode_not: Int
-  locationAddressZipCode_lt: Int
-  locationAddressZipCode_lte: Int
-  locationAddressZipCode_gt: Int
-  locationAddressZipCode_gte: Int
-  locationAddressZipCode_in: [Int]
-  locationAddressZipCode_not_in: [Int]
-  locationLatitude: Float
-  locationLatitude_not: Float
-  locationLatitude_lt: Float
-  locationLatitude_lte: Float
-  locationLatitude_gt: Float
-  locationLatitude_gte: Float
-  locationLatitude_in: [Float]
-  locationLatitude_not_in: [Float]
-  locationLongitude: Float
-  locationLongitude_not: Float
-  locationLongitude_lt: Float
-  locationLongitude_lte: Float
-  locationLongitude_gt: Float
-  locationLongitude_gte: Float
-  locationLongitude_in: [Float]
-  locationLongitude_not_in: [Float]
   description: String
   description_not: String
   description_contains: String
@@ -2213,6 +2230,8 @@ input PickupWhereInput {
   slug_not_ends_with_i: String
   slug_in: [String]
   slug_not_in: [String]
+  location: LocationWhereInput
+  location_is_null: Boolean
 }
 
 input PickupWhereUniqueInput {
@@ -3496,8 +3515,24 @@ enum SortLocationsBy {
   id_DESC
   name_ASC
   name_DESC
+  slug_ASC
+  slug_DESC
   mapsLocationUrl_ASC
   mapsLocationUrl_DESC
+  type_ASC
+  type_DESC
+  addressStreet_ASC
+  addressStreet_DESC
+  addressCity_ASC
+  addressCity_DESC
+  addressState_ASC
+  addressState_DESC
+  addressZipCode_ASC
+  addressZipCode_DESC
+  latitude_ASC
+  latitude_DESC
+  longitude_ASC
+  longitude_DESC
 }
 
 enum SortPickupsBy {
@@ -3523,28 +3558,14 @@ enum SortPickupsBy {
   contactUrl_DESC
   contactWhatsapp_ASC
   contactWhatsapp_DESC
-  locationName_ASC
-  locationName_DESC
-  locationType_ASC
-  locationType_DESC
-  locationAddressStreet_ASC
-  locationAddressStreet_DESC
-  locationAddressCity_ASC
-  locationAddressCity_DESC
-  locationAddressState_ASC
-  locationAddressState_DESC
-  locationAddressZipCode_ASC
-  locationAddressZipCode_DESC
-  locationLatitude_ASC
-  locationLatitude_DESC
-  locationLongitude_ASC
-  locationLongitude_DESC
   description_ASC
   description_DESC
   updatedAt_ASC
   updatedAt_DESC
   slug_ASC
   slug_DESC
+  location_ASC
+  location_DESC
 }
 
 enum SortPlayerGameStatsBy {

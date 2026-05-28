@@ -15,14 +15,16 @@ export const getServerSideProps = async () => {
               day
               time
               description
-              locationName
-              locationType
-              locationAddressStreet
-              locationAddressCity
-              locationAddressState
-              locationAddressZipCode
-              locationLatitude
-              locationLongitude
+              location {
+                name
+                type
+                addressStreet
+                addressCity
+                addressState
+                addressZipCode
+                latitude
+                longitude
+              }
               contactWhatsapp
               contactUrl
               contactEmail
@@ -85,23 +87,23 @@ export default function PickupsPage (props) {
                 <div className="row">
                   <div className="col-sm-8">
                     <h3><a href={'/pickups/' + pickup.slug}>{pickup.title}</a></h3>
-                    <span className="badge">{pickup.locationType}</span>
+                    <span className="badge">{pickup.type}</span>
                     <br/>
                     <small>{pickup.day} at {pickup.time}</small>
                     <p>{pickup.description}</p>
                   </div>
                   <div className="col-sm-4">
                     <address>
-                      <strong>{pickup.locationName}</strong><br/>
-                      {pickup.locationAddressStreet}<br/>
-                      {pickup.locationAddressCity}, {pickup.locationAddressState}, {pickup.locationAddressZipCode}<br/>
+                      <strong>{pickup.name}</strong><br/>
+                      {pickup.addressStreet}<br/>
+                      {pickup.addressCity}, {pickup.addressState}, {pickup.addressZipCode}<br/>
                     </address>
                     <div className="btn-group">
                       {pickup.contactWhatsapp && <a className="btn btn-sm btn-outline-primary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
                       {pickup.contactUrl && <a className="btn btn-sm btn-outline-primary" href={pickup.contactUrl} target="_blank">View Website</a>}
                       {pickup.contactEmail && <a className="btn btn-sm btn-outline-primary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
                       {pickup.contactPhone && <a className="btn btn-sm btn-outline-primary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-                      <a className="btn btn-sm btn-outline-primary" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
+                      <a className="btn btn-sm btn-outline-primary" href={`https://www.google.com/maps/place/${pickup.addressStreet + ' ' + pickup.addressCity + ' ' + pickup.addressState + ' ' + pickup.addressZipCode}`} target="_blank">View on Map</a>
                     </div>
                     {
                       pickupIndex + 1 > pickups.length && <hr/>
@@ -127,16 +129,15 @@ export default function PickupsPage (props) {
         var infoWindows = []
         
         const pickups = ${JSON.stringify(pickups)}
-      
-        pickups.forEach(function (game) {
+        pickups.forEach(function (pickup) {
           const contentString = '' +
             '<div id="content">' +
             '<div id="siteNotice"></div>' +
-            '<h4 id="firstHeading" class="firstHeading">' + game.title + '</h4>' +
-            '<p class="text-muted"><b>' + game.day + ' at ' + game.time + '</b></p>' +
-            '<p><b>' + game.locationType.toUpperCase() + ': </b>' + game.description + '</p>' +
+            '<h4 id="firstHeading" class="firstHeading">' + pickup.title + '</h4>' +
+            '<p class="text-muted"><b>' + pickup.day + ' at ' + pickup.time + '</b></p>' +
+            '<p><b>' + pickup.location.type.toUpperCase() + ': </b>' + pickup.description + '</p>' +
             '<div id="bodyContent">' +
-            '' + game.locationAddressStreet + '<br>' + game.locationAddressCity + ', ' + game.locationAddressState + ', ' + game.locationAddressZipCode + '<br>' +
+            '' + pickup.location.addressStreet + '<br>' + pickup.location.addressCity + ', ' + pickup.location.addressState + ', ' + pickup.location.addressZipCode + '<br>' +
             '</div>'
         
           const infoWindow = new google.maps.InfoWindow({
@@ -148,13 +149,13 @@ export default function PickupsPage (props) {
           const markerOptions = {
             map: map,
             position: {
-              lat: game.locationLatitude,
-              lng: game.locationLongitude
+              lat: pickup.location.latitude,
+              lng: pickup.location.longitude
             },
-            title: game.title
+            title: pickup.title
           }
         
-          console.log(markerOptions, game)
+          console.log(markerOptions, pickup)
         
           const marker = new google.maps.Marker(markerOptions)
         

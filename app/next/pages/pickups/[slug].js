@@ -25,14 +25,16 @@ export const getServerSideProps = async (context) => {
               day
               time
               description
-              locationName
-              locationType
-              locationAddressStreet
-              locationAddressCity
-              locationAddressState
-              locationAddressZipCode
-              locationLatitude
-              locationLongitude
+              location {
+                name
+                type
+                addressStreet
+                addressCity
+                addressState
+                addressZipCode
+                latitude
+                longitude
+              }
               contactWhatsapp
               contactUrl
               contactEmail
@@ -93,7 +95,7 @@ export default function PickupsPage (props) {
             <a className="btn btn-sm btn-secondary" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
           </div>
         </article>
-        <div class="col-md-6">
+        <div className="col-md-6">
           <section id="pickup-listing-map" style={{ height: '400px' }} dangerouslySetInnerHTML={{
             __html: ''
           }}></section>

@@ -1,4 +1,4 @@
-const { Text, Integer, Float, Select, Checkbox, DateTime } = require('@keystonejs/fields')
+const { Text, Integer, Checkbox, DateTime, Relationship} = require('@keystonejs/fields')
 
 const fields = {
   title: {
@@ -50,54 +50,6 @@ const fields = {
     initial: true,
     label: 'WhatsApp Group URL'
   },
-  locationName: {
-    type: Text,
-    initial: true,
-    isRequired: true
-  },
-  locationType: {
-    type: Select,
-    options: ['grass', 'turf', 'beach', 'indoor'],
-    initial: true,
-    isRequired: true,
-    label: 'Field Type'
-  },
-  locationAddressStreet: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'Street Address'
-  },
-  locationAddressCity: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'City'
-  },
-  locationAddressState: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'State'
-  },
-  locationAddressZipCode: {
-    type: Integer,
-    initial: true,
-    isRequired: true,
-    label: 'Zip Code'
-  },
-  locationLatitude: {
-    type: Float,
-    initial: false,
-    isRequired: false,
-    label: 'Latitude'
-  },
-  locationLongitude: {
-    type: Float,
-    initial: false,
-    isRequired: false,
-    label: 'Longitude'
-  },
   description: {
     type: Text,
     initial: true,
@@ -116,6 +68,11 @@ const fields = {
     type: Text,
     initial: true,
     isRequired: true
+  },
+  location: {
+    type: Relationship,
+    ref: 'Location',
+    initial: true
   }
 }
 
