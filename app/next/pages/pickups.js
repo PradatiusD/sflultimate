@@ -87,17 +87,21 @@ export default function PickupsPage (props) {
                 <div className="row">
                   <div className="col-sm-8">
                     <h3><a href={'/pickups/' + pickup.slug}>{pickup.title}</a></h3>
-                    <span className="badge">{pickup.type}</span>
-                    <br/>
                     <small>{pickup.day} at {pickup.time}</small>
                     <p>{pickup.description}</p>
                   </div>
                   <div className="col-sm-4">
-                    <address>
-                      <strong>{pickup.location.name}</strong><br/>
-                      {pickup.location.addressStreet}<br/>
-                      {pickup.location.addressCity}, {pickup.location.addressState}, {pickup.location.addressZipCode}<br/>
-                    </address>
+                    {
+                      pickup.location && (
+                        <address>
+                          <strong>{pickup.location.name}</strong>
+                          <span className="badge bg-primary">{pickup.location.type}</span>
+                          <br/>
+                          {pickup.location.addressStreet}<br/>
+                          {pickup.location.addressCity}, {pickup.location.addressState}, {pickup.location.addressZipCode}<br/>
+                        </address>
+                      )
+                    }
                     <div className="btn-group">
                       {pickup.contactWhatsapp && <a className="btn btn-sm btn-outline-primary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
                       {pickup.contactUrl && <a className="btn btn-sm btn-outline-primary" href={pickup.contactUrl} target="_blank">View Website</a>}
