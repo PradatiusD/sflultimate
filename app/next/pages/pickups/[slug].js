@@ -45,6 +45,7 @@ export const getServerSideProps = async (context) => {
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
   LeagueUtils.addLeagueStatus(league)
   const pickup = results.data.allPickups[0]
+  console.log(pickup)
   return { props: { pickup, league } }
 }
 export default function PickupsPage (props) {
@@ -67,7 +68,7 @@ export default function PickupsPage (props) {
           <strong>How is this pickup information generated/updated?</strong><br/> We try our best to keep an accurate,
           up-to-date list, but as pickups grow and fade out we do sometimes not reflect the most up to date data. Have a
           suggestion or correction? Email <a href="mailto:sflultimate@gmail.com">sflultimate@gmail.com</a> with your
-          suggestion and we'll take care of updating it.
+          suggestion and we&#39;ll take care of updating it.
         </div>
 
         <div className="alert alert-warning" role="alert">
@@ -78,21 +79,20 @@ export default function PickupsPage (props) {
 
         <article className="col-md-6">
           <h1>{pickup.title}</h1>
-          <span className="badge">{pickup.locationType}</span>
+          <span className="badge bg-primary text-uppercase">{pickup.location.type}</span>
           <p className="lead">{pickup.day} at {pickup.time}</p>
           <p>{pickup.description}</p>
-
           <address>
-            <strong>{pickup.locationName}</strong><br/>
-            {pickup.locationAddressStreet}<br/>
-            {pickup.locationAddressCity}, {pickup.locationAddressState}, {pickup.locationAddressZipCode}<br/>
+            <strong>{pickup.location.name}</strong><br/>
+            {pickup.location.addressStreet}<br/>
+            {pickup.location.addressCity}, {pickup.location.addressState}, {pickup.location.addressZipCode}<br/>
           </address>
-          <div className="btn-group">
+          <div className="btn-group mb-3">
             {pickup.contactWhatsapp && <a className="btn btn-sm btn-secondary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
             {pickup.contactUrl && <a className="btn btn-sm btn-secondary" href={pickup.contactUrl} target="_blank">View Website</a>}
             {pickup.contactEmail && <a className="btn btn-sm btn-secondary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
             {pickup.contactPhone && <a className="btn btn-sm btn-secondary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-            <a className="btn btn-sm btn-secondary" href={`https://www.google.com/maps/place/${pickup.locationAddressStreet + ' ' + pickup.locationAddressCity + ' ' + pickup.locationAddressState + ' ' + pickup.locationAddressZipCode}`} target="_blank">View on Map</a>
+            <a className="btn btn-sm btn-secondary" href={`https://www.google.com/maps/place/${pickup.location.addressStreet + ' ' + pickup.location.addressCity + ' ' + pickup.location.addressState + ' ' + pickup.location.addressZipCode}`} target="_blank">View on Map</a>
           </div>
         </article>
         <div className="col-md-6">

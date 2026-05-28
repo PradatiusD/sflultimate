@@ -1,4 +1,4 @@
-const { Text, Integer, Checkbox, DateTime, Relationship} = require('@keystonejs/fields')
+const { Text, Integer, Checkbox, DateTime, Relationship } = require('@keystonejs/fields')
 
 const fields = {
   title: {
