@@ -114,15 +114,18 @@ export default function PickupsPage (props) {
         
         const pickups = ${JSON.stringify([pickup])}
       
-        pickups.forEach(function (game) {
+        pickups.forEach(function (pickup) {
+          if (!pickup.location) {
+            return
+          }
           const contentString = '' +
             '<div id="content">' +
             '<div id="siteNotice"></div>' +
-            '<h4 id="firstHeading" class="firstHeading">' + game.title + '</h4>' +
-            '<p class="text-muted"><b>' + game.day + ' at ' + game.time + '</b></p>' +
-            '<p><b>' + game.location.type.toUpperCase() + ': </b>' + game.description + '</p>' +
+            '<h4 id="firstHeading" class="firstHeading">' + pickup.title + '</h4>' +
+            '<p class="text-muted"><b>' + pickup.day + ' at ' + pickup.time + '</b></p>' +
+            '<p><b>' + pickup.location.type.toUpperCase() + ': </b>' + pickup.description + '</p>' +
             '<div id="bodyContent">' +
-            '' + game.locationAddressStreet + '<br>' + game.locationAddressCity + ', ' + game.locationAddressState + ', ' + game.locationAddressZipCode + '<br>' +
+            '' + pickup.location.addressStreet + '<br>' + pickup.location.addressCity + ', ' + pickup.location.addressState + ', ' + pickup.location.addressZipCode + '<br>' +
             '</div>'
         
           const infoWindow = new google.maps.InfoWindow({
@@ -134,10 +137,10 @@ export default function PickupsPage (props) {
           const markerOptions = {
             map: map,
             position: {
-              lat: game.locationLatitude,
-              lng: game.locationLongitude
+              lat: pickup.location.latitude,
+              lng: pickup.location.longitude
             },
-            title: game.title
+            title: pickup.title
           }
           
           const marker = new google.maps.Marker(markerOptions)
