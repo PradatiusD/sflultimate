@@ -78,7 +78,7 @@ export default function PickupsPage (props) {
           __html: ''
         }}></section>
 
-        <h2>Full List</h2>
+        <h2 className="mt-3">Full List</h2>
         {
           pickups.map((pickup, pickupIndex) => {
             return (

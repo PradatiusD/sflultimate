@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/graphql-client'
 import { HeaderNavigation } from '../../components/Navigation'
-import LeagueUtils from '../../lib/league-utils'
+import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -42,26 +42,24 @@ export const getServerSideProps = async (context) => {
             }
         }`
   })
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
   const pickup = results.data.allPickups[0]
-  console.log(pickup)
-  return { props: { pickup, league } }
+  const props = { pickup }
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 export default function PickupsPage (props) {
-  const { pickup, league } = props
+  const { pickup, leagues } = props
   return (
     <>
       <Head>
         <title>SFLUltimate: {pickup.title}</title>
         <meta property="description" content={pickup.description} />
-
         <meta property="og:title" content={pickup.title}/>
         <meta property="og:url" content={'https://www.sflultimate.com/pickups/' + pickup.slug}/>
         <meta property="og:description" content={pickup.description}/>
         <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
       </Head>
-      <HeaderNavigation league={league} />
+      <HeaderNavigation leagues={leagues} />
 
       <div className="container pickup-listing-page">
         <div className="alert alert-info" role="alert">
@@ -76,29 +74,29 @@ export default function PickupsPage (props) {
           Due to weather, turnout, or competing local events/tournaments, sometimes pickups do not happen, so it's best
           to get confirmation from the pickup organizer before heading there to play.
         </div>
-
-        <article className="col-md-6">
-          <h1>{pickup.title}</h1>
-          <span className="badge bg-primary text-uppercase">{pickup.location.type}</span>
-          <p className="lead">{pickup.day} at {pickup.time}</p>
-          <p>{pickup.description}</p>
-          <address>
-            <strong>{pickup.location.name}</strong><br/>
-            {pickup.location.addressStreet}<br/>
-            {pickup.location.addressCity}, {pickup.location.addressState}, {pickup.location.addressZipCode}<br/>
-          </address>
-          <div className="btn-group mb-3">
-            {pickup.contactWhatsapp && <a className="btn btn-sm btn-secondary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
-            {pickup.contactUrl && <a className="btn btn-sm btn-secondary" href={pickup.contactUrl} target="_blank">View Website</a>}
-            {pickup.contactEmail && <a className="btn btn-sm btn-secondary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
-            {pickup.contactPhone && <a className="btn btn-sm btn-secondary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-            <a className="btn btn-sm btn-secondary" href={`https://www.google.com/maps/place/${pickup.location.addressStreet + ' ' + pickup.location.addressCity + ' ' + pickup.location.addressState + ' ' + pickup.location.addressZipCode}`} target="_blank">View on Map</a>
+        <div className="row">
+          <article className="col-md-6">
+            <h1>{pickup.title}</h1>
+            <p className="lead">{pickup.day} at {pickup.time}</p>
+            <p>{pickup.description}</p>
+            <address>
+              <strong>{pickup.location.name}</strong><span className="badge bg-primary">{pickup.location.type}</span><br/>
+              {pickup.location.addressStreet}<br/>
+              {pickup.location.addressCity}, {pickup.location.addressState}, {pickup.location.addressZipCode}<br/>
+            </address>
+            <div className="btn-group mb-3">
+              {pickup.contactWhatsapp && <a className="btn btn-sm btn-outline-primary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
+              {pickup.contactUrl && <a className="btn btn-sm btn-outline-primary" href={pickup.contactUrl} target="_blank">View Website</a>}
+              {pickup.contactEmail && <a className="btn btn-sm btn-outline-primary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
+              {pickup.contactPhone && <a className="btn btn-sm btn-outline-primary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
+              <a className="btn btn-sm btn-outline-primary" href={`https://www.google.com/maps/place/${pickup.location.addressStreet + ' ' + pickup.location.addressCity + ' ' + pickup.location.addressState + ' ' + pickup.location.addressZipCode}`} target="_blank">View on Map</a>
+            </div>
+          </article>
+          <div className="col-md-6">
+            <section id="pickup-listing-map" style={{ height: '400px' }} dangerouslySetInnerHTML={{
+              __html: ''
+            }}></section>
           </div>
-        </article>
-        <div className="col-md-6">
-          <section id="pickup-listing-map" style={{ height: '400px' }} dangerouslySetInnerHTML={{
-            __html: ''
-          }}></section>
         </div>
       </div>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDld-_TKoN-4PGLgQ1-JwN607eT4RfAMSQ" />
