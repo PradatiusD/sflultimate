@@ -80,7 +80,7 @@ export default function PickupsPage (props) {
 
         <h2 className="mt-3">Full List</h2>
         {
-          pickups.map((pickup, pickupIndex) => {
+          pickups.map((pickup, index) => {
             return (
               <article key={pickup.id}>
                 <hr/>
@@ -94,9 +94,9 @@ export default function PickupsPage (props) {
                   </div>
                   <div className="col-sm-4">
                     <address>
-                      <strong>{pickup.name}</strong><br/>
-                      {pickup.addressStreet}<br/>
-                      {pickup.addressCity}, {pickup.addressState}, {pickup.addressZipCode}<br/>
+                      <strong>{pickup.location.name}</strong><br/>
+                      {pickup.location.addressStreet}<br/>
+                      {pickup.location.addressCity}, {pickup.location.addressState}, {pickup.location.addressZipCode}<br/>
                     </address>
                     <div className="btn-group">
                       {pickup.contactWhatsapp && <a className="btn btn-sm btn-outline-primary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
@@ -106,7 +106,7 @@ export default function PickupsPage (props) {
                       <a className="btn btn-sm btn-outline-primary" href={`https://www.google.com/maps/place/${pickup.addressStreet + ' ' + pickup.addressCity + ' ' + pickup.addressState + ' ' + pickup.addressZipCode}`} target="_blank">View on Map</a>
                     </div>
                     {
-                      pickupIndex + 1 > pickups.length && <hr/>
+                      index + 1 > pickups.length && <hr/>
                     }
                   </div>
                 </div>
