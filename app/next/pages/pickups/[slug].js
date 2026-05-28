@@ -120,7 +120,7 @@ export default function PickupsPage (props) {
             '<div id="siteNotice"></div>' +
             '<h4 id="firstHeading" class="firstHeading">' + game.title + '</h4>' +
             '<p class="text-muted"><b>' + game.day + ' at ' + game.time + '</b></p>' +
-            '<p><b>' + game.locationType.toUpperCase() + ': </b>' + game.description + '</p>' +
+            '<p><b>' + game.location.type.toUpperCase() + ': </b>' + game.description + '</p>' +
             '<div id="bodyContent">' +
             '' + game.locationAddressStreet + '<br>' + game.locationAddressCity + ', ' + game.locationAddressState + ', ' + game.locationAddressZipCode + '<br>' +
             '</div>'

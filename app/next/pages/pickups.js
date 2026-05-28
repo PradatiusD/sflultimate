@@ -134,6 +134,9 @@ export default function PickupsPage (props) {
         
         const pickups = ${JSON.stringify(pickups)}
         pickups.forEach(function (pickup) {
+          if (!pickup.location) {
+            return
+          }
           const contentString = '' +
             '<div id="content">' +
             '<div id="siteNotice"></div>' +
