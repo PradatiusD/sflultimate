@@ -1,61 +1,21 @@
-const { Text, File } = require('@keystonejs/fields')
-const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
-const storage = require('./file-storage-adapter')
-const CustomDateTime = require('../custom-fields/CustomDateTime')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { file, text, timestamp } from '@keystone-6/core/fields'
 
-const fields = {
-  title: {
-    type: Text,
-    required: true
+export default list({
+  access: allowAll,
+  fields: {
+    title: text({ validation: { isRequired: true } }),
+    publishedDate: timestamp(),
+    slug: text({ validation: { isRequired: true } }),
+    summary: text({ ui: { displayMode: 'textarea' } }),
+    body: text({ ui: { displayMode: 'textarea' } }),
+    image: file({ storage: 'local_files' }),
   },
-  publishedDate: {
-    type: CustomDateTime,
-    initial: true
+  ui: {
+    labelField: 'title',
+    listView: {
+      initialColumns: ['title', 'publishedDate', 'slug', 'image'],
+    },
   },
-  slug: {
-    type: Text,
-    required: true
-  },
-  summary: {
-    type: Wysiwyg
-  },
-  body: {
-    type: Wysiwyg
-  },
-  image: {
-    type: File,
-    adapter: storage
-  }
-}
-
-//   state: {
-//     type: Types.Select,
-//     options: 'draft, published, archived',
-//     default: 'draft',
-//     index: true
-//   },
-//   author: {
-//     type: Types.Relationship,
-//     ref: 'Player',
-//     index: true
-//   },
-
-//   },
-//   categories: { type: Types.Relationship, ref: 'PostCategory', many: true }
-// })
-//
-// Post.schema.virtual('content.full').get(function () {
-//   return this.content.extended || this.content.brief
-// })
-//
-// Post.defaultColumns = 'title, state|20%, author|20%, publishedDate|20%'
-// Post.register()
-//
-
-module.exports = {
-  fields,
-  labelResolver: item => item.title,
-  adminConfig: {
-    defaultColumns: 'name, publishedDate, summary'
-  }
-}
+})

@@ -1,43 +1,22 @@
-const { Text, Relationship, Integer, File } = require('@keystonejs/fields')
-const { Color } = require('@keystonejs/fields-color')
-const storage = require('./file-storage-adapter')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { file, integer, relationship, text } from '@keystone-6/core/fields'
 
-const fields = {
-  name: {
-    type: Text,
-    isRequired: true,
-    index: true
+export default list({
+  access: allowAll,
+  fields: {
+    name: text({ validation: { isRequired: true }, isIndexed: true }),
+    color: text(),
+    captains: relationship({ ref: 'Player', many: true }),
+    players: relationship({ ref: 'Player', many: true }),
+    league: relationship({ ref: 'League' }),
+    draftOrder: integer(),
+    image: file({ storage: 'local_files' }),
   },
-  color: {
-    type: Color
+  ui: {
+    labelField: 'name',
+    listView: {
+      initialColumns: ['name', 'league', 'captains', 'color', 'image'],
+    },
   },
-  captains: {
-    type: Relationship,
-    ref: 'Player',
-    many: true
-  },
-  players: {
-    type: Relationship,
-    ref: 'Player',
-    many: true
-  },
-  league: {
-    type: Relationship,
-    ref: 'League',
-    initial: true
-  },
-  draftOrder: {
-    type: Integer
-  },
-  image: {
-    type: File,
-    adapter: storage
-  }
-}
-
-module.exports = {
-  fields,
-  adminConfig: {
-    defaultColumns: 'name, league, captains, color'
-  }
-}
+})

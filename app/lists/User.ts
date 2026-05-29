@@ -1,26 +1,18 @@
-const { Text, Password } = require('@keystonejs/fields')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { password, text } from '@keystone-6/core/fields'
 
-const fields = {
-  firstName: {
-    type: Text,
-    isRequired: true
+export default list({
+  access: allowAll,
+  fields: {
+    firstName: text({ validation: { isRequired: true } }),
+    lastName: text({ validation: { isRequired: true } }),
+    email: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
+    password: password({ validation: { isRequired: true } }),
   },
-  lastName: {
-    type: Text,
-    isRequired: true
+  ui: {
+    listView: {
+      initialColumns: ['firstName', 'lastName', 'email'],
+    },
   },
-  email: {
-    type: Text,
-    isRequired: true
-  },
-  password: {
-    type: Password,
-    isRequired: true
-  }
-}
-
-module.exports = {
-  fields,
-  labelResolver: user => user.firstName + ' ' + user.lastName,
-  defaultColumns: 'firstName, lastName, email'
-}
+})

@@ -1,41 +1,20 @@
-const storage = require('./file-storage-adapter')
-const { Text, Integer, Checkbox, File } = require('@keystonejs/fields')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { checkbox, file, integer, text } from '@keystone-6/core/fields'
 
-/**
- * Board Member Modal
- * ==============
- */
-const fields = {
-  firstName: {
-    type: Text,
-    isRequired: true
+export default list({
+  access: allowAll,
+  fields: {
+    firstName: text({ validation: { isRequired: true } }),
+    lastName: text({ validation: { isRequired: true } }),
+    order: integer({ validation: { isRequired: true } }),
+    active: checkbox(),
+    description: text({ validation: { isRequired: true } }),
+    image: file({ storage: 'local_files' }),
   },
-  lastName: {
-    type: Text,
-    isRequired: true
+  ui: {
+    listView: {
+      initialColumns: ['firstName', 'lastName', 'order', 'active', 'image'],
+    },
   },
-  order: {
-    type: Integer,
-    isRequired: true
-  },
-  active: {
-    type: Checkbox,
-    isRequired: true
-  },
-  description: {
-    type: Text,
-    required: true
-  },
-  image: {
-    type: File,
-    adapter: storage
-  }
-}
-
-module.exports = {
-  fields,
-  adminConfig: {
-    defaultColumns: 'name, order, active, description, image'
-  },
-  labelResolver: member => member.firstName + ' ' + member.lastName
-}
+})

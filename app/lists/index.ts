@@ -1,20 +1,20 @@
-const BoardMember = require('./BoardMember')
-const BoardPosition = require('./BoardPosition')
-const ClubTeam = require('./ClubTeam')
-const Event = require('./Event')
-const Game = require('./Game')
-const League = require('./League')
-const Location = require('./Location')
-const Pickup = require('./Pickup')
-const Player = require('./Player')
-const PlayerGameStat = require('./PlayerGameStat')
-const Post = require('./Post')
-const Team = require('./Team')
-const User = require('./User')
-const TournamentTeam = require('./TournamentTeam')
-const PlayerSubstitution = require('./PlayerSubstitution')
+import BoardMember from './BoardMember'
+import BoardPosition from './BoardPosition'
+import ClubTeam from './ClubTeam'
+import Event from './Event'
+import Game from './Game'
+import League from './League'
+import Location from './Location'
+import Pickup from './Pickup'
+import Player from './Player'
+import PlayerGameStat from './PlayerGameStat'
+import PlayerSubstitution from './PlayerSubstitution'
+import Post from './Post'
+import Team from './Team'
+import TournamentTeam from './TournamentTeam'
+import User from './User'
 
-module.exports = {
+export const lists = {
   BoardMember,
   BoardPosition,
   ClubTeam,
@@ -25,9 +25,9 @@ module.exports = {
   Pickup,
   Player,
   PlayerGameStat,
+  PlayerSubstitution,
   Post,
   Team,
   TournamentTeam,
-  PlayerSubstitution,
-  User
+  User,
 }

@@ -10,8 +10,8 @@ Primary user-facing workflows include league registration, substitutions, schedu
 
 Use the versions declared in `package.json`:
 
-- Node: `16.20.2`
-- npm: `8.19.4`
+- Node: `20.18.0`
+- npm: `10.8.2`
 
 The app expects a root `.env` file loaded from `app/index.js`. Never commit `.env`, database dumps, generated CSVs, credentials, payment tokens, or user data.
 

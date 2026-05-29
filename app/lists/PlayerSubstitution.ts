@@ -1,57 +1,30 @@
-const { Text, Relationship, DateTime, Select } = require('@keystonejs/fields')
-const fields = {
-  createdAt: {
-    type: DateTime,
-    isRequired: true
-  },
-  updatedAt: {
-    type: DateTime,
-    isRequired: true
-  },
-  firstName: {
-    type: Text,
-    isRequired: true
-  },
-  lastName: {
-    type: Text,
-    isRequired: true
-  },
-  name: {
-    type: Text,
-    isRequired: true
-  },
-  gender: {
-    type: Select,
-    options: ['Male', 'Female', 'Other'],
-    isRequired: true
-  },
-  email: {
-    type: Text,
-    isRequired: true
-  },
-  league: {
-    type: Relationship,
-    ref: 'League',
-    many: false
-  },
-  team: {
-    type: Relationship,
-    ref: 'Team',
-    many: false
-  },
-  comments: {
-    type: Text,
-    isRequired: false
-  },
-  phoneNumber: {
-    type: Text,
-    isRequired: false
-  }
-}
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { relationship, select, text, timestamp } from '@keystone-6/core/fields'
 
-module.exports = {
-  fields,
-  adminConfig: {
-    defaultColumns: 'nmae, email, gender, league'
-  }
-}
+export default list({
+  access: allowAll,
+  fields: {
+    createdAt: timestamp({ defaultValue: { kind: 'now' }, validation: { isRequired: true } }),
+    updatedAt: timestamp({ db: { updatedAt: true }, validation: { isRequired: true } }),
+    firstName: text({ validation: { isRequired: true } }),
+    lastName: text({ validation: { isRequired: true } }),
+    name: text({ validation: { isRequired: true } }),
+    gender: select({
+      type: 'string',
+      options: ['Male', 'Female', 'Other'].map(value => ({ label: value, value })),
+      validation: { isRequired: true },
+    }),
+    email: text({ validation: { isRequired: true } }),
+    league: relationship({ ref: 'League' }),
+    team: relationship({ ref: 'Team' }),
+    comments: text({ ui: { displayMode: 'textarea' } }),
+    phoneNumber: text(),
+  },
+  ui: {
+    labelField: 'name',
+    listView: {
+      initialColumns: ['name', 'email', 'gender', 'league', 'team'],
+    },
+  },
+})

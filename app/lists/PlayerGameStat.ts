@@ -1,69 +1,25 @@
-const { Relationship, DateTime, Integer, Checkbox } = require('@keystonejs/fields')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { checkbox, integer, relationship, timestamp } from '@keystone-6/core/fields'
 
-/**
- * PlayerGameStat Model
- * ==============
- */
-
-const fields = {
-  createdAt: {
-    type: DateTime,
-    initial: true,
-    required: true
+export default list({
+  access: allowAll,
+  fields: {
+    createdAt: timestamp({ defaultValue: { kind: 'now' }, validation: { isRequired: true } }),
+    updatedAt: timestamp({ db: { updatedAt: true }, validation: { isRequired: true } }),
+    player: relationship({ ref: 'Player' }),
+    game: relationship({ ref: 'Game' }),
+    assists: integer(),
+    scores: integer(),
+    defenses: integer(),
+    throwaways: integer(),
+    drops: integer(),
+    pointsPlayed: integer(),
+    attended: checkbox(),
   },
-  updatedAt: {
-    type: DateTime,
-    initial: true,
-    required: true
+  ui: {
+    listView: {
+      initialColumns: ['player', 'game', 'assists', 'scores', 'defenses', 'pointsPlayed'],
+    },
   },
-  player: {
-    type: Relationship,
-    ref: 'Player',
-    required: true,
-    index: true,
-    initial: true
-  },
-  game: {
-    type: Relationship,
-    ref: 'Game',
-    required: true,
-    index: true,
-    initial: true
-  },
-  assists: {
-    type: Integer,
-    initial: true
-  },
-  scores: {
-    type: Integer,
-    initial: true
-  },
-  defenses: {
-    type: Integer,
-    initial: true
-  },
-  throwaways: {
-    type: Integer,
-    initial: true
-  },
-  drops: {
-    type: Integer,
-    initial: true
-  },
-  pointsPlayed: {
-    type: Integer,
-    initial: true
-  },
-  attended: {
-    type: Checkbox,
-    initial: true
-  }
-}
-
-module.exports = {
-  fields,
-  labelResolver: member => member.firstName + ' ' + member.lastName,
-  adminConfig: {
-    defaultColumns: 'player, game, assists, scores, defenses, pointsPlayed'
-  }
-}
+})

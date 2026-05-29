@@ -2,37 +2,35 @@
     "name": "sflultimate",
     "version": "3.0.0",
     "engines": {
-        "node": "16.20.2",
-        "npm": "8.19.4"
+        "node": "20.18.0",
+        "npm": "10.8.2"
     },
     "dependencies": {
-        "@keystonejs/adapter-mongoose": "^11.2.2",
-        "@keystonejs/app-admin-ui": "^7.5.2",
-        "@keystonejs/app-graphql": "^6.3.2",
-        "@keystonejs/app-next": "^6.1.2",
-        "@keystonejs/auth-password": "^6.1.2",
-        "@keystonejs/fields": "^22.1.3",
-        "@keystonejs/fields-color": "^1.1.2",
-        "@keystonejs/fields-wysiwyg-tinymce": "^5.4.2",
-        "@keystonejs/file-adapters": "^7.1.2",
-        "@keystonejs/keystone": "^19.3.3",
-        "@keystonejs/server-side-graphql-client": "^2.1.2",
+        "@prisma/client": "5.22.0",
+        "@keystone-6/auth": "^8.1.0",
+        "@keystone-6/core": "^6.5.1",
         "add-to-calendar-button": "^2.13.3",
         "braintree": "^2.21.0",
         "cross-env": "^7.0.3",
         "dotenv": "^16.4.5",
         "file-saver": "^2.0.5",
+        "graphql": "^16.14.0",
         "mailchimp-api-v3": "^1.15.0",
         "node-html-parser": "^7.0.1",
         "nodemailer": "^6.9.1",
+        "prisma": "5.22.0",
+        "react": "18.3.1",
         "react-countdown": "^2.3.6",
         "react-datetime-picker": "^6.0.1",
+        "react-dom": "18.3.1",
         "request": "^2.88.0",
         "sass-mediaqueries": "^1.6.1",
         "superagent": "^4.0.0",
+        "typescript": "^5.5.0",
         "underscore": "^1.9.1"
     },
     "devDependencies": {
+        "@types/node": "^22.10.2",
         "cypress": "^13.6.6",
         "cypress-iframe": "^1.0.1",
         "eslint": "^8.57.1",
@@ -51,15 +49,19 @@
         "load-grunt-tasks": "^4.0.0",
         "time-grunt": "^2.0.0"
     },
+    "overrides": {
+        "react": "18.3.1",
+        "react-dom": "18.3.1"
+    },
     "scripts": {
-        "dev": "cd app && cross-env NODE_ENV=development DISABLE_LOGGING=true keystone dev",
-        "build": "cd app && cross-env NODE_ENV=production keystone build",
-        "start": "cd app && cross-env NODE_ENV=production keystone start",
+        "dev": "cd app && cross-env NODE_ENV=development DISABLE_LOGGING=true node ../node_modules/@keystone-6/core/bin/cli.js dev",
+        "build": "cd app && cross-env NODE_ENV=production node ../node_modules/@keystone-6/core/bin/cli.js build",
+        "start": "cd app && cross-env NODE_ENV=production node ../node_modules/@keystone-6/core/bin/cli.js start",
         "create-tables": "cross-env keystone create-tables",
         "cypress": "npx cypress open",
         "restore": "grunt restore",
         "lint": "npx eslint . --ignore-pattern '**/jquery/**' --ignore-pattern '**/bootstrap/**'",
-        "build-schema": "get-graphql-schema http://localhost:3000/admin/api/ > app/schema.graphql",
+        "build-schema": "get-graphql-schema http://localhost:3000/api/graphql > app/schema.graphql",
         "custom-fields": "npx babel app/custom-fields/CustomDateTime/src/views/*.js --out-dir app/custom-fields/CustomDateTime/views"
     },
     "private": true

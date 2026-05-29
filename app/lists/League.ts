@@ -1,136 +1,44 @@
-const { Text, Checkbox, Integer, Relationship, File } = require('@keystonejs/fields')
-const CustomDateTime = require('../custom-fields/CustomDateTime')
-const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
-const storage = require('./file-storage-adapter')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { checkbox, file, integer, relationship, text, timestamp } from '@keystone-6/core/fields'
 
-const fields = {
-  name: {
-    type: Text,
-    isRequired: true
+export default list({
+  access: allowAll,
+  fields: {
+    name: text({ validation: { isRequired: true } }),
+    title: text({ validation: { isRequired: true }, isIndexed: true }),
+    slug: text({ validation: { isRequired: true }, isIndexed: true }),
+    summary: text(),
+    description: text({ ui: { displayMode: 'textarea' } }),
+    isActive: checkbox({ defaultValue: false }),
+    numberOfWeeksOfPlay: integer(),
+    earlyRegistrationStart: timestamp(),
+    earlyRegistrationEnd: timestamp(),
+    registrationStart: timestamp(),
+    registrationEnd: timestamp(),
+    lateRegistrationStart: timestamp(),
+    lateRegistrationEnd: timestamp(),
+    pricingEarlyStudent: integer({ validation: { isRequired: true }, defaultValue: 30 }),
+    pricingEarlyAdult: integer({ validation: { isRequired: true }, defaultValue: 55 }),
+    pricingRegularStudent: integer({ validation: { isRequired: true }, defaultValue: 30 }),
+    pricingRegularAdult: integer({ validation: { isRequired: true }, defaultValue: 55 }),
+    pricingLateStudent: integer({ validation: { isRequired: true }, defaultValue: 55 }),
+    pricingLateAdult: integer({ validation: { isRequired: true }, defaultValue: 55 }),
+    finalsTournamentStartDate: timestamp(),
+    finalsTournamentEndDate: timestamp(),
+    finalsTournamentDescription: text({ ui: { displayMode: 'textarea' } }),
+    finalsTournamentLocation: relationship({ ref: 'Location' }),
+    jerseyDesign: file({ storage: 'local_files' }),
+    registrationShareImage: file({ storage: 'local_files' }),
+    requestAttendance: checkbox(),
+    requestShirtSize: checkbox(),
+    requestSponsorship: checkbox(),
+    champion: relationship({ ref: 'Team' }),
   },
-  title: {
-    type: Text,
-    initial: true,
-    required: true,
-    index: true
+  ui: {
+    labelField: 'title',
+    listView: {
+      initialColumns: ['title', 'isActive', 'registrationStart', 'registrationEnd', 'champion'],
+    },
   },
-  slug: {
-    type: Text,
-    initial: true,
-    required: true,
-    index: true
-  },
-  summary: {
-    type: Text
-  },
-  description: {
-    type: Wysiwyg,
-    wysiwyg: true
-  },
-  isActive: {
-    type: Checkbox,
-    default: false
-  },
-  numberOfWeeksOfPlay: {
-    type: Integer,
-    initial: false,
-    required: false
-  },
-  earlyRegistrationStart: {
-    type: CustomDateTime
-  },
-  earlyRegistrationEnd: {
-    type: CustomDateTime
-  },
-  registrationStart: {
-    type: CustomDateTime
-  },
-  registrationEnd: {
-    type: CustomDateTime
-  },
-  lateRegistrationStart: {
-    type: CustomDateTime
-  },
-  lateRegistrationEnd: {
-    type: CustomDateTime
-  },
-  pricingEarlyStudent: {
-    type: Integer,
-    initial: true,
-    required: true,
-    default: 30
-  },
-  pricingEarlyAdult: {
-    type: Integer,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  pricingRegularStudent: {
-    type: Integer,
-    initial: true,
-    required: true,
-    default: 30
-  },
-  pricingRegularAdult: {
-    type: Integer,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  pricingLateStudent: {
-    type: Integer,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  pricingLateAdult: {
-    type: Integer,
-    initial: true,
-    required: true,
-    default: 55
-  },
-  finalsTournamentStartDate: {
-    type: CustomDateTime
-  },
-  finalsTournamentEndDate: {
-    type: CustomDateTime
-  },
-  finalsTournamentDescription: {
-    type: Wysiwyg,
-    wysiwyg: true
-  },
-  finalsTournamentLocation: {
-    type: Relationship,
-    ref: 'Location'
-  },
-  jerseyDesign: {
-    type: File,
-    adapter: storage
-  },
-  registrationShareImage: {
-    type: File,
-    adapter: storage
-  },
-  requestAttendance: {
-    type: Checkbox
-  },
-  requestShirtSize: {
-    type: Checkbox
-  },
-  requestSponsorship: {
-    type: Checkbox
-  },
-  champion: {
-    type: Relationship,
-    ref: 'Team'
-  }
-}
-
-module.exports = {
-  fields,
-  labelResolver: item => item.title,
-  adminConfig: {
-    defaultColumns: 'title, isActive, registrationStart, registrationEnd'
-  }
-}
+})

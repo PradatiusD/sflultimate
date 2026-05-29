@@ -1,68 +1,30 @@
-const { Text, Url, Select, Float, Integer } = require('@keystonejs/fields')
-const fields = {
-  name: {
-    type: Text,
-    initial: true,
-    required: true,
-    index: true
-  },
-  slug: {
-    type: Text,
-    initial: true,
-    isRequired: true
-  },
-  mapsLocationUrl: {
-    type: Url
-  },
-  type: {
-    type: Select,
-    options: ['grass', 'turf', 'beach', 'indoor'],
-    initial: true,
-    isRequired: true,
-    label: 'Field Type'
-  },
-  addressStreet: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'Street Address'
-  },
-  addressCity: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'City'
-  },
-  addressState: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'State'
-  },
-  addressZipCode: {
-    type: Integer,
-    initial: true,
-    isRequired: true,
-    label: 'Zip Code'
-  },
-  latitude: {
-    type: Float,
-    initial: false,
-    isRequired: false,
-    label: 'Latitude'
-  },
-  longitude: {
-    type: Float,
-    initial: false,
-    isRequired: false,
-    label: 'Longitude'
-  }
-}
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { float, integer, select, text } from '@keystone-6/core/fields'
 
-module.exports = {
-  fields,
-  labelResolver: item => item.name,
-  adminConfig: {
-    defaultColumns: 'name'
-  }
-}
+export default list({
+  access: allowAll,
+  fields: {
+    name: text({ validation: { isRequired: true }, isIndexed: true }),
+    slug: text({ validation: { isRequired: true } }),
+    mapsLocationUrl: text(),
+    type: select({
+      type: 'string',
+      options: ['grass', 'turf', 'beach', 'indoor'].map(value => ({ label: value, value })),
+      validation: { isRequired: true },
+      label: 'Field Type',
+    }),
+    addressStreet: text({ validation: { isRequired: true }, label: 'Street Address' }),
+    addressCity: text({ validation: { isRequired: true }, label: 'City' }),
+    addressState: text({ validation: { isRequired: true }, label: 'State' }),
+    addressZipCode: integer({ validation: { isRequired: true }, label: 'Zip Code' }),
+    latitude: float({ label: 'Latitude' }),
+    longitude: float({ label: 'Longitude' }),
+  },
+  ui: {
+    labelField: 'name',
+    listView: {
+      initialColumns: ['name', 'type', 'addressCity', 'addressState'],
+    },
+  },
+})

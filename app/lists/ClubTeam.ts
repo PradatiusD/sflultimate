@@ -1,60 +1,32 @@
-const storage = require('./file-storage-adapter')
-const { Text, Url, Select, Integer, Checkbox, File } = require('@keystonejs/fields')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { checkbox, file, integer, select, text } from '@keystone-6/core/fields'
 
-const fields = {
-  name: {
-    type: Text,
-    isRequired: true
+export default list({
+  access: allowAll,
+  fields: {
+    name: text({ validation: { isRequired: true } }),
+    category: select({
+      type: 'string',
+      options: ['Mixed', 'Open', 'Women', 'College - Women', 'College - Mixed', 'College - Open'].map(value => ({
+        label: value,
+        value,
+      })),
+    }),
+    order: integer({ validation: { isRequired: true } }),
+    active: checkbox(),
+    description: text({ validation: { isRequired: true } }),
+    image: file({ storage: 'local_files' }),
+    instagramPageUrl: text(),
+    facebookPageUrl: text(),
+    websiteUrl: text(),
+    twitterPageUrl: text(),
+    interestFormPageUrl: text(),
   },
-  category: {
-    type: Select,
-    options: [
-      'Mixed',
-      'Open',
-      'Women',
-      'College - Women',
-      'College - Mixed',
-      'College - Open'
-    ],
-    dataType: 'string'
+  ui: {
+    labelField: 'name',
+    listView: {
+      initialColumns: ['name', 'category', 'order', 'active', 'image'],
+    },
   },
-  order: {
-    type: Integer,
-    isRequired: true
-  },
-  active: {
-    type: Checkbox,
-    isRequired: true
-  },
-  description: {
-    type: Text,
-    isRequired: true
-  },
-  image: {
-    type: File,
-    adapter: storage
-  },
-  instagramPageUrl: {
-    type: Url
-  },
-  facebookPageUrl: {
-    type: Url
-  },
-  websiteUrl: {
-    type: Url
-  },
-  twitterPageUrl: {
-    type: Url
-  },
-  interestFormPageUrl: {
-    type: Url
-  }
-}
-
-module.exports = {
-  fields,
-  adminConfig: {
-    defaultColumns: 'name, order, active, description, image'
-  }
-
-}
+})

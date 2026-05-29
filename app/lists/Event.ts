@@ -1,56 +1,28 @@
-const { Text, Url, File } = require('@keystonejs/fields')
-const CustomDateTime = require('../custom-fields/CustomDateTime')
-const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
-const storage = require('./file-storage-adapter')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { file, text, timestamp } from '@keystone-6/core/fields'
 
-const fields = {
-  name: {
-    type: Text,
-    isRequired: true
+export default list({
+  access: allowAll,
+  fields: {
+    name: text({ validation: { isRequired: true } }),
+    slug: text(),
+    category: text(),
+    startTime: timestamp({ validation: { isRequired: true } }),
+    endTime: timestamp({ validation: { isRequired: true } }),
+    location: text({ validation: { isRequired: true } }),
+    summary: text({ ui: { displayMode: 'textarea' } }),
+    description: text({
+      validation: { isRequired: true },
+      ui: { displayMode: 'textarea' },
+    }),
+    image: file({ storage: 'local_files' }),
+    moreInformationUrl: text(),
   },
-  slug: {
-    type: Text,
-    initial: true
+  ui: {
+    labelField: 'name',
+    listView: {
+      initialColumns: ['name', 'startTime', 'endTime', 'location', 'image'],
+    },
   },
-  category: {
-    type: Text,
-    initial: true
-  },
-  startTime: {
-    type: CustomDateTime,
-    isRequired: true
-  },
-  endTime: {
-    type: CustomDateTime,
-    isRequired: true
-  },
-  location: {
-    type: Text,
-    isRequired: true
-  },
-  summary: {
-    type: Wysiwyg
-  },
-  description: {
-    type: Wysiwyg,
-    isRequired: true
-  },
-  image: {
-    type: File,
-    adapter: storage
-  },
-  moreInformationUrl: {
-    type: Url
-  }
-}
-
-module.exports = {
-  fields,
-  labelResolver: (item) => {
-    const startTime = item.startTime ? new Date(item.startTime).toLocaleDateString() : ''
-    return `${startTime} - ${item.name}`
-  },
-  adminConfig: {
-    defaultColumns: 'name, startTime, endTime, active, description, image'
-  }
-}
+})

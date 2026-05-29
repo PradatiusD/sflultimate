@@ -1,43 +1,26 @@
-const { Text, Select, File } = require('@keystonejs/fields')
-const { Color } = require('@keystonejs/fields-color')
-const storage = require('./file-storage-adapter')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { file, select, text } from '@keystone-6/core/fields'
 
-const fields = {
-  name: {
-    type: Text,
-    isRequired: true,
-    index: true
+export default list({
+  access: allowAll,
+  fields: {
+    name: text({ validation: { isRequired: true }, isIndexed: true }),
+    color: text(),
+    email: text(),
+    captainNames: text({ validation: { isRequired: true }, isIndexed: true }),
+    locationName: text({ validation: { isRequired: true }, isIndexed: true }),
+    competitionName: select({
+      type: 'string',
+      options: ['Pro', 'Club', 'Recreation'].map(value => ({ label: value, value })),
+      validation: { isRequired: true },
+    }),
+    image: file({ storage: 'local_files' }),
   },
-  color: {
-    type: Color
+  ui: {
+    labelField: 'name',
+    listView: {
+      initialColumns: ['name', 'captainNames', 'locationName', 'competitionName', 'image'],
+    },
   },
-  email: {
-    type: Text
-  },
-  captainNames: {
-    type: Text,
-    isRequired: true,
-    index: true
-  },
-  locationName: {
-    type: Text,
-    isRequired: true,
-    index: true
-  },
-  competitionName: {
-    type: Select,
-    options: ['Pro', 'Club', 'Recreation'],
-    isRequired: true
-  },
-  image: {
-    type: File,
-    adapter: storage
-  }
-}
-
-module.exports = {
-  fields,
-  adminConfig: {
-    defaultColumns: 'name, captainNames, locationName, competitionName'
-  }
-}
+})

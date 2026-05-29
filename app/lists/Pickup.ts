@@ -1,94 +1,29 @@
-const { Text, Integer, Checkbox, DateTime, Relationship } = require('@keystonejs/fields')
+import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
+import { checkbox, integer, relationship, text, timestamp } from '@keystone-6/core/fields'
 
-const fields = {
-  title: {
-    type: Text,
-    initial: true,
-    required: true,
-    index: true,
-    label: 'Pickup Name'
+export default list({
+  access: allowAll,
+  fields: {
+    title: text({ validation: { isRequired: true }, isIndexed: true, label: 'Pickup Name' }),
+    isActive: checkbox({ defaultValue: false }),
+    order: integer({ validation: { isRequired: true } }),
+    day: text({ validation: { isRequired: true }, label: 'Day(s) Played' }),
+    time: text({ validation: { isRequired: true }, label: 'Start Time' }),
+    contactName: text(),
+    contactEmail: text(),
+    contactPhone: text(),
+    contactUrl: text({ label: 'Contact URL' }),
+    contactWhatsapp: text({ label: 'WhatsApp Group URL' }),
+    description: text({ validation: { isRequired: true }, ui: { displayMode: 'textarea' } }),
+    updatedAt: timestamp({ db: { updatedAt: true } }),
+    slug: text({ validation: { isRequired: true } }),
+    location: relationship({ ref: 'Location' }),
   },
-  isActive: {
-    type: Checkbox,
-    default: false
+  ui: {
+    labelField: 'title',
+    listView: {
+      initialColumns: ['isActive', 'order', 'title', 'location', 'day', 'time'],
+    },
   },
-  order: {
-    type: Integer,
-    isRequired: true
-  },
-  day: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'Day(s) Played'
-  },
-  time: {
-    type: Text,
-    initial: true,
-    isRequired: true,
-    label: 'Start Time'
-  },
-  contactName: {
-    type: Text,
-    initial: true
-  },
-  contactEmail: {
-    type: Text,
-    initial: true
-  },
-  contactPhone: {
-    type: Text,
-    initial: true
-  },
-  contactUrl: {
-    type: Text,
-    initial: true,
-    label: 'Contact URL'
-  },
-  contactWhatsapp: {
-    type: Text,
-    initial: true,
-    label: 'WhatsApp Group URL'
-  },
-  description: {
-    type: Text,
-    initial: true,
-    isRequired: true
-  },
-  updatedAt: {
-    type: DateTime,
-    initial: false,
-    isRequired: false,
-    defaultValue: () => new Date().toISOString(),
-    adminConfig: {
-      isReadOnly: true
-    }
-  },
-  slug: {
-    type: Text,
-    initial: true,
-    isRequired: true
-  },
-  location: {
-    type: Relationship,
-    ref: 'Location',
-    initial: true
-  }
-}
-
-module.exports = {
-  fields,
-  labelResolver: item => item.title,
-  adminConfig: {
-    defaultColumns: 'isActive, order, title, locationName, day, time, locationType'
-  },
-  hooks: {
-    resolveInput: ({ resolvedData, existingItem, context }) => {
-      // On update (existingItem != undefined), set updatedAt
-      if (existingItem) {
-        resolvedData.updatedAt = new Date().toISOString()
-      }
-      return resolvedData
-    }
-  }
-}
+})
