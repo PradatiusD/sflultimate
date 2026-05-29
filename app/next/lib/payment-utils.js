@@ -45,9 +45,10 @@ class PaymentUtils {
     })
   }
 
-  validateRecaptchaToken (token) {
+  validateRecaptchaToken (token, options = {}) {
+    const secretKey = options.secretKey || RECAPTCHA_SECRET_KEY
     // eslint-disable-next-line camelcase
-    const captchaURL = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${token}`
+    const captchaURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`
     const params = {
       url: captchaURL,
       method: 'POST',

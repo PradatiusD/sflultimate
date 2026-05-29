@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/graphql-client'
 import { HeaderNavigation } from '../../components/Navigation'
+import PickupContactActions from '../../components/PickupContactActions'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -42,7 +43,22 @@ export const getServerSideProps = async (context) => {
             }
         }`
   })
-  const pickup = results.data.allPickups[0]
+  const pickupResult = results.data.allPickups[0]
+  const pickup = pickupResult && {
+    id: pickupResult.id,
+    updatedAt: pickupResult.updatedAt,
+    slug: pickupResult.slug,
+    title: pickupResult.title,
+    order: pickupResult.order,
+    day: pickupResult.day,
+    time: pickupResult.time,
+    description: pickupResult.description,
+    location: pickupResult.location,
+    contactUrl: pickupResult.contactUrl,
+    hasContactWhatsapp: Boolean(pickupResult.contactWhatsapp),
+    hasContactEmail: Boolean(pickupResult.contactEmail),
+    hasContactPhone: Boolean(pickupResult.contactPhone)
+  }
   const props = { pickup }
   await updateWithGlobalServerSideProps(props)
   return { props }
@@ -71,7 +87,7 @@ export default function PickupsPage (props) {
 
         <div className="alert alert-warning" role="alert">
           <strong>Reach Out Before You Play</strong><br/>Please reach out to the pickup before heading there to play.
-          Due to weather, turnout, or competing local events/tournaments, sometimes pickups do not happen, so it's best
+          Due to weather, turnout, or competing local events/tournaments, sometimes pickups do not happen, so it&#39;s best
           to get confirmation from the pickup organizer before heading there to play.
         </div>
         <div className="row">
@@ -84,12 +100,8 @@ export default function PickupsPage (props) {
               {pickup.location.addressStreet}<br/>
               {pickup.location.addressCity}, {pickup.location.addressState}, {pickup.location.addressZipCode}<br/>
             </address>
-            <div className="btn-group mb-3">
-              {pickup.contactWhatsapp && <a className="btn btn-sm btn-outline-primary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
-              {pickup.contactUrl && <a className="btn btn-sm btn-outline-primary" href={pickup.contactUrl} target="_blank">View Website</a>}
-              {pickup.contactEmail && <a className="btn btn-sm btn-outline-primary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
-              {pickup.contactPhone && <a className="btn btn-sm btn-outline-primary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-              <a className="btn btn-sm btn-outline-primary" href={`https://www.google.com/maps/place/${pickup.location.addressStreet + ' ' + pickup.location.addressCity + ' ' + pickup.location.addressState + ' ' + pickup.location.addressZipCode}`} target="_blank">View on Map</a>
+            <div className="mb-3">
+              <PickupContactActions pickup={pickup} />
             </div>
           </article>
           <div className="col-md-6">

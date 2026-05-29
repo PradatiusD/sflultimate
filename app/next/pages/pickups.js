@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
+import PickupContactActions from '../components/PickupContactActions'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -34,7 +35,20 @@ export const getServerSideProps = async () => {
   })
 
   const props = {
-    pickups: results.data.allPickups
+    pickups: results.data.allPickups.map((pickup) => ({
+      id: pickup.id,
+      slug: pickup.slug,
+      title: pickup.title,
+      order: pickup.order,
+      day: pickup.day,
+      time: pickup.time,
+      description: pickup.description,
+      location: pickup.location,
+      contactUrl: pickup.contactUrl,
+      hasContactWhatsapp: Boolean(pickup.contactWhatsapp),
+      hasContactEmail: Boolean(pickup.contactEmail),
+      hasContactPhone: Boolean(pickup.contactPhone)
+    }))
   }
   await updateWithGlobalServerSideProps(props)
   return { props }
@@ -63,12 +77,12 @@ export default function PickupsPage (props) {
           <strong>How is this pickup list generated/updated?</strong><br/> We try our best to keep an accurate,
           up-to-date list, but as pickups grow and fade out we do sometimes not reflect the most up to date data. Have a
           suggestion or correction? Email <a href="mailto:sflultimate@gmail.com">sflultimate@gmail.com</a> with your
-          suggestion and we'll take care of updating it.
+          suggestion and we&#39;ll take care of updating it.
         </div>
 
         <div className="alert alert-warning" role="alert">
           <strong>Reach Out Before You Play</strong><br/>Please reach out to the pickup before heading there to play.
-          Due to weather, turnout, or competing local events/tournaments, sometimes pickups do not happen, so it's best
+          Due to weather, turnout, or competing local events/tournaments, sometimes pickups do not happen, so it&#39;s best
           to get confirmation from the pickup organizer before heading there to play.
         </div>
 
@@ -102,13 +116,7 @@ export default function PickupsPage (props) {
                         </address>
                       )
                     }
-                    <div className="btn-group">
-                      {pickup.contactWhatsapp && <a className="btn btn-sm btn-outline-primary" href={pickup.contactWhatsapp} target="_blank">Join WhatsApp Group</a>}
-                      {pickup.contactUrl && <a className="btn btn-sm btn-outline-primary" href={pickup.contactUrl} target="_blank">View Website</a>}
-                      {pickup.contactEmail && <a className="btn btn-sm btn-outline-primary" href={`mailto:${pickup.contactEmail}`} target="_blank">Send Email</a>}
-                      {pickup.contactPhone && <a className="btn btn-sm btn-outline-primary" href={`tel:${pickup.contactPhone}`}>Call Phone</a>}
-                      <a className="btn btn-sm btn-outline-primary" href={`https://www.google.com/maps/place/${pickup.addressStreet + ' ' + pickup.addressCity + ' ' + pickup.addressState + ' ' + pickup.addressZipCode}`} target="_blank">View on Map</a>
-                    </div>
+                    <PickupContactActions pickup={pickup} />
                     {
                       index + 1 > pickups.length && <hr/>
                     }
