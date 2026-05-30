@@ -1,4 +1,3 @@
-'use client'
 import { HeaderNavigation } from '../components/Navigation'
 import dynamic from 'next/dynamic'
 const ClientOnlyComponent = dynamic(() => import('../components/Quiz'), {

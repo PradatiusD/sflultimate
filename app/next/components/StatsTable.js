@@ -1,4 +1,3 @@
-'use server'
 export default function StatTable (props) {
   const { players, awards, startRowNumber, statKeysToCompare, endRowNumber } = props
   return (

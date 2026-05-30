@@ -1,4 +1,3 @@
-'use server'
 import Notification from './Notification'
 let navLinks = []
 

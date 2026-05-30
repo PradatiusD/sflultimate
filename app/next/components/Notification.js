@@ -1,4 +1,3 @@
-'use client'
 import Countdown from 'react-countdown'
 import { useEffect, useState } from 'react'
 

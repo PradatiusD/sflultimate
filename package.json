@@ -16,6 +16,7 @@
         "file-saver": "^2.0.5",
         "graphql": "^16.14.0",
         "mailchimp-api-v3": "^1.15.0",
+        "next": "14.2.35",
         "node-html-parser": "^7.0.1",
         "nodemailer": "^6.9.1",
         "prisma": "5.22.0",
@@ -31,11 +32,14 @@
     },
     "devDependencies": {
         "@types/node": "^22.10.2",
+        "concurrently": "^9.1.2",
         "cypress": "^13.6.6",
         "cypress-iframe": "^1.0.1",
         "eslint": "^8.57.1",
         "eslint-config-cypress": "^0.28.0",
         "eslint-config-next": "^15.5.0",
+        "eslint-plugin-n": "^17.15.1",
+        "eslint-plugin-promise": "^7.2.1",
         "eslint-config-standard": "^17.1.0",
         "grunt": "^1.0.4",
         "grunt-concurrent": "^2.3.1",
@@ -54,9 +58,13 @@
         "react-dom": "18.3.1"
     },
     "scripts": {
-        "dev": "cd app && cross-env NODE_ENV=development DISABLE_LOGGING=true node ../node_modules/@keystone-6/core/bin/cli.js dev",
+        "dev": "concurrently -k -n CMS,UI \"npm run dev:cms\" \"npm run dev:ui\"",
+        "dev:cms": "cd app && cross-env NODE_ENV=development DISABLE_LOGGING=true node ../node_modules/@keystone-6/core/bin/cli.js dev",
+        "dev:ui": "cross-env NODE_ENV=development next dev app/next -p 3001",
         "build": "cd app && cross-env NODE_ENV=production node ../node_modules/@keystone-6/core/bin/cli.js build",
+        "build:ui": "next build app/next",
         "start": "cd app && cross-env NODE_ENV=production node ../node_modules/@keystone-6/core/bin/cli.js start",
+        "start:ui": "next start app/next -p 3001",
         "create-tables": "cross-env keystone create-tables",
         "cypress": "npx cypress open",
         "restore": "grunt restore",
@@ -64,5 +72,6 @@
         "build-schema": "get-graphql-schema http://localhost:3000/api/graphql > app/schema.graphql",
         "custom-fields": "npx babel app/custom-fields/CustomDateTime/src/views/*.js --out-dir app/custom-fields/CustomDateTime/views"
     },
-    "private": true
+    "private": true,
+    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

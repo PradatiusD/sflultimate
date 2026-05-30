@@ -1,22 +1,29 @@
-const { ApolloClient, InMemoryCache } = require('@apollo/client')
+const { ApolloClient, HttpLink, InMemoryCache } = require('@apollo/client')
 
-let host
-const hosts = {
-  dev: 'http://localhost:3000',
-  prod: 'https://www.sflultimate.com'
-}
-
-if (typeof window === 'undefined') {
-  host = !process.env.MONGOLAB_URI || process.env.MONGOLAB_URI.includes('localhost') ? hosts.dev : hosts.prod
-} else {
-  if (window.location.host.includes('localhost')) {
-    host = hosts.dev
-  } else {
-    host = hosts.prod
+function getGraphqlHost () {
+  if (process.env.NEXT_PUBLIC_KEYSTONE_URL) {
+    return process.env.NEXT_PUBLIC_KEYSTONE_URL
   }
+
+  if (process.env.KEYSTONE_URL) {
+    return process.env.KEYSTONE_URL
+  }
+
+  if (typeof window !== 'undefined') {
+    if (window.location.host.includes('localhost')) {
+      return 'http://localhost:3000'
+    }
+
+    return 'https://www.sflultimate.com'
+  }
+
+  return 'http://localhost:3000'
 }
+
 const GraphqlClient = new ApolloClient({
-  uri: host + '/admin/api',
+  link: new HttpLink({
+    uri: getGraphqlHost() + '/api/graphql'
+  }),
   cache: new InMemoryCache(),
   defaultOptions: {
     query: {
@@ -29,3 +36,6 @@ const GraphqlClient = new ApolloClient({
 })
 
 module.exports = GraphqlClient
+module.exports.default = GraphqlClient
+module.exports.query = GraphqlClient.query.bind(GraphqlClient)
+module.exports.mutate = GraphqlClient.mutate.bind(GraphqlClient)
