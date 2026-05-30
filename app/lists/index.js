@@ -2,6 +2,8 @@ const BoardMember = require('./BoardMember')
 const BoardPosition = require('./BoardPosition')
 const ClubTeam = require('./ClubTeam')
 const Event = require('./Event')
+const Gallery = require('./Gallery')
+const GalleryAsset = require('./GalleryAsset')
 const Game = require('./Game')
 const League = require('./League')
 const Location = require('./Location')
@@ -19,6 +21,8 @@ module.exports = {
   BoardPosition,
   ClubTeam,
   Event,
+  Gallery,
+  GalleryAsset,
   Game,
   League,
   Location,
