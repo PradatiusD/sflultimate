@@ -32,7 +32,7 @@ const getAssetType = file => {
   return 'image'
 }
 const getTitleFromFile = file => file.name.replace(/\.[^.]+$/, '')
-const graphqlRequest = async ({ query, variables, file }) => {
+const graphqlRequest = ({ query, variables, file, onProgress }) => new Promise((resolve, reject) => {
   const operations = {
     query,
     variables: Object.assign({}, variables, {
@@ -45,18 +45,32 @@ const graphqlRequest = async ({ query, variables, file }) => {
     0: ['variables.file']
   }))
   formData.append('0', file, file.name)
-  const response = await fetch('/admin/api', {
-    method: 'POST',
-    body: formData,
-    credentials: 'same-origin'
+  const request = new XMLHttpRequest()
+  request.open('POST', '/admin/api')
+  request.withCredentials = true
+  request.upload.addEventListener('progress', event => {
+    if (event.lengthComputable && onProgress) {
+      onProgress(Math.round(event.loaded / event.total * 100))
+    }
   })
-  const payload = await response.json()
-  if (!response.ok || payload.errors) {
-    const message = payload.errors && payload.errors[0] ? payload.errors[0].message : 'Upload failed'
-    throw new Error(message)
-  }
-  return payload.data
-}
+  request.addEventListener('load', () => {
+    try {
+      const payload = JSON.parse(request.responseText)
+      if (request.status < 200 || request.status >= 300 || payload.errors) {
+        const message = payload.errors && payload.errors[0] ? payload.errors[0].message : 'Upload failed'
+        reject(new Error(message))
+        return
+      }
+      resolve(payload.data)
+    } catch (error) {
+      reject(error)
+    }
+  })
+  request.addEventListener('error', () => {
+    reject(new Error('Upload failed'))
+  })
+  request.send(formData)
+})
 const graphQLJsonRequest = async ({ query, variables }) => {
   const response = await fetch('/admin/api', {
     method: 'POST',
@@ -130,6 +144,12 @@ const GalleryAssetsManagerField = props => {
   const [isUploading, setIsUploading] = React.useState(false)
   const [statusMessage, setStatusMessage] = React.useState('')
   const [errorMessage, setErrorMessage] = React.useState('')
+  const [uploadState, setUploadState] = React.useState({
+    currentFileIndex: 0,
+    currentFileName: '',
+    currentFileProgress: 0,
+    totalFiles: 0
+  })
   const inputRef = React.useRef(null)
   const htmlID = `ks-input-${field.path}`
   const hasItemId = Boolean(item && item.id)
@@ -169,9 +189,21 @@ const GalleryAssetsManagerField = props => {
     setStatusMessage(`Uploading ${normalizedFiles.length} file${normalizedFiles.length === 1 ? '' : 's'}...`)
     setIsUploading(true)
     setFiles(currentFiles => currentFiles.concat(normalizedFiles))
+    setUploadState({
+      currentFileIndex: 0,
+      currentFileName: normalizedFiles[0].name,
+      currentFileProgress: 0,
+      totalFiles: normalizedFiles.length
+    })
     let nextSortOrder = assets.length
     try {
-      for (const file of normalizedFiles) {
+      for (const [index, file] of normalizedFiles.entries()) {
+        setUploadState({
+          currentFileIndex: index,
+          currentFileName: file.name,
+          currentFileProgress: 0,
+          totalFiles: normalizedFiles.length
+        })
         await graphqlRequest({
           query: createGalleryAssetMutation,
           variables: {
@@ -180,7 +212,15 @@ const GalleryAssetsManagerField = props => {
             sortOrder: nextSortOrder,
             title: getTitleFromFile(file)
           },
-          file
+          file,
+          onProgress: progress => {
+            setUploadState(currentState => Object.assign({}, currentState, {
+              currentFileIndex: index,
+              currentFileName: file.name,
+              currentFileProgress: progress,
+              totalFiles: normalizedFiles.length
+            }))
+          }
         })
         nextSortOrder += 1
       }
@@ -190,6 +230,12 @@ const GalleryAssetsManagerField = props => {
       }))
       setStatusMessage(`Uploaded ${normalizedFiles.length} file${normalizedFiles.length === 1 ? '' : 's'}.`)
       setFiles([])
+      setUploadState({
+        currentFileIndex: normalizedFiles.length,
+        currentFileName: '',
+        currentFileProgress: 100,
+        totalFiles: normalizedFiles.length
+      })
       await loadAssets()
     } catch (error) {
       setErrorMessage(error.message)
@@ -205,6 +251,12 @@ const GalleryAssetsManagerField = props => {
   const helpText = hasItemId
     ? 'Drop files here or click to select multiple files. Each file is saved as a GalleryAsset record.'
     : 'Save this gallery first so dropped files can be attached to a real Gallery record.'
+  const completedFileCount = isUploading
+    ? uploadState.currentFileIndex
+    : uploadState.totalFiles
+  const overallProgress = uploadState.totalFiles
+    ? Math.round((completedFileCount + uploadState.currentFileProgress / 100) / uploadState.totalFiles * 100)
+    : 0
   const dropZone = React.createElement('div', {
     id: htmlID,
     onClick: () => hasItemId && inputRef.current && inputRef.current.click(),
@@ -219,7 +271,56 @@ const GalleryAssetsManagerField = props => {
     style: {
       marginTop: '0.5rem'
     }
-  }, helpText))
+  }, helpText), isUploading && React.createElement('div', {
+    style: {
+      marginTop: '1rem',
+      textAlign: 'left'
+    }
+  }, React.createElement('div', {
+    style: {
+      fontSize: '0.875rem',
+      fontWeight: 600
+    }
+  }, `Uploading file ${uploadState.currentFileIndex + 1} of ${uploadState.totalFiles}`), React.createElement('div', {
+    style: {
+      fontSize: '0.875rem',
+      marginTop: '0.25rem'
+    }
+  }, uploadState.currentFileName), React.createElement('div', {
+    style: {
+      marginTop: '0.75rem',
+      height: '10px',
+      backgroundColor: '#e9ecef',
+      borderRadius: '999px',
+      overflow: 'hidden'
+    }
+  }, React.createElement('div', {
+    style: {
+      width: `${overallProgress}%`,
+      height: '100%',
+      backgroundColor: '#0d6efd',
+      transition: 'width 120ms linear'
+    }
+  })), React.createElement('div', {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginTop: '0.5rem',
+      fontSize: '0.875rem'
+    }
+  }, React.createElement('span', null, `${overallProgress}% uploaded`), React.createElement('span', null, 'Please wait on this page until upload completes.'))), !isUploading && statusMessage && React.createElement('div', {
+    style: {
+      marginTop: '1rem',
+      fontSize: '0.875rem',
+      fontWeight: 600
+    }
+  }, statusMessage), !!errorMessage && React.createElement('div', {
+    style: {
+      marginTop: '1rem',
+      color: '#b42318',
+      fontSize: '0.875rem'
+    }
+  }, errorMessage))
   const fileInput = React.createElement('input', {
     ref: inputRef,
     accept: 'image/*,video/*',
@@ -230,25 +331,6 @@ const GalleryAssetsManagerField = props => {
     },
     type: 'file'
   })
-  const uploadingMessage = isUploading && React.createElement('div', {
-    style: {
-      marginTop: '1rem',
-      fontSize: '0.875rem'
-    }
-  }, statusMessage)
-  const uploadedMessage = !isUploading && statusMessage && React.createElement('div', {
-    style: {
-      marginTop: '1rem',
-      fontSize: '0.875rem'
-    }
-  }, statusMessage)
-  const errorNode = !!errorMessage && React.createElement('div', {
-    style: {
-      marginTop: '1rem',
-      color: '#b42318',
-      fontSize: '0.875rem'
-    }
-  }, errorMessage)
   const queuedFiles = !!files.length && React.createElement('ol', {
     style: listStyle
   }, files.map((file, index) => React.createElement('li', {
@@ -276,7 +358,7 @@ const GalleryAssetsManagerField = props => {
     errors
   }), React.createElement(FieldDescription, {
     text: field.adminDoc
-  }), React.createElement(FieldInput, null, dropZone, fileInput, uploadingMessage, uploadedMessage, errorNode, queuedFiles, savedAssets))
+  }), React.createElement(FieldInput, null, dropZone, fileInput, queuedFiles, savedAssets))
 }
 
 module.exports = GalleryAssetsManagerField

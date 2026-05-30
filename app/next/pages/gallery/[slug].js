@@ -98,11 +98,6 @@ function GalleryAsset ({ asset, galleryTitle, onOpenImage }) {
         }
         <figcaption className="card-body">
           {
-            title && (
-              <h2 className="h5">{title}</h2>
-            )
-          }
-          {
             asset.caption && asset.caption !== title && (
               <p style={{ marginBottom: '0.5rem' }}>{asset.caption}</p>
             )

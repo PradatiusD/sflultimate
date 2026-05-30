@@ -32,7 +32,7 @@ const getAssetType = file => {
 
 const getTitleFromFile = file => file.name.replace(/\.[^.]+$/, '')
 
-const graphqlRequest = async ({ query, variables, file }) => {
+const graphqlRequest = ({ query, variables, file, onProgress }) => new Promise((resolve, reject) => {
   const operations = {
     query,
     variables: { ...variables, file: null }
@@ -43,21 +43,37 @@ const graphqlRequest = async ({ query, variables, file }) => {
   formData.append('map', JSON.stringify({ 0: ['variables.file'] }))
   formData.append('0', file, file.name)
 
-  const response = await fetch('/admin/api', {
-    method: 'POST',
-    body: formData,
-    credentials: 'same-origin'
+  const request = new XMLHttpRequest()
+  request.open('POST', '/admin/api')
+  request.withCredentials = true
+
+  request.upload.addEventListener('progress', event => {
+    if (event.lengthComputable && onProgress) {
+      onProgress(Math.round((event.loaded / event.total) * 100))
+    }
   })
 
-  const payload = await response.json()
+  request.addEventListener('load', () => {
+    try {
+      const payload = JSON.parse(request.responseText)
+      if (request.status < 200 || request.status >= 300 || payload.errors) {
+        const message = payload.errors && payload.errors[0] ? payload.errors[0].message : 'Upload failed'
+        reject(new Error(message))
+        return
+      }
 
-  if (!response.ok || payload.errors) {
-    const message = payload.errors && payload.errors[0] ? payload.errors[0].message : 'Upload failed'
-    throw new Error(message)
-  }
+      resolve(payload.data)
+    } catch (error) {
+      reject(error)
+    }
+  })
 
-  return payload.data
-}
+  request.addEventListener('error', () => {
+    reject(new Error('Upload failed'))
+  })
+
+  request.send(formData)
+})
 
 const graphQLJsonRequest = async ({ query, variables }) => {
   const response = await fetch('/admin/api', {
@@ -131,6 +147,12 @@ const GalleryAssetsManagerField = ({ errors, field, item, onChange }) => {
   const [isUploading, setIsUploading] = React.useState(false)
   const [statusMessage, setStatusMessage] = React.useState('')
   const [errorMessage, setErrorMessage] = React.useState('')
+  const [uploadState, setUploadState] = React.useState({
+    currentFileIndex: 0,
+    currentFileName: '',
+    currentFileProgress: 0,
+    totalFiles: 0
+  })
   const inputRef = React.useRef(null)
   const htmlID = `ks-input-${field.path}`
   const hasItemId = Boolean(item && item.id)
@@ -176,11 +198,24 @@ const GalleryAssetsManagerField = ({ errors, field, item, onChange }) => {
     setStatusMessage(`Uploading ${normalizedFiles.length} file${normalizedFiles.length === 1 ? '' : 's'}...`)
     setIsUploading(true)
     setFiles(currentFiles => currentFiles.concat(normalizedFiles))
+    setUploadState({
+      currentFileIndex: 0,
+      currentFileName: normalizedFiles[0].name,
+      currentFileProgress: 0,
+      totalFiles: normalizedFiles.length
+    })
 
     let nextSortOrder = assets.length
 
     try {
-      for (const file of normalizedFiles) {
+      for (const [index, file] of normalizedFiles.entries()) {
+        setUploadState({
+          currentFileIndex: index,
+          currentFileName: file.name,
+          currentFileProgress: 0,
+          totalFiles: normalizedFiles.length
+        })
+
         await graphqlRequest({
           query: createGalleryAssetMutation,
           variables: {
@@ -189,7 +224,16 @@ const GalleryAssetsManagerField = ({ errors, field, item, onChange }) => {
             sortOrder: nextSortOrder,
             title: getTitleFromFile(file)
           },
-          file
+          file,
+          onProgress: progress => {
+            setUploadState(currentState => ({
+              ...currentState,
+              currentFileIndex: index,
+              currentFileName: file.name,
+              currentFileProgress: progress,
+              totalFiles: normalizedFiles.length
+            }))
+          }
         })
 
         nextSortOrder += 1
@@ -202,6 +246,12 @@ const GalleryAssetsManagerField = ({ errors, field, item, onChange }) => {
 
       setStatusMessage(`Uploaded ${normalizedFiles.length} file${normalizedFiles.length === 1 ? '' : 's'}.`)
       setFiles([])
+      setUploadState({
+        currentFileIndex: normalizedFiles.length,
+        currentFileName: '',
+        currentFileProgress: 100,
+        totalFiles: normalizedFiles.length
+      })
       await loadAssets()
     } catch (error) {
       setErrorMessage(error.message)
@@ -219,6 +269,13 @@ const GalleryAssetsManagerField = ({ errors, field, item, onChange }) => {
   const helpText = hasItemId
     ? 'Drop files here or click to select multiple files. Each file is saved as a GalleryAsset record.'
     : 'Save this gallery first so dropped files can be attached to a real Gallery record.'
+
+  const completedFileCount = isUploading
+    ? uploadState.currentFileIndex
+    : uploadState.totalFiles
+  const overallProgress = uploadState.totalFiles
+    ? Math.round(((completedFileCount + (uploadState.currentFileProgress / 100)) / uploadState.totalFiles) * 100)
+    : 0
 
   return (
     <FieldContainer>
@@ -239,6 +296,40 @@ const GalleryAssetsManagerField = ({ errors, field, item, onChange }) => {
         >
           <strong>{hasItemId ? 'Drop gallery files here' : 'Save gallery before uploading files'}</strong>
           <div style={{ marginTop: '0.5rem' }}>{helpText}</div>
+          {isUploading && (
+            <div style={{ marginTop: '1rem', textAlign: 'left' }}>
+              <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>
+                Uploading file {uploadState.currentFileIndex + 1} of {uploadState.totalFiles}
+              </div>
+              <div style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                {uploadState.currentFileName}
+              </div>
+              <div style={{ marginTop: '0.75rem', height: '10px', backgroundColor: '#e9ecef', borderRadius: '999px', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    width: `${overallProgress}%`,
+                    height: '100%',
+                    backgroundColor: '#0d6efd',
+                    transition: 'width 120ms linear'
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.875rem' }}>
+                <span>{overallProgress}% uploaded</span>
+                <span>Please wait on this page until upload completes.</span>
+              </div>
+            </div>
+          )}
+          {!isUploading && statusMessage && (
+            <div style={{ marginTop: '1rem', fontSize: '0.875rem', fontWeight: 600 }}>
+              {statusMessage}
+            </div>
+          )}
+          {!!errorMessage && (
+            <div style={{ marginTop: '1rem', color: '#b42318', fontSize: '0.875rem' }}>
+              {errorMessage}
+            </div>
+          )}
         </div>
         <input
           ref={inputRef}
@@ -248,21 +339,6 @@ const GalleryAssetsManagerField = ({ errors, field, item, onChange }) => {
           style={{ display: 'none' }}
           type='file'
         />
-        {isUploading && (
-          <div style={{ marginTop: '1rem', fontSize: '0.875rem' }}>
-            {statusMessage}
-          </div>
-        )}
-        {!isUploading && statusMessage && (
-          <div style={{ marginTop: '1rem', fontSize: '0.875rem' }}>
-            {statusMessage}
-          </div>
-        )}
-        {!!errorMessage && (
-          <div style={{ marginTop: '1rem', color: '#b42318', fontSize: '0.875rem' }}>
-            {errorMessage}
-          </div>
-        )}
         {!!files.length && (
           <ol style={listStyle}>
             {files.map((file, index) => (
