@@ -96,18 +96,22 @@ function GalleryAsset ({ asset, galleryTitle, onOpenImage }) {
               </button>
               )
         }
-        <figcaption className="card-body">
-          {
-            asset.caption && asset.caption !== title && (
-              <p style={{ marginBottom: '0.5rem' }}>{asset.caption}</p>
-            )
-          }
-          {
-            asset.credit && (
-              <small className="text-muted">Credit: {asset.credit}</small>
-            )
-            }
-        </figcaption>
+        {
+          (asset.caption || asset.credit) && (
+            <figcaption className="card-body">
+              {
+                asset.caption && asset.caption !== title && (
+                  <p style={{ marginBottom: '0.5rem' }}>{asset.caption}</p>
+                )
+              }
+              {
+                asset.credit && (
+                  <small className="text-muted">Credit: {asset.credit}</small>
+                )
+              }
+            </figcaption>
+          )
+        }
       </figure>
     </div>
   )
@@ -147,7 +151,7 @@ export default function GalleryItemPage (props) {
                   src={gallery.coverImage.publicUrl}
                   alt={gallery.title || 'Gallery cover image'}
                   className="img-fluid rounded"
-                  style={{ marginBottom: '1.5rem', width: '100%', maxHeight: '480px', objectFit: 'cover' }}
+                  style={{ marginBottom: '1.5rem', width: '100%' }}
                 />
               )
             }
@@ -169,7 +173,7 @@ export default function GalleryItemPage (props) {
             }
           </div>
         </div>
-        <div className="gallery-masonry">
+        <div className="gallery-masonry mt-4">
             {
               gallery.assets.map(asset => (
                 <GalleryAsset
@@ -212,12 +216,20 @@ export default function GalleryItemPage (props) {
         }
 
         .gallery-masonry-item {
+          display: inline-block;
+          width: 100%;
+          vertical-align: top;
           break-inside: avoid;
+          page-break-inside: avoid;
+          -webkit-column-break-inside: avoid;
           margin-bottom: 1.5rem;
         }
 
         .gallery-masonry-item :global(.card) {
           display: block;
+          width: 100%;
+          margin-bottom: 0;
+          overflow: hidden;
         }
 
         @media (min-width: 768px) {
