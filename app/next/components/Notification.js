@@ -9,13 +9,17 @@ export default function Notification (props) {
     setPathname(window.location.pathname)
   }, [])
 
-  if (!leagues) {
+  if (!leagues && leagues.length === 0) {
     return <></>
   }
 
   const activeLeague = leagues.find((league) => {
     return league.isActive
   })
+
+  if (!activeLeague) {
+    return <></>
+  }
 
   const destinationUrl = '/leagues/' + activeLeague.slug + '/register'
 

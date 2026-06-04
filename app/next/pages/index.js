@@ -124,6 +124,7 @@ export default function Homepage (props) {
   ]
 
   const showSignupLeague = false
+  const showStandings = false
 
   return (
     <>
@@ -146,7 +147,7 @@ export default function Homepage (props) {
         <div className="row">
           <div className="col-md-8">
             {
-              !showSignupLeague && (
+              showStandings && (
                 <>
                   <h3>Latest Standings</h3>
                   <div className="standings">
@@ -168,7 +169,7 @@ export default function Homepage (props) {
                           {
                             league.registrationShareImage && league.registrationShareImage.publicUrl && (
                               <a href={href}>
-                                <Image className="img-fluid rounded " src={league.registrationShareImage.publicUrl} height={630} width={1200} />
+                                <Image className="img-fluid rounded" src={league.registrationShareImage.publicUrl} height={630} width={1200} />
                               </a>
                             )
                           }
