@@ -9,7 +9,7 @@ export default function Notification (props) {
     setPathname(window.location.pathname)
   }, [])
 
-  if (!leagues && leagues.length === 0) {
+  if (!Array.isArray(leagues) || leagues.length === 0) {
     return <></>
   }
 

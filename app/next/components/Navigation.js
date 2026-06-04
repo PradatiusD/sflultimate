@@ -29,7 +29,7 @@ function HeaderNavigation (props) {
   const { section, leagues } = props
 
   const headerNavLinks = navLinks.slice()
-  if (leagues.find(l => l.active)) {
+  if (Array.isArray(leagues) && leagues.find(l => l.active)) {
     headerNavLinks.unshift({ label: 'Register', key: 'register', href: '/register' })
   }
   headerNavLinks.push({ label: 'Leagues', key: 'leagues', href: '/leagues' })
@@ -61,7 +61,7 @@ function HeaderNavigation (props) {
           {link.label}
         </a>
         <ul className={`dropdown-menu${desktop ? ' dropdown-menu-mega' : ''}`} aria-labelledby={dropdownId}>
-          {leagues.map(({ slug, title }) => (
+          {leagues && leagues.map(({ slug, title }) => (
             <li key={slug} className={`league-menu-group${desktop ? ' league-menu-group-desktop' : ''}`}>
               <a className="dropdown-item league-menu-trigger" href={`/leagues/${slug}/teams`}>
                 <span>{title}</span>
