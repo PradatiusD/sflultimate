@@ -12535,10 +12535,11 @@ textarea.form-control-lg {
 
 .event-btn {
   position: relative;
-  padding: 1.1rem 1rem;
+  padding: 0.65rem;
   font-weight: 400;
   font-size: 16px;
   bottom: 2px;
+  border-radius: 4px;
 }
 
 .draftboard-controls .btn {
