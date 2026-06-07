@@ -1,2 +1,9 @@
 User-agent: *
-Disallow: /keystone/
+Allow: /
+
+# Block admin and internal application surfaces
+Disallow: /admin
+Disallow: /admin/
+Disallow: /admin/api
+Disallow: /admin/graphiql
+Disallow: /api/
