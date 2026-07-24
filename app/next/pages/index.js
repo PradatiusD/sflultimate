@@ -181,49 +181,53 @@ export default function Homepage (props) {
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">
-          <div className="col-md-8">
-            {
-              showStandings && (
-                <>
-                  <h3>Latest Standings</h3>
-                  <div className="standings">
-                    <Standings games={games} />
-                  </div>
-                </>
-              )
-            }
-            {
-              showSignupLeague && (
-                <>
-                  <h3>Active Leagues</h3>
-                  {
-                    activeLeagues.map((league) => {
-                      const route = league.canRegister ? 'register' : 'substitutions'
-                      const href = `/leagues/${league.slug}/${route}`
-                      return (
-                        <div key={league.id} style={{ marginBottom: '1rem' }}>
-                          {
-                            league.registrationShareImage && league.registrationShareImage.publicUrl && (
-                              <a href={href}>
-                                <Image className="img-fluid rounded" src={league.registrationShareImage.publicUrl} height={630} width={1200} />
-                              </a>
-                            )
-                          }
-                          <a href={href}><strong>{league.title}</strong></a>
-                          <div dangerouslySetInnerHTML={{ __html: league.summary }}></div>
-                        </div>
-                      )
-                    })
-                  }
-                </>
-              )
-            }
-          </div>
+          {
+            showStandings && (
+              <div className="col-md-8">
+                {
+                  showStandings && (
+                    <>
+                      <h3>Latest Standings</h3>
+                      <div className="standings">
+                        <Standings games={games} />
+                      </div>
+                    </>
+                  )
+                }
+                {
+                  showSignupLeague && (
+                    <>
+                      <h3>Active Leagues</h3>
+                      {
+                        activeLeagues.map((league) => {
+                          const route = league.canRegister ? 'register' : 'substitutions'
+                          const href = `/leagues/${league.slug}/${route}`
+                          return (
+                            <div key={league.id} style={{ marginBottom: '1rem' }}>
+                              {
+                                league.registrationShareImage && league.registrationShareImage.publicUrl && (
+                                  <a href={href}>
+                                    <Image className="img-fluid rounded" src={league.registrationShareImage.publicUrl} height={630} width={1200} />
+                                  </a>
+                                )
+                              }
+                              <a href={href}><strong>{league.title}</strong></a>
+                              <div dangerouslySetInnerHTML={{ __html: league.summary }}></div>
+                            </div>
+                          )
+                        })
+                      }
+                    </>
+                  )
+                }
+              </div>
+            )
+          }
           {
             events.length > 0 && (
               <>
-                <h3>Upcoming Events</h3>
                 <div className="col-md-4">
+                  <h3>Upcoming Events</h3>
                   {
                     events.map((event) => {
                       return (
@@ -246,7 +250,7 @@ export default function Homepage (props) {
                             </div>
                           </div>
                           <div dangerouslySetInnerHTML={{ __html: createSummary(event, 140) }}></div>
-                          <hr />
+                          { events.length > 1 && <hr /> }
                         </div>
                       )
                     })
@@ -255,16 +259,14 @@ export default function Homepage (props) {
               </>
             )
           }
-        </div>
-        <div className="row">
           {
             featuredPickups.length > 0 && (
-              <>
+              <div className="col-md-4">
                 <h3>Featured Pickups</h3>
                 {
                   featuredPickups.map((pickup) => {
                     return (
-                      <div key={pickup.id} className="homepage-news-card col-md-4">
+                      <div key={pickup.id} className="homepage-news-card">
                         <a href={'/pickups/' + pickup.slug}><strong>{pickup.title}</strong></a>
                         <div>
                           <small className="text-muted">{pickup.day} at {pickup.time}</small>
@@ -282,7 +284,7 @@ export default function Homepage (props) {
                     )
                   })
                 }
-              </>
+              </div>
             )
           }
 

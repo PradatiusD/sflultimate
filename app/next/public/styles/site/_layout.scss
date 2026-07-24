@@ -213,7 +213,7 @@
 .mobile-logo {
   position: fixed;
   top: 8px;
-  z-index: 9999;
+  z-index: 1040;
   left: 50%;
   width: 170px;
   margin-left: -85px;
@@ -295,6 +295,7 @@
 .navbar {
   border-radius: 0;
   padding: 0.35rem 0 0;
+  z-index: 1030;
   .container-fluid {
     align-items: stretch;
   }
@@ -314,12 +315,21 @@
   margin-right: 30px;
   width: 100px;
   position: relative;
+  z-index: 1040;
   img {
     max-width: 120px;
     position: absolute;
     top: -26px;
     right: -19px;
   }
+}
+
+.modal {
+  z-index: 1055;
+}
+
+.modal-backdrop {
+  z-index: 1050;
 }
 
 .desktop-nav-shell {
