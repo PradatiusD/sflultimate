@@ -19,6 +19,13 @@ const footerLinks = [
   { label: 'Privacy Policy', key: 'privacy', href: '/privacy' }
 ].concat(evergreenLinks)
 
+const socialLinks = [
+  { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/sflultimate/', iconClassName: 'fa-brands fa-instagram' },
+  { key: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/sflultimate/', iconClassName: 'fa-brands fa-youtube' },
+  { key: 'tiktok', label: 'TikTok', href: 'https://www.tiktok.com/@sflultimate', iconClassName: 'fa-brands fa-tiktok' },
+  { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/sflultimate/', iconClassName: 'fa-brands fa-facebook' }
+]
+
 const leagueSections = [
   { label: 'Teams', key: 'teams' },
   { label: 'Schedule', key: 'schedule' },
@@ -42,6 +49,36 @@ function HeaderNavigation (props) {
     return (
       <a href={link.href} className={className}>
         {link.label} {link.key === 'register' && <span className="badge bg-success">OPEN</span>}
+      </a>
+    )
+  }
+
+  function renderExternalNavLink (link, iconOnly = false) {
+    return (
+      <li key={link.key} className="nav-item">
+        {renderSocialLinkAnchor(link, iconOnly)}
+      </li>
+    )
+  }
+
+  function renderSocialLinkAnchor (link, iconOnly = false) {
+    return (
+      <a
+        key={link.key}
+        className={`nav-link${iconOnly ? ' nav-social-link' : ''}`}
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={link.label}
+        title={link.label}
+      >
+        {iconOnly
+          ? (
+            link.iconClassName
+              ? <i className={`fa ${link.iconClassName}`} aria-hidden="true"></i>
+              : <span className="nav-social-badge" aria-hidden="true">{link.badgeLabel}</span>
+            )
+          : link.label}
       </a>
     )
   }
@@ -123,6 +160,9 @@ function HeaderNavigation (props) {
                       )
                     })
                   }
+                  <li className="nav-item nav-mobile-social-row">
+                    {socialLinks.map((link) => renderSocialLinkAnchor(link, true))}
+                  </li>
                 </ul>
               </div>
 
@@ -155,6 +195,7 @@ function HeaderNavigation (props) {
                       </li>
                     )
                   })}
+                  {socialLinks.map((link) => renderExternalNavLink(link, true))}
                 </ul>
               </div>
             </div>
@@ -176,17 +217,23 @@ function FooterNavigation (props) {
             <div className="col-sm-8">
               <br/>
               <div>
-                <a href="https://www.instagram.com/sflultimate/" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-instagram"></i>
-                </a>
-                <a href="https://www.youtube.com/sflultimate/" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-youtube-play"></i>
-                </a>
-                <a href="https://www.facebook.com/sflultimate/" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-facebook"></i>
-                </a>
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.key}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.label}
+                    title={link.label}
+                    className={link.badgeLabel ? 'social-badge' : ''}
+                  >
+                    {link.iconClassName
+                      ? <i className={`fa ${link.iconClassName}`}></i>
+                      : <span>{link.badgeLabel}</span>}
+                  </a>
+                ))}
                 <a href="mailto:sflultimate@gmail.com" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-envelope"></i>
+                  <i className="fa fa-solid fa-envelope"></i>
                 </a>
               </div>
               <br/>

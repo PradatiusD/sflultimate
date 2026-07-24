@@ -264,6 +264,26 @@
   .fa:hover {
     background: black;
   }
+
+  .social-badge {
+    background: $primary;
+    color: #FFF;
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 15px;
+    border-radius: 100%;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .social-badge:hover {
+    background: black;
+    color: #FFF;
+  }
 }
 
 .gallery-image img{
@@ -327,6 +347,35 @@
 .desktop-nav-group .nav-link,
 .desktop-nav-group .nav-link {
   padding: 0.7rem 1rem;
+}
+
+.nav-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  padding-left: 0.55rem !important;
+  padding-right: 0.55rem !important;
+
+  .fa {
+    font-size: 1.1rem;
+  }
+}
+
+.nav-social-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.2rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .nav-item-mega {
@@ -496,6 +545,18 @@
   .navbar .nav-link {
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .nav-mobile-social-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+  }
+
+  .nav-mobile-social-row .nav-social-link {
+    padding-left: 0.55rem !important;
+    padding-right: 0.55rem !important;
   }
 
   .dropdown-menu-mega {

@@ -12,6 +12,11 @@ const fields = {
     type: Checkbox,
     default: false
   },
+  isFeaturedOnHomepage: {
+    type: Checkbox,
+    default: false,
+    label: 'Featured on Homepage'
+  },
   order: {
     type: Integer,
     isRequired: true
@@ -80,7 +85,7 @@ module.exports = {
   fields,
   labelResolver: item => item.title,
   adminConfig: {
-    defaultColumns: 'isActive, order, title, locationName, day, time, locationType'
+    defaultColumns: 'isActive, isFeaturedOnHomepage, order, title, locationName, day, time, locationType'
   },
   hooks: {
     resolveInput: ({ resolvedData, existingItem, context }) => {

@@ -6,6 +6,7 @@
         "npm": "8.19.4"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^7.3.1",
         "@keystonejs/adapter-mongoose": "^11.2.2",
         "@keystonejs/app-admin-ui": "^7.5.2",
         "@keystonejs/app-graphql": "^6.3.2",

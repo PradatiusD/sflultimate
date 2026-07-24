@@ -8,19 +8,19 @@ const REQUIRED_CORRECT_ANSWERS = 3
 
 const CONTACT_TYPE_CONFIG = {
   whatsapp: {
-    icon: 'fa-whatsapp',
+    icon: 'fa-brands fa-whatsapp',
     actionButtonLabel: 'Join WhatsApp Group',
     modalTitle: 'Verify Before Opening WhatsApp',
     revealButtonLabel: 'Open WhatsApp Group'
   },
   email: {
-    icon: 'fa-envelope',
+    icon: 'fa-solid fa-envelope',
     actionButtonLabel: 'Send Email',
     modalTitle: 'Verify Before Revealing Email',
     revealButtonLabel: 'Open Email App'
   },
   phone: {
-    icon: 'fa-phone',
+    icon: 'fa-solid fa-phone',
     actionButtonLabel: 'Text Phone',
     modalTitle: 'Verify Before Revealing Phone Number',
     revealButtonLabel: 'Text Organizer'
@@ -28,12 +28,12 @@ const CONTACT_TYPE_CONFIG = {
 }
 
 const WEBSITE_ACTION = {
-  icon: 'fa-globe',
+  icon: 'fa-solid fa-globe',
   label: 'View Website'
 }
 
 const MAP_ACTION = {
-  icon: 'fa-map-marker',
+  icon: 'fa-solid fa-location-dot',
   label: 'View on Map'
 }
 

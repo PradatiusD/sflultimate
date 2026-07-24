@@ -157,33 +157,33 @@ export default function YouthPage (props) {
               to her, and that is why she wishes to share that same passion and joy with kids
             </p>
             <div className="row justify-content-center">
-              <YouthInfoCard icon="fa-users" title="Coaching Experience">
+              <YouthInfoCard icon="fa-solid fa-users" title="Coaching Experience">
                 With years of coaching experience, we bring a wide variety of strategies and tactics from all around the
                 world. As club players, we understand the technical aspects of the sport and are skilled at breaking
                 down complex concepts into simple terms for the athletes.
               </YouthInfoCard>
-              <YouthInfoCard icon="fa-heart" title="Philosophy">
+              <YouthInfoCard icon="fa-solid fa-heart" title="Philosophy">
                 Our coaching philosophy centers around creating a positive and inclusive environment where players feel
                 comfortable to take risks, make mistakes, and learn from each experience. We emphasize skill
                 development, strategy, and teamwork while explaining how important values such as sportsmanship,
                 respect, and perseverance are in ultimate.
               </YouthInfoCard>
-              <YouthInfoCard icon="fa-bullseye" title="Fundamentals">
+              <YouthInfoCard icon="fa-solid fa-bullseye" title="Fundamentals">
                 Through engaging and dynamic training sessions, our coaches focus on teaching fundamental skills such as
                 throwing, catching, cutting, and defensive positioning, while also introducing more advanced tactics and
                 game scenarios.
               </YouthInfoCard>
-              <YouthInfoCard icon="fa-smile-o" title="Adaptive">
+              <YouthInfoCard icon="fa-regular fa-face-smile" title="Adaptive">
                 We believe in adapting our coaching approach to meet the individual needs and abilities of each player,
                 ensuring that everyone has the opportunity to succeed and thrive.
               </YouthInfoCard>
-              <YouthInfoCard icon="fa-line-chart" title="Development">
+              <YouthInfoCard icon="fa-solid fa-chart-line" title="Development">
                 Beyond the Xs and Os of the game, we prioritizes the development of our players, helping their
                 confidence, leadership skills, and sense of belonging within the ultimate frisbee community. Our goal is
                 to serve as a mentor and role model, inspiring young athletes to reach their full potential both on and
                 off the field.
               </YouthInfoCard>
-              <YouthInfoCard icon="fa-play-circle" title="Let&#39;s Play">
+              <YouthInfoCard icon="fa-solid fa-circle-play" title="Let&#39;s Play">
                 Players not only improve their athletic abilities but also cultivate lifelong friendships, memories, and
                 a deep appreciation for the sport of ultimate frisbee. Our passion, dedication, and commitment to
                 excellence help us mentor youth ultimate frisbee players across South Florida.

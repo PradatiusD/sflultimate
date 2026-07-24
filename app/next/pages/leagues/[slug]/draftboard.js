@@ -293,7 +293,7 @@ export default function Draftboard (props) {
                                     <button
                                       className="btn btn-secondary btn-sm"
                                       onClick={() => modifyRoster(team, player, 'remove')}>
-                                      <i className="fa fa-close"></i>
+                                      <i className="fa fa-solid fa-xmark"></i>
                                     </button>
                                   </div>
                                 </td>
@@ -436,7 +436,7 @@ export default function Draftboard (props) {
                                     onClick={() => {
                                       modifyRoster(team, player, 'add')
                                     }}>
-                                    <i className="fa fa-plus"></i> {team.name}
+                                    <i className="fa fa-solid fa-plus"></i> {team.name}
                                   </button>
                                 )
                               })
