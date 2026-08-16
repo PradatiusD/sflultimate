@@ -4,6 +4,7 @@ import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import LeagueUtils from '../lib/league-utils'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import { buildTeamUrl } from '../lib/team-utils'
 
 export const getScheduleData = async function (context) {
   const variables = addLeagueToVariables(context, {})
@@ -13,6 +14,7 @@ export const getScheduleData = async function (context) {
         allLeagues(where: $leagueCriteria) {
           id
           title
+          slug
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
@@ -32,13 +34,17 @@ export const getScheduleData = async function (context) {
           showNameOnSchedule
           scheduledTime
           homeTeam {
+            id
             name
+            slug
             color
           }
           homeTeamScore
           homeTeamForfeit
           awayTeam {
+            id
             name
+            slug
             color
           }
           awayTeamScore
@@ -151,9 +157,13 @@ export const Schedule = function (props) {
                             {
                               hasTeams && (
                                 <div>
-                                  <span style={{ borderBottom: '3px solid ' + game.homeTeam.color }}>{game.homeTeam.name}</span>
+                                  <a href={buildTeamUrl(league, game.homeTeam)} style={{ borderBottom: '3px solid ' + game.homeTeam.color }}>
+                                    {game.homeTeam.name}
+                                  </a>
                                     {' '}vs.{' '}
-                                  <span style={{ borderBottom: '3px solid ' + game.awayTeam.color }}>{game.awayTeam.name}</span>
+                                  <a href={buildTeamUrl(league, game.awayTeam)} style={{ borderBottom: '3px solid ' + game.awayTeam.color }}>
+                                    {game.awayTeam.name}
+                                  </a>
                                 </div>
                               )
                             }
@@ -165,14 +175,14 @@ export const Schedule = function (props) {
                             {
                               game.homeTeamForfeit && (
                                 <span>
-                                  <br/> {game.homeTeam.name} forfeited
+                                  <br/> <a href={buildTeamUrl(league, game.homeTeam)}>{game.homeTeam.name}</a> forfeited
                                 </span>
                               )
                             }
                             {
                               game.awayTeamForfeit && (
                                 <span>
-                                  <br/> {game.awayTeam.name} forfeited
+                                  <br/> <a href={buildTeamUrl(league, game.awayTeam)}>{game.awayTeam.name}</a> forfeited
                                 </span>
                               )
                             }

@@ -3699,6 +3699,8 @@ enum SortTeamsBy {
   id_DESC
   name_ASC
   name_DESC
+  slug_ASC
+  slug_DESC
   color_ASC
   color_DESC
   captains_ASC
@@ -3751,6 +3753,7 @@ type Team {
   _label_: String
   id: ID!
   name: String
+  slug: String
   color: String
   captains(where: PlayerWhereInput, search: String, sortBy: [SortPlayersBy!], orderBy: String, first: Int, skip: Int): [Player!]!
   _captainsMeta(where: PlayerWhereInput, search: String, sortBy: [SortPlayersBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
@@ -3763,6 +3766,7 @@ type Team {
 
 input TeamCreateInput {
   name: String
+  slug: String
   color: String
   captains: PlayerRelateToManyInput
   players: PlayerRelateToManyInput
@@ -3789,6 +3793,7 @@ input TeamsUpdateInput {
 
 input TeamUpdateInput {
   name: String
+  slug: String
   color: String
   captains: PlayerRelateToManyInput
   players: PlayerRelateToManyInput
@@ -3822,6 +3827,24 @@ input TeamWhereInput {
   name_not_ends_with_i: String
   name_in: [String]
   name_not_in: [String]
+  slug: String
+  slug_not: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
+  slug_i: String
+  slug_not_i: String
+  slug_contains_i: String
+  slug_not_contains_i: String
+  slug_starts_with_i: String
+  slug_not_starts_with_i: String
+  slug_ends_with_i: String
+  slug_not_ends_with_i: String
+  slug_in: [String]
+  slug_not_in: [String]
   color: String
   color_not: String
   color_contains: String
@@ -4162,4 +4185,3 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID!
 }
-
