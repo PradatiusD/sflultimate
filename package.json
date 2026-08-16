@@ -2,8 +2,8 @@
     "name": "sflultimate",
     "version": "3.0.0",
     "engines": {
-        "node": "16.20.2",
-        "npm": "8.19.4"
+        "node": ">=16.20.2 <23",
+        "npm": ">=8 <11"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^7.3.1",
@@ -53,8 +53,8 @@
         "time-grunt": "^2.0.0"
     },
     "scripts": {
-        "dev": "cd app && cross-env NODE_ENV=development DISABLE_LOGGING=true keystone dev",
-        "build": "cd app && cross-env NODE_ENV=production keystone build",
+        "dev": "cd app && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development DISABLE_LOGGING=true keystone dev",
+        "build": "cd app && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production keystone build",
         "start": "cd app && cross-env NODE_ENV=production keystone start",
         "create-tables": "cross-env keystone create-tables",
         "cypress": "npx cypress open",
