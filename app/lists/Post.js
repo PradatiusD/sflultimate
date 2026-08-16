@@ -1,7 +1,16 @@
+const { randomUUID } = require('crypto')
 const { Text, File } = require('@keystonejs/fields')
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
+const UploadableWysiwyg = require('../custom-fields/UploadableWysiwyg')
 const storage = require('./file-storage-adapter')
 const CustomDateTime = require('../custom-fields/CustomDateTime')
+
+const allowedEmbeddedImageTypes = new Set([
+  'image/gif',
+  'image/jpeg',
+  'image/png',
+  'image/webp'
+])
 
 const fields = {
   title: {
@@ -20,7 +29,7 @@ const fields = {
     type: Wysiwyg
   },
   body: {
-    type: Wysiwyg
+    type: UploadableWysiwyg
   },
   image: {
     type: File,
@@ -57,5 +66,46 @@ module.exports = {
   labelResolver: item => item.title,
   adminConfig: {
     defaultColumns: 'name, publishedDate, summary'
+  },
+  extendGraphQLSchema: {
+    types: [
+      {
+        type: `
+          type WysiwygImageUploadResult {
+            filename: String!
+            publicUrl: String!
+          }
+        `
+      }
+    ],
+    mutations: [
+      {
+        schema: 'uploadWysiwygImage(file: Upload!): WysiwygImageUploadResult',
+        resolver: async (item, { file }, context) => {
+          if (!context.authedItem || context.authedListKey !== 'User') {
+            throw new Error('Not authorized')
+          }
+
+          const upload = await file
+
+          if (!allowedEmbeddedImageTypes.has(upload.mimetype)) {
+            throw new Error('Only JPG, PNG, GIF, and WebP images can be uploaded inside a post.')
+          }
+
+          const savedFile = await storage.save({
+            stream: upload.createReadStream(),
+            filename: upload.filename,
+            mimetype: upload.mimetype,
+            encoding: upload.encoding,
+            id: randomUUID()
+          })
+
+          return {
+            filename: savedFile.filename,
+            publicUrl: storage.publicUrl(savedFile)
+          }
+        }
+      }
+    ]
   }
 }
