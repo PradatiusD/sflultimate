@@ -362,18 +362,18 @@ export default function PlayerPage (props) {
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row align-items-center mb-4">
-          <div className="col-md-4 mb-3 mb-md-0 text-center">
-            {
-              player.profileImage?.publicUrl && (
+          {
+            player.profileImage?.publicUrl && (
+              <div className="col-md-4 mb-3 mb-md-0 text-center">
                 <img
                   src={player.profileImage.publicUrl}
                   alt={player.firstName + ' ' + player.lastName}
                   className="img-fluid rounded"
                   style={{ maxHeight: '240px', objectFit: 'cover' }}
                 />
-              )
-            }
-          </div>
+              </div>
+            )
+          }
           <div className="col-md-8">
             <h1>{player.firstName} {player.lastName}</h1>
             {
@@ -420,7 +420,7 @@ export default function PlayerPage (props) {
               const statLabel = statValue === 1 ? statCard.singularLabel : statCard.label
               return (
                 <div className="col-6 col-md-3 mb-3" key={statCard.key}>
-                  <div className="border rounded h-100 p-3 d-flex flex-column justify-content-center align-items-center">
+                  <div className="rounded h-100 p-3 d-flex flex-column justify-content-center align-items-center">
                     <i className={`fa ${statCard.icon} fa-2x mb-2 text-primary`} aria-hidden="true"></i>
                     <strong style={{ fontSize: '2rem', lineHeight: '1' }}>{statValue}</strong>
                     <span className="text-uppercase text-muted mt-2" style={{ letterSpacing: '0.08em', fontSize: '0.85rem' }}>{statLabel}</span>
