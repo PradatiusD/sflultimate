@@ -4,8 +4,8 @@ import { generateGatewayClientToken } from '../../../lib/payment-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'
 import RegisterPage from '../../../components/Register'
-import Head from 'next/head'
 import { updateWithGlobalServerSideProps } from '../../../lib/global-server-side-props'
+import SeoHead from '../../../components/SeoHead'
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -82,18 +82,12 @@ export default function LeagueSubPage (props) {
   const description = `Fill in the form below to sign up as a substitute player for ${activeLeague.title}. We'll reach out to you when a team needs subs!`
   return (
     <>
-      <Head>
-        <title>{'Play as a Sub for ' + activeLeague.title}</title>
-        <meta name="description" content={description}/>
-        <meta property="og:title" content={'Play as a sub for ' + activeLeague.title}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/substitutions'}/>
-        <meta property="og:description" content={description}/>
-        {
-          activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
-            <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
-          )
-        }
-      </Head>
+      <SeoHead
+        title={'Play as a Sub for ' + activeLeague.title}
+        description={description}
+        path={`/leagues/${activeLeague.slug}/substitutions`}
+        image={activeLeague.registrationShareImage?.publicUrl}
+      />
       <RegisterPage {...props} />
     </>
   )

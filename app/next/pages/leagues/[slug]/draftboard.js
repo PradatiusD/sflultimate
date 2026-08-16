@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client'
-import Head from 'next/head'
 import { useState } from 'react'
 import GraphqlClient from '../../../lib/graphql-client'
 import { PlayerLink } from '../../../components/PlayerLink'
@@ -7,6 +6,7 @@ import { HeaderNavigation } from '../../../components/Navigation'
 import LeagueUtils from '../../../lib/league-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
 import { updateWithGlobalServerSideProps } from '../../../lib/global-server-side-props'
+import SeoHead from '../../../components/SeoHead'
 
 const getBadgeStyle = function (color) {
   let badgeColor
@@ -28,6 +28,7 @@ export async function getServerSideProps (context) {
         allLeagues(where: $leagueCriteria) {
           id
           title
+          slug
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
@@ -80,7 +81,6 @@ export async function getServerSideProps (context) {
   })
 
   const teams = results.data.allTeams.map(function (team) {
-    team.players = team.players
     return team
   })
 
@@ -239,9 +239,13 @@ export default function Draftboard (props) {
 
   return (
     <>
-      <Head>
-        <title>{league?.title} Draftboard</title>
-      </Head>
+      <SeoHead
+        title={`${league?.title} Draftboard`}
+        description={`${league?.title} draftboard tools.`}
+        path={`/leagues/${league?.slug}/draftboard`}
+        noindex
+        image={false}
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container-fluid">
         <h1>{league?.title} Draftboard</h1>

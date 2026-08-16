@@ -1,9 +1,9 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
 import { AddToCalendar } from '../components/AddToCalendar'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -111,12 +111,12 @@ export default function EventsPage (props) {
   })
   return (
     <>
-      <Head>
-        <title>South Florida Ultimate • Upcoming & Past Events</title>
-        <meta property="og:title" content="South Florida Events"/>
-        <meta property="og:url" content="https://www.sflultimate.com/events"/>
-        <meta property="og:description" content="See what events are local to the South Florida area!"/>
-      </Head>
+      <SeoHead
+        title="South Florida Ultimate Events"
+        ogTitle="South Florida Events"
+        description="See upcoming and past Ultimate Frisbee events across South Florida, including community meetups, tournaments, and special programs."
+        path="/events"
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
 
@@ -145,4 +145,4 @@ export default function EventsPage (props) {
       </div>
     </>
   )
-};
+}

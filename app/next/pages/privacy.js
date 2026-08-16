@@ -1,6 +1,6 @@
-import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 export async function getServerSideProps (context) {
   const props = {}
@@ -14,12 +14,11 @@ export default function Privacy (props) {
   const { leagues } = props
   return (
     <>
-      <Head>
-        <meta property="og:title" content="South Florida Ultimate Inc. Privacy Policy" />
-        <meta property="og:url" content="https://www.sflultimate.com/privacy" />
-        <meta property="og:image" content="https://www.sflultimate.com/images/open-graph/homepage.jpg" />
-        <meta property="og:description" content="View our privacy policy" />
-      </Head>
+      <SeoHead
+        title="South Florida Ultimate Privacy Policy"
+        description="Review how South Florida Ultimate collects, uses, and protects information shared through the site."
+        path="/privacy"
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">

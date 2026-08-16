@@ -1,6 +1,6 @@
-import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
 import { getLeagueStats } from '../lib/stat-utils'
+import SeoHead from '../components/SeoHead'
 
 export const getServerSideProps = async (context) => {
   return getLeagueStats(context)
@@ -60,11 +60,11 @@ export default function StatsPage (props) {
   const { league, players, awards, statKeysToCompare, playerGameStats, leagues } = props
   return (
     <>
-      <Head>
-        <title>League Stats</title>
-        <meta property="og:title" content="League Stats"/>
-        <meta property="og:url" content="https://www.sflultimate.com/stats"/>
-        <meta property="og:description" content={'Find out who is making big plays for ' + league.title}/>
+      <SeoHead
+        title={league.title + ' Stats'}
+        description={'Find out who is making big plays for ' + league.title}
+        path="/stats"
+      >
         <style>
           {
             `
@@ -82,7 +82,7 @@ export default function StatsPage (props) {
           }
 
         </style>
-      </Head>
+      </SeoHead>
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>{league.title} Stats</h1>
@@ -98,7 +98,7 @@ export default function StatsPage (props) {
               )
             : (
               <>
-                <p className="alert alert-info">We're awaiting stats information for this leaderboard to update.  Check back later!</p>
+                <p className="alert alert-info">We&apos;re awaiting stats information for this leaderboard to update.  Check back later!</p>
               </>
               )
         }

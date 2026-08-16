@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { useEffect, useRef, useState } from 'react'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
@@ -6,6 +5,7 @@ import { HeaderNavigation } from '../components/Navigation'
 import PickupContactActions from '../components/PickupContactActions'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 import { SOUTH_FLORIDA_ZIP_COORDINATES } from '../lib/south-florida-zip-coordinates'
+import SeoHead from '../components/SeoHead'
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyDld-_TKoN-4PGLgQ1-JwN607eT4RfAMSQ'
 const GOOGLE_MAPS_SCRIPT_ID = 'pickup-google-maps-script'
@@ -324,14 +324,12 @@ export default function PickupsPage (props) {
 
   return (
     <>
-      <Head>
-        <title>Local Broward, Palm Beach, & Miami-Dade County Pickups</title>
-        <meta property="og:title" content="Local Broward, Palm Beach, & Miami-Dade County Pickups"/>
-        <meta property="og:url" content="https://www.sflultimate.com/pickups"/>
-        <meta property="og:description"
-          content="Learn about the local days, times, and locations for ultimate frisbee pickup near you in South Florida!"/>
-        <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
-      </Head>
+      <SeoHead
+        title="Local Broward, Palm Beach, & Miami-Dade County Pickups"
+        description="Learn about the local days, times, and locations for Ultimate Frisbee pickup near you in South Florida."
+        path="/pickups"
+        image="https://www.sflultimate.com/images/dave-catching-face.jpg"
+      />
       <HeaderNavigation leagues={leagues} />
 
       <div className="container pickup-listing-page">

@@ -1,10 +1,10 @@
-import Head from 'next/head'
 import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
 import Modal from '../components/Modal'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 const BOARD_BIO_PREVIEW_LENGTH = 140
 
@@ -110,15 +110,15 @@ export default function BoardPage (props) {
 
   return (
     <>
-      <Head>
-        <title>South Florida Ultimate Board</title>
-        <meta property="og:title" content="SFLUltimate | Join Our Board" />
-        <meta property="og:description" content="We’re looking for passionate, community-driven players to step up and shape the future of the game by volunteering or serving on the South Florida Ultimate board." />
-        <meta property="og:url" content="https://www.sflultimate.com/board" />
-        <meta property="og:image" content="https://d137pw2ndt5u9c.cloudfront.net/keystone/682dac872efed40028e728e6-temp-5.jpg"/>
-        <meta property="og:image:width" content="1200"/>
-        <meta property="og:image:height" content="630"/>
-      </Head>
+      <SeoHead
+        title="South Florida Ultimate Board"
+        ogTitle="SFLUltimate | Join Our Board"
+        description="We’re looking for passionate, community-driven players to step up and shape the future of the game by volunteering or serving on the South Florida Ultimate board."
+        path="/board"
+        image="https://d137pw2ndt5u9c.cloudfront.net/keystone/682dac872efed40028e728e6-temp-5.jpg"
+        imageWidth={1200}
+        imageHeight={630}
+      />
       <HeaderNavigation leagues={leagues} />
       <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/682db0ce069a32002858c125-frisbee_final-417-o.jpg" alt="League Finals 2025" className="img-fluid"/>
       <div className="container">

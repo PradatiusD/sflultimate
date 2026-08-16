@@ -1,9 +1,9 @@
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
-import Head from 'next/head'
 import { showDate } from '../lib/utils'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -32,12 +32,11 @@ export default function PostsPage (props) {
   const { posts, leagues } = props
   return (
     <>
-      <Head>
-        <title>South Florida Ultimate News</title>
-        <meta property="og:title" content="South Florida Ultimate News" />
-        <meta property="og:url" content="https://www.sflultimate.com/news" />
-        <meta property="og:description" content="Find out local news from your South Florida Ultimate Area" />
-      </Head>
+      <SeoHead
+        title="South Florida Ultimate News"
+        description="Catch up on South Florida Ultimate league updates, community stories, announcements, and local Ultimate news."
+        path="/news"
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>Posts</h1>

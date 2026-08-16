@@ -1,12 +1,11 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/graphql-client'
 import { HeaderNavigation } from '../../components/Navigation'
-import LeagueUtils from '../../lib/league-utils'
 import NotFound from 'next/error'
 import { createSummary } from '../../lib/utils'
 import { AddToCalendar } from '../../components/AddToCalendar'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
+import SeoHead from '../../components/SeoHead'
 
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
@@ -65,15 +64,17 @@ export default function EventItemPage (props) {
     return <NotFound statusCode={404} />
   }
 
+  const seoDescription = createSummary(event, 140)
+
   return (
     <>
-      <Head>
-        <title>Event: {event.name}</title>
-        <meta property="og:title" content={event.name + ' | SFL Community Events'}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/events/' + event.slug} />
-        <meta property="og:description" content={createSummary(event, 140)} />
-        <meta property="og:image" content={event.image.publicUrl} />
-      </Head>
+      <SeoHead
+        title={`Event: ${event.name}`}
+        ogTitle={event.name + ' | SFL Community Events'}
+        description={seoDescription}
+        path={`/events/${event.slug}`}
+        image={event.image?.publicUrl}
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">

@@ -5,6 +5,7 @@ import { gql } from '@apollo/client'
 import LeagueUtils from '../lib/league-utils'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 import { buildTeamUrl } from '../lib/team-utils'
+import { buildGameUrl } from '../lib/game-utils'
 
 export const getScheduleData = async function (context) {
   const variables = addLeagueToVariables(context, {})
@@ -202,7 +203,7 @@ export const Schedule = function (props) {
                             }
                           </td>
                           <td>
-                            <a href={'/games/' + game.id}>
+                            <a href={buildGameUrl(league, game)}>
                               {new Date(game.scheduledTime).getTime() < Date.now() ? 'Recap' : 'Preview'}
                             </a>
                           </td>

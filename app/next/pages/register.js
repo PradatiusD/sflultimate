@@ -3,8 +3,8 @@ import GraphqlClient from './../lib/graphql-client'
 import { addLeagueToVariables } from '../lib/utils'
 import LeagueUtils from '../lib/league-utils'
 import { HeaderNavigation } from '../components/Navigation'
-import Head from 'next/head'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -58,11 +58,11 @@ export default function LeagueRegisterPage (props) {
   const { activeLeagues, leagues } = props
   return (
     <div>
-      <Head>
-        <title>{'Register now SFLUltimate leagues'}</title>
-        <meta property="og:title" content={'Register now for SFL Ultimate leagues'}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/register'}/>
-        <meta property="og:description" content={'Find here a list of active leagues for you to play or be a sub at.'}/>
+      <SeoHead
+        title="Register now for SFL Ultimate leagues"
+        description="Find active South Florida Ultimate leagues that are open for registration or currently seeking substitute players."
+        path="/register"
+      >
         <style>{`
         .league-logo {
             border: 1px solid #cfcfcf;
@@ -70,7 +70,7 @@ export default function LeagueRegisterPage (props) {
             box-shadow: 1px 1px 4px #e3e3e3;
             margin-bottom: 1rem;
         }`}</style>
-      </Head>
+      </SeoHead>
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         {

@@ -1,6 +1,6 @@
-import Head from 'next/head'
 import { HeaderNavigation } from '../components/Navigation'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 const coachFormUrl = 'https://docs.google.com/forms/d/1BPm-f2v4VwcRA6oDdE9rfNelEEbX5e7g1coJ7pGd9Uc/edit?pli=1'
 const pageUrl = 'https://www.sflultimate.com/youth'
@@ -63,23 +63,17 @@ export default function YouthPage (props) {
   const { leagues } = props
   return (
     <div>
-      <Head>
-        <title>{seoTitle}</title>
-        <meta name="description" content={seoDescription}/>
-        <meta name="keywords"
-              content="youth ultimate frisbee South Florida, youth ultimate frisbee programs, kids ultimate frisbee, ultimate frisbee clinics, ultimate frisbee camps, Miami ultimate frisbee youth, Broward ultimate frisbee youth, Palm Beach ultimate frisbee youth, youth sports South Florida"/>
-        <link rel="canonical" href={pageUrl}/>
-        <meta property="og:title" content={seoTitle}/>
-        <meta property="og:url" content={pageUrl}/>
-        <meta property="og:image" content={seoImage}/>
-        <meta property="og:image:width" content="1200"/>
-        <meta property="og:image:height" content="630"/>
-        <meta property="og:description" content={seoDescription}/>
-        <meta name="twitter:card" content="summary_large_image"/>
-        <meta name="twitter:title" content={seoTitle}/>
-        <meta name="twitter:description" content={seoDescription}/>
-        <meta name="twitter:image" content={seoImage}/>
-      </Head>
+      <SeoHead
+        title={seoTitle}
+        description={seoDescription}
+        keywords="youth ultimate frisbee South Florida, youth ultimate frisbee programs, kids ultimate frisbee, ultimate frisbee clinics, ultimate frisbee camps, Miami ultimate frisbee youth, Broward ultimate frisbee youth, Palm Beach ultimate frisbee youth, youth sports South Florida"
+        path="/youth"
+        canonicalUrl={pageUrl}
+        image={seoImage}
+        imageWidth={1200}
+        imageHeight={630}
+        imageAlt="Youth ultimate frisbee clinic in South Florida"
+      />
       <HeaderNavigation leagues={leagues}/>
 
       <VideoBackground
@@ -195,7 +189,7 @@ export default function YouthPage (props) {
       </div>
       <VideoBackground
         src={'https://d137pw2ndt5u9c.cloudfront.net/youth-sizzle.mp4'}
-        text={'Let\' s Play!'}
+        text={'Let\'s Play!'}
       />
     </div>
   )

@@ -1,8 +1,8 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -60,13 +60,15 @@ export const getServerSideProps = async () => {
 
 export default function ClubTeamsPage (props) {
   const { clubTeams, leagues } = props
+  const shareImage = clubTeams.find(team => team.active && team.image && team.image.publicUrl)?.image?.publicUrl
   return (
     <>
-      <Head>
-        <title>South Florida Club Teams</title>
-        <meta property="og:title" content="South Florida Club Teams" />
-        <meta property="og:url" content="https://www.sflultimate.com/club-teams" />
-        <meta property="og:description" content="See what club teams are local to the South Florida area in the mens, mixed, womens, and college divisions!" />
+      <SeoHead
+        title="South Florida Club Teams"
+        description="See what club teams are local to the South Florida area in the men's, mixed, women's, and college divisions."
+        path="/club-teams"
+        image={shareImage}
+      >
         <style>{`
           .img-fluid {
             width: 150px;
@@ -84,7 +86,7 @@ export default function ClubTeamsPage (props) {
           `
         }
         </style>
-      </Head>
+      </SeoHead>
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>Club Teams</h1>

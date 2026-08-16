@@ -1,11 +1,11 @@
 import GraphqlClient from '../../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../components/Navigation'
-import Head from 'next/head'
 import { useEffect } from 'react'
 import { showDate } from '../../lib/utils'
 import { parse } from 'node-html-parser'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
+import SeoHead from '../../components/SeoHead'
 
 export const getServerSideProps = async (context) => {
   const { expandArticleShortcodes } = require('../../lib/article-shortcodes')
@@ -50,6 +50,7 @@ export default function PostsPage (props) {
     table.removeAttribute('style')
   })
   const modifiedBody = parsedBody.outerHTML
+  const seoDescription = post.summary ? post.summary.replace(/<[^>]*>/g, '') : post.title
 
   useEffect(() => {
     const appendedScripts = []
@@ -81,13 +82,14 @@ export default function PostsPage (props) {
 
   return (
     <>
-      <Head>
-        <title>{post.title}</title>
-        <meta property="og:title" content={post.title} />
-        <meta property="og:url" content={'https://www.sflultimate.com/news/' + post.slug} />
-        <meta property="og:image" content={post.image.publicUrl} />
-        <meta property="og:description" content={post.summary.replace(/<[^>]*>/g, '')} />
-      </Head>
+      <SeoHead
+        title={post.title}
+        description={seoDescription}
+        path={`/news/${post.slug}`}
+        image={post.image?.publicUrl}
+        ogType="article"
+        publishedTime={post.publishedDate}
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">

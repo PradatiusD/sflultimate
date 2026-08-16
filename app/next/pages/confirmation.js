@@ -3,8 +3,8 @@ import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
 import { addLeagueToVariables } from '../lib/utils'
-import Head from 'next/head'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context)
@@ -83,9 +83,13 @@ export default function ConfirmationPage (props) {
   }
 
   return <>
-    <Head>
-      <title>Your Order for {league.title} is Confirmed!</title>
-    </Head>
+    <SeoHead
+      title={`Your Order for ${league.title} is Confirmed!`}
+      description={`Registration confirmation for ${league.title}.`}
+      path="/confirmation"
+      noindex
+      image={false}
+    />
     <HeaderNavigation leagues={leagues} />
     <img src="https://d137pw2ndt5u9c.cloudfront.net/keystone/67bbc3865bfcdf00289f58a1-IMG_9589-optimized.jpg" className="img-fluid" alt="" style={{
       maxHeight: '480px',
@@ -101,7 +105,7 @@ export default function ConfirmationPage (props) {
             <p className="lead">We&apos;ve successfully received your payment!</p>
           </div>
           <p>Please check your email at <strong>{player.email}</strong> for a confirmation email.</p>
-          <p>Feel free to <strong>share the joy</strong> of having signed up to play! Also don't forget to follow us on social media!</p>
+          <p>Feel free to <strong>share the joy</strong> of having signed up to play! Also don&apos;t forget to follow us on social media!</p>
           <ul>
             <li><a target="_blank" href="https://instagram.com/sflultimate">Instagram</a></li>
             <li><a target="_blank" href="https://chat.whatsapp.com/FZC77g5Tzsw8xwxMXG997V">WhatsApp</a></li>

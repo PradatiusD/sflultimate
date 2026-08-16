@@ -1,7 +1,7 @@
-import Head from 'next/head'
 import { HeaderNavigation } from '../../../components/Navigation'
 import { getLeagueStats } from '../../../lib/stat-utils'
 import StatTable from '../../../components/StatsTable'
+import SeoHead from '../../../components/SeoHead'
 
 export const getServerSideProps = async (context) => {
   const statsInfo = await getLeagueStats(context)
@@ -13,11 +13,11 @@ export default function ArchivedStatsPage (props) {
   const { league, players, leagues, awards, statKeysToCompare, playerGameStats, url } = props
   return (
     <>
-      <Head>
-        <title>{league.title} Stats</title>
-        <meta property="og:title" content={league.title + ' Stats'}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/' + url} />
-        <meta property="og:description" content={'Find out who made the big plays during ' + league.title}/>
+      <SeoHead
+        title={league.title + ' Stats'}
+        description={'Find out who made the big plays during ' + league.title}
+        path={url}
+      >
         <style>
           {
             `
@@ -35,7 +35,7 @@ export default function ArchivedStatsPage (props) {
           }
 
         </style>
-      </Head>
+      </SeoHead>
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>{league.title} Stats</h1>
@@ -51,7 +51,7 @@ export default function ArchivedStatsPage (props) {
               )
             : (
               <>
-                <p className="alert alert-info">We're awaiting stats information for this leaderboard to update.  Check back later!</p>
+                <p className="alert alert-info">We&apos;re awaiting stats information for this leaderboard to update.  Check back later!</p>
               </>
               )
         }

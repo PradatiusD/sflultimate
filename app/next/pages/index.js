@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
@@ -8,6 +7,7 @@ import { createSummary, showDate } from '../lib/utils'
 import Image from 'next/image'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 import LeagueUtils from '../lib/league-utils'
+import SeoHead from '../components/SeoHead'
 
 export const getServerSideProps = async (context) => {
   const host = context.req.headers.host
@@ -164,20 +164,12 @@ export default function Homepage (props) {
 
   return (
     <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
-        <title>South Florida Ultimate: Pickups, Leagues, News & Events</title>
-        <meta property="og:title" content="South Florida Ultimate: Pickups, Leagues, News & Events" />
-        <meta property="og:url" content="https://www.sflultimate.com/"/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:description" content="Since 1999, we organize & amplify the Ultimate Frisbee scene for Broward, Miami-Dade & Palm Beach." />
-        <meta property="og:image" content="https://www.sflultimate.com/images/hatter-beach-ultimate.jpg"/>
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/styles/font-awesome/css/all.min.css"/>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
-        <link rel="stylesheet" href="/styles/site.css"/>
-      </Head>
+      <SeoHead
+        title="South Florida Ultimate: Pickups, Leagues, News & Events"
+        description="Since 1999, we organize and amplify the Ultimate Frisbee scene for Broward, Miami-Dade, and Palm Beach."
+        path="/"
+        image="https://www.sflultimate.com/images/hatter-beach-ultimate.jpg"
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">

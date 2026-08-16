@@ -1,7 +1,7 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import Countdown from 'react-countdown'
+import SeoHead from '../components/SeoHead'
 
 function Spanify (props) {
   const words = props.text.split(' ')
@@ -51,20 +51,18 @@ export default function BeachBashTournament (props) {
 
   return (
     <>
-      <Head>
-        <title>{content.seoTitle}</title>
-        <meta property="og:title" content={content.seoTitle}/>
-        <meta name="description" content={"Florida's highest-level 4v4 2:2 mixed Beach Ultimate Championship on February 21-22, 2026 at Ft. Lauderdale Beach."} />
-        <meta property="og:url" content="https://www.sflultimate.com/beach-bash-tournament"/>
-        <meta property="og:image"
-              content="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg"/>
-        <meta property="og:description"
-              content="Beach Bash is Back! A 4 on 4 Beach Ultimate tournament February 21-22 2026 in Fort Lauderdale!"/>
+      <SeoHead
+        title={content.seoTitle}
+        description="Florida's highest-level 4v4 2:2 mixed Beach Ultimate Championship on February 21-22, 2026 at Ft. Lauderdale Beach."
+        ogDescription="Beach Bash is back. Join a 4-on-4 Beach Ultimate tournament on February 21-22, 2026 in Fort Lauderdale."
+        path="/beach-bash-tournament"
+        image="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg"
+      >
         <link rel="stylesheet" href="/styles/beach-bash-tournament.css"/>
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet"/>
-      </Head>
+      </SeoHead>
       <section className="bash-video-background">
         <video autoPlay muted loop>
           <source src="https://d137pw2ndt5u9c.cloudfront.net/sfl-beach-bash-tournament-with-play-v1.mp4"
@@ -133,7 +131,7 @@ export default function BeachBashTournament (props) {
       </div>
 
       <hr/>
-      <h2 className="text-center">Last Year's Teams</h2>
+      <h2 className="text-center">Last Year&apos;s Teams</h2>
       <p className="text-center lead">Use the below to get a sense of the competition that came to join us in Fort.
         Lauderdale!</p>
       <section className="team-list-tournament">
@@ -169,7 +167,7 @@ export default function BeachBashTournament (props) {
                 <h3 className="card-title h6 mb-0">How many teams will this be?</h3>
               </div>
               <div className="card-body">
-                We're set on inviting <strong>12 teams</strong> from Florida as well as from around the USA (and
+                We&apos;re set on inviting <strong>12 teams</strong> from Florida as well as from around the USA (and
                 hopefully the world).
               </div>
             </div>
@@ -177,11 +175,11 @@ export default function BeachBashTournament (props) {
               <div className="card-header">
                 <h3 className="card-title h6 mb-0">How much is the bid fee?</h3>
               </div>
-              <div className="card-body">It's <strong>$500</strong>, we use this for field permits and tournament drinks/snacks.</div>
+              <div className="card-body">It&apos;s <strong>$500</strong>, we use this for field permits and tournament drinks/snacks.</div>
             </div>
             <div className="card mb-3">
               <div className="card-header">
-                <h3 className="card-title h6 mb-0">What's the gender ratio? How many players?</h3>
+                <h3 className="card-title h6 mb-0">What&apos;s the gender ratio? How many players?</h3>
               </div>
               <div className="card-body">This will be a 2:2 mixed beach tournament, with a minimum of 4 players and a
                 maximum of 14 players per team.

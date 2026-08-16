@@ -1,9 +1,9 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
 import { createSummary } from '../lib/utils'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import SeoHead from '../components/SeoHead'
 
 function getGallerySummary (gallery, limit = 180) {
   if (!gallery.summary && !gallery.description) {
@@ -87,12 +87,11 @@ export default function GalleryPage (props) {
 
   return (
     <>
-      <Head>
-        <title>South Florida Ultimate Galleries</title>
-        <meta property="og:title" content="South Florida Ultimate Galleries" />
-        <meta property="og:url" content="https://www.sflultimate.com/gallery" />
-        <meta property="og:description" content="Browse photo and video galleries from South Florida Ultimate events and community moments." />
-      </Head>
+      <SeoHead
+        title="South Florida Ultimate Galleries"
+        description="Browse photo and video galleries from South Florida Ultimate events, leagues, and community moments."
+        path="/gallery"
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <h1>Galleries</h1>

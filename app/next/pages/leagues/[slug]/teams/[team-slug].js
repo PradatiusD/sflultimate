@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../../../components/Navigation'
 import Standings from '../../../../components/Standings'
@@ -8,6 +7,7 @@ import { addLeagueToVariables } from '../../../../lib/utils'
 import GraphqlClient from '../../../../lib/graphql-client'
 import { updateWithGlobalServerSideProps } from '../../../../lib/global-server-side-props'
 import { buildTeamUrl, isMatchingTeamRoute } from '../../../../lib/team-utils'
+import SeoHead from '../../../../components/SeoHead'
 
 function buildTeamStats (players = [], playerGameStats = []) {
   const statMap = {}
@@ -221,12 +221,12 @@ export default function TeamPage (props) {
 
   return (
     <>
-      <Head>
-        <title>{league.title} Team: {team.name}</title>
-        <meta property="og:title" content={`${league.title} Team: ${team.name}`} />
-        <meta property="og:url" content={`https://www.sflultimate.com${buildTeamUrl(league, team)}`} />
-        <meta property="og:description" content={`See the ${team.name} roster and season stats for ${league.title}.`} />
-      </Head>
+      <SeoHead
+        title={`${league.title} Team: ${team.name}`}
+        description={`See the ${team.name} roster and season stats for ${league.title}.`}
+        path={buildTeamUrl(league, team)}
+        image={team.image?.publicUrl}
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <p className="h1 text-center">{league.title}</p>

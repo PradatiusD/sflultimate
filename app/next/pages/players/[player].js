@@ -3,11 +3,11 @@ import { gql } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { HeaderNavigation } from '../../components/Navigation'
 import { getMongoTimestamp } from '../../lib/utils'
-import Head from 'next/head'
 import { buildPlayerUrl } from '../../components/PlayerLink'
 import { PreferredPositionBadge, getPreferredPositions } from '../../components/PreferredPositions'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 import { buildTeamUrl } from '../../lib/team-utils'
+import SeoHead from '../../components/SeoHead'
 
 const statKeys = ['assists', 'scores', 'defenses']
 
@@ -353,12 +353,12 @@ export default function PlayerPage (props) {
 
   return (
     <div>
-      <Head>
-        <title>{player.firstName} {player.lastName} Statistics</title>
-        <meta property="og:title" content={`${player.firstName} ${player.lastName} Statistics`} />
-        <meta property="og:url" content={'https://www.sflultimate.com' + buildPlayerUrl(player)}/>
-        <meta property="og:description" content={`See historical scores, assists, and defenses for ${player.firstName} ${player.lastName} across current and past SFLUltimate events`}/>
-      </Head>
+      <SeoHead
+        title={`${player.firstName} ${player.lastName} Statistics`}
+        description={`See historical scores, assists, and defenses for ${player.firstName} ${player.lastName} across current and past SFLUltimate events.`}
+        path={buildPlayerUrl(player)}
+        image={player.profileImage?.publicUrl}
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row align-items-center mb-4">

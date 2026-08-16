@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client'
-import Head from 'next/head'
 import GraphqlClient from '../../../lib/graphql-client'
 import { generateGatewayClientToken } from '../../../lib/payment-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'
 import RegisterPage from '../../../components/Register'
 import { updateWithGlobalServerSideProps } from '../../../lib/global-server-side-props'
+import SeoHead from '../../../components/SeoHead'
 export const getServerSideProps = async (context) => {
   const variables = addLeagueToVariables(context, {})
   const results = await GraphqlClient.query({
@@ -74,18 +74,12 @@ export default function LeagueRegisterPage (props) {
   const { league: activeLeague } = props
   return (
     <>
-      <Head>
-        <title>{'Register now for the SFL Ultimate ' + activeLeague.title}</title>
-        <meta name="description" content={activeLeague.summary || ''}/>
-        <meta property="og:title" content={'Register now for the SFL Ultimate ' + activeLeague.title}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/leagues/' + activeLeague.slug + '/register'}/>
-        <meta property="og:description" content={activeLeague.summary || ''}/>
-        {
-          activeLeague.registrationShareImage && activeLeague.registrationShareImage.publicUrl && (
-            <meta property="og:image" content={activeLeague.registrationShareImage.publicUrl}/>
-          )
-        }
-      </Head>
+      <SeoHead
+        title={'Register now for the SFL Ultimate ' + activeLeague.title}
+        description={activeLeague.summary || ''}
+        path={`/leagues/${activeLeague.slug}/register`}
+        image={activeLeague.registrationShareImage?.publicUrl}
+      />
       <RegisterPage {...props} />
     </>
   )

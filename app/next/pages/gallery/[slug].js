@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { useState } from 'react'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/graphql-client'
@@ -7,6 +6,7 @@ import Modal from '../../components/Modal'
 import NotFound from 'next/error'
 import { createSummary } from '../../lib/utils'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
+import SeoHead from '../../components/SeoHead'
 
 function getGallerySummary (gallery, limit = 160) {
   if (!gallery.summary && !gallery.description) {
@@ -129,17 +129,12 @@ export default function GalleryItemPage (props) {
 
   return (
     <>
-      <Head>
-        <title>{gallery.title || 'Gallery'} | South Florida Ultimate</title>
-        <meta property="og:title" content={(gallery.title || 'Gallery') + ' | South Florida Ultimate'} />
-        <meta property="og:url" content={'https://www.sflultimate.com/gallery/' + gallery.slug} />
-        <meta property="og:description" content={seoDescription} />
-        {
-          gallery.coverImage && gallery.coverImage.publicUrl && (
-            <meta property="og:image" content={gallery.coverImage.publicUrl} />
-          )
-        }
-      </Head>
+      <SeoHead
+        title={`${gallery.title || 'Gallery'} | South Florida Ultimate`}
+        description={seoDescription}
+        path={`/gallery/${gallery.slug}`}
+        image={gallery.coverImage?.publicUrl}
+      />
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <p><a href="/gallery">← Back to all galleries</a></p>

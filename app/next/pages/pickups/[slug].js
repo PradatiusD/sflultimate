@@ -1,9 +1,9 @@
-import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/graphql-client'
 import { HeaderNavigation } from '../../components/Navigation'
 import PickupContactActions from '../../components/PickupContactActions'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
+import SeoHead from '../../components/SeoHead'
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -67,14 +67,12 @@ export default function PickupsPage (props) {
   const { pickup, leagues } = props
   return (
     <>
-      <Head>
-        <title>SFLUltimate: {pickup.title}</title>
-        <meta property="description" content={pickup.description} />
-        <meta property="og:title" content={pickup.title}/>
-        <meta property="og:url" content={'https://www.sflultimate.com/pickups/' + pickup.slug}/>
-        <meta property="og:description" content={pickup.description}/>
-        <meta property="og:image" content="https://www.sflultimate.com/images/dave-catching-face.jpg"/>
-      </Head>
+      <SeoHead
+        title={`SFLUltimate: ${pickup.title}`}
+        description={pickup.description}
+        path={`/pickups/${pickup.slug}`}
+        image="https://www.sflultimate.com/images/dave-catching-face.jpg"
+      />
       <HeaderNavigation leagues={leagues} />
 
       <div className="container pickup-listing-page">

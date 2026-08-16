@@ -2,6 +2,7 @@ import GraphqlClient from '../../../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { useState } from 'react'
 import { addLeagueToVariables } from '../../../lib/utils'
+import SeoHead from '../../../components/SeoHead'
 
 export async function getServerSideProps (context) {
   const variables = addLeagueToVariables(context, {})
@@ -282,13 +283,20 @@ function Sheets (props) {
   const [statsMap, setStatsMap] = useState(initPlayerMap)
 
   return <>
-    <link rel='stylesheet' href='/styles/site.css' media='all'/>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-      rel="stylesheet"/>
-    <style>{
-      `
+    <SeoHead
+      title={`${props.league.title} Sheets`}
+      description={`${props.league.title} stat sheets.`}
+      path={url.split('?')[0]}
+      noindex
+      image={false}
+    >
+      <link rel='stylesheet' href='/styles/site.css' media='all'/>
+      <link rel="preconnect" href="https://fonts.googleapis.com"/>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet"/>
+      <style>{
+        `
       .spirit-of-the-game-text {
         font-size: 0.7em;
       }
@@ -344,7 +352,8 @@ function Sheets (props) {
           page-break-after: initial;
         }
       }`}
-    </style>
+      </style>
+    </SeoHead>
 
     <div className="container-fluid">
       <div className="game-container">
@@ -453,7 +462,7 @@ function Sheets (props) {
               </div>
               {editor && (
                 <button className="btn btn-primary" onClick={() => handleSave(game, team.currentTeam)}>
-                    Save {team.currentTeam.name}'s stats for {new Date(game.scheduledTime).toLocaleDateString()}
+                    Save {team.currentTeam.name}&apos;s stats for {new Date(game.scheduledTime).toLocaleDateString()}
                 </button>
               )}
               <SpiritOfTheGameText/>
