@@ -5,8 +5,11 @@ import { HeaderNavigation } from '../../components/Navigation'
 import { getMongoTimestamp } from '../../lib/utils'
 import Head from 'next/head'
 import { buildPlayerUrl } from '../../components/PlayerLink'
+import { PreferredPositionBadge, getPreferredPositions } from '../../components/PreferredPositions'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 import { buildTeamUrl } from '../../lib/team-utils'
+
+const statKeys = ['assists', 'scores', 'defenses']
 
 function buildLeagueStatsUrl (league) {
   return `/leagues/${league.slug}/stats`
@@ -84,18 +87,6 @@ const seasonStatCards = [
     icon: 'fa-solid fa-shield-halved'
   }
 ]
-
-function getPreferredPositions (preferredPositions) {
-  if (Array.isArray(preferredPositions)) {
-    return preferredPositions.map(position => position.trim()).filter(Boolean)
-  }
-
-  if (typeof preferredPositions === 'string') {
-    return preferredPositions.split(',').map(position => position.trim()).filter(Boolean)
-  }
-
-  return []
-}
 
 export const getServerSideProps = async (context) => {
   const nameSplit = context.query.player.split('-')
@@ -235,11 +226,17 @@ export const getServerSideProps = async (context) => {
       assists: 0,
       scores: 0,
       defenses: 0,
+      overall: 0,
       playerTeamScore: 0,
       opponentTeamScore: 0,
       outcomes: [],
       wins: 0,
       losses: 0
+    }
+    league.highStats = {
+      assists: 0,
+      scores: 0,
+      defenses: 0
     }
     if (foundTeamForLeague) {
       league.team = Object.assign({}, foundTeamForLeague)
@@ -267,16 +264,19 @@ export const getServerSideProps = async (context) => {
           leagueGame.stats = {
             assists: gameToStatsMap[leagueGame.id]?.assists || 0,
             scores: gameToStatsMap[leagueGame.id]?.scores || 0,
-            defenses: gameToStatsMap[leagueGame.id]?.defenses || 0
+            defenses: gameToStatsMap[leagueGame.id]?.defenses || 0,
+            overall: 0
           }
 
-          const keys = ['assists', 'scores', 'defenses']
-          keys.forEach((key) => {
+          statKeys.forEach((key) => {
             const stat = gameToStatsMap[leagueGame.id] ? gameToStatsMap[leagueGame.id][key] : 0
             leagueGame.stats[key] = stat
             league.totals[key] += stat
             allTimeTotals[key] += stat
+            league.highStats[key] = Math.max(league.highStats[key], stat)
           })
+          leagueGame.stats.overall = leagueGame.stats.assists + leagueGame.stats.scores + leagueGame.stats.defenses
+          league.totals.overall += leagueGame.stats.overall
 
           leagueGame.outcome = leagueGame.playerTeamScore > leagueGame.opponentTeamScore ? 'W' : 'L'
           league.totals[leagueGame.outcome === 'W' ? 'wins' : 'losses']++
@@ -343,6 +343,14 @@ export default function PlayerPage (props) {
     }
   }, [allTimeTotals])
 
+  function getSeasonStatCellClassName (league, key, value) {
+    if (value > 0 && value === league.highStats[key]) {
+      return 'table-warning fw-bold'
+    }
+
+    return ''
+  }
+
   return (
     <div>
       <Head>
@@ -383,8 +391,8 @@ export default function PlayerPage (props) {
                       </a>
                     )
                   }
-                  <span className="badge bg-light text-dark border fs-6">
-                    Community member since <a href={buildLeagueStatsUrl(firstCommunityLeague)}>{getLeagueYearLabel(firstCommunityLeague)}</a>
+                  <span className="badge text-bg-light border border-secondary fs-6">
+                    Community Member Since <a href={buildLeagueStatsUrl(firstCommunityLeague)} className="text-reset">{getLeagueYearLabel(firstCommunityLeague)}</a>
                   </span>
                 </div>
               )
@@ -396,9 +404,7 @@ export default function PlayerPage (props) {
                   {
                     preferredPositions.map(function (position) {
                       return (
-                        <span key={position} className="badge text-bg-primary fs-6">
-                          {position}
-                        </span>
+                        <PreferredPositionBadge key={position} position={position} />
                       )
                     })
                   }
@@ -468,6 +474,7 @@ export default function PlayerPage (props) {
                     <th>Assists</th>
                     <th>Scores</th>
                     <th>Defenses</th>
+                    <th>Overall</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -487,9 +494,10 @@ export default function PlayerPage (props) {
                           {game.outcome}
                         </strong>
                       </td>
-                      <td>{game.stats.assists}</td>
-                      <td>{game.stats.scores}</td>
-                      <td>{game.stats.defenses}</td>
+                      <td className={getSeasonStatCellClassName(league, 'assists', game.stats.assists)}>{game.stats.assists}</td>
+                      <td className={getSeasonStatCellClassName(league, 'scores', game.stats.scores)}>{game.stats.scores}</td>
+                      <td className={getSeasonStatCellClassName(league, 'defenses', game.stats.defenses)}>{game.stats.defenses}</td>
+                      <td><strong>{game.stats.overall}</strong></td>
                     </tr>
                   ))}
                 </tbody>
@@ -502,6 +510,7 @@ export default function PlayerPage (props) {
                     <td><strong>{league.totals.assists}</strong></td>
                     <td><strong>{league.totals.scores}</strong></td>
                     <td><strong>{league.totals.defenses}</strong></td>
+                    <td><strong>{league.totals.overall}</strong></td>
                   </tr>
                 </tfoot>
               </table>

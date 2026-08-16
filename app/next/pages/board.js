@@ -1,8 +1,30 @@
 import Head from 'next/head'
+import { useState } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../components/Navigation'
+import Modal from '../components/Modal'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+
+const BOARD_BIO_PREVIEW_LENGTH = 140
+
+function getBoardBioPreview (description, maxLength = BOARD_BIO_PREVIEW_LENGTH) {
+  if (!description) {
+    return ''
+  }
+
+  const normalizedDescription = description.replace(/\s+/g, ' ').trim()
+
+  if (normalizedDescription.length <= maxLength) {
+    return normalizedDescription
+  }
+
+  const previewCandidate = normalizedDescription.slice(0, maxLength + 1)
+  const lastWhitespaceIndex = previewCandidate.search(/\s\S*$/)
+  const cutoffIndex = lastWhitespaceIndex > 0 ? lastWhitespaceIndex : maxLength
+
+  return `${previewCandidate.slice(0, cutoffIndex).trimEnd()}...`
+}
 
 export const getServerSideProps = async () => {
   const results = await GraphqlClient.query({
@@ -45,6 +67,7 @@ export const getServerSideProps = async () => {
 
 export default function BoardPage (props) {
   const { positions, boardMembers, leagues } = props
+  const [activeMember, setActiveMember] = useState(null)
 
   const links = [
     {
@@ -56,6 +79,14 @@ export default function BoardPage (props) {
   positions.forEach((item) => {
     item.links = links
   })
+
+  function openMemberModal (member) {
+    setActiveMember(member)
+  }
+
+  function closeMemberModal () {
+    setActiveMember(null)
+  }
 
   return (
     <>
@@ -116,43 +147,87 @@ export default function BoardPage (props) {
           ))}
           <hr/>
           <h2 className="text-center">Our Team</h2>
-          {boardMembers.map((member, index) => (
-            member.active && (
-              <div className="row" style={{ marginBottom: '1em' }} key={index}>
-                <div className="col-md-4">
-                  {member.image && (
-                    <img
-                      src={member.image.publicUrl}
-                      alt={`${member.firstName} ${member.lastName}`}
-                      className="img-fluid rounded"
-                      style={{ margin: '0 auto' }}
-                    />
-                  )}
+          <div className="row board-members-grid">
+            {boardMembers.map((member) => (
+              member.active && (
+                <div className="col-sm-6 col-lg-4 mb-4 d-flex" key={member.id}>
+                  <div className="card board-member-card w-100">
+                    <div className="board-member-card__image-wrapper">
+                      {member.image
+                        ? (
+                        <img
+                          src={member.image.publicUrl}
+                          alt={`${member.firstName} ${member.lastName}`}
+                          className="card-img-top board-member-card__image"
+                        />
+                          )
+                        : (
+                        <div className="board-member-card__image-placeholder">
+                          <span>{member.firstName} {member.lastName}</span>
+                        </div>
+                          )}
+                    </div>
+                    <div className="card-body board-member-card__body">
+                      <h3 className="board-member-card__name">
+                        {member.firstName} {member.lastName}
+                      </h3>
+                      <p className="board-member-card__bio-preview">
+                        {getBoardBioPreview(member.description)}
+                      </p>
+                      <ul className="list-inline">
+                        {member?.links?.map((link, i) => (
+                          <li key={i}>
+                            <a href={link.url} target="_blank" rel="noopener noreferrer">
+                              {link.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                      {member.description && (
+                        <button
+                          type="button"
+                          className="btn btn-outline-primary board-member-card__cta"
+                          onClick={() => openMemberModal(member)}
+                        >
+                          Learn More
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <div className="col-md-8">
-                  <h3 className="text-left">
-                    {member.firstName} {member.lastName}
-                  </h3>
-                  <p>
-                    <strong>{member.category}</strong>
-                  </p>
-                  <p>{member.description}</p>
-                  <ul className="list-inline">
-                    {member?.links?.map((link, i) => (
-                      <li key={i}>
-                        <a href={link.url} target="_blank" rel="noopener noreferrer">
-                          {link.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )
-          ))}
+              )
+            ))}
+          </div>
           <hr/>
         </div>
       </div>
+      <Modal
+        id="board-member-modal"
+        isOpen={Boolean(activeMember)}
+        onClose={closeMemberModal}
+        title={activeMember ? `${activeMember.firstName} ${activeMember.lastName}` : ''}
+        size="lg"
+        footer={(
+          <button type="button" className="btn btn-secondary" onClick={closeMemberModal}>
+            Close
+          </button>
+        )}
+      >
+        {activeMember && (
+          <div className="board-member-modal">
+            {activeMember.image && (
+              <img
+                src={activeMember.image.publicUrl}
+                alt={`${activeMember.firstName} ${activeMember.lastName}`}
+                className="img-fluid rounded board-member-modal__image"
+              />
+            )}
+            <p className="board-member-modal__bio mb-0">
+              {activeMember.description}
+            </p>
+          </div>
+        )}
+      </Modal>
     </>
   )
 }

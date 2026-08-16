@@ -3,22 +3,11 @@ import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../../../components/Navigation'
 import Standings from '../../../../components/Standings'
 import GameStatTable from '../../../../components/GameStatTable'
+import { PreferredPositionBadge, buildPreferredPositionMap } from '../../../../components/PreferredPositions'
 import { addLeagueToVariables } from '../../../../lib/utils'
 import GraphqlClient from '../../../../lib/graphql-client'
 import { updateWithGlobalServerSideProps } from '../../../../lib/global-server-side-props'
 import { buildTeamUrl, isMatchingTeamRoute } from '../../../../lib/team-utils'
-
-function buildPositionMap (players = []) {
-  return players.reduce(function (acc, player) {
-    player?.preferredPositions?.split(', ').forEach(function (position) {
-      if (position) {
-        acc[position] = acc[position] || 0
-        acc[position]++
-      }
-    })
-    return acc
-  }, {})
-}
 
 function buildTeamStats (players = [], playerGameStats = []) {
   const statMap = {}
@@ -227,7 +216,7 @@ export const getServerSideProps = async (context) => {
 
 export default function TeamPage (props) {
   const { league, leagues, record, seasonGames, team } = props
-  const positionMap = buildPositionMap(team.players)
+  const positionMap = buildPreferredPositionMap(team.players)
   const recordText = `${record.wins}-${record.losses}${record.forfeits > 0 ? ` (${record.forfeits} forfeits)` : ''}`
 
   return (
@@ -278,16 +267,14 @@ export default function TeamPage (props) {
           }
           {
             Object.keys(positionMap).length > 0 && (
-              <p className="lead d-flex justify-content-around flex-wrap">
-                <span>Player Positions:</span>
+              <div className="d-flex align-items-center justify-content-center flex-wrap gap-2 mt-3">
+                <span className="lead mb-0 me-2">Player Positions:</span>
                 {
                   Object.keys(positionMap).sort().map(position => (
-                    <span key={position}>
-                      <strong>{position.charAt(0).toUpperCase() + position.slice(1)}</strong>: {positionMap[position]}
-                    </span>
+                    <PreferredPositionBadge key={position} position={position} count={positionMap[position]} />
                   ))
                 }
-              </p>
+              </div>
             )
           }
         </div>

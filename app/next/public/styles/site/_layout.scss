@@ -805,3 +805,70 @@
 .pickup-contact-modal-body {
   font-size: 15px;
 }
+
+.board-member-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+}
+
+.board-member-card__image-wrapper {
+  background: #f8f9fa;
+}
+
+.board-member-card__image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.board-member-card__image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 320px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #495057;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.board-member-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.board-member-card__name {
+  margin-bottom: 0.75rem;
+}
+
+.board-member-card__bio-preview {
+  min-height: 6rem;
+  margin-bottom: 1rem;
+  color: #495057;
+  white-space: pre-line;
+}
+
+.board-member-card__cta {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.board-member-modal__image {
+  width: 100%;
+  max-height: 420px;
+  margin-bottom: 1.5rem;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.board-member-modal__bio {
+  white-space: pre-line;
+}
