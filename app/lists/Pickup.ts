@@ -7,6 +7,7 @@ export default list({
   fields: {
     title: text({ validation: { isRequired: true }, isIndexed: true, label: 'Pickup Name' }),
     isActive: checkbox({ defaultValue: false }),
+    isFeaturedOnHomepage: checkbox({ defaultValue: false, label: 'Featured on Homepage' }),
     order: integer({ validation: { isRequired: true } }),
     day: text({ validation: { isRequired: true }, label: 'Day(s) Played' }),
     time: text({ validation: { isRequired: true }, label: 'Start Time' }),
@@ -18,12 +19,12 @@ export default list({
     description: text({ validation: { isRequired: true }, ui: { displayMode: 'textarea' } }),
     updatedAt: timestamp({ db: { updatedAt: true } }),
     slug: text({ validation: { isRequired: true } }),
-    location: relationship({ ref: 'Location' }),
+    location: relationship({ ref: 'Location' })
   },
   ui: {
     labelField: 'title',
     listView: {
-      initialColumns: ['isActive', 'order', 'title', 'location', 'day', 'time'],
-    },
-  },
+      initialColumns: ['isActive', 'isFeaturedOnHomepage', 'order', 'title', 'location', 'day', 'time']
+    }
+  }
 })

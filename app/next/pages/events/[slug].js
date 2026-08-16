@@ -12,16 +12,6 @@ export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
       query {
-        allLeagues(where:{isActive: true}) {
-          id
-          title
-          earlyRegistrationStart
-          earlyRegistrationEnd
-          registrationStart
-          registrationEnd
-          lateRegistrationStart
-          lateRegistrationEnd
-        }
         allEvents(where: {slug: "${context.params.slug}"} sortBy: startTime_DESC) {
           id
           image {
@@ -38,9 +28,6 @@ export const getServerSideProps = async (context) => {
         }
       }`
   })
-
-  const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league)
 
   const events = results.data.allEvents.map(function (event) {
     event = JSON.parse(JSON.stringify(event))
@@ -66,7 +53,7 @@ export const getServerSideProps = async (context) => {
     return event
   })
 
-  const props = { event: events[0] || null, league }
+  const props = { event: events[0] || null }
   await updateWithGlobalServerSideProps(props)
   return { props }
 }

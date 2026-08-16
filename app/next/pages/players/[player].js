@@ -1,10 +1,92 @@
 import GraphqlClient from '../../lib/graphql-client'
 import { gql } from '@apollo/client'
+import { useEffect, useState } from 'react'
 import { HeaderNavigation } from '../../components/Navigation'
 import { getMongoTimestamp } from '../../lib/utils'
 import Head from 'next/head'
 import { buildPlayerUrl } from '../../components/PlayerLink'
+import { PreferredPositionBadge, getPreferredPositions } from '../../components/PreferredPositions'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
+import { buildTeamUrl } from '../../lib/team-utils'
+
+const statKeys = ['assists', 'scores', 'defenses']
+
+function buildLeagueStatsUrl (league) {
+  return `/leagues/${league.slug}/stats`
+}
+
+function getLeagueYearLabel (league) {
+  const yearMatch = league?.title?.match(/\b(20\d{2})\b/)
+  if (yearMatch) {
+    return yearMatch[1]
+  }
+
+  return getMongoTimestamp(league.id).getFullYear()
+}
+
+function sortPlayersByName (players = []) {
+  return Array.from(players).sort(function (a, b) {
+    const aName = `${a.firstName} ${a.lastName}`.trim().toLowerCase()
+    const bName = `${b.firstName} ${b.lastName}`.trim().toLowerCase()
+    return aName.localeCompare(bName)
+  })
+}
+
+function getMostRecentPlayerRecord (players = []) {
+  return Array.from(players).sort(function (a, b) {
+    return getMongoTimestamp(b.id) - getMongoTimestamp(a.id)
+  })[0]
+}
+
+function getCanonicalPlayer (players = []) {
+  const playersWithImages = players.filter(function (player) {
+    return player.profileImage?.publicUrl
+  })
+
+  if (playersWithImages.length > 0) {
+    return getMostRecentPlayerRecord(playersWithImages)
+  }
+
+  return getMostRecentPlayerRecord(players)
+}
+
+function WinLossRecord (props) {
+  const { wins, losses } = props
+  return (
+    <strong>
+      <span style={{ color: '#198754' }}>{wins}W</span>
+      <span>-</span>
+      <span style={{ color: '#dc3545' }}>{losses}L</span>
+    </strong>
+  )
+}
+
+const seasonStatCards = [
+  {
+    key: 'leagues',
+    label: 'Leagues',
+    singularLabel: 'League',
+    icon: 'fa-solid fa-trophy'
+  },
+  {
+    key: 'scores',
+    label: 'Scores',
+    singularLabel: 'Score',
+    icon: 'fa-solid fa-bullseye'
+  },
+  {
+    key: 'assists',
+    label: 'Assists',
+    singularLabel: 'Assist',
+    icon: 'fa-solid fa-handshake-angle'
+  },
+  {
+    key: 'defenses',
+    label: 'Defenses',
+    singularLabel: 'Defense',
+    icon: 'fa-solid fa-shield-halved'
+  }
+]
 
 export const getServerSideProps = async (context) => {
   const nameSplit = context.query.player.split('-')
@@ -29,9 +111,13 @@ export const getServerSideProps = async (context) => {
           firstName
           lastName
           preferredPositions
+          profileImage {
+            publicUrl
+          }
           leagues {
             id
             title
+            slug
           }
         }
       }`,
@@ -78,19 +164,31 @@ export const getServerSideProps = async (context) => {
           homeTeam {
             id
             name
+            slug
           }
           awayTeam {
             id
             name
+            slug
           }
         }
         allTeams(where: {players_some: {id_in: $playerIds}}) {
           id
           name
+          slug
+          image {
+            publicUrl
+          }
           league {
             id
+            slug
           }
           captains {
+            id
+            firstName
+            lastName
+          }
+          players {
             id
             firstName
             lastName
@@ -128,11 +226,17 @@ export const getServerSideProps = async (context) => {
       assists: 0,
       scores: 0,
       defenses: 0,
+      overall: 0,
       playerTeamScore: 0,
       opponentTeamScore: 0,
       outcomes: [],
       wins: 0,
       losses: 0
+    }
+    league.highStats = {
+      assists: 0,
+      scores: 0,
+      defenses: 0
     }
     if (foundTeamForLeague) {
       league.team = Object.assign({}, foundTeamForLeague)
@@ -152,23 +256,27 @@ export const getServerSideProps = async (context) => {
           const leagueGame = Object.assign({}, dbGame)
           leagueGame.playerTeamScore = isHomeTeam ? dbGame.homeTeamScore : dbGame.awayTeamScore
           leagueGame.opponentTeamScore = isHomeTeam ? dbGame.awayTeamScore : dbGame.homeTeamScore
-          leagueGame.opponentTeamName = isHomeTeam ? dbGame.awayTeam.name : dbGame.homeTeam.name
+          leagueGame.opponentTeam = isHomeTeam ? dbGame.awayTeam : dbGame.homeTeam
+          leagueGame.opponentTeamName = leagueGame.opponentTeam.name
           league.totals.opponentTeamScore += leagueGame.opponentTeamScore
           league.totals.playerTeamScore += leagueGame.playerTeamScore
 
           leagueGame.stats = {
             assists: gameToStatsMap[leagueGame.id]?.assists || 0,
             scores: gameToStatsMap[leagueGame.id]?.scores || 0,
-            defenses: gameToStatsMap[leagueGame.id]?.defenses || 0
+            defenses: gameToStatsMap[leagueGame.id]?.defenses || 0,
+            overall: 0
           }
 
-          const keys = ['assists', 'scores', 'defenses']
-          keys.forEach((key) => {
+          statKeys.forEach((key) => {
             const stat = gameToStatsMap[leagueGame.id] ? gameToStatsMap[leagueGame.id][key] : 0
             leagueGame.stats[key] = stat
             league.totals[key] += stat
             allTimeTotals[key] += stat
+            league.highStats[key] = Math.max(league.highStats[key], stat)
           })
+          leagueGame.stats.overall = leagueGame.stats.assists + leagueGame.stats.scores + leagueGame.stats.defenses
+          league.totals.overall += leagueGame.stats.overall
 
           leagueGame.outcome = leagueGame.playerTeamScore > leagueGame.opponentTeamScore ? 'W' : 'L'
           league.totals[leagueGame.outcome === 'W' ? 'wins' : 'losses']++
@@ -179,15 +287,18 @@ export const getServerSideProps = async (context) => {
     }
   })
 
+  const firstCommunityLeague = leagueGameStatHistory[0] || null
+
   leagueGameStatHistory.sort(function (a, b) {
     return getMongoTimestamp(b.id) - getMongoTimestamp(a.id)
   })
 
-  const player = playerResults.data.allPlayers[0]
+  const player = getCanonicalPlayer(playerResults.data.allPlayers)
   const props = {
     player,
     allTimeTotals,
-    leagueGameStatHistory
+    leagueGameStatHistory,
+    firstCommunityLeague
   }
   await updateWithGlobalServerSideProps(props)
   return {
@@ -196,37 +307,162 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function PlayerPage (props) {
-  const { player, leagueGameStatHistory, leagues, allTimeTotals } = props
+  const { player, leagueGameStatHistory, leagues, allTimeTotals, firstCommunityLeague } = props
+  const preferredPositions = getPreferredPositions(player.preferredPositions)
+  const [animatedTotals, setAnimatedTotals] = useState({
+    leagues: 0,
+    scores: 0,
+    assists: 0,
+    defenses: 0
+  })
+
+  useEffect(() => {
+    let frameId
+    const duration = 900
+    const startedAt = window.performance.now()
+
+    function animate (now) {
+      const progress = Math.min((now - startedAt) / duration, 1)
+      const nextTotals = {}
+
+      seasonStatCards.forEach(function (statCard) {
+        nextTotals[statCard.key] = Math.round(allTimeTotals[statCard.key] * progress)
+      })
+
+      setAnimatedTotals(nextTotals)
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(animate)
+      }
+    }
+
+    frameId = window.requestAnimationFrame(animate)
+
+    return function cleanup () {
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [allTimeTotals])
+
+  function getSeasonStatCellClassName (league, key, value) {
+    if (value > 0 && value === league.highStats[key]) {
+      return 'table-warning fw-bold'
+    }
+
+    return ''
+  }
+
   return (
     <div>
       <Head>
         <title>{player.firstName} {player.lastName} Statistics</title>
         <meta property="og:title" content={`${player.firstName} ${player.lastName} Statistics`} />
-        <meta property="og:url" content={'https://www.sflultimate.com/players' + buildPlayerUrl(player)}/>
+        <meta property="og:url" content={'https://www.sflultimate.com' + buildPlayerUrl(player)}/>
         <meta property="og:description" content={`See historical scores, assists, and defenses for ${player.firstName} ${player.lastName} across current and past SFLUltimate events`}/>
       </Head>
       <HeaderNavigation leagues={leagues} />
       <div className="container">
-        <h1>{player.firstName} {player.lastName} Profile</h1>
-        <div>
+        <div className="row align-items-center mb-4">
           {
-            player.preferredPositions && (
-              <p className="lead">Preferred Positions: {Array.isArray(player.preferredPositions) ? player.preferredPositions.join(', ') : player.preferredPositions}</p>
+            player.profileImage?.publicUrl && (
+              <div className="col-md-4 mb-3 mb-md-0 text-center">
+                <img
+                  src={player.profileImage.publicUrl}
+                  alt={player.firstName + ' ' + player.lastName}
+                  className="img-fluid rounded"
+                  style={{ maxHeight: '240px', objectFit: 'cover' }}
+                />
+              </div>
             )
           }
-          <p className="lead" style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <span>Leagues: <strong>{allTimeTotals.leagues}</strong></span>
-            <span>Scores: <strong>{allTimeTotals.scores}</strong></span>
-            <span>Assists: <strong>{allTimeTotals.assists}</strong></span>
-            <span>Defenses: <strong>{allTimeTotals.defenses}</strong></span>
-          </p>
+          <div className="col-md-8">
+            <h1>{player.firstName} {player.lastName}</h1>
+            {
+              firstCommunityLeague && (
+                <div className="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                  {
+                    firstCommunityLeague.team?.image?.publicUrl && (
+                      <a href={buildTeamUrl(firstCommunityLeague, firstCommunityLeague.team)}>
+                        <img
+                          src={firstCommunityLeague.team.image.publicUrl}
+                          alt={firstCommunityLeague.team.name + ' logo'}
+                          className="img-fluid rounded"
+                          style={{ maxHeight: '72px', objectFit: 'contain' }}
+                        />
+                      </a>
+                    )
+                  }
+                  <span className="badge text-bg-light border border-secondary fs-6">
+                    Community Member Since <a href={buildLeagueStatsUrl(firstCommunityLeague)} className="text-reset">{getLeagueYearLabel(firstCommunityLeague)}</a>
+                  </span>
+                </div>
+              )
+            }
+            {
+              preferredPositions.length > 0 && (
+                <div className="d-flex align-items-center flex-wrap gap-2">
+                  <span className="lead mb-0 me-2">Preferred Positions:</span>
+                  {
+                    preferredPositions.map(function (position) {
+                      return (
+                        <PreferredPositionBadge key={position} position={position} />
+                      )
+                    })
+                  }
+                </div>
+              )
+            }
+          </div>
+        </div>
+        <div className="row text-center mb-4">
+          {
+            seasonStatCards.map(function (statCard) {
+              const statValue = animatedTotals[statCard.key]
+              const statLabel = statValue === 1 ? statCard.singularLabel : statCard.label
+              return (
+                <div className="col-6 col-md-3 mb-3" key={statCard.key}>
+                  <div className="rounded h-100 p-3 d-flex flex-column justify-content-center align-items-center">
+                    <i className={`fa ${statCard.icon} fa-2x mb-2 text-primary`} aria-hidden="true"></i>
+                    <strong style={{ fontSize: '2rem', lineHeight: '1' }}>{statValue}</strong>
+                    <span className="text-uppercase text-muted mt-2" style={{ letterSpacing: '0.08em', fontSize: '0.85rem' }}>{statLabel}</span>
+                  </div>
+                </div>
+              )
+            })
+          }
         </div>
         {leagueGameStatHistory.map((league, index) => (
           league.team && (
             <div key={index}>
-              <h2>{league.title}</h2>
-              <p className="lead" style={{ marginBottom: '0.5rem' }}>{league.team.name}</p>
+              <h2><a href={buildLeagueStatsUrl(league)}>{league.title}</a></h2>
+              {
+                league.team.image?.publicUrl && (
+                  <p style={{ marginBottom: '0.5rem' }}>
+                    <a href={buildTeamUrl(league, league.team)}>
+                      <img
+                        src={league.team.image.publicUrl}
+                        alt={league.team.name + ' logo'}
+                        className="img-fluid rounded"
+                        style={{ maxHeight: '110px', objectFit: 'contain' }}
+                      />
+                    </a>
+                  </p>
+                )
+              }
+              <p className="lead" style={{ marginBottom: '0.5rem' }}>
+                <a href={buildTeamUrl(league, league.team)}>{league.team.name}</a>
+              </p>
               <p><strong>Captains:</strong> {league.team.captains.map(c => c.firstName.trim() + ' ' + c.lastName.trim()).join(', ')}</p>
+              <p>
+                <strong>Players:</strong>{' '}
+                {sortPlayersByName(league.team.players).map(function (teamPlayer, playerIndex) {
+                  return (
+                    <span key={teamPlayer.id}>
+                      {playerIndex > 0 ? ', ' : ''}
+                      <a href={buildPlayerUrl(teamPlayer)}>{teamPlayer.firstName.trim()} {teamPlayer.lastName.trim()}</a>
+                    </span>
+                  )
+                })}
+              </p>
               <table className="table table-bordered table-striped">
                 <thead>
                   <tr>
@@ -238,6 +474,7 @@ export default function PlayerPage (props) {
                     <th>Assists</th>
                     <th>Scores</th>
                     <th>Defenses</th>
+                    <th>Overall</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -249,13 +486,18 @@ export default function PlayerPage (props) {
                         day: 'numeric',
                         weekday: 'short'
                       })}</td>
-                      <td>{game.opponentTeamName}</td>
+                      <td><a href={buildTeamUrl(league, game.opponentTeam)}>{game.opponentTeamName}</a></td>
                       <td>{game.playerTeamScore}</td>
                       <td>{game.opponentTeamScore}</td>
-                      <td>{game.outcome}</td>
-                      <td>{game.stats.assists}</td>
-                      <td>{game.stats.scores}</td>
-                      <td>{game.stats.defenses}</td>
+                      <td>
+                        <strong style={{ color: game.outcome === 'W' ? '#198754' : '#dc3545' }}>
+                          {game.outcome}
+                        </strong>
+                      </td>
+                      <td className={getSeasonStatCellClassName(league, 'assists', game.stats.assists)}>{game.stats.assists}</td>
+                      <td className={getSeasonStatCellClassName(league, 'scores', game.stats.scores)}>{game.stats.scores}</td>
+                      <td className={getSeasonStatCellClassName(league, 'defenses', game.stats.defenses)}>{game.stats.defenses}</td>
+                      <td><strong>{game.stats.overall}</strong></td>
                     </tr>
                   ))}
                 </tbody>
@@ -264,10 +506,11 @@ export default function PlayerPage (props) {
                     <td colSpan="2"><strong>Total</strong></td>
                     <td><strong>{league.totals.playerTeamScore}</strong></td>
                     <td><strong>{league.totals.opponentTeamScore}</strong></td>
-                    <td><strong>{league.totals.wins}W-{league.totals.losses}L</strong></td>
+                    <td><WinLossRecord wins={league.totals.wins} losses={league.totals.losses} /></td>
                     <td><strong>{league.totals.assists}</strong></td>
                     <td><strong>{league.totals.scores}</strong></td>
                     <td><strong>{league.totals.defenses}</strong></td>
+                    <td><strong>{league.totals.overall}</strong></td>
                   </tr>
                 </tfoot>
               </table>

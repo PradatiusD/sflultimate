@@ -4,6 +4,7 @@ import LeagueUtils from '../lib/league-utils'
 import { gql } from '@apollo/client'
 import { addLeagueToVariables } from '../lib/utils'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import { buildTeamUrl } from '../lib/team-utils'
 
 export const getLeagueTeamsData = async (context) => {
   const variables = addLeagueToVariables(context, {})
@@ -12,6 +13,7 @@ export const getLeagueTeamsData = async (context) => {
       query($leagueCriteria: LeagueWhereInput) {
         allLeagues(where:$leagueCriteria) {
           title
+          slug
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
@@ -25,6 +27,7 @@ export const getLeagueTeamsData = async (context) => {
         allTeams(where: {league: $leagueCriteria}) {
           id,
           name
+          slug
           color
           captains {
             id
@@ -164,7 +167,10 @@ export default function LeagueTeams (props) {
 
                 return (
                   <article key={team.id}>
-                    <h3><span className="team-color" style={{ backgroundColor: team.color }}></span>{team.name}</h3>
+                    <h3>
+                      <span className="team-color" style={{ backgroundColor: team.color }}></span>
+                      <a href={buildTeamUrl(league, team)}>{team.name}</a>
+                    </h3>
                     <p className="lead">
                       {
                         team.captains.length > 0 && (

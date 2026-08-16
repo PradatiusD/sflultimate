@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
+import PickupContactActions from '../components/PickupContactActions'
 import Standings from '../components/Standings'
 import { createSummary, showDate } from '../lib/utils'
 import Image from 'next/image'
@@ -78,6 +79,28 @@ export const getServerSideProps = async (context) => {
           homeTeamScore
           awayTeamScore
         }
+        allPickups(where: {isActive: true, isFeaturedOnHomepage: true}, sortBy: order_ASC) {
+          id
+          slug
+          title
+          day
+          time
+          description
+          location {
+            name
+            type
+            addressStreet
+            addressCity
+            addressState
+            addressZipCode
+            latitude
+            longitude
+          }
+          contactWhatsapp
+          contactUrl
+          contactEmail
+          contactPhone
+        }
       }`
   }, {
     variables: {}
@@ -96,7 +119,20 @@ export const getServerSideProps = async (context) => {
     }),
     games: results.data.allGames,
     events: activeEvents,
-    news: results.data.allPosts
+    news: results.data.allPosts,
+    featuredPickups: results.data.allPickups.map((pickup) => ({
+      id: pickup.id,
+      slug: pickup.slug,
+      title: pickup.title,
+      day: pickup.day,
+      time: pickup.time,
+      description: pickup.description,
+      location: pickup.location,
+      contactUrl: pickup.contactUrl,
+      hasContactWhatsapp: Boolean(pickup.contactWhatsapp),
+      hasContactEmail: Boolean(pickup.contactEmail),
+      hasContactPhone: Boolean(pickup.contactPhone)
+    }))
   }
 
   await updateWithGlobalServerSideProps(props)
@@ -106,7 +142,7 @@ export const getServerSideProps = async (context) => {
 }
 
 export default function Homepage (props) {
-  const { games, leagues, events, news, activeLeagues } = props
+  const { games, leagues, events, news, activeLeagues, featuredPickups } = props
 
   const keyTakeaways = getKeyTakeawaysData()
   keyTakeaways.pop()
@@ -124,6 +160,7 @@ export default function Homepage (props) {
   ]
 
   const showSignupLeague = false
+  const showStandings = false
 
   return (
     <>
@@ -137,83 +174,119 @@ export default function Homepage (props) {
         <meta property="og:description" content="Since 1999, we organize & amplify the Ultimate Frisbee scene for Broward, Miami-Dade & Palm Beach." />
         <meta property="og:image" content="https://www.sflultimate.com/images/hatter-beach-ultimate.jpg"/>
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css"/>
+        <link rel="stylesheet" href="/styles/font-awesome/css/all.min.css"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700|Roboto:300,400,400i,700"/>
         <link rel="stylesheet" href="/styles/site.css"/>
       </Head>
       <HeaderNavigation leagues={leagues} />
       <div className="container">
         <div className="row">
-          <div className="col-md-8">
-            {
-              !showSignupLeague && (
-                <>
-                  <h3>Latest Standings</h3>
-                  <div className="standings">
-                    <Standings games={games} />
-                  </div>
-                </>
-              )
-            }
-            {
-              showSignupLeague && (
-                <>
-                  <h3>Active Leagues</h3>
+          {
+            showStandings && (
+              <div className="col-md-8">
+                {
+                  showStandings && (
+                    <>
+                      <h3>Latest Standings</h3>
+                      <div className="standings">
+                        <Standings games={games} />
+                      </div>
+                    </>
+                  )
+                }
+                {
+                  showSignupLeague && (
+                    <>
+                      <h3>Active Leagues</h3>
+                      {
+                        activeLeagues.map((league) => {
+                          const route = league.canRegister ? 'register' : 'substitutions'
+                          const href = `/leagues/${league.slug}/${route}`
+                          return (
+                            <div key={league.id} style={{ marginBottom: '1rem' }}>
+                              {
+                                league.registrationShareImage && league.registrationShareImage.publicUrl && (
+                                  <a href={href}>
+                                    <Image className="img-fluid rounded" src={league.registrationShareImage.publicUrl} height={630} width={1200} />
+                                  </a>
+                                )
+                              }
+                              <a href={href}><strong>{league.title}</strong></a>
+                              <div dangerouslySetInnerHTML={{ __html: league.summary }}></div>
+                            </div>
+                          )
+                        })
+                      }
+                    </>
+                  )
+                }
+              </div>
+            )
+          }
+          {
+            events.length > 0 && (
+              <>
+                <div className="col-md-4">
+                  <h3>Upcoming Events</h3>
                   {
-                    activeLeagues.map((league) => {
-                      const route = league.canRegister ? 'register' : 'substitutions'
-                      const href = `/leagues/${league.slug}/${route}`
+                    events.map((event) => {
                       return (
-                        <div key={league.id} style={{ marginBottom: '1rem' }}>
-                          {
-                            league.registrationShareImage && league.registrationShareImage.publicUrl && (
-                              <a href={href}>
-                                <Image className="img-fluid rounded " src={league.registrationShareImage.publicUrl} height={630} width={1200} />
+                        <div key={event.id} className="homepage-news-card">
+                          <div className="homepage-news-card-header">
+                            <div>
+                              {
+                                event.image && event.image.publicUrl && (
+                                  <img className="img-fluid rounded-circle" src={event.image.publicUrl} style={{ aspectRatio: '1' }} />
+                                )
+                              }
+                            </div>
+                            <div>
+                              <a href={'/events/' + event.slug}>
+                                <strong>{event.name}</strong><br/>
                               </a>
-                            )
-                          }
-                          <a href={href}><strong>{league.title}</strong></a>
-                          <div dangerouslySetInnerHTML={{ __html: league.summary }}></div>
+                              <div>
+                                <small className="text-muted">{event.category} • {showDate(event.startTime, { month: 'long', day: 'numeric', year: 'numeric', weekday: 'short' })}</small>
+                              </div>
+                            </div>
+                          </div>
+                          <div dangerouslySetInnerHTML={{ __html: createSummary(event, 140) }}></div>
+                          { events.length > 1 && <hr /> }
                         </div>
                       )
                     })
                   }
-                </>
-              )
-            }
-          </div>
-          <div className="col-md-4">
-            <h3>Upcoming Events</h3>
-            {
-              events.map((event) => {
-                return (
-                  <div key={event.id} className="homepage-news-card">
-                    <div className="homepage-news-card-header">
-                      <div>
+                </div>
+              </>
+            )
+          }
+          {
+            featuredPickups.length > 0 && (
+              <div className="col-md-4">
+                <h3>Featured Pickups</h3>
+                {
+                  featuredPickups.map((pickup) => {
+                    return (
+                      <div key={pickup.id} className="homepage-news-card">
+                        <a href={'/pickups/' + pickup.slug}><strong>{pickup.title}</strong></a>
+                        <div>
+                          <small className="text-muted">{pickup.day} at {pickup.time}</small>
+                        </div>
                         {
-                          event.image && event.image.publicUrl && (
-                            <img className="img-fluid rounded-circle" src={event.image.publicUrl} style={{ aspectRatio: '1' }} />
+                          pickup.location && (
+                            <div>
+                              <small className="text-muted">{pickup.location.name} • {pickup.location.type}</small>
+                            </div>
                           )
                         }
+                        <p className="mt-2">{pickup.description}</p>
+                        <PickupContactActions pickup={pickup} />
                       </div>
-                      <div>
-                        <a href={'/events/' + event.slug}>
-                          <strong>{event.name}</strong><br/>
-                        </a>
-                        <div>
-                          <small className="text-muted">{event.category} • {showDate(event.startTime, { month: 'long', day: 'numeric', year: 'numeric', weekday: 'short' })}</small>
-                        </div>
-                      </div>
-                    </div>
-                    <div dangerouslySetInnerHTML={{ __html: createSummary(event, 140) }}></div>
-                    <hr />
-                  </div>
-                )
-              })
-            }
-          </div>
-        </div>
-        <div className="row">
+                    )
+                  })
+                }
+              </div>
+            )
+          }
 
           <h3>News</h3>
           {
@@ -259,15 +332,15 @@ export default function Homepage (props) {
           <h2 className="text-center">Why play South Florida Ultimate?</h2>
           <hr className="sfl-divider"/>
           <div className="row">
-            <article className="col-sm-4 text-center"><i className="fa fa-smile-o fa-4x"></i>
+            <article className="col-sm-4 text-center"><i className="fa fa-regular fa-face-smile fa-4x"></i>
               <h3>Community</h3>
               <p>From club athletes to newbies, league welcomes players of all skills & ability</p>
             </article>
-            <article className="col-sm-4 text-center"><i className="fa fa-trophy fa-4x"></i>
+            <article className="col-sm-4 text-center"><i className="fa fa-solid fa-trophy fa-4x"></i>
               <h3>Play Ultimate</h3>
               <p>We have 8-10 regular season games and one final playoff tournament!</p>
             </article>
-            <article className="col-sm-4 text-center"><i className="fa fa-female fa-4x"></i>
+            <article className="col-sm-4 text-center"><i className="fa fa-solid fa-venus fa-4x"></i>
               <h3>Ladies Welcome</h3>
               <p>Our league is co-ed, and is always excited to invite new lady players!</p>
             </article>

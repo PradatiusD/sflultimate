@@ -4,8 +4,10 @@ import Head from 'next/head'
 import { HeaderNavigation } from '../../components/Navigation'
 import { showDate, showHourMinute } from '../../lib/utils'
 import Standings from '../../components/Standings'
-import { buildPlayerUrl } from '../../components/PlayerLink'
+import { PlayerLink } from '../../components/PlayerLink'
+import GameStatTable from '../../components/GameStatTable'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
+import { buildTeamUrl } from '../../lib/team-utils'
 export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
@@ -17,6 +19,7 @@ export const getServerSideProps = async (context) => {
           league {
             id
             title
+            slug
           }
           location {
             name
@@ -25,6 +28,7 @@ export const getServerSideProps = async (context) => {
           homeTeam {
             id
             name
+            slug
             players {
               id
               firstName
@@ -39,6 +43,7 @@ export const getServerSideProps = async (context) => {
           awayTeam {
             id
             name
+            slug
             players {
               id
               firstName
@@ -98,10 +103,18 @@ export const getServerSideProps = async (context) => {
           homeTeam {
             id
             name
+            slug
+            image {
+              publicUrl
+            }
           }
           awayTeam {
             id
             name
+            slug
+            image {
+              publicUrl
+            }
           }
           homeTeamScore
           awayTeamScore
@@ -206,6 +219,7 @@ export default function GamePage (props) {
           <p className="h3 text-center">Season Standings</p>
           <Standings
             games={games}
+            league={game.league}
             teamsFilter={(team) => {
               return team.id === game.homeTeam.id || team.id === game.awayTeam.id
             }}
@@ -229,13 +243,20 @@ export default function GamePage (props) {
                     {
                       team.image && team.image.publicUrl && (
                         <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-                          <img src={team.image.publicUrl} className="img-fluid rounded" alt={team.name} style={{ maxWidth: '100%', objectFit: 'contain' }}/>
+                          <a href={buildTeamUrl(game.league, team)}>
+                            <img src={team.image.publicUrl} className="img-fluid rounded" alt={team.name} style={{ maxWidth: '100%', objectFit: 'contain' }}/>
+                          </a>
                         </div>
                       )
                     }
                     {
                       (!team.image || !team.image.publicUrl) && (
-                        <h2>{team.name}</h2>
+                        <h2><a href={buildTeamUrl(game.league, team)}>{team.name}</a></h2>
+                      )
+                    }
+                    {
+                      team.image && team.image.publicUrl && (
+                        <h2 className="mt-3"><a href={buildTeamUrl(game.league, team)}>{team.name}</a></h2>
                       )
                     }
 
@@ -270,16 +291,16 @@ export default function GamePage (props) {
                         <h3>{team.stats.length > 0 ? 'Missing' : 'Stats Pending'}</h3>
                         <table className="table table-striped">
                           <thead>
-                          <tr>
-                            <th>Name</th>
-                          </tr>
+                            <tr>
+                              <th>Name</th>
+                            </tr>
                           </thead>
                           <tbody>
-                          {team.stats?.filter(stat => !stat.attended).map((stat, index) => (
-                            <tr key={index}>
-                              <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
-                            </tr>
-                          ))}
+                            {team.stats?.filter(stat => !stat.attended).map((stat, index) => (
+                              <tr key={index}>
+                                <td><PlayerLink player={stat.player} /></td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </>
@@ -292,52 +313,6 @@ export default function GamePage (props) {
         </div>
       </div>
     </>
-  )
-}
-
-function GameStatTable (props) {
-  const { team, isGamePreview } = props
-  return (
-    <table className="table table-striped">
-      <thead>
-      <tr>
-        <th>Name</th>
-        <th>Assists</th>
-        <th>Scores</th>
-        <th>Defenses</th>
-        <th>Total</th>
-      </tr>
-      </thead>
-      <tbody>
-      {team.stats.length > 0 && team.stats.filter(s => isGamePreview ? true : s.attended || s.total > 0).map((stat, index) => (
-        <tr key={index}>
-          <td><a href={buildPlayerUrl(stat.player)}>{stat.player.firstName} {stat.player.lastName}</a></td>
-          <td>{stat.assists}</td>
-          <td>{stat.scores}</td>
-          <td>{stat.defenses}</td>
-          <td>{stat.total}</td>
-        </tr>
-      ))}
-      {team.stats.length === 0 && team.players.map((player, index) => (
-        <tr key={index}>
-          <td><a href={buildPlayerUrl(player)}>{player.firstName} {player.lastName}</a></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      ))}
-      </tbody>
-      <tfoot>
-      <tr>
-        <th>Total</th>
-        <th>{team.stats.reduce((a, s) => a + s.assists, 0)}</th>
-        <th>{team.stats.reduce((a, s) => a + s.scores, 0)}</th>
-        <th>{team.stats.reduce((a, s) => a + s.defenses, 0)}</th>
-        <th>{team.stats.reduce((a, s) => a + s.total, 0)}</th>
-      </tr>
-      </tfoot>
-    </table>
   )
 }
 

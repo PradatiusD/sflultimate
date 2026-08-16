@@ -1,5 +1,7 @@
+import { buildTeamUrl } from '../lib/team-utils'
+
 export default function Standings (props) {
-  const { games, teamsFilter } = props
+  const { games, league, teamsFilter } = props
   const teamMap = {}
   games.forEach(game => {
     if (!game.homeTeam || !game.awayTeam) {
@@ -14,6 +16,7 @@ export default function Standings (props) {
           games: []
         }
       }
+      teamMap[id].slug = game[type].slug
       teamMap[id].image = game[type].image
     })
   })
@@ -154,8 +157,20 @@ export default function Standings (props) {
               return (
                 <tr key={team.id} style={{ verticalAlign: 'middle' }}>
                   <td className="text-left">
-                    {teamMap[team.id].image && <img src={teamMap[team.id].image.publicUrl} alt={team.name} className="img-fluid" style={{ maxWidth: '75px' }} />}
-                    {!teamMap[team.id].image && <span style={{ whiteSpace: 'nowrap' }}>{team.name}</span>}
+                    {
+                      league && (
+                        <a href={buildTeamUrl(league, { ...team, ...teamMap[team.id] })}>
+                          {teamMap[team.id].image && <img src={teamMap[team.id].image.publicUrl} alt={team.name} className="img-fluid" style={{ maxWidth: '75px' }} />}
+                          {!teamMap[team.id].image && <span style={{ whiteSpace: 'nowrap' }}>{team.name}</span>}
+                        </a>
+                      )
+                    }
+                    {
+                      !league && teamMap[team.id].image && <img src={teamMap[team.id].image.publicUrl} alt={team.name} className="img-fluid" style={{ maxWidth: '75px' }} />
+                    }
+                    {
+                      !league && !teamMap[team.id].image && <span style={{ whiteSpace: 'nowrap' }}>{team.name}</span>
+                    }
                   </td>
                   <td>{team.wins}</td>
                   <td>{team.losses}</td>

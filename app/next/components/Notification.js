@@ -8,13 +8,17 @@ export default function Notification (props) {
     setPathname(window.location.pathname)
   }, [])
 
-  if (!leagues) {
+  if (!Array.isArray(leagues) || leagues.length === 0) {
     return <></>
   }
 
   const activeLeague = leagues.find((league) => {
     return league.isActive
   })
+
+  if (!activeLeague) {
+    return <></>
+  }
 
   const destinationUrl = '/leagues/' + activeLeague.slug + '/register'
 
@@ -25,7 +29,7 @@ export default function Notification (props) {
   return (
     <div className="container">
       <div className="alert alert-info" role="alert">
-        <i className="fa fa-info-circle me-2" aria-hidden="true"></i>
+        <i className="fa fa-solid fa-circle-info me-2" aria-hidden="true"></i>
         <span className="glyphicon glyphicon-info-sign" style={{ position: 'relative', top: '2px' }}></span>{' '}
         <strong><a href={destinationUrl} target="_blank">{activeLeague.title} registration</a><u> closes soon</u>:</strong>
         {' '} only{' '}

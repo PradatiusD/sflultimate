@@ -1,0 +1,366 @@
+<div id="quake-map" style="width:100%;">
+  <div
+  id="quake-map-view"
+  style="
+  position:relative;
+  height:560px;
+  width:100%;
+  overflow:hidden;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  background:#e5e7eb;
+  font-family:Arial,sans-serif;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  "
+  >
+  <div id="quake-tiles" style="position:absolute;inset:0;"></div>
+  <svg id="quake-overlay" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></svg>
+  
+  <div style="position:absolute;top:12px;left:12px;z-index:2;background:rgba(255,255,255,.94);padding:8px 10px;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.15);font-size:13px;color:#111827;">
+    <div style="font-weight:700;margin-bottom:4px;">Colombia Earthquake Epicenter</div>
+    <div>50 mi and 100 mi radius rings</div>
+  </div>
+  
+  <div style="position:absolute;top:12px;right:12px;z-index:2;display:flex;flex-direction:column;gap:8px;">
+    <button id="zoom-in" type="button" style="width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.94);box-shadow:0 1px 4px rgba(0,0,0,.15);font-size:24px;cursor:pointer;">+</button>
+    <button id="zoom-out" type="button" style="width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.94);box-shadow:0 1px 4px rgba(0,0,0,.15);font-size:24px;cursor:pointer;">−</button>
+  </div>
+  
+  <div style="position:absolute;left:12px;bottom:12px;z-index:2;background:rgba(255,255,255,.94);padding:6px 10px;border-radius:999px;box-shadow:0 1px 4px rgba(0,0,0,.15);font-size:12px;color:#111827;">
+    Drag to pan • Scroll to zoom
+  </div>
+  
+  <div style="position:absolute;right:12px;bottom:12px;z-index:2;background:rgba(255,255,255,.94);padding:6px 10px;border-radius:999px;box-shadow:0 1px 4px rgba(0,0,0,.15);font-size:12px;color:#111827;">
+    © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" style="color:#111827;">OpenStreetMap</a>
+  </div>
+</div>
+</div>
+
+<script>
+  (function () {
+    const mapEl = document.getElementById('quake-map-view')
+    const tilesEl = document.getElementById('quake-tiles')
+    const overlayEl = document.getElementById('quake-overlay')
+    const zoomInBtn = document.getElementById('zoom-in')
+    const zoomOutBtn = document.getElementById('zoom-out')
+    
+    const TILE_SIZE = 256
+    const EARTH_RADIUS_M = 6378137
+    const MIN_ZOOM = 4
+    const MAX_ZOOM = 11
+    
+    const nearbyCities = [
+    { name: 'Cali', lat: 3.4520, lng: -76.5325, dx: -78, dy: 18 },
+    { name: 'Pereira', lat: 4.8143, lng: -75.6947, dx: 12, dy: -22 },
+    { name: 'Manizales', lat: 5.0675, lng: -75.5100, dx: 12, dy: -36 }
+    ]
+    
+    const epicenter = {
+      lat: 4.8950,
+      lng: -76.2350,
+      label: 'Epicenter'
+    }
+    
+    const rings = [
+    { miles: 50, color: '#f59e0b', fill: 'rgba(245,158,11,0.12)' },
+    { miles: 100, color: '#dc2626', fill: 'rgba(220,38,38,0.08)' }
+    ]
+    
+    const state = {
+      centerLat: epicenter.lat,
+      centerLng: epicenter.lng,
+      zoom: 7,
+      dragging: false,
+      dragStart: null,
+      dragCenterWorld: null,
+      wheelAccumulator: 0
+    }
+    
+    function clamp (value, min, max) {
+      return Math.min(max, Math.max(min, value))
+    }
+    
+    function project (lat, lng, zoom) {
+      const scale = TILE_SIZE * Math.pow(2, zoom)
+      const sinLat = Math.sin(lat * Math.PI / 180)
+      return {
+        x: ((lng + 180) / 360) * scale,
+        y: (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * scale
+      }
+    }
+    
+    function unproject (x, y, zoom) {
+      const scale = TILE_SIZE * Math.pow(2, zoom)
+      const lng = (x / scale) * 360 - 180
+      const n = Math.PI - 2 * Math.PI * y / scale
+      const lat = 180 / Math.PI * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)))
+      return { lat, lng }
+    }
+    
+    function metersPerPixel (lat, zoom) {
+      return (Math.cos(lat * Math.PI / 180) * 2 * Math.PI * EARTH_RADIUS_M) / (TILE_SIZE * Math.pow(2, zoom))
+    }
+    
+    function viewportSize () {
+      return {
+        width: mapEl.clientWidth,
+        height: mapEl.clientHeight
+      }
+    }
+    
+    function setCenterFromWorld (worldX, worldY) {
+      const ll = unproject(worldX, worldY, state.zoom)
+      state.centerLat = clamp(ll.lat, -85, 85)
+      state.centerLng = ((ll.lng + 540) % 360) - 180
+    }
+    
+    function zoomAtPoint (nextZoom, clientX, clientY) {
+      nextZoom = clamp(nextZoom, MIN_ZOOM, MAX_ZOOM)
+      if (nextZoom === state.zoom) return
+      
+      const rect = mapEl.getBoundingClientRect()
+      const px = clientX - rect.left
+      const py = clientY - rect.top
+      const { width, height } = viewportSize()
+      
+      const centerWorldBefore = project(state.centerLat, state.centerLng, state.zoom)
+      const anchorWorldBefore = {
+        x: centerWorldBefore.x + (px - width / 2),
+        y: centerWorldBefore.y + (py - height / 2)
+      }
+      const anchorLatLng = unproject(anchorWorldBefore.x, anchorWorldBefore.y, state.zoom)
+      
+      state.zoom = nextZoom
+      
+      const anchorWorldAfter = project(anchorLatLng.lat, anchorLatLng.lng, state.zoom)
+      const newCenterWorld = {
+        x: anchorWorldAfter.x - (px - width / 2),
+        y: anchorWorldAfter.y - (py - height / 2)
+      }
+      
+      setCenterFromWorld(newCenterWorld.x, newCenterWorld.y)
+      render()
+    }
+    
+    function renderTiles () {
+      const { width, height } = viewportSize()
+      const centerWorld = project(state.centerLat, state.centerLng, state.zoom)
+      const left = centerWorld.x - width / 2
+      const top = centerWorld.y - height / 2
+      const scale = Math.pow(2, state.zoom)
+      
+      tilesEl.innerHTML = ''
+      
+      const xStart = Math.floor(left / TILE_SIZE)
+      const yStart = Math.floor(top / TILE_SIZE)
+      const xEnd = Math.floor((left + width) / TILE_SIZE)
+      const yEnd = Math.floor((top + height) / TILE_SIZE)
+      
+      for (let x = xStart; x <= xEnd; x++) {
+        for (let y = yStart; y <= yEnd; y++) {
+          if (y < 0 || y >= scale) continue
+          
+          const wrappedX = ((x % scale) + scale) % scale
+          const img = document.createElement('img')
+          img.alt = ''
+          img.draggable = false
+          img.src = 'https://tile.openstreetmap.org/' + state.zoom + '/' + wrappedX + '/' + y + '.png'
+          img.style.position = 'absolute'
+          img.style.left = (x * TILE_SIZE - left) + 'px'
+          img.style.top = (y * TILE_SIZE - top) + 'px'
+          img.style.width = TILE_SIZE + 'px'
+          img.style.height = TILE_SIZE + 'px'
+          img.style.pointerEvents = 'none'
+          tilesEl.appendChild(img)
+        }
+      }
+    }
+    
+    function renderOverlay () {
+      const { width, height } = viewportSize()
+      overlayEl.setAttribute('viewBox', '0 0 ' + width + ' ' + height)
+      overlayEl.innerHTML = ''
+      
+      const centerWorld = project(state.centerLat, state.centerLng, state.zoom)
+      const epicWorld = project(epicenter.lat, epicenter.lng, state.zoom)
+      
+      const cx = width / 2 + (epicWorld.x - centerWorld.x)
+      const cy = height / 2 + (epicWorld.y - centerWorld.y)
+      
+      rings.slice().reverse().forEach(function (ring) {
+        const radiusMeters = ring.miles * 1609.344
+        const radiusPx = radiusMeters / metersPerPixel(epicenter.lat, state.zoom)
+        
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        circle.setAttribute('cx', cx)
+        circle.setAttribute('cy', cy)
+        circle.setAttribute('r', radiusPx)
+        circle.setAttribute('fill', ring.fill)
+        circle.setAttribute('stroke', ring.color)
+        circle.setAttribute('stroke-width', '3')
+        if (ring.miles === 100) circle.setAttribute('stroke-dasharray', '10 8')
+        overlayEl.appendChild(circle)
+        
+        const labelBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+        labelBg.setAttribute('x', cx + 10)
+        labelBg.setAttribute('y', cy - radiusPx - 24)
+        labelBg.setAttribute('rx', '6')
+        labelBg.setAttribute('ry', '6')
+        labelBg.setAttribute('width', ring.miles === 100 ? '64' : '56')
+        labelBg.setAttribute('height', '22')
+        labelBg.setAttribute('fill', 'rgba(255,255,255,0.95)')
+        overlayEl.appendChild(labelBg)
+        
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+        label.setAttribute('x', cx + 20)
+        label.setAttribute('y', cy - radiusPx - 9)
+        label.setAttribute('fill', ring.color)
+        label.setAttribute('font-size', '13')
+        label.setAttribute('font-family', 'Arial, sans-serif')
+        label.setAttribute('font-weight', '700')
+        label.textContent = ring.miles + ' mi'
+        overlayEl.appendChild(label)
+      })
+      
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+      dot.setAttribute('cx', cx)
+      dot.setAttribute('cy', cy)
+      dot.setAttribute('r', '6')
+      dot.setAttribute('fill', '#111827')
+      dot.setAttribute('stroke', '#ffffff')
+      dot.setAttribute('stroke-width', '2')
+      overlayEl.appendChild(dot)
+      
+      const epicBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+      epicBg.setAttribute('x', cx + 10)
+      epicBg.setAttribute('y', cy + 10)
+      epicBg.setAttribute('rx', '6')
+      epicBg.setAttribute('ry', '6')
+      epicBg.setAttribute('width', '78')
+      epicBg.setAttribute('height', '22')
+      epicBg.setAttribute('fill', 'rgba(255,255,255,0.95)')
+      overlayEl.appendChild(epicBg)
+      
+      const epicLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+      epicLabel.setAttribute('x', cx + 20)
+      epicLabel.setAttribute('y', cy + 25)
+      epicLabel.setAttribute('fill', '#111827')
+      epicLabel.setAttribute('font-size', '13')
+      epicLabel.setAttribute('font-family', 'Arial, sans-serif')
+      epicLabel.setAttribute('font-weight', '700')
+      epicLabel.textContent = epicenter.label
+      overlayEl.appendChild(epicLabel)
+    }
+    
+    function render () {
+      renderTiles()
+      renderOverlay()
+      nearbyCities.forEach(drawCity)
+    }
+    
+    mapEl.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('button')) return
+      
+      state.dragging = true
+      state.dragStart = { x: e.clientX, y: e.clientY }
+      state.dragCenterWorld = project(state.centerLat, state.centerLng, state.zoom)
+      mapEl.setPointerCapture(e.pointerId)
+    })
+    
+    mapEl.addEventListener('pointermove', function (e) {
+      if (!state.dragging) return
+      const dx = e.clientX - state.dragStart.x
+      const dy = e.clientY - state.dragStart.y
+      setCenterFromWorld(state.dragCenterWorld.x - dx, state.dragCenterWorld.y - dy)
+      render()
+    })
+    
+    function endDrag () {
+      state.dragging = false
+    }
+    
+    function drawCity (city) {
+      const { width, height } = viewportSize()
+      const cityWorld = project(city.lat, city.lng, state.zoom)
+      const x = width / 2 + (cityWorld.x - (state.dragCenterWorld ? state.dragCenterWorld.x : project(state.centerLat, state.centerLng, state.zoom).x))
+      const y = height / 2 + (cityWorld.y - (state.dragCenterWorld ? state.dragCenterWorld.y : project(state.centerLat, state.centerLng, state.zoom).y))
+      if (x < -120 || x > width + 120 || y < -60 || y > height + 60) {
+        return
+      }
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+      line.setAttribute('x1', x)
+      line.setAttribute('y1', y)
+      line.setAttribute('x2', x + city.dx)
+      line.setAttribute('y2', y + city.dy)
+      line.setAttribute('stroke', '#1d4ed8')
+      line.setAttribute('stroke-width', '2')
+      overlayEl.appendChild(line)
+      
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+      dot.setAttribute('cx', x)
+      dot.setAttribute('cy', y)
+      dot.setAttribute('r', '5')
+      dot.setAttribute('fill', '#1d4ed8')
+      dot.setAttribute('stroke', '#ffffff')
+      dot.setAttribute('stroke-width', '2')
+      overlayEl.appendChild(dot)
+      
+      const labelWidth = city.name === 'Manizales' ? 82 : 64
+      const labelX = x + city.dx
+      const labelY = y + city.dy - 16
+      
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+      bg.setAttribute('x', labelX)
+      bg.setAttribute('y', labelY)
+      bg.setAttribute('rx', '6')
+      bg.setAttribute('ry', '6')
+      bg.setAttribute('width', String(labelWidth))
+      bg.setAttribute('height', '22')
+      bg.setAttribute('fill', 'rgba(255,255,255,0.95)')
+      overlayEl.appendChild(bg)
+      
+      
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+      text.setAttribute('x', labelX + 10)
+      text.setAttribute('y', labelY + 15)
+      text.setAttribute('fill', '#1d4ed8')
+      text.setAttribute('font-size', '13')
+      text.setAttribute('font-family', 'Arial, sans-serif')
+      text.setAttribute('font-weight', '700')
+      text.textContent = city.name
+      overlayEl.appendChild(text)
+    }
+    
+    mapEl.addEventListener('pointerup', endDrag)
+    mapEl.addEventListener('pointercancel', endDrag)
+    mapEl.addEventListener('pointerleave', endDrag)
+    
+    mapEl.addEventListener('wheel', function (e) {
+      e.preventDefault()
+      
+      state.wheelAccumulator += e.deltaY
+      
+      const threshold = 180
+      if (Math.abs(state.wheelAccumulator) < threshold) return
+      
+      const zoomStep = state.wheelAccumulator < 0 ? 1 : -1
+      state.wheelAccumulator = 0
+      zoomAtPoint(state.zoom + zoomStep, e.clientX, e.clientY)
+    }, { passive: false })
+    
+    zoomInBtn.addEventListener('click', function () {
+      const rect = mapEl.getBoundingClientRect()
+      zoomAtPoint(state.zoom + 1, rect.left + rect.width / 2, rect.top + rect.height / 2)
+    })
+    
+    zoomOutBtn.addEventListener('click', function () {
+      const rect = mapEl.getBoundingClientRect()
+      zoomAtPoint(state.zoom - 1, rect.left + rect.width / 2, rect.top + rect.height / 2)
+    })
+    
+    window.addEventListener('resize', render)
+    render()
+  })()
+</script>

@@ -3,10 +3,10 @@ let navLinks = []
 
 const evergreenLinks = [
   { label: 'Local Pickups', key: 'community', href: '/pickups' },
-  { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
-  { label: 'Our Board', key: 'board', href: '/board' },
   { label: 'Events', key: 'events', href: '/events' },
   { label: 'News', key: 'news', href: '/news' },
+  { label: 'Club & College Teams', key: 'club-teams', href: '/club-teams' },
+  { label: 'Our Board', key: 'board', href: '/board' },
   { label: 'Youth', key: 'youth', href: '/youth' },
   { label: 'Beach Bash', key: 'beach-bash', href: '/beach-bash-tournament' }
 ]
@@ -18,30 +18,117 @@ const footerLinks = [
   { label: 'Privacy Policy', key: 'privacy', href: '/privacy' }
 ].concat(evergreenLinks)
 
+const socialLinks = [
+  { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/sflultimate/', iconClassName: 'fa-brands fa-instagram' },
+  { key: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/sflultimate/', iconClassName: 'fa-brands fa-youtube' },
+  { key: 'tiktok', label: 'TikTok', href: 'https://www.tiktok.com/@sflultimate', iconClassName: 'fa-brands fa-tiktok' },
+  { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/sflultimate/', iconClassName: 'fa-brands fa-facebook' }
+]
+
+const leagueSections = [
+  { label: 'Teams', key: 'teams' },
+  { label: 'Schedule', key: 'schedule' },
+  { label: 'Stats', key: 'stats' }
+]
+
 function HeaderNavigation (props) {
   const { section, leagues } = props
 
-  let headerNavLinks = navLinks.slice()
-  headerNavLinks.unshift({ label: 'Register', key: 'register', href: '/register' })
-  headerNavLinks = headerNavLinks.concat([
-    { label: 'Teams', key: 'teams', href: '/teams' },
-    { label: 'Schedule', key: 'schedule', href: '/schedule' },
-    { label: 'Stats', key: 'stats', href: '/stats' }
-  ])
+  const headerNavLinks = navLinks.slice()
+  if (Array.isArray(leagues) && leagues.find(l => l.active)) {
+    headerNavLinks.unshift({ label: 'Register', key: 'register', href: '/register' })
+  }
+  headerNavLinks.push({ label: 'Leagues', key: 'leagues', href: '/leagues' })
+  const primaryNavLinks = headerNavLinks
+  const leftNavLinks = primaryNavLinks.slice(0, Math.ceil(primaryNavLinks.length / 2))
+  const rightNavLinks = primaryNavLinks.slice(Math.ceil(primaryNavLinks.length / 2))
+
+  function renderStandardLink (link, extraClassName = '') {
+    const className = `nav-link${section === link.key ? ' active' : ''}${extraClassName ? ` ${extraClassName}` : ''}`
+    return (
+      <a href={link.href} className={className}>
+        {link.label} {link.key === 'register' && <span className="badge bg-success">OPEN</span>}
+      </a>
+    )
+  }
+
+  function renderExternalNavLink (link, iconOnly = false) {
+    return (
+      <li key={link.key} className="nav-item">
+        {renderSocialLinkAnchor(link, iconOnly)}
+      </li>
+    )
+  }
+
+  function renderSocialLinkAnchor (link, iconOnly = false) {
+    return (
+      <a
+        key={link.key}
+        className={`nav-link${iconOnly ? ' nav-social-link' : ''}`}
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={link.label}
+        title={link.label}
+      >
+        {iconOnly
+          ? (
+            link.iconClassName
+              ? <i className={`fa ${link.iconClassName}`} aria-hidden="true"></i>
+              : <span className="nav-social-badge" aria-hidden="true">{link.badgeLabel}</span>
+            )
+          : link.label}
+      </a>
+    )
+  }
+
+  function renderLeagueDropdown (link, desktop = false) {
+    const dropdownId = `${link.key}-${desktop ? 'desktop' : 'mobile'}-dropdown-menu`
+    return (
+      <li className={`nav-item dropdown${desktop ? ' nav-item-mega' : ''}`} key={dropdownId}>
+        <a
+          className={`nav-link dropdown-toggle${section === link.key ? ' active' : ''}`}
+          href="#"
+          id={dropdownId}
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {link.label}
+        </a>
+        <ul className={`dropdown-menu${desktop ? ' dropdown-menu-mega' : ''}`} aria-labelledby={dropdownId}>
+          {leagues && leagues.map(({ slug, title }) => (
+            <li key={slug} className={`league-menu-group${desktop ? ' league-menu-group-desktop' : ''}`}>
+              <a className="dropdown-item league-menu-trigger" href={`/leagues/${slug}/teams`}>
+                <span>{title}</span>
+                <span className="league-menu-chevron" aria-hidden="true">›</span>
+              </a>
+              <ul className="league-menu-list">
+                {leagueSections.map((sectionLink) => (
+                  <li key={`${slug}-${sectionLink.key}`}>
+                    <a className="dropdown-item league-menu-child-link" href={`/leagues/${slug}/${sectionLink.key}`}>
+                      {sectionLink.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </li>
+    )
+  }
 
   return (
     <>
       <header id="header" className="site-header">
-        <div className="navbar-brand-container d-block d-sm-none mobile-logo">
-          <a href="/">
-            <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
+        <div className="navbar-brand-container d-xl-none mobile-logo">
+          <a href="/" aria-label="South Florida Ultimate home">
+            <img className="img-fluid" src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
           </a>
         </div>
         <nav className="navbar navbar-dark bg-dark fixed-top navbar-expand-xl" role="navigation">
           <div className="container-fluid">
-            <a href="/" className="navbar-brand d-none d-sm-flex navbar-brand-container">
-              <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
-            </a>
             <button
               className="navbar-toggler"
               type="button"
@@ -54,50 +141,62 @@ function HeaderNavigation (props) {
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="primaryNav">
-              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <li className="nav-item d-block d-sm-none">
-                  <a className="nav-link" href="/">Home</a>
-                </li>
-                {
-                  leagues && headerNavLinks.map((link) => {
-                    const dropdownId = link.key + '-dropdown-menu'
-                    if (link.key === 'stats' || link.key === 'schedule' || link.key === 'teams') {
+              <div className="w-100 d-xl-none">
+                <ul className="navbar-nav mb-2 mb-lg-0 pt-4">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/">Home</a>
+                  </li>
+                  {
+                    primaryNavLinks.map((link) => {
+                      if (link.key === 'leagues') {
+                        return renderLeagueDropdown(link)
+                      }
+
                       return (
-                        <li className="nav-item dropdown" key={link.key}>
-                          <a
-                            className="nav-link dropdown-toggle"
-                            href="#"
-                            id={dropdownId}
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            {link.label}
-                          </a>
-                          <ul className="dropdown-menu" aria-labelledby={dropdownId}>
-                            {
-                              leagues.map(({ slug, title }) => {
-                                const leagueUrl = `/leagues/${slug}/${link.key}`
-                                return (
-                                  <li key={slug}>
-                                    <a className="dropdown-item" href={leagueUrl}>{title}</a>
-                                  </li>
-                                )
-                              })
-                            }
-                          </ul>
+                        <li key={link.key} className="nav-item">
+                          {renderStandardLink(link)}
                         </li>
                       )
+                    })
+                  }
+                  <li className="nav-item nav-mobile-social-row">
+                    {socialLinks.map((link) => renderSocialLinkAnchor(link, true))}
+                  </li>
+                </ul>
+              </div>
+
+              <div className="desktop-nav-shell d-none d-xl-flex">
+                <ul className="navbar-nav desktop-nav-group desktop-nav-group-left">
+                  {leftNavLinks.map((link) => {
+                    if (link.key === 'leagues') {
+                      return renderLeagueDropdown(link, true)
                     }
+
                     return (
                       <li key={link.key} className="nav-item">
-                        <a href={link.href} className={`nav-link${section === link.key ? ' active' : ''}`}>
-                          {link.label} {link.key === 'register' && <span className="badge bg-success">OPEN</span>}
-                        </a>
+                        {renderStandardLink(link)}
                       </li>
                     )
                   })}
-              </ul>
+                </ul>
+                <a href="/" className="navbar-brand navbar-brand-centered" aria-label="South Florida Ultimate home">
+                  <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
+                </a>
+                <ul className="navbar-nav desktop-nav-group desktop-nav-group-right">
+                  {rightNavLinks.map((link) => {
+                    if (link.key === 'leagues') {
+                      return renderLeagueDropdown(link, true)
+                    }
+
+                    return (
+                      <li key={link.key} className="nav-item">
+                        {renderStandardLink(link)}
+                      </li>
+                    )
+                  })}
+                  {socialLinks.map((link) => renderExternalNavLink(link, true))}
+                </ul>
+              </div>
             </div>
           </div>
         </nav>
@@ -117,17 +216,23 @@ function FooterNavigation (props) {
             <div className="col-sm-8">
               <br/>
               <div>
-                <a href="https://www.instagram.com/sflultimate/" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-instagram"></i>
-                </a>
-                <a href="https://www.youtube.com/sflultimate/" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-youtube-play"></i>
-                </a>
-                <a href="https://www.facebook.com/sflultimate/" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-facebook"></i>
-                </a>
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.key}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.label}
+                    title={link.label}
+                    className={link.badgeLabel ? 'social-badge' : ''}
+                  >
+                    {link.iconClassName
+                      ? <i className={`fa ${link.iconClassName}`}></i>
+                      : <span>{link.badgeLabel}</span>}
+                  </a>
+                ))}
                 <a href="mailto:sflultimate@gmail.com" target="_blank" rel="noopener noreferrer">
-                  <i className="fa fa-envelope"></i>
+                  <i className="fa fa-solid fa-envelope"></i>
                 </a>
               </div>
               <br/>

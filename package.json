@@ -2,8 +2,8 @@
     "name": "sflultimate",
     "version": "3.0.0",
     "engines": {
-        "node": "20.18.0",
-        "npm": "10.8.2"
+        "node": ">=16.20.2 <23",
+        "npm": ">=8 <11"
     },
     "dependencies": {
         "@prisma/client": "5.22.0",
@@ -70,6 +70,7 @@
         "restore": "grunt restore",
         "lint": "npx eslint . --ignore-pattern '**/jquery/**' --ignore-pattern '**/bootstrap/**'",
         "build-schema": "get-graphql-schema http://localhost:3000/api/graphql > app/schema.graphql",
+        "build-sitemap": "node scripts/build-sitemap.js",
         "custom-fields": "npx babel app/custom-fields/CustomDateTime/src/views/*.js --out-dir app/custom-fields/CustomDateTime/views"
     },
     "private": true,

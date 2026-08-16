@@ -82,12 +82,12 @@ function EventItem (props) {
 
           <div dangerouslySetInnerHTML={{ __html: event.description }}/>
           <ul className="list-inline" style={{ marginTop: '1rem' }}>
-            <li>
+            <li className="list-inline-item">
               <a className="btn btn-secondary event-btn" href={eventUrl}>
                 View Event
               </a>
             </li>
-            <li>
+            <li className="list-inline-item">
               {
                 !isPast && (
                   <AddToCalendar event={event} />

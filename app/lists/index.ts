@@ -2,6 +2,8 @@ import BoardMember from './BoardMember'
 import BoardPosition from './BoardPosition'
 import ClubTeam from './ClubTeam'
 import Event from './Event'
+import Gallery from './Gallery'
+import GalleryAsset from './GalleryAsset'
 import Game from './Game'
 import League from './League'
 import Location from './Location'
@@ -19,6 +21,8 @@ export const lists = {
   BoardPosition,
   ClubTeam,
   Event,
+  Gallery,
+  GalleryAsset,
   Game,
   League,
   Location,
@@ -29,5 +33,5 @@ export const lists = {
   Post,
   Team,
   TournamentTeam,
-  User,
+  User
 }

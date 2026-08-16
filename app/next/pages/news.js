@@ -45,8 +45,8 @@ export default function PostsPage (props) {
           posts.map((post) => {
             const postUrl = '/news/' + post.slug
             return (
-              <>
-                <div key={post.id} className="row">
+              <div key={post.id}>
+                <div className="row">
                   <div className="col-md-3">
                     <a href={postUrl}>
                       <img src={post.image.publicUrl} alt={post.title} className="img-fluid rounded" />
@@ -57,10 +57,9 @@ export default function PostsPage (props) {
                     <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                     <div dangerouslySetInnerHTML={{ __html: post.summary }}/>
                   </div>
-                  <hr/>
                 </div>
                 <hr />
-              </>
+              </div>
             )
           })
         }

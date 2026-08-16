@@ -122,15 +122,15 @@ export default function ClubTeamsPage (props) {
                           const iconTypes = [
                             {
                               label: 'instagram',
-                              icon: 'fa-instagram'
+                              icon: 'fa-brands fa-instagram'
                             },
                             {
                               label: 'facebook',
-                              icon: 'fa-facebook'
+                              icon: 'fa-brands fa-facebook'
                             },
                             {
                               label: 'twitter',
-                              icon: 'fa-twitter'
+                              icon: 'fa-brands fa-twitter'
                             }
                           ]
                           const matchingIcon = iconTypes.find((iconType) => link.label.toLowerCase().includes(iconType.label))
