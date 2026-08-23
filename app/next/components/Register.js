@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { HeaderNavigation } from './Navigation'
 import { FormCheckbox, FormInput, FormSelect } from './FormElements'
+import fireConfetti from '../lib/confetti'
 import { is } from 'braintree/vendor/querystring.node.js.511d6a2/util'
 
 const locals = {}
@@ -175,6 +176,27 @@ export default function RegisterPage (props) {
                 />
               </div>
             </div>
+
+            {
+              !isSubstitution && (
+                <FormSelect
+                  label="Are you a first time player?"
+                  id="isFirstTimePlayer"
+                  name="isFirstTimePlayer"
+                  required
+                  options={[
+                    { value: 'Yes', label: 'Yes' },
+                    { value: 'No', label: 'No' }
+                  ]}
+                  onChange={(e) => {
+                    setPlayer({ ...player, isFirstTimePlayer: e.target.value })
+                    if (e.target.value === 'Yes') {
+                      fireConfetti()
+                    }
+                  }}
+                />
+              )
+            }
 
             <FormSelect
               label="Gender"
@@ -390,22 +412,6 @@ export default function RegisterPage (props) {
                 : (
                   <div id={'no-requestShirtSize'}></div>
                   )
-            }
-
-            {
-              !isSubstitution && (
-                <FormSelect
-                  label="Are you a first time player?"
-                  id="isFirstTimePlayer"
-                  name="isFirstTimePlayer"
-                  required
-                  options={[
-                    { value: 'Yes', label: 'Yes' },
-                    { value: 'No', label: 'No' }
-                  ]}
-                  onChange={(e) => setPlayer({ ...player, isFirstTimePlayer: e.target.value })}
-                />
-              )
             }
 
             {

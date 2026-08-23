@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation, socialLinks } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
 import { addLeagueToVariables } from '../lib/utils'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
+import fireConfetti from '../lib/confetti'
 import SeoHead from '../components/SeoHead'
 
 export const getServerSideProps = async (context) => {
@@ -56,12 +58,19 @@ export const getServerSideProps = async (context) => {
 
 export default function ConfirmationPage (props) {
   const { league, referer, player, leagues } = props
-  const parsedURL = new URL(referer)
+  const parsedURL = referer ? new URL(referer) : null
   const validPathNames = [
     '/register-team',
     '/leagues/' + league.slug + '/register',
     '/leagues/' + league.slug + '/substitutions'
   ]
+  const hasValidReferer = parsedURL && validPathNames.includes(parsedURL.pathname)
+
+  useEffect(() => {
+    if (hasValidReferer) {
+      fireConfetti()
+    }
+  }, [hasValidReferer])
 
   function ErrorState () {
     return (
@@ -78,7 +87,7 @@ export default function ConfirmationPage (props) {
   if (!referer) {
     return <ErrorState />
   }
-  if (validPathNames.indexOf(parsedURL.pathname) === -1) {
+  if (!hasValidReferer) {
     return <ErrorState />
   }
 
