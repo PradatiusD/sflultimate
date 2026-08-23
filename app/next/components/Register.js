@@ -472,7 +472,7 @@ export default function RegisterPage (props) {
                     helpText={"If your captain and your team wins the league, you'll have your name and team's name be featured on our league trophy.  Captains get to pick their teams in the draft and are responsible for communicating to their teams on a weekly basis as well as ensuring that games maintain fair, spirited, competitive, and fun play."}
                   />
                   <div className="alert alert-success">
-                    <strong>FYI: </strong>Captains get a <strong>$10 discount</strong> on their league entry!
+                    <strong>FYI: </strong>Captains get a <strong>free jersey!</strong>
                     <br />
                     <br />
                     Also be sure to come to our <strong>DRAFT PARTY</strong> location/time TBD, come get hype about the league and watch the captains select teams. Get to know your new teammates and see friendly faces too!
