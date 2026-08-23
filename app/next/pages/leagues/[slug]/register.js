@@ -26,9 +26,12 @@ export const getServerSideProps = async (context) => {
           lateRegistrationEnd
           pricingEarlyAdult
           pricingEarlyStudent
+          pricingEarlyFirstTimePlayer
           pricingRegularAdult
           pricingRegularStudent
+          pricingRegularFirstTimePlayer
           pricingLateStudent
+          pricingLateFirstTimePlayer
           pricingLateAdult
           requestShirtSize
           jerseyCost

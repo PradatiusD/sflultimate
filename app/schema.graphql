@@ -1091,10 +1091,13 @@ type League {
   lateRegistrationStart: DateTime
   lateRegistrationEnd: DateTime
   pricingEarlyStudent: Int
+  pricingEarlyFirstTimePlayer: Int
   pricingEarlyAdult: Int
   pricingRegularStudent: Int
+  pricingRegularFirstTimePlayer: Int
   pricingRegularAdult: Int
   pricingLateStudent: Int
+  pricingLateFirstTimePlayer: Int
   pricingLateAdult: Int
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
@@ -1123,10 +1126,13 @@ input LeagueCreateInput {
   lateRegistrationStart: DateTime
   lateRegistrationEnd: DateTime
   pricingEarlyStudent: Int
+  pricingEarlyFirstTimePlayer: Int
   pricingEarlyAdult: Int
   pricingRegularStudent: Int
+  pricingRegularFirstTimePlayer: Int
   pricingRegularAdult: Int
   pricingLateStudent: Int
+  pricingLateFirstTimePlayer: Int
   pricingLateAdult: Int
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
@@ -1178,10 +1184,13 @@ input LeagueUpdateInput {
   lateRegistrationStart: DateTime
   lateRegistrationEnd: DateTime
   pricingEarlyStudent: Int
+  pricingEarlyFirstTimePlayer: Int
   pricingEarlyAdult: Int
   pricingRegularStudent: Int
+  pricingRegularFirstTimePlayer: Int
   pricingRegularAdult: Int
   pricingLateStudent: Int
+  pricingLateFirstTimePlayer: Int
   pricingLateAdult: Int
   finalsTournamentStartDate: DateTime
   finalsTournamentEndDate: DateTime
@@ -1358,6 +1367,14 @@ input LeagueWhereInput {
   pricingEarlyStudent_gte: Int
   pricingEarlyStudent_in: [Int]
   pricingEarlyStudent_not_in: [Int]
+  pricingEarlyFirstTimePlayer: Int
+  pricingEarlyFirstTimePlayer_not: Int
+  pricingEarlyFirstTimePlayer_lt: Int
+  pricingEarlyFirstTimePlayer_lte: Int
+  pricingEarlyFirstTimePlayer_gt: Int
+  pricingEarlyFirstTimePlayer_gte: Int
+  pricingEarlyFirstTimePlayer_in: [Int]
+  pricingEarlyFirstTimePlayer_not_in: [Int]
   pricingEarlyAdult: Int
   pricingEarlyAdult_not: Int
   pricingEarlyAdult_lt: Int
@@ -1374,6 +1391,14 @@ input LeagueWhereInput {
   pricingRegularStudent_gte: Int
   pricingRegularStudent_in: [Int]
   pricingRegularStudent_not_in: [Int]
+  pricingRegularFirstTimePlayer: Int
+  pricingRegularFirstTimePlayer_not: Int
+  pricingRegularFirstTimePlayer_lt: Int
+  pricingRegularFirstTimePlayer_lte: Int
+  pricingRegularFirstTimePlayer_gt: Int
+  pricingRegularFirstTimePlayer_gte: Int
+  pricingRegularFirstTimePlayer_in: [Int]
+  pricingRegularFirstTimePlayer_not_in: [Int]
   pricingRegularAdult: Int
   pricingRegularAdult_not: Int
   pricingRegularAdult_lt: Int
@@ -1390,6 +1415,14 @@ input LeagueWhereInput {
   pricingLateStudent_gte: Int
   pricingLateStudent_in: [Int]
   pricingLateStudent_not_in: [Int]
+  pricingLateFirstTimePlayer: Int
+  pricingLateFirstTimePlayer_not: Int
+  pricingLateFirstTimePlayer_lt: Int
+  pricingLateFirstTimePlayer_lte: Int
+  pricingLateFirstTimePlayer_gt: Int
+  pricingLateFirstTimePlayer_gte: Int
+  pricingLateFirstTimePlayer_in: [Int]
+  pricingLateFirstTimePlayer_not_in: [Int]
   pricingLateAdult: Int
   pricingLateAdult_not: Int
   pricingLateAdult_lt: Int
@@ -2263,7 +2296,7 @@ type Player {
   experienceLevel: Int
   throwsLevel: Int
   participation: Int
-  registrationLevel: PlayerRegistrationLevelType
+  registrationLevel: String
   leagues(where: LeagueWhereInput, search: String, sortBy: [SortLeaguesBy!], orderBy: String, first: Int, skip: Int): [League!]!
   _leaguesMeta(where: LeagueWhereInput, search: String, sortBy: [SortLeaguesBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
   partnerName: String
@@ -2294,7 +2327,7 @@ input PlayerCreateInput {
   experienceLevel: Int
   throwsLevel: Int
   participation: Int
-  registrationLevel: PlayerRegistrationLevelType
+  registrationLevel: String
   leagues: LeagueRelateToManyInput
   partnerName: String
   wouldCaptain: Boolean
@@ -2457,11 +2490,6 @@ enum PlayerGenderType {
   Male
   Female
   Other
-}
-
-enum PlayerRegistrationLevelType {
-  Student
-  Adult
 }
 
 input PlayerRelateToManyInput {
@@ -2725,7 +2753,7 @@ input PlayerUpdateInput {
   experienceLevel: Int
   throwsLevel: Int
   participation: Int
-  registrationLevel: PlayerRegistrationLevelType
+  registrationLevel: String
   leagues: LeagueRelateToManyInput
   partnerName: String
   wouldCaptain: Boolean
@@ -2871,10 +2899,10 @@ input PlayerWhereInput {
   participation_not: Int
   participation_in: [Int]
   participation_not_in: [Int]
-  registrationLevel: PlayerRegistrationLevelType
-  registrationLevel_not: PlayerRegistrationLevelType
-  registrationLevel_in: [PlayerRegistrationLevelType]
-  registrationLevel_not_in: [PlayerRegistrationLevelType]
+  registrationLevel: String
+  registrationLevel_not: String
+  registrationLevel_in: [String]
+  registrationLevel_not_in: [String]
 
   """ condition must be true for all nodes """
   leagues_every: LeagueWhereInput
@@ -3482,14 +3510,20 @@ enum SortLeaguesBy {
   lateRegistrationEnd_DESC
   pricingEarlyStudent_ASC
   pricingEarlyStudent_DESC
+  pricingEarlyFirstTimePlayer_ASC
+  pricingEarlyFirstTimePlayer_DESC
   pricingEarlyAdult_ASC
   pricingEarlyAdult_DESC
   pricingRegularStudent_ASC
   pricingRegularStudent_DESC
+  pricingRegularFirstTimePlayer_ASC
+  pricingRegularFirstTimePlayer_DESC
   pricingRegularAdult_ASC
   pricingRegularAdult_DESC
   pricingLateStudent_ASC
   pricingLateStudent_DESC
+  pricingLateFirstTimePlayer_ASC
+  pricingLateFirstTimePlayer_DESC
   pricingLateAdult_ASC
   pricingLateAdult_DESC
   finalsTournamentStartDate_ASC

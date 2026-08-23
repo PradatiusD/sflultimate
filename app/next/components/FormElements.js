@@ -45,7 +45,7 @@ export function FormInput ({ label, type, name, placeholder, required, helpText,
   </>
 }
 
-export function FormSelect ({ label, name, options, required, helpText, onChange }) {
+export function FormSelect ({ label, name, options, required, helpText, onChange, value }) {
   const [inputStateClass, setInputStateClass] = useState([])
   return <>
     <div className={inputStateClass.join(' ')}>
@@ -55,6 +55,7 @@ export function FormSelect ({ label, name, options, required, helpText, onChange
         className="form-control-lg form-control"
         name={name}
         required={required}
+        value={value}
         onChange={(e) => {
           // if (e.target.validity.valid) {
           //   setInputStateClass([...inputStateClass, 'has-feedback', 'has-success'])

@@ -1,4 +1,4 @@
-function testRegistration ({ cardNumber, expirationDate, disablePayment, registrationPath, shirtSize, period }) {
+function visitRegistrationForm ({ disablePayment, registrationPath, period } = {}) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
   registrationPath = registrationPath || '/register'
@@ -16,6 +16,12 @@ function testRegistration ({ cardNumber, expirationDate, disablePayment, registr
   testUrl = testUrl.toString()
   const isSubstitution = registrationPath === '/substitutions'
   cy.visit(testUrl)
+
+  return { isSubstitution, registrationPeriod }
+}
+
+function testRegistration ({ assertConfirmation = true, cardNumber, expirationDate, disablePayment, registrationLevel, registrationPath, shirtSize, period }) {
+  const { isSubstitution, registrationPeriod } = visitRegistrationForm({ disablePayment, registrationPath, period })
   cy.get('#firstName').type('Test')
   cy.get('#lastName').type('Robot')
   const testEmailAddress = 'danielprada2012+sflultimate-test-' + Math.floor(Math.random() * 10000).toString() + '@gmail.com'
@@ -26,12 +32,6 @@ function testRegistration ({ cardNumber, expirationDate, disablePayment, registr
   cy.get('#throwsLevel').select('3')
   if (!isSubstitution) {
     cy.get('#participation').select('50')
-
-    cy.get('body').then(($body) => {
-      if ($body.find('#shirtSize').length) {
-        cy.get('#shirtSize').select(shirtSize || 'NA')
-      }
-    })
 
     cy.get('#isFirstTimePlayer').select('Yes')
     cy.get('#partnerName').type('Test Friend')
@@ -68,7 +68,21 @@ function testRegistration ({ cardNumber, expirationDate, disablePayment, registr
   cy.get('#codeOfConduct5').check()
 
   cy.get('#age').type('25')
-  cy.get('#registrationLevel').select('Student')
+  registrationLevel = registrationLevel || 'Student'
+  cy.get('#registrationLevel').select(registrationLevel)
+  if (!isSubstitution) {
+    cy.get('body').then(($body) => {
+      if ($body.find('#shirtSize').length) {
+        if (registrationLevel === 'Adult') {
+          cy.get('#shirtSize option[value="NA"]').should('exist')
+          cy.get('#shirtSize').select(shirtSize || 'NA')
+        } else {
+          cy.get('#shirtSize option[value="NA"]').should('not.exist')
+          cy.get('#shirtSize').select(shirtSize || 'M')
+        }
+      }
+    })
+  }
   if (!disablePayment && !isSubstitution) {
     cy.get('#donationLevel').select('tier_0')
   }
@@ -92,17 +106,58 @@ function testRegistration ({ cardNumber, expirationDate, disablePayment, registr
   }
 
   cy.get('#submitButton').click()
+
+  if (assertConfirmation) {
+    cy.location('pathname', { timeout: 30000 }).should('eq', '/confirmation')
+    if (!isSubstitution) {
+      cy.contains('Registration type:').should('contain.text', registrationLevel)
+      if (shirtSize === 'NA') {
+        cy.contains('Jersey:').should('not.exist')
+      } else {
+        cy.contains('Jersey:').should('contain.text', `size ${shirtSize || 'M'}`)
+      }
+    }
+  }
 }
 
 describe('Registration: Regular', () => {
+  it('Should default first-time players to student pricing with an included jersey', () => {
+    visitRegistrationForm()
+
+    cy.get('#registrationLevel option[value="Student"]').invoke('text').then((studentLabel) => {
+      cy.get('#registrationLevel option[value="First Time Player"]')
+        .should('contain.text', studentLabel.replace('Student', '').trim())
+    })
+    cy.get('#isFirstTimePlayer').select('Yes')
+    cy.get('#registrationLevel').should('have.value', 'First Time Player')
+    cy.get('#shirtSize option[value="NA"]').should('not.exist')
+  })
+
+  it('Should only let adults opt out of adding a jersey', () => {
+    visitRegistrationForm()
+
+    cy.get('#registrationLevel').select('Student')
+    cy.get('#registrationLevel option:checked').should('contain.text', 'jersey included')
+    cy.get('#shirtSize option[value="NA"]').should('not.exist')
+    cy.get('#registrationLevel').select('Adult')
+    cy.get('#registrationLevel option:checked').should('contain.text', 'jersey optional')
+    cy.get('#shirtSize option[value="NA"]').should('exist')
+    cy.get('#shirtSize').select('M')
+    cy.get('#registrationLevel option:checked').should('contain.text', 'with jersey')
+    cy.get('#shirtSize').select('NA')
+    cy.get('#registrationLevel option:checked').should('contain.text', 'jersey optional')
+  })
+
   it('Should allow registration with a jersey', () => {
     testRegistration({
+      registrationLevel: 'Adult',
       shirtSize: 'M'
     })
   })
 
   it('Should allow registration without a jersey', () => {
     testRegistration({
+      registrationLevel: 'Adult',
       shirtSize: 'NA'
     })
   })
@@ -110,6 +165,7 @@ describe('Registration: Regular', () => {
   it('Should show processor declined', () => {
     // https://developer.paypal.com/braintree/docs/reference/general/testing/node
     testRegistration({
+      assertConfirmation: false,
       cardNumber: '4000111111111511'
     })
   })
@@ -117,6 +173,14 @@ describe('Registration: Regular', () => {
   it('Should allow comped registration', () => {
     testRegistration({
       disablePayment: true
+    })
+  })
+
+  it('Should confirm a first-time player registration with an included jersey', () => {
+    testRegistration({
+      disablePayment: true,
+      registrationLevel: 'First Time Player',
+      shirtSize: 'M'
     })
   })
 
@@ -135,5 +199,4 @@ describe('Registration: Substitution', () => {
       registrationPath: '/substitutions'
     })
   })
-
 })

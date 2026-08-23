@@ -68,7 +68,8 @@ const fields = {
   },
   registrationLevel: {
     type: Select,
-    options: ['Student', 'Adult'],
+    options: ['Student', 'Adult', 'First Time Player'],
+    dataType: 'string',
     isRequired: true
   },
   leagues: {

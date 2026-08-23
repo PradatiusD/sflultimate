@@ -59,7 +59,7 @@ export function SendEmail (payload, league) {
   })
 
   const jerseyStatus = payload.shirtSize && payload.shirtSize !== 'NA'
-    ? `Yes (size: ${payload.shirtSize})`
+    ? `${payload.registrationLevel === 'Adult' ? 'Yes' : 'Included'} (size: ${payload.shirtSize})`
     : 'No'
 
   const emailSendParams = {

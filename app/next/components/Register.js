@@ -55,19 +55,23 @@ export default function RegisterPage (props) {
   const errorMessage = query.error
   const isSubstitution = props.postUrl === '/api/substitutions'
 
-  let adultPrice, studentPrice
+  let adultPrice, studentPrice, firstTimePlayerPrice
   if (disablePayment) {
     studentPrice = 0
     adultPrice = 0
+    firstTimePlayerPrice = 0
   } else if (activeLeague.isEarlyRegistrationPeriod) {
     studentPrice = activeLeague.pricingEarlyStudent
     adultPrice = activeLeague.pricingEarlyAdult
+    firstTimePlayerPrice = activeLeague.pricingEarlyFirstTimePlayer ?? studentPrice
   } else if (activeLeague.isRegistrationPeriod) {
     studentPrice = activeLeague.pricingRegularStudent
     adultPrice = activeLeague.pricingRegularAdult
+    firstTimePlayerPrice = activeLeague.pricingRegularFirstTimePlayer ?? studentPrice
   } else if (activeLeague.isLateRegistrationPeriod || forceForm || isSubstitution) {
     studentPrice = activeLeague.pricingLateStudent
     adultPrice = activeLeague.pricingLateAdult
+    firstTimePlayerPrice = activeLeague.pricingLateFirstTimePlayer ?? studentPrice
   }
 
   const headerHtml = (
@@ -189,7 +193,10 @@ export default function RegisterPage (props) {
                     { value: 'No', label: 'No' }
                   ]}
                   onChange={(e) => {
-                    setPlayer({ ...player, isFirstTimePlayer: e.target.value })
+                    const registrationLevel = e.target.value === 'Yes'
+                      ? 'First Time Player'
+                      : player.registrationLevel === 'First Time Player' ? '' : player.registrationLevel
+                    setPlayer({ ...player, isFirstTimePlayer: e.target.value, registrationLevel, shirtSize: player.shirtSize === 'NA' ? '' : player.shirtSize })
                     if (e.target.value === 'Yes') {
                       fireConfetti()
                     }
@@ -388,6 +395,21 @@ export default function RegisterPage (props) {
             {/*            //                         if locals.league.jerseyDesign
             //                             p.help-block The above is the current design for this league, which will in color depending on what team you are on.
 */}
+            <h3>Payment Information</h3>
+            <FormSelect
+              label="Registration Type"
+              id="registrationLevel"
+              name="registrationLevel"
+              required
+              value={player.registrationLevel || ''}
+              options={[
+                { value: 'Adult', label: activeLeague.requestShirtSize && player.shirtSize && player.shirtSize !== 'NA' ? `Adult - $${adultPrice + activeLeague.jerseyCost} (with jersey)` : `Adult - $${adultPrice} (jersey optional)` },
+                { value: 'Student', label: activeLeague.requestShirtSize ? `Student - $${studentPrice} (jersey included)` : `Student - $${studentPrice}` },
+                ...(!isSubstitution ? [{ value: 'First Time Player', label: activeLeague.requestShirtSize ? `First Time Player - $${firstTimePlayerPrice} (jersey included)` : `First Time Player - $${firstTimePlayerPrice}` }] : [])
+              ]}
+              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value, shirtSize: e.target.value === 'Adult' || player.shirtSize !== 'NA' ? player.shirtSize : '' })}
+            />
+
             {
               activeLeague.requestShirtSize && !isSubstitution
                 ? (
@@ -403,9 +425,11 @@ export default function RegisterPage (props) {
                       { value: 'L', label: 'L' },
                       { value: 'XL', label: 'XL' },
                       { value: 'XXL', label: 'XXL' },
-                      { value: 'NA', label: 'I do not want a jersey' }
+                      ...(player.registrationLevel === 'Adult' ? [{ value: 'NA', label: 'I do not want a jersey' }] : [])
                     ]}
-                    helpText={`You’ll be able to rep SFU anytime you take the field with your custom jersey. It will be your team color for this season. Adding a jersey costs $${activeLeague.jerseyCost}.`}
+                    helpText={player.registrationLevel === 'Adult'
+                      ? `You’ll be able to rep SFU anytime you take the field with your custom jersey. It will be your team color for this season. Adding a jersey costs $${activeLeague.jerseyCost}.`
+                      : 'Your jersey is included with student and first-time player registration.'}
                     onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
                   />
                   )
@@ -556,19 +580,6 @@ export default function RegisterPage (props) {
                 </>
               )
             }
-
-            <h3>Payment Information</h3>
-            <FormSelect
-              label="Registration Type"
-              id="registrationLevel"
-              name="registrationLevel"
-              required
-              options={[
-                { value: 'Adult', label: activeLeague.requestShirtSize && player.shirtSize !== 'NA' ? `Adult - $${adultPrice + activeLeague.jerseyCost} (with jersey)` : `Adult - $${adultPrice} (without jersey)` },
-                { value: 'Student', label: activeLeague.requestShirtSize && player.shirtSize !== 'NA' ? `Student - $${studentPrice + activeLeague.jerseyCost} (with jersey)` : `Student - $${studentPrice} (without jersey)` }
-              ]}
-              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
-            />
 
             {
               !disablePayment && (

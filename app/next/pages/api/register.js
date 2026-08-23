@@ -80,11 +80,15 @@ export default async function handler (req, res) {
             slug
             pricingEarlyAdult
             pricingEarlyStudent
+            pricingEarlyFirstTimePlayer
             pricingRegularAdult
             pricingRegularStudent
+            pricingRegularFirstTimePlayer
             pricingLateAdult
             pricingLateStudent
+            pricingLateFirstTimePlayer
             jerseyCost
+            requestShirtSize
             earlyRegistrationStart
             earlyRegistrationEnd
             registrationStart
@@ -133,14 +137,34 @@ export default async function handler (req, res) {
       sanitizedPayload.preferredPositions = []
     }
 
-    let amount = 0
-    const registrationLevel = sanitizedPayload.registrationLevel
+    let adultRegistrationPrice = 0
+    let studentRegistrationPrice = 0
+    let firstTimeRegistrationPrice
     if (league.isEarlyRegistrationPeriod) {
-      amount = registrationLevel === 'Student' ? league.pricingEarlyStudent : league.pricingEarlyAdult
+      adultRegistrationPrice = league.pricingEarlyAdult
+      studentRegistrationPrice = league.pricingEarlyStudent
+      firstTimeRegistrationPrice = league.pricingEarlyFirstTimePlayer
     } else if (league.isRegistrationPeriod) {
-      amount = registrationLevel === 'Student' ? league.pricingRegularStudent : league.pricingRegularAdult
+      adultRegistrationPrice = league.pricingRegularAdult
+      studentRegistrationPrice = league.pricingRegularStudent
+      firstTimeRegistrationPrice = league.pricingRegularFirstTimePlayer
     } else if (league.isLateRegistrationPeriod) {
-      amount = registrationLevel === 'Student' ? league.pricingLateStudent : league.pricingLateAdult
+      adultRegistrationPrice = league.pricingLateAdult
+      studentRegistrationPrice = league.pricingLateStudent
+      firstTimeRegistrationPrice = league.pricingLateFirstTimePlayer
+    }
+
+    let amount = studentRegistrationPrice
+    const registrationLevel = sanitizedPayload.registrationLevel
+    const validRegistrationLevels = ['Adult', 'Student', 'First Time Player']
+    if (!validRegistrationLevels.includes(registrationLevel)) {
+      throw new Error('Please select a valid registration type.')
+    }
+
+    if (registrationLevel === 'Adult') {
+      amount = adultRegistrationPrice
+    } else if (registrationLevel === 'First Time Player') {
+      amount = firstTimeRegistrationPrice ?? studentRegistrationPrice
     }
 
     // Donation
@@ -155,7 +179,11 @@ export default async function handler (req, res) {
     amount += donationAmount
     sanitizedPayload.donationAmount = amount
 
-    if (league.requestShirtSize && sanitizedPayload.shirtSize !== 'NA') {
+    if (league.requestShirtSize && registrationLevel !== 'Adult' && (!sanitizedPayload.shirtSize || sanitizedPayload.shirtSize === 'NA')) {
+      throw new Error('Students and first-time players must select a jersey size.')
+    }
+
+    if (league.requestShirtSize && registrationLevel === 'Adult' && sanitizedPayload.shirtSize && sanitizedPayload.shirtSize !== 'NA') {
       amount += league.jerseyCost
     }
 

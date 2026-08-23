@@ -60,6 +60,11 @@ const fields = {
     required: true,
     default: 30
   },
+  pricingEarlyFirstTimePlayer: {
+    type: Integer,
+    initial: true,
+    required: false
+  },
   pricingEarlyAdult: {
     type: Integer,
     initial: true,
@@ -72,6 +77,11 @@ const fields = {
     required: true,
     default: 30
   },
+  pricingRegularFirstTimePlayer: {
+    type: Integer,
+    initial: true,
+    required: false
+  },
   pricingRegularAdult: {
     type: Integer,
     initial: true,
@@ -83,6 +93,11 @@ const fields = {
     initial: true,
     required: true,
     default: 55
+  },
+  pricingLateFirstTimePlayer: {
+    type: Integer,
+    initial: true,
+    required: false
   },
   pricingLateAdult: {
     type: Integer,

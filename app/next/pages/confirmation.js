@@ -30,6 +30,8 @@ export const getServerSideProps = async (context) => {
           firstName
           lastName
           email
+          registrationLevel
+          shirtSize
         }
         allPlayerSubstitutions(where: {id: "${context.query.id}"}) {
           id
@@ -114,6 +116,8 @@ export default function ConfirmationPage (props) {
             <p className="lead">We&apos;ve successfully received your payment!</p>
           </div>
           <p>Please check your email at <strong>{player.email}</strong> for a confirmation email.</p>
+          {player.registrationLevel && <p>Registration type: <strong>{player.registrationLevel}</strong></p>}
+          {player.shirtSize && player.shirtSize !== 'NA' && <p>Jersey: <strong>{player.registrationLevel === 'Adult' ? 'Added' : 'Included'} (size {player.shirtSize})</strong></p>}
           <p>Feel free to <strong>share the joy</strong> of having signed up to play! Also don&apos;t forget to follow us on social media!</p>
           <div className="social-icon-links mb-4">
             {socialLinks.map((link) => (
