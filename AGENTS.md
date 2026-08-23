@@ -27,7 +27,7 @@ The app expects a root `.env` file loaded from `app/index.js`. Never commit `.en
 - Refresh GraphQL schema from a running local app: `npm run build-schema`
 - Restore DB from dump: `npm run restore`
 
-Use `npm run dev` for local app development. Do not use old Grunt server tasks unless they have first been updated; current Grunt server/watch config still references removed root legacy files.
+Use `npm run dev` for local app development.
 
 `npm run restore` drops and restores the local `sflultimateV5` database. Do not run it casually.
 

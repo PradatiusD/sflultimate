@@ -39,18 +39,7 @@
         "eslint": "^8.57.1",
         "eslint-config-cypress": "^0.28.0",
         "eslint-config-next": "^15.5.0",
-        "eslint-config-standard": "^17.1.0",
-        "grunt": "^1.0.4",
-        "grunt-concurrent": "^2.3.1",
-        "grunt-contrib-jshint": "^2.1.0",
-        "grunt-contrib-watch": "^1.1.0",
-        "grunt-nodemon": "^0.4.2",
-        "grunt-sass": "^3.0.2",
-        "grunt-shell": "^2.1.0",
-        "jshint-stylish": "^2.2.1",
-        "load-grunt-configs": "^1.0.0",
-        "load-grunt-tasks": "^4.0.0",
-        "time-grunt": "^2.0.0"
+        "eslint-config-standard": "^17.1.0"
     },
     "scripts": {
         "dev": "cd app && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development DISABLE_LOGGING=true keystone dev",
@@ -58,7 +47,7 @@
         "start": "cd app && cross-env NODE_ENV=production keystone start",
         "create-tables": "cross-env keystone create-tables",
         "cypress": "npx cypress open",
-        "restore": "grunt restore",
+        "restore": "node scripts/restore.js",
         "lint": "npx eslint . --ignore-pattern '**/jquery/**' --ignore-pattern '**/bootstrap/**'",
         "build-schema": "get-graphql-schema http://localhost:3000/admin/api/ > app/schema.graphql",
         "build-sitemap": "node scripts/build-sitemap.js",

@@ -12,7 +12,6 @@ You will need:
 - `git`: For collaborative software development
 - `node`: For running the application (check package.json for supported version), recommend using [`n`](https://github.com/tj/n) to switch between versions
 - `mongo`: The database
-- `grunt`: For task automation
 - `heroku toolbelt`: For Heroku deployment 
 
 Additionally, you will need to install:
@@ -28,12 +27,12 @@ This assumes you already have the project downloaded from git.
 n v14
 npm i # to install all Node.js modules required by the project package.json
 brew services start mongod # to start mongodb daemon via Homebrew
-grunt serve # to run application on port 5000 (or 3000 if you have an older version).
+npm run dev # to run the application locally
 ```
 
-On running `grunt serve` successfully the application will now be able to be used on port 5000, at:
+On running `npm run dev` successfully the application will be available at:
 
-- [http://localhost:5000](http://localhost:5000)
+- [http://localhost:3000](http://localhost:3000)
 
 > **Note**: You will need a separate `.env` file to be placed inside the project root directory for it to run successfully.  Contact the administrator to receive its contents. Additionally, to populate your database you will need the player data.
 
