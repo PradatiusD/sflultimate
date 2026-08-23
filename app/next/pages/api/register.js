@@ -84,6 +84,7 @@ export default async function handler (req, res) {
             pricingRegularStudent
             pricingLateAdult
             pricingLateStudent
+            jerseyCost
             earlyRegistrationStart
             earlyRegistrationEnd
             registrationStart
@@ -154,8 +155,8 @@ export default async function handler (req, res) {
     amount += donationAmount
     sanitizedPayload.donationAmount = amount
 
-    if (sanitizedPayload.shirtSize === 'NA') {
-      amount -= 15
+    if (league.requestShirtSize && sanitizedPayload.shirtSize !== 'NA') {
+      amount += league.jerseyCost
     }
 
     if (disablePayment) {
@@ -172,10 +173,11 @@ export default async function handler (req, res) {
       console.log(dbCreateResult)
       console.log(emailResult)
       // res.status(200).json({ message: 'Success', data: { paymentResult, dbCreateResult, emailResult } })
+    } else {
+      notify(`New registration for ${league.title}: ${sanitizedPayload.firstName} ${sanitizedPayload.lastName} (${sanitizedPayload.email})`)
     }
 
-    notify(`New registration for ${league.title}: ${sanitizedPayload.firstName} ${sanitizedPayload.lastName} (${sanitizedPayload.email}`)
-    res.redirect('/confirmation?id=' + dbCreateResult.data.createPlayer.id + '&leagueId=' + sanitizedPayload.leagueId)
+    res.redirect(`/confirmation?id=${dbCreateResult.data.createPlayer.id}&leagueId=${sanitizedPayload.leagueId}`)
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))

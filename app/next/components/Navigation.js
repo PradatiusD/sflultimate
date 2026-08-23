@@ -23,7 +23,8 @@ const socialLinks = [
   { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/sflultimate/', iconClassName: 'fa-brands fa-instagram' },
   { key: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/sflultimate/', iconClassName: 'fa-brands fa-youtube' },
   { key: 'tiktok', label: 'TikTok', href: 'https://www.tiktok.com/@sflultimate', iconClassName: 'fa-brands fa-tiktok' },
-  { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/sflultimate/', iconClassName: 'fa-brands fa-facebook' }
+  { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/sflultimate/', iconClassName: 'fa-brands fa-facebook' },
+  { key: 'whatsapp', label: 'WhatsApp', href: 'https://chat.whatsapp.com/FZC77g5Tzsw8xwxMXG997V', iconClassName: 'fa-brands fa-whatsapp' }
 ]
 
 const leagueSections = [
@@ -264,5 +265,6 @@ function FooterNavigation (props) {
 
 export {
   HeaderNavigation,
-  FooterNavigation
+  FooterNavigation,
+  socialLinks
 }

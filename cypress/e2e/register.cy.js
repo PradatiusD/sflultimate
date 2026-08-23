@@ -1,12 +1,18 @@
-async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disablePayment, registrationPath }) {
+function testRegistration ({ cardNumber, expirationDate, disablePayment, registrationPath, shirtSize, period }) {
   // cy.viewport('macbook-15')
   cy.viewport('iphone-x')
-  let testUrl = 'http://localhost:3000/leagues/spring-league-2026' + registrationPath
+  registrationPath = registrationPath || '/register'
+  let testUrl = 'http://localhost:3000/leagues/fall-league-2026' + registrationPath
   testUrl = new URL(testUrl)
   if (disablePayment) {
     testUrl.searchParams.set('disable_payment', 'true')
   }
   testUrl.searchParams.set('force_form', 'true')
+  // `force_period` pins the registration window (early/regular/late) so the test doesn't
+  // depend on the league's real DB dates or the current date. Defaults to 'regular' so the
+  // late-fee checkbox/messaging never shows unless a test explicitly asks for 'late'.
+  const registrationPeriod = period || 'regular'
+  testUrl.searchParams.set('force_period', registrationPeriod)
   testUrl = testUrl.toString()
   const isSubstitution = registrationPath === '/substitutions'
   cy.visit(testUrl)
@@ -20,15 +26,22 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   cy.get('#throwsLevel').select('3')
   if (!isSubstitution) {
     cy.get('#participation').select('50')
-    cy.get('#shirtSize').select('NA')
+
+    cy.get('body').then(($body) => {
+      if ($body.find('#shirtSize').length) {
+        cy.get('#shirtSize').select(shirtSize || 'NA')
+      }
+    })
+
+    cy.get('#isFirstTimePlayer').select('Yes')
     cy.get('#partnerName').type('Test Friend')
     cy.get('#willAttendFinals').check()
   }
 
-  const $body = await cy.get('body')
-  const $noUnderstandsLateFeeElement = $body.find('#no-understandsLateFee')
-  if (!$noUnderstandsLateFeeElement.length) {
-    cy.get('#understandsLateFee').check()
+  if (registrationPeriod === 'late') {
+    cy.get('#understandsLateFee').should('be.visible').check()
+  } else {
+    cy.get('#understandsLateFee').should('not.exist')
   }
   cy.get('#comments').type('A random comment about me when registering for the draft')
   cy.get('#phoneNumber').type('9543055611')
@@ -37,10 +50,11 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   }
   cy.get('#termsConditions').check()
 
-  const $noSponsorElement = await $body.find('#no-requestSponsorship')
-  if (!$noSponsorElement.length) {
-    cy.get('#wouldSponsor').check()
-  }
+  cy.get('body').then(($body) => {
+    if ($body.find('#wouldSponsor').length) {
+      cy.get('#wouldSponsor').check()
+    }
+  })
 
   cy.get('#playerPositionHandler').check()
   cy.get('#playerPositionCutter').check()
@@ -57,11 +71,6 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   cy.get('#registrationLevel').select('Student')
   if (!disablePayment && !isSubstitution) {
     cy.get('#donationLevel').select('tier_0')
-  }
-
-  const $lateFeeCheckbox = await $body.find('#understandsLateFee')
-  if ($lateFeeCheckbox.length) {
-    cy.get('#understandsLateFee').check()
   }
 
   if (!disablePayment) {
@@ -85,30 +94,46 @@ async function shouldHandlePaymentWithNumber ({ cardNumber, expirationDate, disa
   cy.get('#submitButton').click()
 }
 
-describe('Registration', () => {
-  it('Should allow regular registration with payment', () => {
-    shouldHandlePaymentWithNumber({
-      registrationPath: '/register'
+describe('Registration: Regular', () => {
+  it('Should allow registration with a jersey', () => {
+    testRegistration({
+      shirtSize: 'M'
     })
   })
 
-  // it('Should handle failed transaction', () => {
-  //   // https://developer.paypal.com/braintree/docs/reference/general/testing/node
-  //   shouldHandlePaymentWithNumber({
-  //     // expirationDate: '01 22'
-  //   })
-  // })
+  it('Should allow registration without a jersey', () => {
+    testRegistration({
+      shirtSize: 'NA'
+    })
+  })
+
+  it('Should show processor declined', () => {
+    // https://developer.paypal.com/braintree/docs/reference/general/testing/node
+    testRegistration({
+      cardNumber: '4000111111111511'
+    })
+  })
+
   it('Should allow comped registration', () => {
-    shouldHandlePaymentWithNumber({
-      disablePayment: true,
-      registrationPath: '/register'
+    testRegistration({
+      disablePayment: true
     })
   })
 
-  it.only('Should allow substitution registration', () => {
-    shouldHandlePaymentWithNumber({
-      registrationPath: '/substitutions',
-      cardNumber: '4000 1111 1111 1115'
+  it('Should allow late registration with the late fee acknowledgement', () => {
+    testRegistration({
+      shirtSize: 'M',
+      period: 'late'
     })
   })
+})
+
+describe('Registration: Substitution', () => {
+  it('Should accept a substitution', () => {
+    // https://developer.paypal.com/braintree/docs/reference/general/testing/node
+    testRegistration({
+      registrationPath: '/substitutions'
+    })
+  })
+
 })

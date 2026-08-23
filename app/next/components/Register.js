@@ -381,9 +381,9 @@ export default function RegisterPage (props) {
                       { value: 'L', label: 'L' },
                       { value: 'XL', label: 'XL' },
                       { value: 'XXL', label: 'XXL' },
-                      { value: 'NA', label: 'I do not want a jersey, (save $15)' }
+                      { value: 'NA', label: 'I do not want a jersey' }
                     ]}
-                    helpText="You’ll be able to rep SFU anytime you take the field with your custom jersey. It will be your team color for this season."
+                    helpText={`You’ll be able to rep SFU anytime you take the field with your custom jersey. It will be your team color for this season. Adding a jersey costs $${activeLeague.jerseyCost}.`}
                     onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
                   />
                   )
@@ -394,6 +394,22 @@ export default function RegisterPage (props) {
 
             {
               !isSubstitution && (
+                <FormSelect
+                  label="Are you a first time player?"
+                  id="isFirstTimePlayer"
+                  name="isFirstTimePlayer"
+                  required
+                  options={[
+                    { value: 'Yes', label: 'Yes' },
+                    { value: 'No', label: 'No' }
+                  ]}
+                  onChange={(e) => setPlayer({ ...player, isFirstTimePlayer: e.target.value })}
+                />
+              )
+            }
+
+            {
+              !isSubstitution && player.isFirstTimePlayer === 'Yes' && (
                 <FormInput
                   label="Partner Name"
                   id="partnerName"
@@ -439,6 +455,7 @@ export default function RegisterPage (props) {
             <FormCheckbox
               id="termsConditions"
               required
+              className="mb-3"
               label={<span>I have read and agree to the <a href="/waiver" target="_blank">SFLUltimate Waiver</a></span>}
             />
 
@@ -541,8 +558,8 @@ export default function RegisterPage (props) {
               name="registrationLevel"
               required
               options={[
-                { value: 'Adult', label: activeLeague.requestShirtSize && player.shirtSize === 'NA' ? `Adult - $${adultPrice - 15} (without jersey)` : `Adult - $${adultPrice} (with jersey)` },
-                { value: 'Student', label: activeLeague.requestShirtSize && player.shirtSize === 'NA' ? `Student - $${studentPrice - 15} (without jersey)` : `Student - $${studentPrice} (with jersey)` }
+                { value: 'Adult', label: activeLeague.requestShirtSize && player.shirtSize !== 'NA' ? `Adult - $${adultPrice + activeLeague.jerseyCost} (with jersey)` : `Adult - $${adultPrice} (without jersey)` },
+                { value: 'Student', label: activeLeague.requestShirtSize && player.shirtSize !== 'NA' ? `Student - $${studentPrice + activeLeague.jerseyCost} (with jersey)` : `Student - $${studentPrice} (without jersey)` }
               ]}
               onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value })}
             />

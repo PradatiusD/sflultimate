@@ -240,14 +240,8 @@
   }
 }
 
-.site-footer {
-  margin-top: 30px;
-  border-top: 1px solid #eeeeee;
-  padding-top: 30px;
-  color: rgba(black, 0.90);
-  background: rgba(black, 0.10);
-  vertical-align: bottom;
-
+.site-footer,
+.social-icon-links {
   .fa {
     color: #FFF;
     background: $primary;
@@ -284,6 +278,15 @@
     background: black;
     color: #FFF;
   }
+}
+
+.site-footer {
+  margin-top: 30px;
+  border-top: 1px solid #eeeeee;
+  padding-top: 30px;
+  color: rgba(black, 0.90);
+  background: rgba(black, 0.10);
+  vertical-align: bottom;
 }
 
 .gallery-image img{

@@ -118,6 +118,12 @@ const fields = {
   requestShirtSize: {
     type: Checkbox
   },
+  jerseyCost: {
+    type: Integer,
+    initial: true,
+    required: true,
+    default: 15
+  },
   requestSponsorship: {
     type: Checkbox
   },

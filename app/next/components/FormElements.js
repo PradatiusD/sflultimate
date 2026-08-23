@@ -75,8 +75,12 @@ export function FormSelect ({ label, name, options, required, helpText, onChange
   </>
 }
 
-export function FormCheckbox ({ label, id, required }) {
-  const [inputStateClass, setInputStateClass] = useState(['form-check'])
+export function FormCheckbox ({ label, id, required, className }) {
+  const classes = ['form-check']
+  if (className) {
+    classes.push(className)
+  }
+  const [inputStateClass, setInputStateClass] = useState(classes)
 
   return (
     <div className={inputStateClass.join(' ')}>

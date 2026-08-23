@@ -12081,15 +12081,8 @@ textarea.form-control-lg {
   margin-bottom: 0;
 }
 
-.site-footer {
-  margin-top: 30px;
-  border-top: 1px solid #eeeeee;
-  padding-top: 30px;
-  color: rgba(0, 0, 0, 0.9);
-  background: rgba(0, 0, 0, 0.1);
-  vertical-align: bottom;
-}
-.site-footer .fa {
+.site-footer .fa,
+.social-icon-links .fa {
   color: #FFF;
   background: #804399;
   display: inline-block;
@@ -12101,10 +12094,12 @@ textarea.form-control-lg {
   border-radius: 100%;
   text-align: center;
 }
-.site-footer .fa:hover {
+.site-footer .fa:hover,
+.social-icon-links .fa:hover {
   background: black;
 }
-.site-footer .social-badge {
+.site-footer .social-badge,
+.social-icon-links .social-badge {
   background: #804399;
   color: #FFF;
   display: inline-block;
@@ -12118,9 +12113,19 @@ textarea.form-control-lg {
   text-align: center;
   text-transform: uppercase;
 }
-.site-footer .social-badge:hover {
+.site-footer .social-badge:hover,
+.social-icon-links .social-badge:hover {
   background: black;
   color: #FFF;
+}
+
+.site-footer {
+  margin-top: 30px;
+  border-top: 1px solid #eeeeee;
+  padding-top: 30px;
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.1);
+  vertical-align: bottom;
 }
 
 .gallery-image img {

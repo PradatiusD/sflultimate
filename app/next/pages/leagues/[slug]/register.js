@@ -31,6 +31,7 @@ export const getServerSideProps = async (context) => {
           pricingLateStudent
           pricingLateAdult
           requestShirtSize
+          jerseyCost
           requestSponsorship
           requestAttendance
           finalsTournamentDescription
@@ -47,7 +48,7 @@ export const getServerSideProps = async (context) => {
     variables
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league, context)
+  LeagueUtils.addLeagueStatus(league, context, true)
 
   let braintreeToken = null
   try {

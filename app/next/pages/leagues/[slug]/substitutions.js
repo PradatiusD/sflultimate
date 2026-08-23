@@ -47,7 +47,7 @@ export const getServerSideProps = async (context) => {
     variables
   })
   const league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
-  LeagueUtils.addLeagueStatus(league, context)
+  LeagueUtils.addLeagueStatus(league, context, true)
   league.canRegister = true
   league.pricingEarlyStudent = 10
   league.pricingRegularStudent = 10

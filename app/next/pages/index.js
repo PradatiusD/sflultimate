@@ -28,6 +28,7 @@ export const getServerSideProps = async (context) => {
           title
           slug
           summary
+          isActive
           earlyRegistrationStart
           earlyRegistrationEnd
           registrationStart
@@ -159,7 +160,9 @@ export default function Homepage (props) {
     'league-champions-2013-spring.jpg'
   ]
 
-  const showSignupLeague = false
+  const showSignupLeague = activeLeagues.find(function (league) {
+    return league.isActive && league.canRegister
+  })
   const showStandings = false
 
   return (
@@ -174,7 +177,7 @@ export default function Homepage (props) {
       <div className="container">
         <div className="row">
           {
-            showStandings && (
+            (showStandings || showSignupLeague) && (
               <div className="col-md-8">
                 {
                   showStandings && (
@@ -216,10 +219,39 @@ export default function Homepage (props) {
             )
           }
           {
-            events.length > 0 && (
-              <>
-                <div className="col-md-4">
-                  <h3>Upcoming Events</h3>
+
+            <div className="col-md-4">
+              {
+                featuredPickups.length > 0 && (
+                  <div>
+                    <h3>Featured Pickups</h3>
+                    {
+                      featuredPickups.map((pickup) => {
+                        return (
+                          <div key={pickup.id} className="homepage-news-card">
+                            <a href={'/pickups/' + pickup.slug}><strong>{pickup.title}</strong></a>
+                            <div>
+                              <small className="text-muted">{pickup.day} at {pickup.time}</small>
+                            </div>
+                            {
+                              pickup.location && (
+                                <div>
+                                  <small className="text-muted">{pickup.location.name} • {pickup.location.type}</small>
+                                </div>
+                              )
+                            }
+                            <p className="mt-2">{pickup.description}</p>
+                            <PickupContactActions pickup={pickup} />
+                          </div>
+                        )
+                      })
+                    }
+                  </div>
+                )
+              }
+              <h3>Upcoming Events</h3>
+              {events.length > 0 && (
+                <>
                   {
                     events.map((event) => {
                       return (
@@ -247,37 +279,11 @@ export default function Homepage (props) {
                       )
                     })
                   }
-                </div>
-              </>
-            )
-          }
-          {
-            featuredPickups.length > 0 && (
-              <div className="col-md-4">
-                <h3>Featured Pickups</h3>
-                {
-                  featuredPickups.map((pickup) => {
-                    return (
-                      <div key={pickup.id} className="homepage-news-card">
-                        <a href={'/pickups/' + pickup.slug}><strong>{pickup.title}</strong></a>
-                        <div>
-                          <small className="text-muted">{pickup.day} at {pickup.time}</small>
-                        </div>
-                        {
-                          pickup.location && (
-                            <div>
-                              <small className="text-muted">{pickup.location.name} • {pickup.location.type}</small>
-                            </div>
-                          )
-                        }
-                        <p className="mt-2">{pickup.description}</p>
-                        <PickupContactActions pickup={pickup} />
-                      </div>
-                    )
-                  })
-                }
-              </div>
-            )
+                </>
+              )
+              }
+            </div>
+
           }
 
           <h3>News</h3>

@@ -1,6 +1,6 @@
 import GraphqlClient from '../lib/graphql-client'
 import { gql } from '@apollo/client'
-import { HeaderNavigation } from '../components/Navigation'
+import { HeaderNavigation, socialLinks } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'
 import { addLeagueToVariables } from '../lib/utils'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
@@ -106,13 +106,20 @@ export default function ConfirmationPage (props) {
           </div>
           <p>Please check your email at <strong>{player.email}</strong> for a confirmation email.</p>
           <p>Feel free to <strong>share the joy</strong> of having signed up to play! Also don&apos;t forget to follow us on social media!</p>
-          <ul>
-            <li><a target="_blank" href="https://instagram.com/sflultimate">Instagram</a></li>
-            <li><a target="_blank" href="https://chat.whatsapp.com/FZC77g5Tzsw8xwxMXG997V">WhatsApp</a></li>
-            <li><a target="_blank" href="https://www.facebook.com/sflultimate">Facebook</a></li>
-            <li><a target="_blank" href="https://www.tiktok.com/@sflultimate">TikTok</a></li>
-          </ul>
-
+          <div className="social-icon-links mb-4">
+            {socialLinks.map((link) => (
+              <a
+                key={link.key}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.label}
+                title={link.label}
+              >
+                <i className={`fa ${link.iconClassName}`} aria-hidden="true"></i>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
       <h2>Frequently Asked Questions</h2>
