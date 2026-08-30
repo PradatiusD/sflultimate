@@ -104,6 +104,11 @@ export default async function handler (req, res) {
     league = JSON.parse(JSON.stringify(results.data.allLeagues[0]))
     LeagueUtils.addLeagueStatus(league)
 
+    const registrationSelection = req.body.registrationLevel
+    const normalizedRegistrationLevel = ['Adult with jersey', 'Adult without jersey'].includes(registrationSelection)
+      ? 'Adult'
+      : registrationSelection
+
     const sanitizedPayload = {
       paymentMethodNonce: req.body.paymentMethodNonce,
       firstName: req.body.firstName.trim(),
@@ -114,7 +119,7 @@ export default async function handler (req, res) {
       athleticismLevel: parseInt(req.body.athleticismLevel),
       experienceLevel: parseInt(req.body.experienceLevel),
       throwsLevel: parseInt(req.body.throwsLevel),
-      registrationLevel: req.body.registrationLevel,
+      registrationLevel: normalizedRegistrationLevel,
       streetAddress: req.body.streetAddress,
       participation: parseInt(req.body.participation),
       comments: req.body.comments,
@@ -157,7 +162,10 @@ export default async function handler (req, res) {
     let amount = studentRegistrationPrice
     const registrationLevel = sanitizedPayload.registrationLevel
     const validRegistrationLevels = ['Adult', 'Student', 'First Time Player']
-    if (!validRegistrationLevels.includes(registrationLevel)) {
+    const validAdultSelections = league.requestShirtSize
+      ? ['Adult', 'Adult with jersey', 'Adult without jersey']
+      : ['Adult']
+    if (!validRegistrationLevels.includes(registrationLevel) || (registrationLevel === 'Adult' && !validAdultSelections.includes(registrationSelection))) {
       throw new Error('Please select a valid registration type.')
     }
 
@@ -179,11 +187,21 @@ export default async function handler (req, res) {
     amount += donationAmount
     sanitizedPayload.donationAmount = amount
 
-    if (league.requestShirtSize && registrationLevel !== 'Adult' && (!sanitizedPayload.shirtSize || sanitizedPayload.shirtSize === 'NA')) {
-      throw new Error('Students and first-time players must select a jersey size.')
+    const validShirtSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+    const adultIncludesJersey = registrationSelection === 'Adult with jersey' ||
+      (registrationSelection === 'Adult' && validShirtSizes.includes(sanitizedPayload.shirtSize))
+
+    if (league.requestShirtSize && (registrationLevel !== 'Adult' || adultIncludesJersey) && !validShirtSizes.includes(sanitizedPayload.shirtSize)) {
+      throw new Error(registrationLevel === 'Adult'
+        ? 'Please select a jersey size.'
+        : 'Students and first-time players must select a jersey size.')
     }
 
-    if (league.requestShirtSize && registrationLevel === 'Adult' && sanitizedPayload.shirtSize && sanitizedPayload.shirtSize !== 'NA') {
+    if (league.requestShirtSize && registrationLevel === 'Adult' && !adultIncludesJersey) {
+      sanitizedPayload.shirtSize = 'NA'
+    }
+
+    if (league.requestShirtSize && registrationLevel === 'Adult' && adultIncludesJersey) {
       amount += league.jerseyCost
     }
 

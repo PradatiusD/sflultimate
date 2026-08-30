@@ -70,18 +70,11 @@ function testRegistration ({ assertConfirmation = true, cardNumber, expirationDa
   cy.get('#age').type('25')
   registrationLevel = registrationLevel || 'Student'
   cy.get('#registrationLevel').select(registrationLevel)
-  if (!isSubstitution) {
-    cy.get('body').then(($body) => {
-      if ($body.find('#shirtSize').length) {
-        if (registrationLevel === 'Adult') {
-          cy.get('#shirtSize option[value="NA"]').should('exist')
-          cy.get('#shirtSize').select(shirtSize || 'NA')
-        } else {
-          cy.get('#shirtSize option[value="NA"]').should('not.exist')
-          cy.get('#shirtSize').select(shirtSize || 'M')
-        }
-      }
-    })
+  if (!isSubstitution && registrationLevel !== 'Adult without jersey') {
+    cy.get('#shirtSize').should('be.visible').select(shirtSize || 'M')
+  }
+  if (!isSubstitution && registrationLevel === 'Adult without jersey') {
+    cy.get('#shirtSize').should('not.exist')
   }
   if (!disablePayment && !isSubstitution) {
     cy.get('#donationLevel').select('tier_0')
@@ -110,7 +103,7 @@ function testRegistration ({ assertConfirmation = true, cardNumber, expirationDa
   if (assertConfirmation) {
     cy.location('pathname', { timeout: 30000 }).should('eq', '/confirmation')
     if (!isSubstitution) {
-      cy.contains('Registration type:').should('contain.text', registrationLevel)
+      cy.contains('Registration type:').should('contain.text', registrationLevel.startsWith('Adult ') ? 'Adult' : registrationLevel)
       if (shirtSize === 'NA') {
         cy.contains('Jersey:').should('not.exist')
       } else {
@@ -133,31 +126,32 @@ describe('Registration: Regular', () => {
     cy.get('#shirtSize option[value="NA"]').should('not.exist')
   })
 
-  it('Should only let adults opt out of adding a jersey', () => {
+  it('Should show separate adult prices and only ask for a size with a jersey', () => {
     visitRegistrationForm()
 
-    cy.get('#registrationLevel').select('Student')
-    cy.get('#registrationLevel option:checked').should('contain.text', 'jersey included')
+    cy.get('#registrationLevel option[value="Adult without jersey"]')
+      .should('contain.text', 'without jersey')
+    cy.get('#registrationLevel option[value="Adult with jersey"]')
+      .should('contain.text', 'with jersey')
+
+    cy.get('#registrationLevel').select('Adult without jersey')
+    cy.get('#shirtSize').should('not.exist')
+
+    cy.get('#registrationLevel').select('Adult with jersey')
+    cy.get('#shirtSize').should('be.visible')
     cy.get('#shirtSize option[value="NA"]').should('not.exist')
-    cy.get('#registrationLevel').select('Adult')
-    cy.get('#registrationLevel option:checked').should('contain.text', 'jersey optional')
-    cy.get('#shirtSize option[value="NA"]').should('exist')
-    cy.get('#shirtSize').select('M')
-    cy.get('#registrationLevel option:checked').should('contain.text', 'with jersey')
-    cy.get('#shirtSize').select('NA')
-    cy.get('#registrationLevel option:checked').should('contain.text', 'jersey optional')
   })
 
   it('Should allow registration with a jersey', () => {
     testRegistration({
-      registrationLevel: 'Adult',
+      registrationLevel: 'Adult with jersey',
       shirtSize: 'M'
     })
   })
 
   it('Should allow registration without a jersey', () => {
     testRegistration({
-      registrationLevel: 'Adult',
+      registrationLevel: 'Adult without jersey',
       shirtSize: 'NA'
     })
   })
@@ -178,7 +172,6 @@ describe('Registration: Regular', () => {
 
   it('Should confirm a first-time player registration with an included jersey', () => {
     testRegistration({
-      disablePayment: true,
       registrationLevel: 'First Time Player',
       shirtSize: 'M'
     })

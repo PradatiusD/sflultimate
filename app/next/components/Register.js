@@ -403,31 +403,45 @@ export default function RegisterPage (props) {
               required
               value={player.registrationLevel || ''}
               options={[
-                { value: 'Adult', label: activeLeague.requestShirtSize && player.shirtSize && player.shirtSize !== 'NA' ? `Adult - $${adultPrice + activeLeague.jerseyCost} (with jersey)` : `Adult - $${adultPrice} (jersey optional)` },
+                ...(activeLeague.requestShirtSize && !isSubstitution
+                  ? [
+                      { value: 'Adult without jersey', label: `Adult - $${adultPrice} (without jersey)` },
+                      { value: 'Adult with jersey', label: `Adult - $${adultPrice + activeLeague.jerseyCost} (with jersey)` }
+                    ]
+                  : [{ value: 'Adult', label: `Adult - $${adultPrice}` }]),
                 { value: 'Student', label: activeLeague.requestShirtSize ? `Student - $${studentPrice} (jersey included)` : `Student - $${studentPrice}` },
                 ...(!isSubstitution ? [{ value: 'First Time Player', label: activeLeague.requestShirtSize ? `First Time Player - $${firstTimePlayerPrice} (jersey included)` : `First Time Player - $${firstTimePlayerPrice}` }] : [])
               ]}
-              onChange={(e) => setPlayer({ ...player, registrationLevel: e.target.value, shirtSize: e.target.value === 'Adult' || player.shirtSize !== 'NA' ? player.shirtSize : '' })}
+              onChange={(e) => {
+                const registrationLevel = e.target.value
+                let shirtSize = player.shirtSize
+                if (registrationLevel === 'Adult without jersey') {
+                  shirtSize = 'NA'
+                } else if (registrationLevel === 'Adult with jersey' || (registrationLevel !== 'Adult' && shirtSize === 'NA')) {
+                  shirtSize = ''
+                }
+                setPlayer({ ...player, registrationLevel, shirtSize })
+              }}
             />
 
             {
-              activeLeague.requestShirtSize && !isSubstitution
+              activeLeague.requestShirtSize && !isSubstitution && player.registrationLevel && player.registrationLevel !== 'Adult without jersey'
                 ? (
                   <FormSelect
-                    label="Shirt Size"
+                    label="Jersey Size"
                     id="shirtSize"
                     name="shirtSize"
                     required
+                    value={player.shirtSize || ''}
                     options={[
                       { value: 'XS', label: 'XS' },
                       { value: 'S', label: 'S' },
                       { value: 'M', label: 'M' },
                       { value: 'L', label: 'L' },
                       { value: 'XL', label: 'XL' },
-                      { value: 'XXL', label: 'XXL' },
-                      ...(player.registrationLevel === 'Adult' ? [{ value: 'NA', label: 'I do not want a jersey' }] : [])
+                      { value: 'XXL', label: 'XXL' }
                     ]}
-                    helpText={player.registrationLevel === 'Adult'
+                    helpText={player.registrationLevel === 'Adult with jersey'
                       ? `You’ll be able to rep SFU anytime you take the field with your custom jersey. It will be your team color for this season. Adding a jersey costs $${activeLeague.jerseyCost}.`
                       : 'Your jersey is included with student and first-time player registration.'}
                     onChange={(e) => setPlayer({ ...player, shirtSize: e.target.value })}
