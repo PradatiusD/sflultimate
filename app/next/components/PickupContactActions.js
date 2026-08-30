@@ -65,7 +65,12 @@ function createQuizState (completedQuestionIds = [], correctAnswerCount = 0) {
   }
 }
 
-export default function PickupContactActions ({ pickup, className = 'btn btn-sm btn-outline-primary' }) {
+export default function PickupContactActions ({
+  pickup,
+  className = 'btn btn-sm btn-outline-primary',
+  externalTriggerSelector = '',
+  hideActions = false
+}) {
   const [activeContactType, setActiveContactType] = useState(null)
   const [isVerifying, setIsVerifying] = useState(false)
   const [revealedContact, setRevealedContact] = useState(null)
@@ -91,6 +96,24 @@ export default function PickupContactActions ({ pickup, className = 'btn btn-sm 
       revealedActionRef.current.focus()
     }
   }, [revealedContact])
+
+  useEffect(() => {
+    if (!externalTriggerSelector) {
+      return
+    }
+
+    function onExternalTriggerClick (event) {
+      if (!event.target.closest(externalTriggerSelector)) {
+        return
+      }
+
+      event.preventDefault()
+      openModal('whatsapp')
+    }
+
+    document.addEventListener('click', onExternalTriggerClick)
+    return () => document.removeEventListener('click', onExternalTriggerClick)
+  }, [externalTriggerSelector])
 
   function openModal (contactType) {
     setActiveContactType(contactType)
@@ -175,7 +198,7 @@ export default function PickupContactActions ({ pickup, className = 'btn btn-sm 
 
   return (
     <>
-      <div className="d-flex flex-wrap">
+      {!hideActions && <div className="d-flex flex-wrap">
         {pickup.hasContactWhatsapp && (
           <button type="button" className={`${className} me-2 mb-2`} onClick={() => openModal('whatsapp')}>
             <i className={`fa ${CONTACT_TYPE_CONFIG.whatsapp.icon} me-2`} aria-hidden="true"></i>
@@ -206,7 +229,7 @@ export default function PickupContactActions ({ pickup, className = 'btn btn-sm 
             {MAP_ACTION.label}
           </a>
         )}
-      </div>
+      </div>}
 
       <Modal
         id={`pickup-contact-modal-${pickup.id}`}
@@ -252,7 +275,7 @@ export default function PickupContactActions ({ pickup, className = 'btn btn-sm 
             have been scraping these pages, then sending unwanted calls, texts, emails, and spamming WhatsApp groups.
           </p>
           <p className="mb-3">
-            To bypass this, we're asking you to look up <a target="_blank" href="https://wfdf.sport/wp-content/uploads/2020/11/wfdf_rules_of_ultimate_-_hand_signals_feb2020.pdf">The World Flying Disc Federation</a> hand signals and answer a few questions to prove you're a real person.
+            To bypass this, we&#39;re asking you to look up <a target="_blank" href="https://wfdf.sport/wp-content/uploads/2020/11/wfdf_rules_of_ultimate_-_hand_signals_feb2020.pdf">The World Flying Disc Federation</a> hand signals and answer a few questions to prove you&#39;re a real person.
           </p>
 
           {!revealedContact && quizState.activeRule && (

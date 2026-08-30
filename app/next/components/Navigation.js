@@ -1,5 +1,6 @@
 'use server'
 import Notification from './Notification'
+import PickupContactActions from './PickupContactActions'
 let navLinks = []
 
 const evergreenLinks = [
@@ -24,8 +25,14 @@ const socialLinks = [
   { key: 'youtube', label: 'YouTube', href: 'https://www.youtube.com/sflultimate/', iconClassName: 'fa-brands fa-youtube' },
   { key: 'tiktok', label: 'TikTok', href: 'https://www.tiktok.com/@sflultimate', iconClassName: 'fa-brands fa-tiktok' },
   { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/sflultimate/', iconClassName: 'fa-brands fa-facebook' },
-  { key: 'whatsapp', label: 'WhatsApp', href: 'https://chat.whatsapp.com/FZC77g5Tzsw8xwxMXG997V', iconClassName: 'fa-brands fa-whatsapp' }
+  { key: 'whatsapp', label: 'WhatsApp', href: '#community-whatsapp', iconClassName: 'fa-brands fa-whatsapp', protected: true }
 ]
+
+const communityWhatsappContact = {
+  id: 'community-whatsapp',
+  title: 'South Florida Ultimate community',
+  hasContactWhatsapp: true
+}
 
 const leagueSections = [
   { label: 'Teams', key: 'teams' },
@@ -68,16 +75,17 @@ function HeaderNavigation (props) {
         key={link.key}
         className={`nav-link${iconOnly ? ' nav-social-link' : ''}`}
         href={link.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        target={link.protected ? null : '_blank'}
+        rel={link.protected ? null : 'noopener noreferrer'}
+        data-community-whatsapp={link.protected ? true : null}
         aria-label={link.label}
         title={link.label}
       >
         {iconOnly
           ? (
-            link.iconClassName
-              ? <i className={`fa ${link.iconClassName}`} aria-hidden="true"></i>
-              : <span className="nav-social-badge" aria-hidden="true">{link.badgeLabel}</span>
+              link.iconClassName
+                ? <i className={`fa ${link.iconClassName}`} aria-hidden="true"></i>
+                : <span className="nav-social-badge" aria-hidden="true">{link.badgeLabel}</span>
             )
           : link.label}
       </a>
@@ -204,6 +212,11 @@ function HeaderNavigation (props) {
         </nav>
       </header>
       <Notification leagues={leagues} />
+      <PickupContactActions
+        pickup={communityWhatsappContact}
+        externalTriggerSelector="[data-community-whatsapp]"
+        hideActions
+      />
     </>
   )
 }
@@ -222,8 +235,9 @@ function FooterNavigation (props) {
                   <a
                     key={link.key}
                     href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target={link.protected ? null : '_blank'}
+                    rel={link.protected ? null : 'noopener noreferrer'}
+                    data-community-whatsapp={link.protected ? true : null}
                     aria-label={link.label}
                     title={link.label}
                     className={link.badgeLabel ? 'social-badge' : ''}

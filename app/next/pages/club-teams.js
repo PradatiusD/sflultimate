@@ -137,11 +137,11 @@ export default function ClubTeamsPage (props) {
                           ]
                           const matchingIcon = iconTypes.find((iconType) => link.label.toLowerCase().includes(iconType.label))
                           return (
-                              <>
+                              <span key={i}>
                                 <a key={i} className="btn btn-outline-primary text-nowrap" href={link.url} target="_blank" rel="noopener noreferrer">
                                   {matchingIcon ? <i className={[matchingIcon.icon, 'fa'].join(' ')}></i> : link.label}
                                 </a>
-                              </>
+                              </span>
                           )
                         }
                         )

@@ -108,7 +108,7 @@ function buildInfoWindowContent (pickup) {
     '</div>'
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
   const results = await GraphqlClient.query({
     query: gql`
           query {
@@ -138,7 +138,11 @@ export const getServerSideProps = async () => {
         }`
   })
 
+  const requestedZipCode = typeof context.query.zip === 'string' ? context.query.zip : ''
+  const initialSortOrigin = getSouthFloridaSortOrigin(requestedZipCode)
   const props = {
+    initialZipCode: initialSortOrigin ? requestedZipCode : '',
+    initialSortOrigin,
     pickups: results.data.allPickups.map((pickup) => ({
       id: pickup.id,
       slug: pickup.slug,
@@ -159,10 +163,10 @@ export const getServerSideProps = async () => {
 }
 
 export default function PickupsPage (props) {
-  const { pickups, leagues } = props
-  const [zipCode, setZipCode] = useState('')
-  const [displayPickups, setDisplayPickups] = useState(pickups)
-  const [sortOrigin, setSortOrigin] = useState(null)
+  const { initialSortOrigin, initialZipCode, pickups, leagues } = props
+  const [zipCode, setZipCode] = useState(initialZipCode)
+  const [displayPickups, setDisplayPickups] = useState(() => initialSortOrigin ? sortPickupsByDistance(pickups, initialSortOrigin) : pickups)
+  const [sortOrigin, setSortOrigin] = useState(initialSortOrigin)
   const [sortError, setSortError] = useState('')
   const [isGoogleMapsReady, setIsGoogleMapsReady] = useState(false)
   const mapElementRef = useRef(null)
@@ -171,8 +175,10 @@ export default function PickupsPage (props) {
   const infoWindowsRef = useRef([])
 
   useEffect(() => {
-    setDisplayPickups(pickups)
-  }, [pickups])
+    setZipCode(initialZipCode)
+    setSortOrigin(initialSortOrigin)
+    setDisplayPickups(initialSortOrigin ? sortPickupsByDistance(pickups, initialSortOrigin) : pickups)
+  }, [initialSortOrigin, initialZipCode, pickups])
 
   useEffect(() => {
     if (window.google && window.google.maps) {
@@ -326,9 +332,9 @@ export default function PickupsPage (props) {
     <>
       <SeoHead
         title="Local Broward, Palm Beach, & Miami-Dade County Pickups"
-        description="Learn about the local days, times, and locations for Ultimate Frisbee pickup near you in South Florida."
+        description="Learn about the days, times, and locations for Ultimate Frisbee pickup near you in South Florida."
         path="/pickups"
-        image="https://www.sflultimate.com/images/dave-catching-face.jpg"
+        image="https://d137pw2ndt5u9c.cloudfront.net/keystone/6a94b2e1eac52500284a7d35-south_florida_pickups_banner-optimized.jpg"
       />
       <HeaderNavigation leagues={leagues} />
 

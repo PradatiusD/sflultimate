@@ -3,6 +3,8 @@ import GraphqlClient from '../../../lib/graphql-client'
 import PaymentUtils from '../../../lib/payment-utils'
 
 const { RECAPTCHA_V2_SITE_SECRET } = process.env
+const COMMUNITY_WHATSAPP_PICKUP_ID = 'community-whatsapp'
+const COMMUNITY_WHATSAPP_URL = 'https://chat.whatsapp.com/FZC77g5Tzsw8xwxMXG997V'
 
 const CONTACT_FIELD_BY_TYPE = {
   whatsapp: 'contactWhatsapp',
@@ -59,6 +61,11 @@ export default async function handler (req, res) {
     })
     if (!recaptchaResponse || !recaptchaResponse.success) {
       res.status(403).json({ error: 'reCAPTCHA verification failed. Please try again.' })
+      return
+    }
+
+    if (pickupId === COMMUNITY_WHATSAPP_PICKUP_ID && contactType === 'whatsapp') {
+      res.status(200).json(buildContactResponse(contactType, COMMUNITY_WHATSAPP_URL))
       return
     }
 
