@@ -42,8 +42,8 @@
         "eslint-config-standard": "^17.1.0"
     },
     "scripts": {
-        "dev": "cd app && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development DISABLE_LOGGING=true keystone dev",
-        "build": "cd app && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production keystone build",
+        "dev": "cd app && cross-env NODE_ENV=development DISABLE_LOGGING=true keystone dev",
+        "build": "cd app && cross-env NODE_ENV=production keystone build",
         "start": "cd app && cross-env NODE_ENV=production keystone start",
         "create-tables": "cross-env keystone create-tables",
         "cypress": "npx cypress open",

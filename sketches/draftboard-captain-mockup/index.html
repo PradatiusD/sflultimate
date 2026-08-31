@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SFL Ultimate Draft Room Mockup</title>
+  <style>
+    :root {
+      --ink: #25222a;
+      --muted: #706b76;
+      --line: #e6e1e8;
+      --soft: #f7f4f8;
+      --paper: #ffffff;
+      --purple: #804399;
+      --purple-dark: #623276;
+      --purple-soft: #f1e9f5;
+      --pink: #e44989;
+      --green: #1f8b57;
+      --green-soft: #e9f7f0;
+      --amber: #9a650d;
+      --amber-soft: #fff4dd;
+      --danger: #b43d4d;
+      --shadow: 0 8px 28px rgba(42, 29, 48, 0.08);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; }
+    body {
+      margin: 0;
+      background: #f5f2f6;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid rgba(128, 67, 153, 0.28);
+      outline-offset: 2px;
+    }
+
+    .demo-bar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 54px;
+      padding: 8px 20px;
+      background: #28242b;
+      color: white;
+      box-shadow: 0 3px 16px rgba(0,0,0,.18);
+    }
+    .demo-label {
+      flex: 0 0 auto;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #d8d0db;
+    }
+    .role-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: thin; }
+    .role-tab {
+      white-space: nowrap;
+      border: 1px solid #555059;
+      border-radius: 999px;
+      background: transparent;
+      color: #eee9f0;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .role-tab:hover { background: #3a353e; }
+    .role-tab.active { border-color: white; background: white; color: #2c2830; }
+    .reset-demo {
+      margin-left: auto;
+      border: 0;
+      border-radius: 8px;
+      background: #48424d;
+      color: white;
+      padding: 7px 11px;
+      white-space: nowrap;
+    }
+
+    .site-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 28px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 230px; }
+    .brand img { width: 44px; height: 44px; object-fit: contain; }
+    .brand strong { display: block; font-size: 17px; }
+    .brand small { display: block; color: var(--muted); font-size: 12px; }
+    .draft-meta { display: flex; gap: 8px; margin-left: auto; align-items: center; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: var(--soft);
+      color: #4e4853;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #27a466; box-shadow: 0 0 0 4px #dff4e9; }
+    .viewer-pill { background: var(--purple-soft); color: var(--purple-dark); }
+
+    .page {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 24px 28px 48px;
+    }
+    .turn-banner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 18px 20px;
+      border: 1px solid #dfcde7;
+      border-left: 6px solid var(--purple);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+    .turn-banner.yours { border-color: #9dd5b8; border-left-color: var(--green); background: var(--green-soft); }
+    .turn-icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--purple-soft);
+      font-size: 22px;
+    }
+    .turn-banner.yours .turn-icon { background: white; }
+    .turn-eyebrow { margin: 0 0 2px; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .turn-title { margin: 0; font-size: clamp(20px, 2vw, 28px); line-height: 1.2; }
+    .turn-subtitle { margin: 5px 0 0; color: var(--muted); font-size: 14px; }
+    .turn-actions { display: flex; gap: 8px; }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 9px 13px;
+      font-weight: 750;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn-primary { background: var(--purple); color: white; }
+    .btn-primary:hover:not(:disabled) { background: var(--purple-dark); }
+    .btn-secondary { border-color: #cec7d2; background: white; color: #4e4653; }
+    .btn-secondary:hover:not(:disabled) { border-color: var(--purple); color: var(--purple); }
+    .btn-quiet { border-color: transparent; background: transparent; color: var(--purple); }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn:disabled { cursor: not-allowed; opacity: .48; }
+    .btn-sm { padding: 7px 10px; font-size: 13px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 20px;
+      align-items: start;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 4px 18px rgba(42, 29, 48, 0.045);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 64px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-header h2, .card-header h3 { margin: 0; font-size: 18px; }
+    .card-header p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .count { margin-left: 6px; color: var(--muted); font-weight: 550; }
+    .filters { display: flex; gap: 8px; margin-left: auto; }
+    .search {
+      width: min(260px, 36vw);
+      border: 1px solid #d6d0d9;
+      border-radius: 9px;
+      background: #fbfafb;
+      padding: 9px 11px;
+    }
+    .filter-select {
+      border: 1px solid #d6d0d9;
+      border-radius: 9px;
+      background: white;
+      padding: 9px 28px 9px 10px;
+    }
+
+    .player-table { width: 100%; border-collapse: collapse; }
+    .player-table th {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #faf8fb;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+    .player-table td { padding: 13px 14px; border-bottom: 1px solid #eeeaf0; vertical-align: middle; }
+    .player-table tr:last-child td { border-bottom: 0; }
+    .player-table tbody tr:hover { background: #fcfafd; }
+    .player-name { font-weight: 800; }
+    .player-note { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .rating { display: inline-flex; align-items: center; gap: 5px; font-weight: 800; }
+    .rating::before { content: "★"; color: #df9e29; }
+    .position-tag {
+      display: inline-block;
+      margin: 2px 3px 2px 0;
+      border-radius: 5px;
+      background: var(--soft);
+      padding: 3px 6px;
+      color: #5d5662;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .pick-cell { text-align: right; }
+
+    .sidebar { display: grid; gap: 16px; position: sticky; top: 78px; }
+    .team-card { overflow: hidden; }
+    .team-color { height: 7px; background: var(--team-color, var(--purple)); }
+    .team-summary { display: flex; align-items: center; gap: 12px; padding: 17px 18px 14px; }
+    .team-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
+      background: var(--team-soft, var(--purple-soft));
+      color: var(--team-color, var(--purple));
+      font-size: 19px;
+      font-weight: 900;
+    }
+    .team-summary h3 { margin: 0; font-size: 18px; }
+    .team-summary p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .roster { list-style: none; margin: 0; padding: 0 18px 16px; }
+    .roster li {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 9px;
+      align-items: center;
+      padding: 10px 0;
+      border-top: 1px solid #eeeaf0;
+      font-size: 13px;
+    }
+    .roster-number { color: #9b949f; font-size: 11px; font-weight: 800; }
+    .roster-name { font-weight: 700; }
+    .roster-meta { color: var(--muted); font-size: 11px; }
+    .empty-roster { padding: 12px 0; color: var(--muted); font-size: 13px; }
+
+    .up-next { padding: 16px 18px; }
+    .up-next h3 { margin: 0 0 12px; font-size: 15px; }
+    .queue { display: flex; gap: 7px; align-items: center; }
+    .queue-team {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .queue-team.current { border-color: var(--purple); background: var(--purple-soft); color: var(--purple-dark); }
+    .queue-arrow { color: #aaa2ad; }
+
+    .history { padding: 8px 18px 14px; }
+    .history-row { display: grid; grid-template-columns: 26px 1fr auto; gap: 9px; padding: 9px 0; border-bottom: 1px solid #eeeaf0; font-size: 12px; }
+    .history-row:last-child { border-bottom: 0; }
+    .history-pick { color: #9a929e; font-weight: 800; }
+    .history-player { font-weight: 750; }
+    .history-team { color: var(--muted); }
+
+    .admin-panel { display: none; margin-bottom: 20px; padding: 18px; }
+    .admin-panel.visible { display: block; }
+    .admin-title { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+    .admin-title h2 { margin: 0; font-size: 18px; }
+    .admin-title span { border-radius: 999px; background: var(--amber-soft); color: var(--amber); padding: 4px 8px; font-size: 11px; font-weight: 850; text-transform: uppercase; }
+    .admin-grid { display: grid; grid-template-columns: 1.2fr 1fr auto; gap: 12px; align-items: end; }
+    .field label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .field select, .field input[type="text"] { width: 100%; border: 1px solid #d6d0d9; border-radius: 9px; padding: 9px 10px; background: white; }
+    .check-field { display: flex; align-items: center; gap: 8px; min-height: 40px; font-size: 13px; font-weight: 700; }
+    .override-note { display: none; grid-column: 1 / -1; }
+    .override-note.visible { display: block; }
+    .admin-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 60;
+      max-width: min(380px, calc(100vw - 44px));
+      border-radius: 11px;
+      background: #26222a;
+      color: white;
+      padding: 13px 16px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.24);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .2s ease;
+      font-size: 14px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(28, 23, 30, .58);
+    }
+    .modal-backdrop.open { display: grid; }
+    .modal {
+      width: min(460px, 100%);
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 22px 70px rgba(0,0,0,.28);
+      padding: 22px;
+    }
+    .modal h2 { margin: 0 0 8px; font-size: 22px; }
+    .modal p { margin: 0 0 18px; color: var(--muted); }
+    .modal-summary { margin-bottom: 18px; border-radius: 10px; background: var(--soft); padding: 13px 14px; font-size: 14px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+    .locked-view {
+      display: none;
+      min-height: 560px;
+      place-items: center;
+      padding: 30px;
+    }
+    .locked-view.visible { display: grid; }
+    .login-card { width: min(420px, 100%); padding: 28px; text-align: center; }
+    .lock-icon { display: grid; place-items: center; width: 62px; height: 62px; margin: 0 auto 14px; border-radius: 50%; background: var(--purple-soft); font-size: 28px; }
+    .login-card h1 { margin: 0 0 6px; font-size: 24px; }
+    .login-card p { margin: 0 0 18px; color: var(--muted); }
+    .login-card input { width: 100%; margin-bottom: 10px; border: 1px solid #d6d0d9; border-radius: 9px; padding: 11px; }
+    .login-card .btn { width: 100%; }
+    .prototype-note { margin-top: 12px; color: #958e99; font-size: 11px; }
+    .draft-content.hidden { display: none; }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; grid-template-columns: 1fr 1fr; }
+      .team-card { grid-row: span 2; }
+      .admin-grid { grid-template-columns: 1fr 1fr; }
+      .admin-grid .btn { width: 100%; }
+    }
+    @media (max-width: 720px) {
+      .demo-bar { padding: 8px 12px; }
+      .demo-label { display: none; }
+      .reset-demo { display: none; }
+      .site-header { padding: 13px 15px; }
+      .brand { min-width: 0; }
+      .brand strong { font-size: 14px; }
+      .brand small { display: none; }
+      .draft-meta .pill:not(.viewer-pill) { display: none; }
+      .page { padding: 15px 12px 35px; }
+      .turn-banner { grid-template-columns: auto 1fr; padding: 15px; }
+      .turn-actions { grid-column: 1 / -1; }
+      .turn-actions .btn { flex: 1; }
+      .card-header { align-items: flex-start; flex-direction: column; }
+      .filters { width: 100%; margin-left: 0; }
+      .search { width: 100%; }
+      .filter-select { max-width: 42%; }
+      .player-table th:nth-child(3), .player-table td:nth-child(3),
+      .player-table th:nth-child(5), .player-table td:nth-child(5) { display: none; }
+      .player-table td, .player-table th { padding-left: 10px; padding-right: 10px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .admin-grid { grid-template-columns: 1fr; }
+      .override-note { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-bar">
+    <span class="demo-label">View as</span>
+    <div class="role-tabs" id="roleTabs"></div>
+    <button class="reset-demo" id="resetDemo">Reset demo</button>
+  </div>
+
+  <header class="site-header">
+    <div class="brand">
+      <img src="../../app/next/public/images/flamingo-logo.png" alt="South Florida Ultimate flamingo logo">
+      <div><strong>South Florida Ultimate</strong><small>Summer League · Live Draft Room</small></div>
+    </div>
+    <div class="draft-meta">
+      <span class="pill"><span class="live-dot"></span> Live</span>
+      <span class="pill" id="roundPill">Round 1 · Pick 1</span>
+      <span class="pill viewer-pill" id="viewerPill">Commissioner</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="locked-view" id="lockedView">
+      <div class="card login-card">
+        <div class="lock-icon">🔒</div>
+        <h1 id="loginTeamName">Captain draft room</h1>
+        <p>Enter your team's draft password to continue.</p>
+        <input id="passwordInput" type="password" value="captain" aria-label="Team password">
+        <button class="btn btn-primary" id="loginButton">Open draft room</button>
+        <div class="prototype-note">Mockup: any password works.</div>
+      </div>
+    </section>
+
+    <div class="draft-content" id="draftContent">
+      <div class="page">
+        <section class="turn-banner" id="turnBanner">
+          <div class="turn-icon" id="turnIcon">⏱</div>
+          <div>
+            <p class="turn-eyebrow" id="turnEyebrow">Now drafting</p>
+            <h1 class="turn-title" id="turnTitle">Pink Flamingos are on the clock</h1>
+            <p class="turn-subtitle" id="turnSubtitle">Round 1, pick 1 · Vice City is next</p>
+          </div>
+          <div class="turn-actions">
+            <button class="btn btn-secondary btn-sm" id="reminderButton">🔔 Enable reminders</button>
+            <button class="btn btn-quiet btn-sm" id="lockButton">Lock view</button>
+          </div>
+        </section>
+
+        <section class="card admin-panel" id="adminPanel">
+          <div class="admin-title"><h2>Commissioner controls</h2><span>Snake is the default</span></div>
+          <div class="admin-grid">
+            <div class="field">
+              <label for="adminTeam">Team receiving the pick</label>
+              <select id="adminTeam"></select>
+            </div>
+            <label class="check-field"><input type="checkbox" id="advanceOrder" checked> Advance draft order after pick</label>
+            <button class="btn btn-secondary" id="setNextButton">Set next team…</button>
+            <div class="field override-note" id="overrideNoteWrap">
+              <label for="overrideNote">Optional override note</label>
+              <input type="text" id="overrideNote" placeholder="Example: makeup pick after a late arrival">
+            </div>
+          </div>
+          <div class="admin-actions">
+            <button class="btn btn-secondary btn-sm" id="pauseButton">Pause draft</button>
+            <button class="btn btn-secondary btn-sm" id="undoButton">Undo last pick</button>
+            <button class="btn btn-secondary btn-sm" id="copyLinksButton">Copy captain links</button>
+          </div>
+        </section>
+
+        <div class="layout">
+          <section class="card">
+            <div class="card-header">
+              <div><h2>Available players <span class="count" id="playerCount"></span></h2><p>Choose a player to add to your roster.</p></div>
+              <div class="filters">
+                <input class="search" id="searchInput" type="search" placeholder="Search players…" aria-label="Search players">
+                <select class="filter-select" id="genderFilter" aria-label="Filter by division">
+                  <option value="all">All players</option>
+                  <option value="W">W matching</option>
+                  <option value="M">M matching</option>
+                </select>
+              </div>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="player-table">
+                <thead><tr><th>Player</th><th>Match</th><th>Positions</th><th>Rating</th><th>Attendance</th><th></th></tr></thead>
+                <tbody id="playerRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <aside class="sidebar">
+            <section class="card team-card" id="teamCard">
+              <div class="team-color"></div>
+              <div class="team-summary">
+                <div class="team-mark" id="teamMark">PF</div>
+                <div><h3 id="rosterTitle">Pink Flamingos</h3><p id="rosterSubtitle">Your roster · 2 players</p></div>
+              </div>
+              <ol class="roster" id="rosterList"></ol>
+            </section>
+
+            <section class="card up-next">
+              <h3>Draft order</h3>
+              <div class="queue" id="queue"></div>
+            </section>
+
+            <section class="card">
+              <div class="card-header"><h3>Recent picks</h3></div>
+              <div class="history" id="history"></div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="pickModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <h2 id="modalTitle">Confirm pick</h2>
+      <p>This updates every captain's draft room immediately.</p>
+      <div class="modal-summary" id="modalSummary"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="cancelPick">Cancel</button>
+        <button class="btn btn-primary" id="confirmPick">Confirm pick</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const initialPlayers = [
+      { id: 1, name: 'Jordan Reyes', match: 'W', positions: ['Handler', 'Hybrid'], rating: 8.4, attendance: '80%', note: 'Reliable reset handler' },
+      { id: 2, name: 'Micah Thompson', match: 'M', positions: ['Cutter', 'Deep'], rating: 8.1, attendance: '80%', note: 'Strong downfield speed' },
+      { id: 3, name: 'Avery Chen', match: 'W', positions: ['Hybrid'], rating: 7.8, attendance: '50%', note: 'Comfortable on both sides' },
+      { id: 4, name: 'Dante Williams', match: 'M', positions: ['Handler'], rating: 7.7, attendance: '80%', note: 'Patient with the disc' },
+      { id: 5, name: 'Sofia Martinez', match: 'W', positions: ['Cutter', 'Deep'], rating: 7.5, attendance: '80%', note: 'Attacks space aggressively' },
+      { id: 6, name: 'Eli Brooks', match: 'M', positions: ['Hybrid'], rating: 7.2, attendance: '50%', note: 'Versatile matchup defender' },
+      { id: 7, name: 'Taylor Morgan', match: 'W', positions: ['Handler'], rating: 7.0, attendance: '80%', note: 'Calm in zone offense' },
+      { id: 8, name: 'Noah Patel', match: 'M', positions: ['Cutter'], rating: 6.9, attendance: '80%', note: 'Quick first step' },
+      { id: 9, name: 'Camila Lewis', match: 'W', positions: ['Hybrid', 'Deep'], rating: 6.7, attendance: '50%', note: 'Excellent field awareness' },
+      { id: 10, name: 'Owen Davis', match: 'M', positions: ['Cutter'], rating: 6.5, attendance: '80%', note: 'Consistent continuation cuts' }
+    ]
+
+    const initialTeams = [
+      { id: 'flamingos', name: 'Pink Flamingos', short: 'PF', color: '#e44989', soft: '#fdeaf2', roster: [{ name: 'Maya Rivera', match: 'W', captain: true }, { name: 'Ben Carter', match: 'M', captain: true }] },
+      { id: 'vice', name: 'Vice City', short: 'VC', color: '#7257bb', soft: '#efebfa', roster: [{ name: 'Nina Lopez', match: 'W', captain: true }, { name: 'Chris Hall', match: 'M', captain: true }] },
+      { id: 'waves', name: 'Ocean Waves', short: 'OW', color: '#1488a5', soft: '#e5f5f8', roster: [{ name: 'Zoe Kim', match: 'W', captain: true }, { name: 'Marcus Lee', match: 'M', captain: true }] },
+      { id: 'sun', name: 'Sun Chasers', short: 'SC', color: '#d47a14', soft: '#fff1df', roster: [{ name: 'Lena Scott', match: 'W', captain: true }, { name: 'Theo Green', match: 'M', captain: true }] }
+    ]
+
+    let teams, players, history, pickIndex, viewer, nextOverride, paused, pendingPlayer, unlocked
+
+    const $ = id => document.getElementById(id)
+    const getTeam = id => teams.find(team => team.id === id)
+    const snakeTeamId = index => {
+      const round = Math.floor(index / teams.length)
+      const position = index % teams.length
+      return round % 2 === 0 ? teams[position].id : teams[teams.length - 1 - position].id
+    }
+    const currentTeamId = () => nextOverride || snakeTeamId(pickIndex)
+    const isAdmin = () => viewer === 'admin'
+    const canViewerPick = () => !paused && (isAdmin() || viewer === currentTeamId())
+
+    function resetState () {
+      teams = JSON.parse(JSON.stringify(initialTeams))
+      players = JSON.parse(JSON.stringify(initialPlayers))
+      history = []
+      pickIndex = 0
+      viewer = 'admin'
+      nextOverride = null
+      paused = false
+      pendingPlayer = null
+      unlocked = { admin: true }
+      render()
+      showToast('Demo reset to the first pick.')
+    }
+
+    function renderRoleTabs () {
+      const roles = [{ id: 'admin', name: 'Commissioner' }, ...teams.map(t => ({ id: t.id, name: t.name }))]
+      $('roleTabs').innerHTML = roles.map(role => `<button class="role-tab ${viewer === role.id ? 'active' : ''}" data-role="${role.id}">${role.name}</button>`).join('')
+      document.querySelectorAll('.role-tab').forEach(button => button.addEventListener('click', () => switchViewer(button.dataset.role)))
+    }
+
+    function switchViewer (role) {
+      viewer = role
+      if (role !== 'admin' && !unlocked[role]) {
+        $('draftContent').classList.add('hidden')
+        $('lockedView').classList.add('visible')
+        $('loginTeamName').textContent = `${getTeam(role).name} captain room`
+      } else {
+        $('lockedView').classList.remove('visible')
+        $('draftContent').classList.remove('hidden')
+      }
+      render()
+    }
+
+    function render () {
+      renderRoleTabs()
+      const current = getTeam(currentTeamId())
+      const round = Math.floor(pickIndex / teams.length) + 1
+      const nextId = snakeTeamId(pickIndex + 1)
+      const next = getTeam(nextId)
+      const ownTeam = isAdmin() ? current : getTeam(viewer)
+      const yours = !isAdmin() && viewer === current.id && !paused
+
+      $('viewerPill').textContent = isAdmin() ? 'Commissioner' : `${ownTeam.name} captain`
+      $('roundPill').textContent = `Round ${round} · Pick ${pickIndex + 1}`
+      $('turnBanner').classList.toggle('yours', yours)
+      $('turnIcon').textContent = paused ? '⏸' : yours ? '🔥' : '⏱'
+      $('turnEyebrow').textContent = paused ? 'Draft paused by commissioner' : yours ? 'Your turn' : nextOverride ? 'Commissioner-adjusted turn' : 'Now drafting'
+      $('turnTitle').textContent = paused ? 'Picks are temporarily paused' : yours ? 'You are on the clock' : `${current.name} are on the clock`
+      $('turnSubtitle').textContent = paused ? `The next pick remains with ${current.name}.` : `Round ${round}, pick ${pickIndex + 1} · ${next.name} is next in the default snake order`
+      $('lockButton').style.display = isAdmin() ? 'none' : 'inline-block'
+      $('reminderButton').style.display = isAdmin() ? 'none' : 'inline-block'
+      $('adminPanel').classList.toggle('visible', isAdmin())
+      $('pauseButton').textContent = paused ? 'Resume draft' : 'Pause draft'
+      $('undoButton').disabled = history.length === 0
+
+      renderAdmin(current)
+      renderPlayers()
+      renderTeam(ownTeam)
+      renderQueue()
+      renderHistory()
+    }
+
+    function renderAdmin (current) {
+      $('adminTeam').innerHTML = teams.map(team => `<option value="${team.id}" ${team.id === current.id ? 'selected' : ''}>${team.name}${team.id === current.id ? ' — next' : ''}</option>`).join('')
+      $('advanceOrder').checked = true
+      $('overrideNote').value = ''
+      updateOverrideNote()
+    }
+
+    function renderPlayers () {
+      const query = $('searchInput').value.trim().toLowerCase()
+      const gender = $('genderFilter').value
+      const visible = players.filter(player => (gender === 'all' || player.match === gender) && (!query || player.name.toLowerCase().includes(query) || player.positions.join(' ').toLowerCase().includes(query)))
+      $('playerCount').textContent = `${players.length} remaining`
+      $('playerRows').innerHTML = visible.length ? visible.map(player => {
+        const enabled = canViewerPick()
+        const label = isAdmin() ? 'Draft' : viewer === currentTeamId() ? 'Pick' : 'Waiting'
+        return `<tr>
+          <td><div class="player-name">${player.name}</div><div class="player-note">${player.note}</div></td>
+          <td>${player.match}</td>
+          <td>${player.positions.map(p => `<span class="position-tag">${p}</span>`).join('')}</td>
+          <td><span class="rating">${player.rating.toFixed(1)}</span></td>
+          <td>${player.attendance}</td>
+          <td class="pick-cell"><button class="btn btn-primary btn-sm pick-button" data-player="${player.id}" ${enabled ? '' : 'disabled'}>${label}</button></td>
+        </tr>`
+      }).join('') : '<tr><td colspan="6" style="padding:36px;text-align:center;color:var(--muted)">No players match this filter.</td></tr>'
+      document.querySelectorAll('.pick-button').forEach(button => button.addEventListener('click', () => openPick(Number(button.dataset.player))))
+    }
+
+    function renderTeam (team) {
+      $('teamCard').style.setProperty('--team-color', team.color)
+      $('teamCard').style.setProperty('--team-soft', team.soft)
+      $('teamMark').textContent = team.short
+      $('rosterTitle').textContent = team.name
+      $('rosterSubtitle').textContent = `${isAdmin() ? 'Selected team' : 'Your roster'} · ${team.roster.length} players`
+      $('rosterList').innerHTML = team.roster.length ? team.roster.map((player, index) => `<li><span class="roster-number">${index + 1}</span><span class="roster-name">${player.name}${player.captain ? ' <span class="position-tag">C</span>' : ''}</span><span class="roster-meta">${player.match}</span></li>`).join('') : '<li class="empty-roster">No players yet.</li>'
+    }
+
+    function renderQueue () {
+      const ids = [currentTeamId(), snakeTeamId(pickIndex + 1), snakeTeamId(pickIndex + 2)]
+      $('queue').innerHTML = ids.map((id, i) => `${i ? '<span class="queue-arrow">→</span>' : ''}<div class="queue-team ${i === 0 ? 'current' : ''}" title="${getTeam(id).name}">${getTeam(id).short}</div>`).join('')
+    }
+
+    function renderHistory () {
+      $('history').innerHTML = history.length ? history.slice().reverse().slice(0, 5).map(item => `<div class="history-row"><span class="history-pick">${item.displayPick}</span><span><span class="history-player">${item.player.name}</span><br><span class="history-team">${item.note || getTeam(item.teamId).name}</span></span><span>${item.player.match}</span></div>`).join('') : '<div style="padding:14px 0;color:var(--muted);font-size:13px">The draft is ready. No picks yet.</div>'
+    }
+
+    function openPick (playerId) {
+      pendingPlayer = players.find(player => player.id === playerId)
+      const target = isAdmin() ? getTeam($('adminTeam').value) : getTeam(viewer)
+      const advancing = !isAdmin() || $('advanceOrder').checked
+      $('modalSummary').innerHTML = `<strong>${pendingPlayer.name}</strong> will join <strong>${target.name}</strong>.<br><span style="color:var(--muted)">${advancing ? 'The draft will advance to the next position.' : 'This makeup pick will not advance the order.'}</span>`
+      $('pickModal').classList.add('open')
+    }
+
+    function confirmPick () {
+      if (!pendingPlayer) return
+      const scheduledId = currentTeamId()
+      const targetId = isAdmin() ? $('adminTeam').value : viewer
+      const advancing = !isAdmin() || $('advanceOrder').checked
+      const note = isAdmin() && (targetId !== scheduledId || !advancing) ? ($('overrideNote').value.trim() || 'Commissioner override') : ''
+      const target = getTeam(targetId)
+      target.roster.push({ name: pendingPlayer.name, match: pendingPlayer.match, captain: false })
+      history.push({ player: pendingPlayer, teamId: targetId, scheduledId, advanced: advancing, priorOverride: nextOverride, displayPick: advancing ? pickIndex + 1 : '—', note })
+      players = players.filter(player => player.id !== pendingPlayer.id)
+      if (advancing) {
+        pickIndex += 1
+        nextOverride = null
+      }
+      $('pickModal').classList.remove('open')
+      showToast(`${pendingPlayer.name} drafted by ${target.name}${advancing ? '. Next position loaded.' : '. Draft order unchanged.'}`)
+      pendingPlayer = null
+      render()
+    }
+
+    function undoPick () {
+      const last = history.pop()
+      if (!last) return
+      const team = getTeam(last.teamId)
+      team.roster = team.roster.filter(player => player.name !== last.player.name)
+      players.push(last.player)
+      players.sort((a, b) => a.id - b.id)
+      if (last.advanced) pickIndex = Math.max(0, pickIndex - 1)
+      nextOverride = last.priorOverride
+      showToast(`Undid the pick of ${last.player.name}.`)
+      render()
+    }
+
+    function updateOverrideNote () {
+      const isOverride = $('adminTeam').value !== currentTeamId() || !$('advanceOrder').checked
+      $('overrideNoteWrap').classList.toggle('visible', isOverride)
+    }
+
+    function setNextTeam () {
+      const choices = teams.map((team, index) => `${index + 1}: ${team.name}`).join('\n')
+      const answer = window.prompt(`Set the next captain turn. Enter a number:\n${choices}\n\nLeave blank to clear an override.`)
+      if (answer === null) return
+      if (!answer.trim()) {
+        nextOverride = null
+        showToast('Next-team override cleared. Snake order restored.')
+      } else {
+        const team = teams[Number(answer) - 1]
+        if (!team) return showToast('That team number is not valid.')
+        nextOverride = team.id
+        showToast(`${team.name} will take the next turn.`)
+      }
+      render()
+    }
+
+    function showToast (message) {
+      $('toast').textContent = message
+      $('toast').classList.add('show')
+      window.clearTimeout(showToast.timer)
+      showToast.timer = window.setTimeout(() => $('toast').classList.remove('show'), 2600)
+    }
+
+    $('searchInput').addEventListener('input', renderPlayers)
+    $('genderFilter').addEventListener('change', renderPlayers)
+    $('adminTeam').addEventListener('change', updateOverrideNote)
+    $('advanceOrder').addEventListener('change', updateOverrideNote)
+    $('cancelPick').addEventListener('click', () => $('pickModal').classList.remove('open'))
+    $('confirmPick').addEventListener('click', confirmPick)
+    $('pickModal').addEventListener('click', event => { if (event.target === $('pickModal')) $('pickModal').classList.remove('open') })
+    $('pauseButton').addEventListener('click', () => { paused = !paused; showToast(paused ? 'Draft paused.' : 'Draft resumed.'); render() })
+    $('undoButton').addEventListener('click', undoPick)
+    $('setNextButton').addEventListener('click', setNextTeam)
+    $('copyLinksButton').addEventListener('click', () => showToast('Captain links copied (mockup).'))
+    $('resetDemo').addEventListener('click', resetState)
+    $('lockButton').addEventListener('click', () => { unlocked[viewer] = false; switchViewer(viewer) })
+    $('reminderButton').addEventListener('click', event => { event.target.textContent = '✓ Reminders enabled'; event.target.disabled = true; showToast('You will be alerted when your team is on the clock.') })
+    $('loginButton').addEventListener('click', () => { unlocked[viewer] = true; $('lockedView').classList.remove('visible'); $('draftContent').classList.remove('hidden'); showToast(`${getTeam(viewer).name} draft room unlocked.`); render() })
+    $('passwordInput').addEventListener('keydown', event => { if (event.key === 'Enter') $('loginButton').click() })
+
+    resetState()
+  </script>
+</body>
+</html>
