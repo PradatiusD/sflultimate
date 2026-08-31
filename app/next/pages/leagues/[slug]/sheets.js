@@ -1,8 +1,10 @@
 import GraphqlClient from '../../../lib/graphql-client'
 import { gql } from '@apollo/client'
-import { useState } from 'react'
+import QRCode from 'qrcode'
 import { addLeagueToVariables } from '../../../lib/utils'
+import { buildStatEditorUrl } from '../../../lib/stat-editor-utils'
 import SeoHead from '../../../components/SeoHead'
+import StatEditor from '../../../components/StatEditor'
 
 export async function getServerSideProps (context) {
   const variables = addLeagueToVariables(context, {})
@@ -15,6 +17,8 @@ export async function getServerSideProps (context) {
         allGames(where: {league: $leagueCriteria}, sortBy: scheduledTime_ASC) {
           id
           scheduledTime
+          homeTeamScore
+          awayTeamScore
           homeTeam {
             id
             name
@@ -149,6 +153,13 @@ export async function getServerSideProps (context) {
     })
   })
 
+  const protocol = (context.req.headers['x-forwarded-proto'] || 'http').split(',')[0]
+  const origin = `${protocol}://${context.req.headers.host}`
+  await Promise.all(games.flatMap(game => game.teams.map(async team => {
+    team.editorPath = buildStatEditorUrl(game.id, team.currentTeam.id)
+    team.qrCode = await QRCode.toDataURL(origin + team.editorPath, { margin: 1, width: 180 })
+  })))
+
   return {
     props: {
       league,
@@ -179,108 +190,6 @@ function Sheets (props) {
   const editor = queryParams.editor
   const isTournament = url.indexOf('isTournament') !== -1
   const today = new Date()
-
-  const handleSave = function (game, team) {
-    function updateStatsForPlayer (player) {
-      let mutation
-      let params
-      const stats = statsMap[player.id][game.id]
-      const statId = stats && stats.gameStatId
-      const statDataVariable = {
-        player: {
-          connect: {
-            id: player.id
-          }
-        },
-        game: {
-          connect: {
-            id: game.id
-          }
-        },
-        assists: stats.assists,
-        scores: stats.scores,
-        defenses: stats.defenses,
-        attended: stats.attended || false
-      }
-      if (statId) {
-        mutation = gql`
-          mutation updateStat($id: ID!, $data: PlayerGameStatUpdateInput) {
-            updatePlayerGameStat(id: $id, data: $data) {
-              id
-              player {
-                id
-              }
-              game {
-                id
-              }
-              assists
-              scores
-              defenses
-              throwaways
-              drops
-              pointsPlayed
-              attended
-            }
-          }
-        `
-        params = {
-          mutation,
-          variables: {
-            id: statId,
-            data: statDataVariable
-          }
-        }
-      } else {
-        mutation = gql`
-          mutation createStat($data: PlayerGameStatCreateInput) {
-            createPlayerGameStat(data: $data) {
-              player {
-                id
-              }
-              game {
-                id
-              }
-              assists
-              scores
-              defenses
-              throwaways
-              drops
-              pointsPlayed
-              attended
-            }
-          }
-        `
-        params = {
-          mutation,
-          variables: {
-            data: statDataVariable
-          }
-        }
-      }
-
-      return GraphqlClient.mutate(params)
-    }
-
-    Promise.all(team.players.map(function (player) {
-      return updateStatsForPlayer(player)
-    })).then(function (response) {
-      const newState = { ...statsMap }
-      response.forEach(function (player) {
-        const response = (player.data.createPlayerGameStat || player.data.updatePlayerGameStat)
-        const playerId = response.player.id
-        newState[playerId][game.id] = {
-          ...response,
-          gameStatId: response.id
-        }
-      })
-      setStatsMap(newState)
-    }).then(function () {
-      alert('Your data was saved for ' + team.name + ' for the game at ' + new Date(game.scheduledTime).toLocaleString())
-    }).catch(function () {
-      alert('There was an error saving for ' + team.name)
-    })
-  }
-  const [statsMap, setStatsMap] = useState(initPlayerMap)
 
   return <>
     <SeoHead
@@ -396,75 +305,30 @@ function Sheets (props) {
                   </tr>
                   </tbody>
                 </table>
+                <div className="text-center ms-2" style={{ width: '110px', flexShrink: 0 }}>
+                  <img src={team.qrCode} alt={`QR code to enter ${team.currentTeam.name} stats`} style={{ width: '100px', height: '100px' }} />
+                  <small style={{ display: 'block', lineHeight: 1.1 }}>Scan to enter stats</small>
+                </div>
               </div>
-              <table className="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>Player Name</th>
-                    <th>Attended</th>
-                    <th>Assists</th>
-                    <th>Scores</th>
-                    <th>Defenses</th>
-                    <th className="d-none">Throwaways</th>
-                    <th className="d-none">Drops</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    team.currentTeam.players.map((player) => {
-                      const stats = statsMap[player.id][game.id] || {}
-                      const onChange = function (str) {
-                        return (e) => {
-                          const newStats = { ...stats }
-                          newStats[str] = str === 'attended' ? e.target.checked : parseInt(e.target.value) || 0
-                          const newStatsMap = { ...statsMap }
-                          newStatsMap[player.id][game.id] = newStats
-                          setStatsMap(newStatsMap)
-                        }
-                      }
-
-                      const inputProps = {
-                        disabled: !editor,
-                        style: {}
-                      }
-                      if (new Date(game.scheduledTime).getTime() > Date.now()) {
-                        inputProps.style.display = 'none'
-                      }
-
-                      const textInputProps = {
-                        min: 0,
-                        step: 1,
-                        type: 'number',
-                        ...inputProps
-                      }
-                      return (
-                        <tr key={player.firstName + player.lastName}>
-                          <td style={{ width: '20%', whiteSpace: 'nowrap' }}>{player.firstName} {player.lastName}</td>
-                          <td style={{ width: '76px' }}><input type="checkbox" {...inputProps} checked={stats.attended} onChange={onChange('attended')} /></td>
-                          <td>
-                            <input {...textInputProps} value={stats.assists} onChange={onChange('assists')}/>
-                          </td>
-                          <td><input {...textInputProps} value={stats.scores} onChange={onChange('scores')} /></td>
-                          <td><input {...textInputProps} value={stats.defenses} onChange={onChange('defenses')} /></td>
-                          <td className="d-none"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                          <td className="d-none"><input type="number" min="0" step="1" disabled={!editor}/></td>
-                        </tr>
-                      )
-                    })
-                  }
-                </tbody>
-              </table>
+              <StatEditor
+                game={game}
+                team={team.currentTeam}
+                opponent={team.opponent}
+                isHomeTeam={game.homeTeam.id === team.currentTeam.id}
+                initialTeamScore={game.homeTeam.id === team.currentTeam.id ? game.homeTeamScore : game.awayTeamScore}
+                initialOpponentScore={game.homeTeam.id === team.currentTeam.id ? game.awayTeamScore : game.homeTeamScore}
+                initialStats={team.currentTeam.players.map(player => ({
+                  player,
+                  ...initPlayerMap[player.id][game.id]
+                }))}
+                editable={Boolean(editor)}
+              />
 
               <div>
                 <label style={{ fontWeight: 'normal' }}>Please write here any spirit feedback you would like the
                     organizers to note:</label>
                 <textarea className="form-control" style={{ marginBottom: '10px' }} rows={1}></textarea>
               </div>
-              {editor && (
-                <button className="btn btn-primary" onClick={() => handleSave(game, team.currentTeam)}>
-                    Save {team.currentTeam.name}&apos;s stats for {new Date(game.scheduledTime).toLocaleDateString()}
-                </button>
-              )}
               <SpiritOfTheGameText/>
             </section>
           )
