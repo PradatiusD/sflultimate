@@ -111,8 +111,8 @@ export default async function handler (req, res) {
 
     const sanitizedPayload = {
       paymentMethodNonce: req.body.paymentMethodNonce,
-      firstName: req.body.firstName.trim(),
-      lastName: req.body.lastName.trim(),
+      firstName: (req.body.firstName || '').trim(),
+      lastName: (req.body.lastName || '').trim(),
       gender: req.body.gender,
       email: req.body.email,
       age: parseInt(req.body.age),
@@ -124,7 +124,7 @@ export default async function handler (req, res) {
       participation: parseInt(req.body.participation),
       comments: req.body.comments,
       phoneNumber: req.body.phoneNumber,
-      partnerName: req.body.partnerName.trim(),
+      partnerName: (req.body.partnerName || '').trim(),
       shirtSize: req.body.shirtSize,
       wouldSponsor: req.body.wouldSponsor === 'on',
       wouldCaptain: req.body.wouldCaptain === 'Yes',
