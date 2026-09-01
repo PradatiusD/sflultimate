@@ -227,7 +227,7 @@ export default async function handler (req, res) {
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
-    notify(`Error processing registration: ${e.message}`)
+    notify(`Error processing registration: ${e.message}\n${e.stack || ''}`)
     res.redirect('/leagues/' + league.slug + '/register?error=' + encodeURIComponent(e.message))
   }
 }
