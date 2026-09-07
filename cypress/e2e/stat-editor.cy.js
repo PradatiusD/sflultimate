@@ -2,7 +2,7 @@ describe('Mobile game stat editor', () => {
   beforeEach(() => {
     cy.request({
       method: 'POST',
-      url: 'http://localhost:3000/admin/api',
+      url: '/admin/api',
       body: {
         query: `
           query {
@@ -17,6 +17,7 @@ describe('Mobile game stat editor', () => {
         `
       }
     }).then(({ body }) => {
+      assert.isUndefined(body.errors)
       const game = body.data.allGames.find(game => game.homeTeam?.players.length || game.awayTeam?.players.length)
       const team = game.homeTeam?.players.length ? game.homeTeam : game.awayTeam
       const date = new Date(game.scheduledTime).toLocaleDateString('en-CA', { timeZone: 'America/New_York' })
@@ -26,7 +27,7 @@ describe('Mobile game stat editor', () => {
 
   it('renders mobile controls and prevents inconsistent stats from saving', function () {
     cy.viewport('iphone-x')
-    cy.visit(`http://localhost:3000/sheets/${this.statEditorRoute.gameId}/${this.statEditorRoute.teamId}/editor`)
+    cy.visit(`/sheets/${this.statEditorRoute.gameId}/${this.statEditorRoute.teamId}/editor`)
 
     cy.contains('Enter the final score').should('be.visible')
     cy.get('.mobile-stat-card').should('have.length.greaterThan', 0)
@@ -60,7 +61,7 @@ describe('Mobile game stat editor', () => {
   })
 
   it('prints a QR code linking each team sheet to its editor', function () {
-    cy.visit(`http://localhost:3000/leagues/${this.statEditorRoute.leagueSlug}/sheets?date=${this.statEditorRoute.date}`)
+    cy.visit(`/leagues/${this.statEditorRoute.leagueSlug}/sheets?date=${this.statEditorRoute.date}`)
 
     cy.get('img[alt^="QR code to enter"]').should('have.length.greaterThan', 0)
     cy.get('img[alt^="QR code to enter"]').first().should('have.attr', 'src').and('match', /^data:image\/png;base64,/)
@@ -68,7 +69,7 @@ describe('Mobile game stat editor', () => {
 
   it('keeps player names visible after a successful save', function () {
     cy.viewport('iphone-x')
-    cy.visit(`http://localhost:3000/sheets/${this.statEditorRoute.gameId}/${this.statEditorRoute.teamId}/editor`)
+    cy.visit(`/sheets/${this.statEditorRoute.gameId}/${this.statEditorRoute.teamId}/editor`)
 
     cy.get('.mobile-stat-card h2').first().invoke('text').then(playerName => {
       cy.get('.stat-editor-totals span').then(totalElements => {
@@ -80,26 +81,17 @@ describe('Mobile game stat editor', () => {
         cy.get('input[id^="opponent-score-"]').clear()
         cy.get('input[id^="opponent-score-"]').type('0')
 
-        cy.intercept('POST', '**/admin/api', request => {
-          const operation = request.body.operationName
-          if (operation === 'UpdateStatEditorGame') {
-            request.reply({ data: { updateGame: { id: request.body.variables.id } } })
-            return
-          }
-          if (operation === 'UpdateStatEditorStat' || operation === 'CreateStatEditorStat') {
-            const data = request.body.variables.data
-            const playerId = data.player.connect.id
-            const result = {
-              id: request.body.variables.id || `new-${playerId}`,
-              assists: data.assists,
-              scores: data.scores,
-              defenses: data.defenses,
-              attended: data.attended,
-              player: { id: playerId }
-            }
-            const key = operation === 'UpdateStatEditorStat' ? 'updatePlayerGameStat' : 'createPlayerGameStat'
-            request.reply({ data: { [key]: result } })
-          }
+        cy.intercept('POST', '**/api/stats', request => {
+          request.reply({
+            stats: request.body.stats.map(stat => ({
+              id: stat.gameStatId || `new-${stat.playerId}`,
+              assists: stat.assists,
+              scores: stat.scores,
+              defenses: stat.defenses,
+              attended: stat.attended,
+              player: { id: stat.playerId }
+            }))
+          })
         })
 
         cy.contains('button', 'Save').click()

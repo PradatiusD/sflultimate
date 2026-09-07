@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import GraphqlClient from '../lib/graphql-client'
+import GraphqlClient from '../lib/server-graphql-client'
 import Countdown from 'react-countdown'
 import SeoHead from '../components/SeoHead'
 

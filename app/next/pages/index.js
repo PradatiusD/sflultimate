@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import GraphqlClient from '../lib/graphql-client'
+import GraphqlClient from '../lib/server-graphql-client'
 import { HeaderNavigation } from '../components/Navigation'
 import PickupContactActions from '../components/PickupContactActions'
 import Standings from '../components/Standings'

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import { useState } from 'react'
-import GraphqlClient from '../../../lib/graphql-client'
+import GraphqlClient from '../../../lib/server-graphql-client'
 import { PlayerLink } from '../../../components/PlayerLink'
 import { HeaderNavigation } from '../../../components/Navigation'
 import LeagueUtils from '../../../lib/league-utils'

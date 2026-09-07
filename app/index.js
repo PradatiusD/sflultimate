@@ -7,6 +7,8 @@ const PROJECT_NAME = 'SFLUltimate'
 const keystone = require('./keystone')
 const contentListSchemas = require('./lists/index')
 
+global.sflKeystone = keystone
+
 for (const listName in contentListSchemas) {
   const schema = contentListSchemas[listName]
   keystone.createList(listName, schema)

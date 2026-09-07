@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import PaymentUtils from '../../lib/payment-utils'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
-import GraphQlClient from '../../lib/graphql-client'
+import GraphQlClient from '../../lib/server-graphql-client'
 import { notify } from '../../lib/slack'
 
 const CREATE_PLAYER_SUBSTITUTION = gql`
@@ -16,8 +16,8 @@ const CREATE_PLAYER_SUBSTITUTION = gql`
 
 function createSubstitutionRecord (payload) {
   const mutationData = {
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     firstName: payload.firstName,
     lastName: payload.lastName,
     name: payload.firstName + ' ' + payload.lastName,

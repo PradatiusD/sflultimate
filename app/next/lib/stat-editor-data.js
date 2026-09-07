@@ -1,4 +1,4 @@
-import GraphqlClient from './graphql-client'
+import GraphqlClient from './server-graphql-client'
 import { gql } from '@apollo/client'
 import { getTeamGameDetails } from './stat-editor-utils'
 

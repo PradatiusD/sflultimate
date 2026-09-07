@@ -1,4 +1,4 @@
-import GraphqlClient from '../../lib/graphql-client'
+import GraphqlClient from '../../lib/server-graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../components/Navigation'
 import { useEffect } from 'react'

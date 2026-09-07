@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import GraphqlClient from '../../../lib/graphql-client'
+import GraphqlClient from '../../../lib/server-graphql-client'
 import PaymentUtils from '../../../lib/payment-utils'
 
 const { RECAPTCHA_V2_SITE_SECRET } = process.env

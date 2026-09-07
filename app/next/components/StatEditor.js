@@ -1,48 +1,10 @@
 import { useState } from 'react'
-import { gql } from '@apollo/client'
-import GraphqlClient from '../lib/graphql-client'
 import {
   mergeSavedStat,
   normalizeStatValue,
   validateGameScores,
   validateTeamStats
 } from '../lib/stat-editor-utils'
-
-const UPDATE_GAME = gql`
-  mutation UpdateStatEditorGame($id: ID!, $data: GameUpdateInput) {
-    updateGame(id: $id, data: $data) {
-      id
-      homeTeamScore
-      awayTeamScore
-    }
-  }
-`
-
-const UPDATE_STAT = gql`
-  mutation UpdateStatEditorStat($id: ID!, $data: PlayerGameStatUpdateInput) {
-    updatePlayerGameStat(id: $id, data: $data) {
-      id
-      assists
-      scores
-      defenses
-      attended
-      player { id }
-    }
-  }
-`
-
-const CREATE_STAT = gql`
-  mutation CreateStatEditorStat($data: PlayerGameStatCreateInput) {
-    createPlayerGameStat(data: $data) {
-      id
-      assists
-      scores
-      defenses
-      attended
-      player { id }
-    }
-  }
-`
 
 function NumberControl ({ label, value, onChange, disabled }) {
   return (
@@ -224,31 +186,29 @@ export default function StatEditor (props) {
       : { homeTeamScore: opponentScore, awayTeamScore: teamScore }
 
     try {
-      await GraphqlClient.mutate({
-        mutation: UPDATE_GAME,
-        variables: { id: game.id, data: gameData }
+      const response = await fetch('/api/stats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gameId: game.id,
+          gameData,
+          stats: stats.map(stat => ({
+            gameStatId: stat.gameStatId,
+            playerId: stat.player.id,
+            assists: stat.assists,
+            scores: stat.scores,
+            defenses: stat.defenses,
+            attended: stat.attended
+          }))
+        })
       })
 
-      const responses = await Promise.all(stats.map(stat => {
-        const data = {
-          player: { connect: { id: stat.player.id } },
-          game: { connect: { id: game.id } },
-          assists: stat.assists,
-          scores: stat.scores,
-          defenses: stat.defenses,
-          attended: stat.attended
-        }
-        return GraphqlClient.mutate(stat.gameStatId
-          ? { mutation: UPDATE_STAT, variables: { id: stat.gameStatId, data } }
-          : { mutation: CREATE_STAT, variables: { data } })
-      }))
+      if (!response.ok) throw new Error('Unable to save game stats')
+
+      const { stats: savedStats } = await response.json()
 
       setStats(currentStats => currentStats.map(stat => {
-        const response = responses.find(result => {
-          const saved = result.data.updatePlayerGameStat || result.data.createPlayerGameStat
-          return saved.player.id === stat.player.id
-        })
-        const saved = response.data.updatePlayerGameStat || response.data.createPlayerGameStat
+        const saved = savedStats.find(result => result.player.id === stat.player.id)
         return mergeSavedStat(stat, saved)
       }))
       setStatus('saved')

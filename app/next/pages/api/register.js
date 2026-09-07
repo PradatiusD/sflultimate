@@ -1,9 +1,9 @@
-import GraphqlClient from '../../lib/graphql-client'
+import GraphqlClient from '../../lib/server-graphql-client'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
 import { notify } from '../../lib/slack'
 const { gql } = require('@apollo/client')
-const GraphQlClient = require('./../../lib/graphql-client')
+const GraphQlClient = require('./../../lib/server-graphql-client')
 const PaymentUtils = require('./../../lib/payment-utils')
 
 const FORCED_PAYMENT_AMOUNTS = {
@@ -22,8 +22,8 @@ const CREATE_PLAYER_MUTATION = gql`
 
 function createPlayerRecord (payload) {
   const mutationData = {
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     name: payload.firstName + ' ' + payload.lastName,
     firstName: payload.firstName,
     lastName: payload.lastName,

@@ -1,11 +1,7 @@
-import GraphqlClient from './graphql-client'
+import GraphqlClient from './server-graphql-client'
 import { gql } from '@apollo/client'
 import { updateWithGlobalServerSideProps } from './global-server-side-props'
-
-export function buildGameUrl (league, game) {
-  const gameId = typeof game === 'string' ? game : (game?.id || game?._id)
-  return `/leagues/${league.slug}/games/${gameId}`
-}
+import { buildGameUrl } from './game-url'
 
 export async function getGamePageProps (context, options = {}) {
   const { redirectToLeagueRoute = false } = options
