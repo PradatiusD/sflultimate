@@ -33,15 +33,21 @@ export async function processPayment (payload, amount) {
   const paymentResult = await PaymentUtils.createSale(purchase)
 
   if (!paymentResult.success) {
-    console.error({ purchase, paymentResult })
+    const paymentStatus = paymentResult.transaction && paymentResult.transaction.status
+    console.error('Payment failed', {
+      status: paymentStatus,
+      message: paymentResult.message
+    })
     let errorMessage
-    if (payload.firstName && payload.lastName && payload.email) {
-      errorMessage = `Payment failed for ${payload.firstName} ${payload.lastName} (${payload.email})`
+    if (paymentStatus === 'gateway_rejected') {
+      errorMessage = 'Your payment was rejected. Please verify that your street address and ZIP code are correct, or try another payment method.  Your card was not charged.'
+    } else if (paymentStatus === 'processor_declined') {
+      errorMessage = 'Your transaction was declined by your bank. Please double-check your card details, contact your card issuer, or try another payment method.  Your card was not charged.'
+    } else if (paymentStatus) {
+      errorMessage = 'Payment failed'
+      errorMessage += ': ' + paymentStatus
     } else {
       errorMessage = 'Payment failed'
-    }
-    if (paymentResult.transaction && paymentResult.transaction.status) {
-      errorMessage = ': ' + paymentResult.transaction.status
     }
     throw new Error(errorMessage)
   }

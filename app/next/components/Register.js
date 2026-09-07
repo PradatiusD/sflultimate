@@ -6,6 +6,44 @@ import fireConfetti from '../lib/confetti'
 import { is } from 'braintree/vendor/querystring.node.js.511d6a2/util'
 
 const locals = {}
+const REGISTRATION_CACHE_KEY = 'sfl-registration-form'
+const PAYMENT_FIELD_NAMES = new Set(['leagueId', 'paymentMethodNonce', 'recaptchaToken', 'streetAddress', 'donationLevel'])
+
+function cacheRegistrationForm (form) {
+  try {
+    const fields = Array.from(new FormData(form).entries())
+      .filter(([name]) => !PAYMENT_FIELD_NAMES.has(name))
+    Array.from(form.elements)
+      .filter(element => !element.name && element.id && (element.type === 'checkbox' || element.type === 'radio') && element.checked)
+      .forEach(element => fields.push([`#${element.id}`, element.value]))
+    window.sessionStorage.setItem(REGISTRATION_CACHE_KEY, JSON.stringify({
+      path: window.location.pathname,
+      fields
+    }))
+  } catch (e) {
+    console.error('Unable to cache registration form', e)
+  }
+}
+
+function restoreRegistrationForm (form, fields) {
+  const valuesByName = new Map()
+  fields.forEach(([name, value]) => {
+    valuesByName.set(name, [...(valuesByName.get(name) || []), value])
+  })
+
+  Array.from(form.elements).forEach(element => {
+    const values = valuesByName.get(element.name || `#${element.id}`)
+    if (!values) {
+      return
+    }
+    if (element.type === 'checkbox' || element.type === 'radio') {
+      element.checked = values.includes(element.value)
+    } else {
+      element.value = values[values.length - 1]
+    }
+  })
+}
+
 locals.formatDate = function (date) {
   return new Date(date).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'America/New_York' })
 }
@@ -101,6 +139,30 @@ export default function RegisterPage (props) {
   }
 
   useEffect(() => {
+    if (errorMessage) {
+      try {
+        const cachedRegistration = JSON.parse(window.sessionStorage.getItem(REGISTRATION_CACHE_KEY))
+        if (cachedRegistration && cachedRegistration.path === window.location.pathname && Array.isArray(cachedRegistration.fields)) {
+          const cachedPlayer = {}
+          cachedRegistration.fields.forEach(([name, value]) => {
+            if (!name.startsWith('#')) {
+              cachedPlayer[name] = value
+            }
+          })
+          setPlayer(cachedPlayer)
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
+              restoreRegistrationForm(document.querySelector('#registration'), cachedRegistration.fields)
+            })
+          })
+        }
+      } catch (e) {
+        window.sessionStorage.removeItem(REGISTRATION_CACHE_KEY)
+      }
+    } else {
+      window.sessionStorage.removeItem(REGISTRATION_CACHE_KEY)
+    }
+
     window.grecaptcha.ready(function () {
       window.grecaptcha.execute('6Ld6rNQUAAAAAAthlbLL1eCF9NGKfP8-mQOHu89w', { action: 'register' }).then(function (token) {
         window.document.querySelector('#recaptcha').value = token
@@ -120,6 +182,7 @@ export default function RegisterPage (props) {
           if (!form.checkValidity()) {
             return alert('Please scroll up and double-check that you have filled out all the required fields.')
           }
+          cacheRegistrationForm(form)
           form.submit()
         })
       })

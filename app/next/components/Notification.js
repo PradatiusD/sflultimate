@@ -17,7 +17,7 @@ export default function Notification (props) {
     return league.isActive
   })
 
-  if (!activeLeague) {
+  if (!activeLeague || pathname === '/confirmation') {
     return <></>
   }
 
