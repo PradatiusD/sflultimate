@@ -28,10 +28,7 @@ const authStrategy = keystone.createAuthStrategy({
 
 module.exports = {
   keystone,
-  configureExpress: app => {
-    // to handle being behind heroku
-    app.set('trust proxy', true)
-  },
+  configureExpress: require('./configure-express'),
   apps: [
     new GraphQLApp({
       schemaName: 'public',
