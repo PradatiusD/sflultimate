@@ -1,7 +1,7 @@
 import GraphqlClient from '../../lib/server-graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../components/Navigation'
-import { useEffect } from 'react'
+import ShortcodeContent from '../../components/ShortcodeContent'
 import { showDate } from '../../lib/utils'
 import { parse } from 'node-html-parser'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
@@ -52,34 +52,6 @@ export default function PostsPage (props) {
   const modifiedBody = parsedBody.outerHTML
   const seoDescription = post.summary ? post.summary.replace(/<[^>]*>/g, '') : post.title
 
-  useEffect(() => {
-    const appendedScripts = []
-    const scriptsToAppend = [...(post.footerScripts || [])]
-
-    if (modifiedBody.includes('instagram-media')) {
-      scriptsToAppend.push({ src: 'https://www.instagram.com/embed.js' })
-    }
-
-    scriptsToAppend.forEach(script => {
-      const scriptEl = document.createElement('script')
-
-      if (script.src) {
-        scriptEl.src = script.src
-      } else if (script.content) {
-        scriptEl.text = script.content
-      }
-
-      document.body.appendChild(scriptEl)
-      appendedScripts.push(scriptEl)
-    })
-
-    return function cleanupScripts () {
-      appendedScripts.forEach(scriptEl => {
-        scriptEl.remove()
-      })
-    }
-  }, [modifiedBody, post.footerScripts])
-
   return (
     <>
       <SeoHead
@@ -101,7 +73,7 @@ export default function PostsPage (props) {
             }
             <h1>{post.title}</h1>
             <p className="text-muted">Published: {showDate(post.publishedDate, { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-            <div dangerouslySetInnerHTML={{ __html: modifiedBody }}/>
+            <ShortcodeContent html={modifiedBody} footerScripts={post.footerScripts} />
           </div>
         </div>
       </div>
