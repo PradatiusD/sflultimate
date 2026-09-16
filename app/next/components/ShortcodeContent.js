@@ -2,7 +2,13 @@ import { useEffect } from 'react'
 
 export default function ShortcodeContent ({ html, footerScripts }) {
   useEffect(() => {
-    const appendedScripts = (footerScripts || []).map(script => {
+    const scriptsToAppend = [...(footerScripts || [])]
+
+    if (html?.includes('instagram-media')) {
+      scriptsToAppend.push({ src: 'https://www.instagram.com/embed.js' })
+    }
+
+    const appendedScripts = scriptsToAppend.map(script => {
       const scriptEl = document.createElement('script')
 
       if (script.src) {
