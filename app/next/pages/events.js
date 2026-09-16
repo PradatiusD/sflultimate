@@ -4,8 +4,10 @@ import { HeaderNavigation } from '../components/Navigation'
 import { AddToCalendar } from '../components/AddToCalendar'
 import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 import SeoHead from '../components/SeoHead'
+import ShortcodeContent from '../components/ShortcodeContent'
 
 export const getServerSideProps = async () => {
+  const { expandArticleShortcodes } = require('../lib/article-shortcodes')
   const results = await GraphqlClient.query({
     query: gql`
           query {
@@ -28,6 +30,9 @@ export const getServerSideProps = async () => {
 
   const events = results.data.allEvents.map(function (event) {
     event = JSON.parse(JSON.stringify(event))
+    const { html, footerScripts } = expandArticleShortcodes(event.description || '')
+    event.descriptionHtml = html
+    event.footerScripts = footerScripts
     event.links = []
     if (event.moreInformationUrl) {
       event.links.push({
@@ -80,7 +85,7 @@ function EventItem (props) {
             <em>{event.location}</em> • {event.category}
           </p>
 
-          <div dangerouslySetInnerHTML={{ __html: event.description }}/>
+          <ShortcodeContent html={event.descriptionHtml} footerScripts={event.footerScripts} />
           <ul className="list-inline" style={{ marginTop: '1rem' }}>
             <li className="list-inline-item">
               <a className="btn btn-secondary event-btn" href={eventUrl}>

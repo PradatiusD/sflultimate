@@ -6,8 +6,10 @@ import { createSummary } from '../../lib/utils'
 import { AddToCalendar } from '../../components/AddToCalendar'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 import SeoHead from '../../components/SeoHead'
+import ShortcodeContent from '../../components/ShortcodeContent'
 
 export const getServerSideProps = async (context) => {
+  const { expandArticleShortcodes } = require('../../lib/article-shortcodes')
   const results = await GraphqlClient.query({
     query: gql`
       query {
@@ -30,6 +32,9 @@ export const getServerSideProps = async (context) => {
 
   const events = results.data.allEvents.map(function (event) {
     event = JSON.parse(JSON.stringify(event))
+    const { html, footerScripts } = expandArticleShortcodes(event.description || '')
+    event.descriptionHtml = html
+    event.footerScripts = footerScripts
     event.links = []
     if (event.moreInformationUrl) {
       event.links.push({
@@ -86,7 +91,7 @@ export default function EventItemPage (props) {
             <div style={{ marginBottom: '1rem' }}>
               <AddToCalendar event={event} />
             </div>
-            <div dangerouslySetInnerHTML={{ __html: event.description }}/>
+            <ShortcodeContent html={event.descriptionHtml} footerScripts={event.footerScripts} />
             {
               event.links.map((link, i) => {
                 return (
