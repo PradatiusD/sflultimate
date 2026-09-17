@@ -69,7 +69,7 @@ export default async function handler (req, res) {
 
   let league
   let forcePaymentFailure
-
+  let sanitizedPayload
   try {
     const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(req.body.recaptchaToken)
     if (recaptchaResponse && recaptchaResponse.success && recaptchaResponse.score <= 0.5) {
@@ -124,7 +124,7 @@ export default async function handler (req, res) {
       ? 'Adult'
       : registrationSelection
 
-    const sanitizedPayload = {
+    sanitizedPayload = {
       paymentMethodNonce: req.body.paymentMethodNonce,
       firstName: (req.body.firstName || '').trim(),
       lastName: (req.body.lastName || '').trim(),
@@ -247,14 +247,17 @@ export default async function handler (req, res) {
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
-    if (!forcePaymentFailure) {
-      notify(`Error processing registration: ${e.message}\n${e.stack || ''}`)
-    }
     const query = new URLSearchParams({ error: e.message })
     if (forcePaymentFailure) {
       query.set('force_form', 'true')
       query.set('force_period', 'regular')
       query.set('force_payment_failure', forcePaymentFailure)
+    } else {
+      let serializedPayload = null
+      try {
+        serializedPayload = JSON.stringify(sanitizedPayload || {})
+      } catch (e) {}
+      notify(`Error processing registration with submission ${serializedPayload}: ${e.message}\n${e.stack || ''}`)
     }
     res.redirect(`/leagues/${league.slug}/register?${query.toString()}`)
   }
