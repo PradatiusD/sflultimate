@@ -50,6 +50,8 @@
         "cypress": "npx cypress open",
         "restore": "node scripts/restore.js",
         "test:e2e": "npx cypress run --e2e",
+        "test:donations": "node scripts/test-donations-route.js",
+        "test:donations:e2e": "cypress run --spec cypress/e2e/donate.cy.js",
         "test:stats": "node scripts/test-stat-editor.js",
         "test:server-graphql": "node scripts/test-access-control.js && node scripts/test-server-graphql-client.js && node scripts/test-save-stat-editor.js",
         "lint": "npx eslint . --ignore-pattern '**/jquery/**' --ignore-pattern '**/bootstrap/**'",

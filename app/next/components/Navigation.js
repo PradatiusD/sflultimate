@@ -4,6 +4,7 @@ import PickupContactActions from './PickupContactActions'
 let navLinks = []
 
 const evergreenLinks = [
+  // { label: 'Donate', key: 'donate', href: '/donate' },
   { label: 'Local Pickups', key: 'community', href: '/pickups' },
   { label: 'Events', key: 'events', href: '/events' },
   { label: 'News', key: 'news', href: '/news' },
@@ -41,7 +42,7 @@ const leagueSections = [
 ]
 
 function HeaderNavigation (props) {
-  const { section, leagues } = props
+  const { section, leagues, logoSrc = '/images/sflultimate-logo-pink-flamingo.png', logoAlt = 'South Florida Ultimate logo', showNotification = true } = props
 
   const headerNavLinks = navLinks.slice()
   if (Array.isArray(leagues) && leagues.find(l => l.active)) {
@@ -134,7 +135,7 @@ function HeaderNavigation (props) {
       <header id="header" className="site-header">
         <div className="navbar-brand-container d-xl-none mobile-logo">
           <a href="/" aria-label="South Florida Ultimate home">
-            <img className="img-fluid" src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo" />
+            <img className="img-fluid" src={logoSrc} alt={logoAlt} />
           </a>
         </div>
         <nav className="navbar navbar-dark bg-dark fixed-top navbar-expand-xl" role="navigation">
@@ -190,7 +191,7 @@ function HeaderNavigation (props) {
                   })}
                 </ul>
                 <a href="/" className="navbar-brand navbar-brand-centered" aria-label="South Florida Ultimate home">
-                  <img src="/images/sflultimate-logo-pink-flamingo.png" alt="South Florida Ultimate logo"/>
+                  <img src={logoSrc} alt={logoAlt}/>
                 </a>
                 <ul className="navbar-nav desktop-nav-group desktop-nav-group-right">
                   {rightNavLinks.map((link) => {
@@ -211,7 +212,7 @@ function HeaderNavigation (props) {
           </div>
         </nav>
       </header>
-      <Notification leagues={leagues} />
+      {showNotification && <Notification leagues={leagues} />}
       <PickupContactActions
         pickup={communityWhatsappContact}
         externalTriggerSelector="[data-community-whatsapp]"

@@ -1,3 +1,4 @@
+const Donation = require('./Donation')
 const BoardMember = require('./BoardMember')
 const BoardPosition = require('./BoardPosition')
 const ClubTeam = require('./ClubTeam')
@@ -17,6 +18,7 @@ const TournamentTeam = require('./TournamentTeam')
 const PlayerSubstitution = require('./PlayerSubstitution')
 
 module.exports = {
+  Donation,
   BoardMember,
   BoardPosition,
   ClubTeam,

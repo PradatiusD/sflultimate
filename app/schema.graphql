@@ -1986,6 +1986,23 @@ type Mutation {
   authenticateUserWithPassword(email: String, password: String): authenticateUserOutput
   unauthenticateUser: unauthenticateUserOutput
   updateAuthenticatedUser(data: UserUpdateInput): User
+  """ Create a single Donation item. """
+    createDonation(data: DonationCreateInput): Donation
+
+  """ Create multiple Donation items. """
+    createDonations(data: [DonationsCreateInput]): [Donation]
+
+  """ Update a single Donation item by ID. """
+    updateDonation(id: ID!, data: DonationUpdateInput): Donation
+
+  """ Update multiple Donation items by ID. """
+    updateDonations(data: [DonationsUpdateInput]): [Donation]
+
+  """ Delete a single Donation item by ID. """
+    deleteDonation(id: ID!): Donation
+
+  """ Delete multiple Donation items by ID. """
+    deleteDonations(ids: [ID!]): [Donation]
 }
 
 """ A keystone list """
@@ -3370,6 +3387,18 @@ type Query {
   """The version of the Keystone application serving this API."""
   appVersion: String
   authenticatedUser: User
+  """ Search for all Donation items which match the where clause. """
+    allDonations(where: DonationWhereInput, search: String, sortBy: [SortDonationsBy!], orderBy: String, first: Int, skip: Int): [Donation]
+
+  """ Search for the Donation item with the matching ID. """
+    Donation(where: DonationWhereUniqueInput!): Donation
+
+  """ Perform a meta-query on all Donation items which match the where clause.
+    """
+    _allDonationsMeta(where: DonationWhereInput, search: String, sortBy: [SortDonationsBy!], orderBy: String, first: Int, skip: Int): _QueryMeta
+
+  """ Retrieve the meta-data for the Donation list. """
+    _DonationsMeta: _ListMeta
 }
 
 enum SortBoardMembersBy {
@@ -4218,4 +4247,235 @@ input UserWhereInput {
 
 input UserWhereUniqueInput {
   id: ID!
+}
+
+enum DonationStatusType {
+  pending
+  submitted
+  failed
+  needsReview
+}
+
+enum DonationConfirmationEmailStatusType {
+  pending
+  sent
+  failed
+}
+
+""" A keystone list """
+type Donation {
+  """
+  This virtual field will be resolved in one of the following ways (in this order):
+   1. Execution of 'labelResolver' set on the Donation List config, or
+   2. As an alias to the field set on 'labelField' in the Donation List config, or
+   3. As an alias to a 'name' field on the Donation List (if one exists), or
+   4. As an alias to the 'id' field on the Donation List.
+  """
+  _label_: String
+  id: ID!
+  createdAt: DateTime
+  from: String
+  message: String
+  amount: Int
+  email: String
+  status: DonationStatusType
+  transactionId: String
+  requestId: String
+  confirmationEmailStatus: DonationConfirmationEmailStatusType
+  confirmationEmailSentAt: DateTime
+}
+
+input DonationWhereInput {
+  AND: [DonationWhereInput]
+  OR: [DonationWhereInput]
+  id: ID
+  id_not: ID
+  id_in: [ID]
+  id_not_in: [ID]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  createdAt_in: [DateTime]
+  createdAt_not_in: [DateTime]
+  from: String
+  from_not: String
+  from_contains: String
+  from_not_contains: String
+  from_starts_with: String
+  from_not_starts_with: String
+  from_ends_with: String
+  from_not_ends_with: String
+  from_i: String
+  from_not_i: String
+  from_contains_i: String
+  from_not_contains_i: String
+  from_starts_with_i: String
+  from_not_starts_with_i: String
+  from_ends_with_i: String
+  from_not_ends_with_i: String
+  from_in: [String]
+  from_not_in: [String]
+  message: String
+  message_not: String
+  message_contains: String
+  message_not_contains: String
+  message_starts_with: String
+  message_not_starts_with: String
+  message_ends_with: String
+  message_not_ends_with: String
+  message_i: String
+  message_not_i: String
+  message_contains_i: String
+  message_not_contains_i: String
+  message_starts_with_i: String
+  message_not_starts_with_i: String
+  message_ends_with_i: String
+  message_not_ends_with_i: String
+  message_in: [String]
+  message_not_in: [String]
+  amount: Int
+  amount_not: Int
+  amount_lt: Int
+  amount_lte: Int
+  amount_gt: Int
+  amount_gte: Int
+  amount_in: [Int]
+  amount_not_in: [Int]
+  email: String
+  email_not: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  email_i: String
+  email_not_i: String
+  email_contains_i: String
+  email_not_contains_i: String
+  email_starts_with_i: String
+  email_not_starts_with_i: String
+  email_ends_with_i: String
+  email_not_ends_with_i: String
+  email_in: [String]
+  email_not_in: [String]
+  status: DonationStatusType
+  status_not: DonationStatusType
+  status_in: [DonationStatusType]
+  status_not_in: [DonationStatusType]
+  transactionId: String
+  transactionId_not: String
+  transactionId_contains: String
+  transactionId_not_contains: String
+  transactionId_starts_with: String
+  transactionId_not_starts_with: String
+  transactionId_ends_with: String
+  transactionId_not_ends_with: String
+  transactionId_i: String
+  transactionId_not_i: String
+  transactionId_contains_i: String
+  transactionId_not_contains_i: String
+  transactionId_starts_with_i: String
+  transactionId_not_starts_with_i: String
+  transactionId_ends_with_i: String
+  transactionId_not_ends_with_i: String
+  transactionId_in: [String]
+  transactionId_not_in: [String]
+  requestId: String
+  requestId_not: String
+  requestId_contains: String
+  requestId_not_contains: String
+  requestId_starts_with: String
+  requestId_not_starts_with: String
+  requestId_ends_with: String
+  requestId_not_ends_with: String
+  requestId_i: String
+  requestId_not_i: String
+  requestId_contains_i: String
+  requestId_not_contains_i: String
+  requestId_starts_with_i: String
+  requestId_not_starts_with_i: String
+  requestId_ends_with_i: String
+  requestId_not_ends_with_i: String
+  requestId_in: [String]
+  requestId_not_in: [String]
+  confirmationEmailStatus: DonationConfirmationEmailStatusType
+  confirmationEmailStatus_not: DonationConfirmationEmailStatusType
+  confirmationEmailStatus_in: [DonationConfirmationEmailStatusType]
+  confirmationEmailStatus_not_in: [DonationConfirmationEmailStatusType]
+  confirmationEmailSentAt: DateTime
+  confirmationEmailSentAt_not: DateTime
+  confirmationEmailSentAt_lt: DateTime
+  confirmationEmailSentAt_lte: DateTime
+  confirmationEmailSentAt_gt: DateTime
+  confirmationEmailSentAt_gte: DateTime
+  confirmationEmailSentAt_in: [DateTime]
+  confirmationEmailSentAt_not_in: [DateTime]
+}
+
+input DonationWhereUniqueInput {
+  id: ID!
+}
+
+enum SortDonationsBy {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  from_ASC
+  from_DESC
+  message_ASC
+  message_DESC
+  amount_ASC
+  amount_DESC
+  email_ASC
+  email_DESC
+  status_ASC
+  status_DESC
+  transactionId_ASC
+  transactionId_DESC
+  requestId_ASC
+  requestId_DESC
+  confirmationEmailStatus_ASC
+  confirmationEmailStatus_DESC
+  confirmationEmailSentAt_ASC
+  confirmationEmailSentAt_DESC
+}
+
+input DonationUpdateInput {
+  createdAt: DateTime
+  from: String
+  message: String
+  amount: Int
+  email: String
+  status: DonationStatusType
+  transactionId: String
+  requestId: String
+  confirmationEmailStatus: DonationConfirmationEmailStatusType
+  confirmationEmailSentAt: DateTime
+}
+
+input DonationsUpdateInput {
+  id: ID!
+  data: DonationUpdateInput
+}
+
+input DonationCreateInput {
+  createdAt: DateTime
+  from: String
+  message: String
+  amount: Int
+  email: String
+  status: DonationStatusType
+  transactionId: String
+  requestId: String
+  confirmationEmailStatus: DonationConfirmationEmailStatusType
+  confirmationEmailSentAt: DateTime
+}
+
+input DonationsCreateInput {
+  data: DonationCreateInput
 }

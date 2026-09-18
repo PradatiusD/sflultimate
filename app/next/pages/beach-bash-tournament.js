@@ -2,6 +2,8 @@ import { gql } from '@apollo/client'
 import GraphqlClient from '../lib/server-graphql-client'
 import Countdown from 'react-countdown'
 import SeoHead from '../components/SeoHead'
+import { HeaderNavigation } from '../components/Navigation'
+import { updateWithGlobalServerSideProps } from '../lib/global-server-side-props'
 
 function Spanify (props) {
   const words = props.text.split(' ')
@@ -34,17 +36,15 @@ export const getServerSideProps = async () => {
         }
       }`
   })
-  return {
-    props: {
-      teams: results.data.allTournamentTeams
-    }
-  }
+  const props = { teams: results.data.allTournamentTeams }
+  await updateWithGlobalServerSideProps(props)
+  return { props }
 }
 export default function BeachBashTournament (props) {
-  const { teams } = props
+  const { teams, leagues } = props
 
   const content = {
-    seoTitle: 'South Florida Ultimate • Beach Bash 2026',
+    seoTitle: 'South Florida Ultimate • Beach Bash 2027',
     registrationLink: 'https://docs.google.com/forms/d/e/1FAIpQLSeu6GPwqcvLgxDn7vq-cOfApIEeIaiUI3Z1lLj6ppcti2upFQ/viewform?usp=publish-editor',
     freeAgentLink: 'https://docs.google.com/forms/d/1mU4130RrsMuAooBZDhUW6hyZQIH619XJHy3vcvbU5_c'
   }
@@ -53,8 +53,8 @@ export default function BeachBashTournament (props) {
     <>
       <SeoHead
         title={content.seoTitle}
-        description="Florida's highest-level 4v4 2:2 mixed Beach Ultimate Championship on February 21-22, 2026 at Ft. Lauderdale Beach."
-        ogDescription="Beach Bash is back. Join a 4-on-4 Beach Ultimate tournament on February 21-22, 2026 in Fort Lauderdale."
+        description="Florida's highest-level 4v4 2:2 mixed Beach Ultimate Championship on February 21-22, 2027 at Ft. Lauderdale Beach."
+        ogDescription="Beach Bash is back. Join a 4-on-4 Beach Ultimate tournament on February 21-22, 2027 in Fort Lauderdale."
         path="/beach-bash-tournament"
         image="https://www.sflultimate.com/images/open-graph/2023-beach-bash-tournament.jpg"
       >
@@ -63,9 +63,12 @@ export default function BeachBashTournament (props) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet"/>
       </SeoHead>
+      <HeaderNavigation leagues={leagues} section="beach-bash" showNotification={false} logoSrc="/images/beach-bash-2025-logo.svg" logoAlt="Beach Bash logo" />
       <section className="bash-video-background">
-        <video autoPlay muted loop>
-          <source src="https://d137pw2ndt5u9c.cloudfront.net/sfl-beach-bash-tournament-with-play-v1.mp4"
+        <video autoPlay muted loop playsInline>
+          <source src="https://d137pw2ndt5u9c.cloudfront.net/beach-bash-media/2026-mobile.mp4"
+                  type="video/mp4" media="(max-width: 768px)"/>
+          <source src="https://d137pw2ndt5u9c.cloudfront.net/beach-bash-media/2026-desktop.mp4"
                   type="video/mp4"/>
         </video>
         <div className="container-fluid beach-bash-hero-container">
@@ -74,16 +77,16 @@ export default function BeachBashTournament (props) {
             <img src="/images/beach-bash-2025-logo.svg" alt="Beach Bash Logo"/>
             <div>
               <Countdown
-                date={new Date('2026-02-22T14:00:00.000Z').getTime()}
+                date={new Date('2027-02-21T09:00:00-05:00').getTime()}
                 intervalDelay={1000}
                 precision={0}
                 renderer={(props) => {
                   return (
                     <div className="beach-countdown">
                       <span><strong>{props.days}</strong> days</span>
-                      <span><strong>{props.hours}</strong> hours</span>
-                      <span><strong>{props.minutes}</strong> minutes</span>
-                      <span><strong>{props.seconds}</strong> seconds</span>
+                      <span><strong>{props.hours}</strong> hrs</span>
+                      <span><strong>{props.minutes}</strong> mins</span>
+                      <span><strong>{props.seconds}</strong> secs</span>
                     </div>
                   )
                 }}
@@ -99,7 +102,7 @@ export default function BeachBashTournament (props) {
           <h2><Spanify text="Beach Bash is Back!" /></h2>
           <p>Florida’s <strong>highest-level</strong> Beach Ultimate
             Championship.</p>
-          <h3>February 21-22, 2026<br/>@ <strong>Ft. Lauderdale Beach</strong></h3>
+          <h3>February 21st - 22nd, 2027<br/>@ <strong>Ft. Lauderdale Beach</strong></h3>
           <div className="cta-container">
             <a className="btn btn-primary btn-lg" target="_blank" href={content.registrationLink}> Submit a Bid</a>
             <a className="btn btn-primary btn-lg free-agent-btn" target="_blank" href={content.freeAgentLink}> Free Agent Sign Up</a>
@@ -112,13 +115,13 @@ export default function BeachBashTournament (props) {
           <div className="col-lg-2 col-md-12 offset-lg-1">
           </div>
           <div className="col-lg-8 col-md-12">
-            <p>We are playing in the <strong>heart of the pristine Ft Lauderdale Beach the weekend of February 21-22 2026</strong>.</p>
+            <p>We are playing in the <strong>heart of the pristine Ft Lauderdale Beach on February 21-22, 2027</strong>.</p>
               <p>The format is <strong>4v4 USA Ultimate rules with a 2:2 gender ratio</strong>. We will have <strong>lined fields</strong> for a guaranteed
-                4 games of Saturday pool play and at least 3 games of Sunday bracket play.</p>
+                4 games of first-day pool play and at least 3 games of second-day bracket play.</p>
             <p>Cost: <strong>$500 gets you a 10-person team</strong>. Up to 4 additional people can be added for $50 per player. 14 players maximum per roster.</p>
             <p>Showers, restrooms, bars, restaurants, and convenient stores <strong>all within walking distance of the beach!</strong></p>
-            <p>We will be having a Saturday night tournament party with location TBD.</p>
-            <p>Come join the hottest beach ultimate community in Florida! See you in December!</p>
+            <p>We will be having a tournament party on the first night with location TBD.</p>
+            <p>Come join the hottest beach ultimate community in Florida! See you in February!</p>
             <div className="alert alert-info">
               <p><strong>Free Agents:</strong> don’t have a team, but want to play? You can register as a free agent. While it’s not a guarantee we will find you a team, we will do our best to get you on a squad. If you do land on a team, or we have enough free agents to make a full team, you’ll be required to pay a $50 entry fee and will get full participation in the tournament festivities.</p>
             </div>
