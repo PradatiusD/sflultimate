@@ -8,6 +8,10 @@ const nodemailer = require('nodemailer')
  * @return {Promise<unknown>}
  */
 export async function processPayment (payload, amount) {
+  if (typeof payload.streetAddress !== 'string' || !payload.streetAddress.trim()) {
+    throw new Error('Please enter your street address before submitting payment.')
+  }
+
   const purchase = {
     amount,
     paymentMethodNonce: payload.paymentMethodNonce,

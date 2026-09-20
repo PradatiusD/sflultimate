@@ -176,9 +176,14 @@ export default function RegisterPage (props) {
     braintree.dropin.create({ authorization: BRAINTREE_CLIENT_TOKEN, selector: '#payment-form' }, function (err, instance) {
       document.querySelector('#submitButton').addEventListener('click', function (e) {
         e.preventDefault()
+        const form = document.querySelector('#registration')
+        const streetAddress = form.elements.streetAddress
+        streetAddress.value = streetAddress.value.trim()
+        if (!form.reportValidity()) {
+          return
+        }
         instance.requestPaymentMethod(function (err, payload) {
           document.body.querySelector('#nonce').value = payload.nonce
-          const form = document.body.querySelector('form')
           if (!form.checkValidity()) {
             return alert('Please scroll up and double-check that you have filled out all the required fields.')
           }
@@ -664,7 +669,8 @@ export default function RegisterPage (props) {
                   label="Street Address"
                   id="streetAddress"
                   name="streetAddress"
-                  helpText="If you plan on paying with card (so no PayPal) type here just your street address (So 12345 Palm Tree Ave.). Do not pass city/zip code or apt number. We do not store this information, but send it to the payment processor for fraud prevention."
+                  required
+                  helpText="Required for payment. Enter just your street address (for example, 12345 Palm Tree Ave.), without city, ZIP code or apartment number. We do not store this information, but send it to the payment processor for fraud prevention."
                 />
               )
             }

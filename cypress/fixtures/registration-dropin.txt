@@ -1,0 +1,12 @@
+// Stub the hosted SDK so validation tests never tokenize real cards.
+window.braintree = {
+  dropin: {
+    create: function (options, callback) {
+      document.querySelector(options.selector).textContent = 'Test payment method ready'
+      callback(null, this)
+    },
+    requestPaymentMethod: function (callback) {
+      callback(null, { nonce: 'test-registration-nonce' })
+    }
+  }
+}
