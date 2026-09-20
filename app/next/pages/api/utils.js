@@ -43,6 +43,9 @@ export async function processPayment (payload, amount) {
       errorMessage = 'Your payment was rejected. Please verify that your street address and ZIP code are correct, or try another payment method.  Your card was not charged.'
     } else if (paymentStatus === 'processor_declined') {
       errorMessage = 'Your transaction was declined by your bank. Please double-check your card details, contact your card issuer, or try another payment method.  Your card was not charged.'
+    } else if (paymentResult && paymentResult.message) {
+      errorMessage = 'Payment failed'
+      errorMessage += ': ' + paymentResult.message
     } else if (paymentStatus) {
       errorMessage = 'Payment failed'
       errorMessage += ': ' + paymentStatus

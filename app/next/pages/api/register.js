@@ -255,9 +255,9 @@ export default async function handler (req, res) {
     } else {
       let serializedPayload = null
       try {
-        serializedPayload = JSON.stringify(sanitizedPayload || {})
+        serializedPayload = JSON.stringify(sanitizedPayload || {}, null, 2)
       } catch (e) {}
-      notify(`Error processing registration with submission ${serializedPayload}: ${e.message}\n${e.stack || ''}`)
+      notify(`Error processing registration with submission\n\`\`\`${serializedPayload}\`\`\`\n: ${e.message}\n${e.stack || ''}`)
     }
     res.redirect(`/leagues/${league.slug}/register?${query.toString()}`)
   }
