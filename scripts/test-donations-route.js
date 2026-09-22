@@ -47,6 +47,7 @@ function payload (overrides = {}) {
     requestId: randomUUID(),
     paymentMethodNonce: 'test-nonce',
     recaptchaToken: 'test-captcha',
+    streetAddress: '123 Test Way',
     ...overrides
   }
 }
@@ -137,6 +138,7 @@ test('uses normal Keystone mutations to persist and confirm a donation', async (
   assert.ok(calls.mutations.some(call => call.variables.data && call.variables.data.requestId === body.requestId), 'Creation must use the existing server GraphQL client')
   assert.equal(calls.sales.length, 1)
   assert.equal(calls.sales[0].amount, '25.00')
+  assert.equal(calls.sales[0].billing.streetAddress, '123 Test Way')
   assert.equal(Object.hasOwn(calls.sales[0], 'merchantAccountId'), false, 'Use the existing default merchant account')
   const saved = await model.findOne({ requestId: body.requestId }).lean()
   assert.equal(saved.from, body.from)
@@ -147,6 +149,7 @@ test('uses normal Keystone mutations to persist and confirm a donation', async (
   assert.ok(Number.isFinite(new Date(stored.data.allDonations[0].createdAt).getTime()))
   assert.ok(Number.isFinite(new Date(stored.data.allDonations[0].confirmationEmailSentAt).getTime()))
   assert.equal(saved.transactionId, 'sandbox-transaction')
+  assert.equal(saved.streetAddress, undefined)
   assert.equal(calls.sales[0].orderId, String(saved._id))
   assert.equal(saved.paymentMethodNonce, undefined)
   assert.equal(calls.emails.length, 1)
@@ -162,6 +165,15 @@ test('Donation uses ordinary fields without email-resend locks', () => {
   for (const name of ['emailSending', 'emailClaimToken', 'emailClaimExpiresAt']) {
     assert.equal(fields[name], undefined)
   }
+})
+
+test('rejects missing street address before calling Braintree', async () => {
+  assert.equal((await request(payload({ streetAddress: '' }))).code, 400)
+  assert.equal((await request(payload({ streetAddress: '   ' }))).code, 400)
+  const missing = payload()
+  delete missing.streetAddress
+  assert.equal((await request(missing)).code, 400)
+  assert.equal(calls.sales.length, 0)
 })
 
 test('enforces the exact cap and rejects malformed amounts before calling Braintree', async () => {

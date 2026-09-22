@@ -28,6 +28,7 @@ describe('One-time donations (mocked payment boundary)', () => {
 
   function review () {
     cy.get('#donation-email').type('donor@example.test')
+    cy.get('#donation-street-address').type('123 Test Way')
     cy.contains('Complete test captcha').click()
     cy.contains('button', 'Review donation').click()
   }
@@ -50,6 +51,7 @@ describe('One-time donations (mocked payment boundary)', () => {
     visit()
     cy.contains('Complete test captcha').click()
     cy.get('#donation-email').type('donor@example.test')
+    cy.get('#donation-street-address').type('123 Test Way')
     ;['4.99', '250.01', '251', '5.001', '0', '-10'].forEach(amount => {
       cy.get('#donation-amount').clear()
       cy.get('#donation-amount').type(amount)
@@ -235,16 +237,17 @@ describe('One-time donations (mocked payment boundary)', () => {
     visit()
     cy.get('#donation-email').type('donor@example.test')
     cy.get('#donation-from').type('Local player')
+    cy.get('#donation-street-address').type('123 Test Way')
     cy.get('#donation-message').type('Welcome new players!{enter}See you on the field.')
     cy.contains('Complete test captcha').click()
     cy.screenshot('donation-page', { capture: 'fullPage' })
     cy.contains('button', 'Review donation').click()
-    cy.get('[role="dialog"]').should('contain', '$25.00').and('contain', 'Local player').and('contain', 'donor@example.test').and('contain', 'Welcome new players!')
+    cy.get('[role="dialog"]').should('contain', '$25.00').and('contain', 'Local player').and('contain', 'donor@example.test').and('contain', '123 Test Way').and('contain', 'Welcome new players!')
     cy.screenshot('donation-review', { capture: 'viewport' })
     cy.get('@donate.all').should('have.length', 0)
     cy.contains('button', 'Confirm and donate $25.00').click()
     cy.wait('@donate').its('request.body').should('include', {
-      amount: '25.00', from: 'Local player', email: 'donor@example.test', message: 'Welcome new players!\nSee you on the field.', paymentMethodNonce: 'test-nonce-1', recaptchaToken: 'test-captcha'
+      amount: '25.00', from: 'Local player', email: 'donor@example.test', streetAddress: '123 Test Way', message: 'Welcome new players!\nSee you on the field.', paymentMethodNonce: 'test-nonce-1', recaptchaToken: 'test-captcha'
     }).its('requestId').should('match', /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
     cy.contains('[role="status"]', 'Thank you').should('contain', 'donation-test').and('contain', 'confirmation email')
     cy.get('@donate.all').should('have.length', 1)

@@ -28,6 +28,7 @@ export default function DonationForm () {
   const [amount, setAmount] = useState('25')
   const [from, setFrom] = useState('')
   const [email, setEmail] = useState('')
+  const [streetAddress, setStreetAddress] = useState('')
   const [message, setMessage] = useState('')
   const [token, setToken] = useState('')
   const [captchaReset, setCaptchaReset] = useState(0)
@@ -98,12 +99,12 @@ export default function DonationForm () {
       setError('Enter a donation between $5 and $250 USD, with no more than two decimal places.')
       return
     }
-    if (!email.trim() || !token || from.trim().length > 100 || message.length > 1000) {
-      setError('Please enter a valid email, complete verification, and check the field limits.')
+    if (!email.trim() || !streetAddress.trim() || !token || from.trim().length > 100 || message.length > 1000) {
+      setError('Please enter a valid email, street address, complete verification, and check the field limits.')
       return
     }
     setError('')
-    setReview({ amount: Number(amount).toFixed(2), from: from.trim() || 'Anonymous', email: email.trim(), message })
+    setReview({ amount: Number(amount).toFixed(2), from: from.trim() || 'Anonymous', email: email.trim(), streetAddress: streetAddress.trim(), message })
   }
 
   function closeReview () {
@@ -198,6 +199,9 @@ export default function DonationForm () {
         <input id="donation-from" className="form-control mb-3" maxLength={100} placeholder="Anonymous" value={from} onChange={event => setFrom(event.target.value)} />
         <label htmlFor="donation-email" className="form-label">Email (required)</label>
         <input id="donation-email" className="form-control mb-3" type="email" autoComplete="email" required value={email} onChange={event => setEmail(event.target.value)} />
+        <label htmlFor="donation-street-address" className="form-label">Street address (required)</label>
+        <input id="donation-street-address" className="form-control mb-3" autoComplete="address-line1" required maxLength={255} value={streetAddress} onChange={event => setStreetAddress(event.target.value)} aria-describedby="donation-street-address-help" />
+        <p id="donation-street-address-help" className="form-text mt-n2 mb-3">Required for payment. Enter just your street address (for example, 12345 Palm Tree Ave.), without city, ZIP code or apartment number. We do not store this information, but send it to the payment processor for fraud prevention.</p>
         <label htmlFor="donation-message" className="form-label">Private message (optional, up to 1,000 characters)</label>
         <textarea id="donation-message" className="form-control mb-3" maxLength={1000} rows={4} value={message} onChange={event => setMessage(event.target.value)} />
         <p>Your name and message are private and visible only to the board, not published on this site. Payment details are handled securely by Braintree.</p>
@@ -216,7 +220,7 @@ export default function DonationForm () {
     </>}>
       {review && <>
         <p>One-time donation: <strong>${review.amount} USD</strong></p>
-        <dl><dt>From</dt><dd>{review.from}</dd><dt>Email</dt><dd>{review.email}</dd><dt>Private message</dt><dd style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{review.message || 'No message'}</dd></dl>
+        <dl><dt>From</dt><dd>{review.from}</dd><dt>Email</dt><dd>{review.email}</dd><dt>Street address</dt><dd>{review.streetAddress}</dd><dt>Private message</dt><dd style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{review.message || 'No message'}</dd></dl>
         <p>Only confirming below submits your payment. Your details and private message are shared only with the board.</p>
         {!token && <p role="alert">Verification expired. Cancel and complete verification again.</p>}
         {processing && <p role="status">Processing your donation. Please keep this page open.</p>}

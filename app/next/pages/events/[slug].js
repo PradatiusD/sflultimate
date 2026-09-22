@@ -7,6 +7,7 @@ import { AddToCalendar } from '../../components/AddToCalendar'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 import SeoHead from '../../components/SeoHead'
 import ShortcodeContent from '../../components/ShortcodeContent'
+import EventRegistrationForm from '../../components/EventRegistrationForm'
 
 export const getServerSideProps = async (context) => {
   const { expandArticleShortcodes } = require('../../lib/article-shortcodes')
@@ -26,6 +27,8 @@ export const getServerSideProps = async (context) => {
           startTime
           endTime
           moreInformationUrl
+          allowRegistrations
+          registrationPrice
         }
       }`
   })
@@ -84,7 +87,9 @@ export default function EventItemPage (props) {
       <div className="container">
         <div className="row">
           <div className="col-md-6 offset-md-3">
-            <img src={event.image.publicUrl} className="img-fluid" alt=""/>
+            {event.image && event.image.publicUrl && (
+              <img src={event.image.publicUrl} className="img-fluid" alt=""/>
+            )}
             <h1>{event.name}</h1>
             <small className="text-muted">{event.category}</small>
             <p className="lead" style={{ marginBottom: 0 }}>{event.startTimeFormatted}<br/><small>{event.location}</small></p>
@@ -92,6 +97,17 @@ export default function EventItemPage (props) {
               <AddToCalendar event={event} />
             </div>
             <ShortcodeContent html={event.descriptionHtml} footerScripts={event.footerScripts} />
+            {
+              event.allowRegistrations && (
+                <div className="mt-4 mb-4">
+                  <EventRegistrationForm
+                    eventId={event.id}
+                    eventName={event.name}
+                    price={event.registrationPrice}
+                  />
+                </div>
+              )
+            }
             {
               event.links.map((link, i) => {
                 return (
