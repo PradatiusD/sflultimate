@@ -1,6 +1,7 @@
 const { createHash } = require('crypto')
 const nodemailer = require('nodemailer')
 const PaymentUtils = require('./payment-utils')
+const { buildBrandedEmail } = require('./email-template')
 
 const EMAIL = /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+$/i
 const REQUEST_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -209,7 +210,7 @@ function formatEasternDate (value) {
   })
 }
 
-async function sendConfirmationEmail ({ to, subject, paragraphs }) {
+async function sendConfirmationEmail ({ to, subject, paragraphs = [], badge, heading, intro, introHtml, highlight, rows }) {
   if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) throw new Error('Email unavailable')
   const transport = nodemailer.createTransport({
     service: 'gmail',
@@ -218,18 +219,21 @@ async function sendConfirmationEmail ({ to, subject, paragraphs }) {
     greetingTimeout: 10000,
     socketTimeout: 15000
   })
-  const html = paragraphs.map(paragraph => {
-    const escaped = paragraph.replace(/[&<>"']/g, character => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[character]))
-    return `<p>${escaped.replace(/\n/g, '<br>')}</p>`
-  }).join('')
+  const { html, text } = buildBrandedEmail({
+    badge,
+    heading,
+    intro,
+    introHtml,
+    highlight,
+    rows,
+    paragraphs
+  })
   const result = await transport.sendMail({
     from: 'South Florida Ultimate <sflultimate@gmail.com>',
     replyTo: 'sflultimate@gmail.com',
     to,
     subject,
-    text: paragraphs.join('\n\n'),
+    text,
     html
   })
   if (!result.accepted || !result.accepted.length) throw new Error('Email not accepted')

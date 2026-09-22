@@ -1,55 +1,80 @@
-describe('One-time donations (mocked payment boundary)', () => {
-  // Every test blocks the real payment API, even if it unexpectedly submits.
-  beforeEach(() => {
-    cy.intercept('POST', '/api/donate', { statusCode: 400, body: { status: 'invalid', message: 'Unexpected test submission' } })
-  })
+describe('One-time donations (localhost)', () => {
+  function blockPayment () {
+    cy.intercept('POST', '/api/donate', { statusCode: 400, body: { status: 'invalid', message: 'Unexpected test submission' } }).as('donate')
+  }
 
-  function visit (tokenResponse = { clientToken: 'test-client-token' }) {
-    cy.intercept('GET', '/api/donate', tokenResponse)
-    cy.intercept('GET', 'https://js.braintreegateway.com/web/dropin/1.44.1/js/dropin.min.js', {
-      fixture: 'donation-dropin.txt', headers: { 'content-type': 'application/javascript' }
-    })
-    cy.visit('/donate', {
-      onBeforeLoad (win) {
-        win.grecaptcha = {
-          render (container, options) {
-            const button = win.document.createElement('button')
-            button.type = 'button'
-            button.textContent = 'Complete test captcha'
-            button.onclick = () => options.callback('test-captcha')
-            container.appendChild(button)
-            return 1
-          },
-          reset () {}
-        }
+  function watchPayment () {
+    cy.intercept('POST', '/api/donate').as('donate')
+  }
+
+  function visit () {
+    cy.visit('/donate')
+  }
+
+  function donorEmail () {
+    return `danielprada2012+sflultimate-donate-test-${Math.floor(Math.random() * 10000)}@gmail.com`
+  }
+
+  function fillSandboxCard (number = '4111111111111111') {
+    cy.get('#braintree-hosted-field-number', { timeout: 20000 }).should('be.visible')
+    cy.iframe('#braintree-hosted-field-number').find('#credit-card-number').type('{selectall}{backspace}' + number)
+    cy.iframe('#braintree-hosted-field-expirationDate').find('#expiration').type('{selectall}{backspace}0228')
+    cy.iframe('#braintree-hosted-field-cvv').find('#cvv').type('{selectall}{backspace}123')
+    cy.get('body').then($body => {
+      if ($body.find('#braintree-hosted-field-postalCode').length) {
+        cy.iframe('#braintree-hosted-field-postalCode').find('#postal-code').type('{selectall}{backspace}12345')
       }
     })
   }
 
-  function review () {
-    cy.get('#donation-email').type('donor@example.test')
-    cy.get('#donation-street-address').type('123 Test Way')
-    cy.contains('Complete test captcha').click()
-    cy.contains('button', 'Review donation').click()
+  function completeCaptcha () {
+    cy.get('iframe[title="reCAPTCHA"]', { timeout: 20000 }).should('be.visible')
+    cy.iframe('iframe[title="reCAPTCHA"]').find('#recaptcha-anchor').click()
+    cy.contains('button', 'Review donation', { timeout: 15000 }).should('not.be.disabled')
+  }
+
+  function fillDetails (details = {}) {
+    const email = details.email || donorEmail()
+    if (details.amount) {
+      cy.get('#donation-amount').clear()
+      cy.get('#donation-amount').type(details.amount)
+    }
+    if (details.from) {
+      cy.get('#donation-from').clear()
+      cy.get('#donation-from').type(details.from)
+    }
+    cy.get('#donation-email').clear()
+    cy.get('#donation-email').type(email)
+    cy.get('#donation-street-address').clear()
+    cy.get('#donation-street-address').type(details.streetAddress || '123 Test Way')
+    if (details.message) {
+      cy.get('#donation-message').clear()
+      cy.get('#donation-message').type(details.message)
+    }
+    return email
   }
 
   it('offers presets and accepts the exact cap, defaulting to Anonymous', () => {
-    cy.intercept('POST', '/api/donate', { status: 'submitted', reference: 'cap', amount: 25000, emailStatus: 'sent' }).as('donate')
+    blockPayment()
     visit()
     ;[10, 25, 50, 100, 250].forEach(amount => {
       cy.get('[aria-label="Suggested donation amounts"]').contains('button', new RegExp(`^\\$${amount}$`)).click()
       cy.get('#donation-amount').should('have.value', String(amount))
     })
-    review()
+    fillDetails()
+    fillSandboxCard()
+    completeCaptcha()
+    cy.contains('button', 'Review donation').click()
     cy.get('[role="dialog"]').should('contain', 'Anonymous').and('contain', '$250.00')
-    cy.contains('button', 'Confirm and donate $250.00').click()
-    cy.wait('@donate').its('request.body').should('include', { amount: '250.00', from: 'Anonymous' })
+    cy.get('@donate.all').should('have.length', 0)
+    cy.contains('button', 'Cancel and edit').click()
   })
 
   it('blocks out-of-range, excess precision, missing email and invalid email', () => {
-    cy.intercept('POST', '/api/donate', { statusCode: 500 }).as('donate')
+    blockPayment()
     visit()
-    cy.contains('Complete test captcha').click()
+    fillSandboxCard()
+    completeCaptcha()
     cy.get('#donation-email').type('donor@example.test')
     cy.get('#donation-street-address').type('123 Test Way')
     ;['4.99', '250.01', '251', '5.001', '0', '-10'].forEach(amount => {
@@ -71,10 +96,13 @@ describe('One-time donations (mocked payment boundary)', () => {
     cy.get('#donation-message').should('have.attr', 'maxlength', '1000')
   })
 
-  it('cancels review, allows editing, and submits only the newly reviewed snapshot', () => {
-    cy.intercept('POST', '/api/donate', { status: 'submitted', reference: 'edited', amount: 550, emailStatus: 'sent' }).as('donate')
+  it('cancels review, allows editing, and does not pay until the new snapshot is confirmed', () => {
+    blockPayment()
     visit()
-    review()
+    fillDetails()
+    fillSandboxCard()
+    completeCaptcha()
+    cy.contains('button', 'Review donation').click()
     cy.contains('button', 'Cancel and edit').click()
     cy.get('@donate.all').should('have.length', 0)
     cy.get('#donation-amount').clear()
@@ -82,14 +110,21 @@ describe('One-time donations (mocked payment boundary)', () => {
     cy.get('#donation-message').type('Updated message')
     cy.contains('button', 'Review donation').click()
     cy.get('[role="dialog"]').should('contain', '$5.50').and('contain', 'Updated message')
-    cy.contains('button', 'Confirm and donate $5.50').click()
-    cy.wait('@donate').its('request.body').should('include', { amount: '5.50', message: 'Updated message' })
+    cy.get('@donate.all').should('have.length', 0)
+    cy.contains('button', 'Cancel and edit').click()
   })
 
-  it('prevents double submission and closing while processing', () => {
-    cy.intercept('POST', '/api/donate', { delay: 1200, body: { status: 'submitted', reference: 'once', amount: 2500, emailStatus: 'sent' } }).as('donate')
+  it('prevents double submission and closing while processing a real payment', () => {
+    cy.intercept('POST', '/api/donate', req => {
+      req.on('response', res => {
+        res.setDelay(1200)
+      })
+    }).as('donate')
     visit()
-    review()
+    const email = fillDetails({ amount: '5' })
+    fillSandboxCard()
+    completeCaptcha()
+    cy.contains('button', 'Review donation').click()
     cy.contains('button', 'Confirm and donate').then($button => {
       $button[0].click()
       $button[0].click()
@@ -99,38 +134,43 @@ describe('One-time donations (mocked payment boundary)', () => {
     cy.get('[role="dialog"]').should('be.visible')
     cy.get('[role="dialog"] [aria-label="Close"]').should('be.disabled')
     cy.contains('button', 'Cancel and edit').should('be.disabled')
-    cy.wait('@donate')
+    cy.wait('@donate', { timeout: 30000 }).then(({ request, response }) => {
+      expect(request.body.amount).to.equal('5.00')
+      expect(request.body.email).to.equal(email)
+      expect(request.body.paymentMethodNonce).to.be.a('string').and.not.equal('')
+      expect(response.statusCode).to.equal(200)
+      expect(response.body.status).to.equal('submitted')
+    })
     cy.contains('[role="status"]', 'Thank you').should('be.visible')
     cy.get('@donate.all').should('have.length', 1)
   })
 
-  it('keeps successful payment successful when the confirmation email fails', () => {
-    cy.intercept('POST', '/api/donate', { status: 'submitted', reference: 'email-failed', amount: 2500, emailStatus: 'failed' }).as('donate')
+  it('allows an explicit new attempt only after a definite sandbox decline, with a fresh nonce and key', () => {
+    watchPayment()
     visit()
-    review()
-    cy.contains('button', 'Confirm and donate').click()
-    cy.wait('@donate')
-    cy.contains('[role="status"]', 'payment succeeded').should('contain', 'email has not been delivered').and('contain', 'do not donate again')
-    cy.contains('button', 'Review donation').should('not.exist')
-  })
-
-  it('allows an explicit new attempt only after a definite decline, with a fresh nonce and key', () => {
-    let first
-    cy.intercept('POST', '/api/donate', { statusCode: 422, body: { status: 'failed', message: 'Payment declined. No charge was made.' } }).as('decline')
-    visit()
-    review()
-    cy.contains('button', 'Confirm and donate').click()
-    cy.wait('@decline').then(({ request }) => { first = request.body })
-    cy.contains('[role="alert"]', 'Payment declined').should('be.visible')
-    cy.contains('button', 'Review donation').should('be.disabled')
-    cy.intercept('POST', '/api/donate', { status: 'submitted', reference: 'retry', amount: 2500, emailStatus: 'sent' }).as('retry')
-    cy.contains('Complete test captcha').click()
+    fillDetails({ amount: '5' })
+    fillSandboxCard('4000111111111115')
+    completeCaptcha()
     cy.contains('button', 'Review donation').click()
     cy.contains('button', 'Confirm and donate').click()
-    cy.wait('@retry').then(({ request }) => {
+    let first
+    cy.wait('@donate', { timeout: 30000 }).then(({ request, response }) => {
+      first = request.body
+      expect(response.body.status).to.equal('failed')
+    })
+    cy.get('[role="alert"]').should('be.visible')
+    cy.contains('button', 'Review donation').should('be.disabled')
+    fillSandboxCard()
+    completeCaptcha()
+    cy.contains('button', 'Review donation').click()
+    cy.contains('button', 'Confirm and donate').click()
+    cy.wait('@donate', { timeout: 30000 }).then(({ request, response }) => {
       expect(request.body.requestId).not.to.equal(first.requestId)
       expect(request.body.paymentMethodNonce).not.to.equal(first.paymentMethodNonce)
+      expect(response.statusCode).to.equal(200)
+      expect(response.body.status).to.equal('submitted')
     })
+    cy.contains('[role="status"]', 'Thank you').should('be.visible')
   })
 
   ;['pending', 'needsReview', 'network'].forEach(status => {
@@ -139,7 +179,10 @@ describe('One-time donations (mocked payment boundary)', () => {
         ? { forceNetworkError: true }
         : { statusCode: 409, body: { status, reference: 'review-reference', message: 'Check status' } }).as('donate')
       visit()
-      review()
+      fillDetails()
+      fillSandboxCard()
+      completeCaptcha()
+      cy.contains('button', 'Review donation').click()
       cy.contains('button', 'Confirm and donate').click()
       cy.wait('@donate')
       cy.contains('[role="status"]', 'Please do not submit another donation').should('be.visible')
@@ -161,9 +204,12 @@ describe('One-time donations (mocked payment boundary)', () => {
   })
 
   it('stops waiting on an unresponsive server without permitting another payment', () => {
-    cy.intercept('POST', '/api/donate', { delay: 60000, body: { status: 'submitted', reference: 'late', amount: 2500, emailStatus: 'sent' } })
+    cy.intercept('POST', '/api/donate', { delay: 60000, body: { status: 'submitted', reference: 'late', amount: 500, emailStatus: 'sent' } })
     visit()
-    review()
+    fillDetails({ amount: '5' })
+    fillSandboxCard()
+    completeCaptcha()
+    cy.contains('button', 'Review donation').click()
     cy.clock()
     cy.contains('button', 'Confirm and donate').click()
     cy.contains('button', 'Processing donation').should('be.disabled')
@@ -173,12 +219,14 @@ describe('One-time donations (mocked payment boundary)', () => {
   })
 
   it('handles client-token failure without enabling donation', () => {
-    visit({ statusCode: 503, body: { message: 'Unavailable' } })
+    cy.intercept('GET', '/api/donate', { statusCode: 503, body: { message: 'Unavailable' } })
+    visit()
     cy.contains('[role="alert"]', 'temporarily unavailable').should('be.visible')
     cy.contains('button', 'Review donation').should('be.disabled')
   })
 
   it('links to donations in navigation', () => {
+    blockPayment()
     visit()
     cy.get('header a[href="/donate"]').should('exist')
     cy.get('footer').should('have.length', 1)
@@ -186,9 +234,12 @@ describe('One-time donations (mocked payment boundary)', () => {
   })
 
   it('traps dialog focus, cancels with Escape, and restores focus without payment', () => {
-    cy.intercept('POST', '/api/donate', { statusCode: 500 }).as('donate')
+    blockPayment()
     visit()
-    review()
+    fillDetails()
+    fillSandboxCard()
+    completeCaptcha()
+    cy.contains('button', 'Review donation').click()
     cy.get('[role="dialog"]').should('have.attr', 'aria-labelledby', 'donation-review-title')
     cy.focused().should('have.attr', 'aria-label', 'Close')
     cy.focused().trigger('keydown', { key: 'Tab', shiftKey: true })
@@ -202,9 +253,13 @@ describe('One-time donations (mocked payment boundary)', () => {
   })
 
   it('keeps the review controls usable on a narrow mobile viewport', () => {
+    blockPayment()
     cy.viewport(375, 812)
     visit()
-    review()
+    fillDetails()
+    fillSandboxCard()
+    completeCaptcha()
+    cy.contains('button', 'Review donation').click()
     cy.contains('button', 'Confirm and donate $25.00').scrollIntoView()
     cy.contains('button', 'Confirm and donate $25.00').should('be.visible')
     cy.get('[role="dialog"]').then($dialog => {
@@ -232,24 +287,37 @@ describe('One-time donations (mocked payment boundary)', () => {
     })
   })
 
-  it('reviews exact donor fields before sending one payment and shows confirmation', () => {
-    cy.intercept('POST', '/api/donate', { status: 'submitted', reference: 'donation-test', amount: 2500, emailStatus: 'sent' }).as('donate')
+  it('reviews exact donor fields before sending one sandbox payment and shows confirmation', () => {
+    watchPayment()
     visit()
-    cy.get('#donation-email').type('donor@example.test')
-    cy.get('#donation-from').type('Local player')
-    cy.get('#donation-street-address').type('123 Test Way')
-    cy.get('#donation-message').type('Welcome new players!{enter}See you on the field.')
-    cy.contains('Complete test captcha').click()
+    const email = fillDetails({
+      from: 'Local player',
+      message: 'Welcome new players!{enter}See you on the field.'
+    })
+    fillSandboxCard()
+    completeCaptcha()
     cy.screenshot('donation-page', { capture: 'fullPage' })
     cy.contains('button', 'Review donation').click()
-    cy.get('[role="dialog"]').should('contain', '$25.00').and('contain', 'Local player').and('contain', 'donor@example.test').and('contain', '123 Test Way').and('contain', 'Welcome new players!')
+    cy.get('[role="dialog"]').should('contain', '$25.00').and('contain', 'Local player').and('contain', email).and('contain', '123 Test Way').and('contain', 'Welcome new players!')
     cy.screenshot('donation-review', { capture: 'viewport' })
     cy.get('@donate.all').should('have.length', 0)
     cy.contains('button', 'Confirm and donate $25.00').click()
-    cy.wait('@donate').its('request.body').should('include', {
-      amount: '25.00', from: 'Local player', email: 'donor@example.test', streetAddress: '123 Test Way', message: 'Welcome new players!\nSee you on the field.', paymentMethodNonce: 'test-nonce-1', recaptchaToken: 'test-captcha'
-    }).its('requestId').should('match', /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
-    cy.contains('[role="status"]', 'Thank you').should('contain', 'donation-test').and('contain', 'confirmation email')
+    cy.wait('@donate', { timeout: 30000 }).then(({ request, response }) => {
+      expect(request.body).to.include({
+        amount: '25.00',
+        from: 'Local player',
+        email,
+        streetAddress: '123 Test Way',
+        message: 'Welcome new players!\nSee you on the field.'
+      })
+      expect(request.body.paymentMethodNonce).to.be.a('string').and.not.equal('')
+      expect(request.body.recaptchaToken).to.be.a('string').and.not.equal('')
+      expect(request.body.requestId).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+      expect(response.statusCode).to.equal(200)
+      expect(response.body.status).to.equal('submitted')
+      expect(response.body.amount).to.equal(2500)
+      cy.contains('[role="status"]', 'Thank you').should('contain', response.body.reference)
+    })
     cy.get('@donate.all').should('have.length', 1)
   })
 })

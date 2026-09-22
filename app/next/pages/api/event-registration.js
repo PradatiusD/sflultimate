@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/server-graphql-client'
+import { notify } from '../../lib/slack'
 import {
   sanitizeText,
   requireEmail,
@@ -104,18 +105,25 @@ async function loadEvent (eventId) {
 }
 
 function sendConfirmation (record) {
-  const amountLine = record.amountPaid > 0
-    ? `Your registration payment of $${Number(record.amountPaid).toFixed(2)} USD was successfully submitted for processing.`
-    : 'Your free registration was received.'
+  const paid = record.amountPaid > 0
   return sendConfirmationEmail({
     to: record.email,
     subject: `Registration confirmation for ${record.eventName}`,
+    badge: 'Registration confirmed',
+    heading: "You're registered!",
+    intro: `Hi ${record.name}. You are registered for ${record.eventName}.`,
+    highlight: {
+      label: paid ? 'Order total' : 'Registration',
+      value: paid ? `$${Number(record.amountPaid).toFixed(2)}` : 'Free'
+    },
+    rows: [
+      { label: 'Date', value: formatEasternDate(record.createdAt) },
+      { label: 'Reference', value: record.id }
+    ],
     paragraphs: [
-      `Hi ${record.name},`,
-      `You are registered for ${record.eventName}.`,
-      amountLine,
-      `Date: ${formatEasternDate(record.createdAt)}`,
-      `Reference: ${record.id}`,
+      paid
+        ? `Your registration payment of $${Number(record.amountPaid).toFixed(2)} USD was successfully submitted for processing.`
+        : 'Your free registration was received.',
       'Questions about your registration? Reply to this email.',
       'Thank you,\nSouth Florida Ultimate'
     ]
@@ -127,6 +135,12 @@ async function finishSubmitted (res, record, event) {
     send: () => sendConfirmation({ ...record, eventName: event.name }),
     update: data => updateRegistration(record.id, data)
   })
+  if (process.env.NODE_ENV !== 'development') {
+    const amount = record.amountPaid > 0
+      ? `$${Number(record.amountPaid).toFixed(2)}`
+      : 'Free'
+    notify(`New event registration for ${event.name}: ${record.name} (${record.email}) — ${amount} [ref ${record.id}]`)
+  }
   return registrationResponse(res, { ...record, confirmationEmailStatus: emailStatus })
 }
 
@@ -203,6 +217,7 @@ export default async function handler (req, res) {
       })
       if (sale.declined) {
         await updateRegistration(record.id, { status: 'failed' })
+        notify(`Event registration payment declined for ${event.name} [ref ${record.id}]: ${sale.message || 'Payment was not accepted.'}`)
         return res.status(409).json({
           status: 'failed',
           reference: record.id,
@@ -216,6 +231,7 @@ export default async function handler (req, res) {
         await updateRegistration(record.id, { status: 'needsReview' })
       } catch (_) {}
       const detail = error && error.message
+      notify(`Event registration payment needs review for ${event.name} [ref ${record.id}]: ${detail || 'unknown payment outcome'}`)
       return res.status(503).json({
         status: 'needsReview',
         reference: record.id,
@@ -226,7 +242,8 @@ export default async function handler (req, res) {
     }
 
     return finishSubmitted(res, record, event)
-  } catch (_) {
+  } catch (error) {
+    notify(`Error processing event registration: ${error && error.message ? error.message : 'unknown error'}\n${error && error.stack ? error.stack : ''}`)
     return res.status(503).json({
       status: 'pending',
       message: 'Registration is temporarily unavailable. Keep your request ID; do not submit another payment if one may already be processing.'

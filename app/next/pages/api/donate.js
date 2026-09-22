@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/server-graphql-client'
+import { notify } from '../../lib/slack'
 import {
   sanitizeText,
   requireEmail,
@@ -90,12 +91,17 @@ function sendConfirmation (record) {
   return sendConfirmationEmail({
     to: record.email,
     subject: 'Thank you for your donation to South Florida Ultimate',
+    badge: 'Donation received',
+    heading: 'Thank you!',
+    intro: record.from === 'Anonymous' ? 'Hi there,' : `Hi ${record.from},`,
+    highlight: { label: 'Donation total', value: `$${(record.amount / 100).toFixed(2)}` },
+    rows: [
+      { label: 'Date', value: formatEasternDate(record.createdAt) },
+      { label: 'Reference', value: record.id }
+    ],
     paragraphs: [
-      record.from === 'Anonymous' ? 'Hi there,' : `Hi ${record.from},`,
-      `Thank you for supporting ultimate in South Florida. Your one-time donation of $${(record.amount / 100).toFixed(2)} USD was successfully submitted for processing.`,
+      'Thank you for supporting ultimate in South Florida. Your one-time donation was successfully submitted for processing.',
       'Your support helps us welcome more people into the game and grow our local ultimate community.',
-      `Date: ${formatEasternDate(record.createdAt)}`,
-      `Reference: ${record.id}`,
       'Questions about your donation? Reply to this email.',
       'Thank you,\nSouth Florida Ultimate'
     ]
@@ -151,14 +157,16 @@ export default async function handler (req, res) {
       })
       if (sale.declined) {
         await updateDonation(record.id, { status: 'failed' })
+        notify(`Donation payment declined [ref ${record.id}]: ${sale.message || 'Payment was not accepted.'}`)
         return donationResponse(res, { ...record, status: 'failed' })
       }
       await updateDonation(record.id, { status: 'submitted', transactionId: sale.transactionId })
       record.status = 'submitted'
-    } catch (_) {
+    } catch (error) {
       try {
         await updateDonation(record.id, { status: 'needsReview' })
       } catch (_) {}
+      notify(`Donation payment needs review [ref ${record.id}]: ${error && error.message ? error.message : 'unknown payment outcome'}`)
       return needsReviewResponse(res, record.id)
     }
 
@@ -166,8 +174,12 @@ export default async function handler (req, res) {
       send: () => sendConfirmation(record),
       update: data => updateDonation(record.id, data)
     })
+    if (process.env.NODE_ENV !== 'development') {
+      notify(`New donation: ${record.from} (${record.email}) — $${(record.amount / 100).toFixed(2)} [ref ${record.id}]`)
+    }
     return donationResponse(res, { ...record, confirmationEmailStatus: emailStatus })
-  } catch (_) {
+  } catch (error) {
+    notify(`Error processing donation: ${error && error.message ? error.message : 'unknown error'}\n${error && error.stack ? error.stack : ''}`)
     return res.status(503).json({
       status: 'pending',
       message: 'Donation service unavailable. Keep your request ID; do not submit another payment if one may already be processing.'

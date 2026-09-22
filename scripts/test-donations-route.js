@@ -7,7 +7,7 @@ const { MongooseAdapter } = require('@keystonejs/adapter-mongoose')
 const client = require('../app/next/lib/server-graphql-client')
 
 // External services are replaced at the module boundary, not through production factories.
-const calls = { sales: [], emails: [], mutations: [] }
+const calls = { sales: [], emails: [], mutations: [], slack: [] }
 let paymentResult
 let captchaResult
 let emailFailure
@@ -77,6 +77,7 @@ before(async () => {
   process.env.SMTP_PASSWORD = 'test-password'
   const replacements = {
     '../app/next/lib/payment-utils': payment,
+    '../app/next/lib/slack': { notify: msg => { calls.slack.push(msg) } },
     nodemailer: mailer
   }
   for (const [name, exports] of Object.entries(replacements)) {
@@ -122,6 +123,7 @@ beforeEach(async () => {
   calls.sales.length = 0
   calls.emails.length = 0
   calls.mutations.length = 0
+  calls.slack.length = 0
   captchaResult = { success: true, hostname: 'localhost' }
   paymentResult = { success: true, transaction: { id: 'sandbox-transaction', status: 'submitted_for_settlement' } }
   emailFailure = false
@@ -155,6 +157,11 @@ test('uses normal Keystone mutations to persist and confirm a donation', async (
   assert.equal(calls.emails.length, 1)
   assert.ok(calls.emails[0].text.includes('Alex & Sam'))
   assert.ok(calls.emails[0].html.includes('Alex &amp; Sam'))
+  assert.ok(calls.emails[0].html.includes('sflultimate-logo-pink-flamingo.png'))
+  assert.ok(calls.emails[0].html.includes('#804399'))
+  assert.ok(calls.emails[0].html.includes('$25.00'))
+  assert.equal(calls.slack.length, 1)
+  assert.ok(calls.slack[0].startsWith('New donation: Alex & Sam (donor@example.test) — $25.00'))
 })
 
 test('Donation uses ordinary fields without email-resend locks', () => {
@@ -174,6 +181,7 @@ test('rejects missing street address before calling Braintree', async () => {
   delete missing.streetAddress
   assert.equal((await request(missing)).code, 400)
   assert.equal(calls.sales.length, 0)
+  assert.equal(calls.slack.length, 0)
 })
 
 test('enforces the exact cap and rejects malformed amounts before calling Braintree', async () => {
@@ -196,6 +204,7 @@ test('concurrent copies of one request create one record, charge once, and email
   assert.equal(calls.sales.length, 1)
   assert.equal(calls.emails.length, 1)
   assert.equal(await model.countDocuments({}), 1)
+  assert.equal(calls.slack.filter(msg => msg.startsWith('New donation:')).length, 1)
   captchaResult = { success: false }
   assert.equal((await request(body)).code, 200)
   assert.equal((await request({ ...body, amount: '30' })).code, 409)
@@ -209,6 +218,8 @@ test('declines do not send email and replaying the same request never charges ag
   assert.equal((await request(body)).body.status, 'failed')
   assert.equal(calls.sales.length, 1)
   assert.equal(calls.emails.length, 0)
+  assert.equal(calls.slack.length, 1)
+  assert.ok(calls.slack[0].startsWith('Donation payment declined'))
 })
 
 test('unknown payment outcomes stay blocked and preserve the reconciliation reference', async () => {
@@ -221,6 +232,8 @@ test('unknown payment outcomes stay blocked and preserve the reconciliation refe
   await request(body)
   assert.equal(calls.sales.length, 1)
   assert.equal(calls.emails.length, 0)
+  assert.equal(calls.slack.length, 1)
+  assert.ok(calls.slack[0].startsWith('Donation payment needs review'))
 })
 
 test('database failure before creation never charges', async () => {
@@ -249,6 +262,8 @@ test('SMTP failure preserves successful donation and duplicate request does not 
   assert.equal((await request(body)).body.emailStatus, 'failed')
   assert.equal(calls.sales.length, 1)
   assert.equal(calls.emails.length, 1)
+  assert.equal(calls.slack.length, 1)
+  assert.ok(calls.slack[0].startsWith('New donation:'))
 })
 
 test('failure to save email status does not turn a successful donation into a payment error', async () => {
