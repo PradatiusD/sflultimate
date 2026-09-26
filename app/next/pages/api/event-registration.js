@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/server-graphql-client'
 import { notify } from '../../lib/slack'
+import { createSubscriber } from '../../lib/mailerlite'
 import {
   sanitizeText,
   requireEmail,
@@ -131,6 +132,9 @@ function sendConfirmation (record) {
 }
 
 async function finishSubmitted (res, record, event) {
+  createSubscriber({ email: record.email, name: record.name }).catch(error => {
+    console.error('MailerLite subscriber creation failed:', error.message)
+  })
   const emailStatus = await deliverConfirmation({
     send: () => sendConfirmation({ ...record, eventName: event.name }),
     update: data => updateRegistration(record.id, data)

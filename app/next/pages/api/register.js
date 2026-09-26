@@ -2,6 +2,7 @@ import GraphqlClient from '../../lib/server-graphql-client'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
 import { notify } from '../../lib/slack'
+import { createSubscriber } from '../../lib/mailerlite'
 const { gql } = require('@apollo/client')
 const GraphQlClient = require('./../../lib/server-graphql-client')
 const PaymentUtils = require('./../../lib/payment-utils')
@@ -233,6 +234,12 @@ export default async function handler (req, res) {
 
     const paymentResult = disablePayment ? null : await processPayment(sanitizedPayload, amount)
     const dbCreateResult = await createPlayerRecord(sanitizedPayload)
+    createSubscriber({
+      email: sanitizedPayload.email,
+      name: `${sanitizedPayload.firstName} ${sanitizedPayload.lastName}`
+    }).catch(error => {
+      console.error('MailerLite subscriber creation failed:', error.message)
+    })
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
     if (process.env.NODE_ENV === 'development') {
       console.log(paymentResult)

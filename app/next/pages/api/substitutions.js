@@ -4,6 +4,7 @@ import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
 import GraphQlClient from '../../lib/server-graphql-client'
 import { notify } from '../../lib/slack'
+import { createSubscriber } from '../../lib/mailerlite'
 
 const CREATE_PLAYER_SUBSTITUTION = gql`
   mutation CreatePlayerSubstitution($data: PlayerSubstitutionCreateInput!) {
@@ -137,6 +138,12 @@ export default async function handler (req, res) {
 
     const paymentResult = disablePayment ? null : await processPayment(sanitizedPayload, amount)
     const dbCreateResult = await createSubstitutionRecord(sanitizedPayload)
+    createSubscriber({
+      email: sanitizedPayload.email,
+      name: `${sanitizedPayload.firstName} ${sanitizedPayload.lastName}`
+    }).catch(error => {
+      console.error('MailerLite subscriber creation failed:', error.message)
+    })
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
     if (process.env.NODE_ENV === 'development') {
       console.log(paymentResult)
