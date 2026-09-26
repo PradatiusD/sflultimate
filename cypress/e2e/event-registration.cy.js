@@ -79,6 +79,10 @@ describe('Event registration (localhost)', () => {
       cy.contains('button', 'Confirm registration').click()
       cy.wait('@register').its('response.statusCode').should('eq', 200)
       cy.contains('[role="status"]', 'You are registered for Free Cypress Clinic', { timeout: 30000 }).should('be.visible')
+      cy.reload()
+      cy.contains('h2', '1 person is going').should('be.visible')
+      cy.get('.event-registration-attendee').should('have.length', 1).and('contain', 'Alex P.')
+      cy.get('.event-registration-latest-track').invoke('css', 'animation-name').should('match', /^event-registration-latest-loop/).get('.event-registration-latest-track').should('contain', 'Alex P.').find('small').first().invoke('text').should('match', /^(just now|.*ago)$/)
     })
   })
 

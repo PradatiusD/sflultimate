@@ -229,7 +229,7 @@ export default function EventRegistrationForm ({ eventId, eventName, price }) {
   return <>
     <form onSubmit={openReview}>
       <fieldset disabled={processing}>
-        <legend>Register{eventName ? ` for ${eventName}` : ''}</legend>
+        <legend><h3>Register{eventName ? ` for ${eventName}` : ''}</h3></legend>
         <p>{paid
           ? `Registration is $${amountPaid} USD. You will review your details before any charge.`
           : 'This event is free to register.'}</p>
