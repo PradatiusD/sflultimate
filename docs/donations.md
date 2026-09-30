@@ -25,7 +25,7 @@ Deploy/restart Keystone after adding the Donation list. Before enabling producti
 5. Save transaction ID and submitted status before sending email. Never store a nonce, card number, security code, or CAPTCHA token.
 6. Send plain-text/escaped-HTML confirmation. SMTP failure records email failure without reversing or retrying payment.
 
-The private Donation list includes `createdAt`, `from`, `message`, `amount`, `email`, payment status/reference, request ID, and email-delivery state. It is read-only in the standard Keystone admin; anonymous reads and GraphQL financial mutations are denied, including development. `from` defaults to Anonymous, but email is still stored privately. The list covers donations through this page only, not existing league-registration donation add-ons.
+The private Donation list includes `createdAt`, `from`, optional `category`, `message`, `amount`, `email`, payment status/reference, request ID, and email-delivery state. The selectable categories are Youth, Hatter 4 Hope, Beginner Pick Up, and No Category; a donor may leave the field unselected. It is read-only in the standard Keystone admin; anonymous reads and GraphQL financial mutations are denied, including development. `from` defaults to Anonymous, but email is still stored privately. The list covers donations through this page only, not existing league-registration donation add-ons.
 
 `submitted` means accepted for processing/settlement, **not final settlement**. Check Braintree for settlement, refunds, and disputes. There are no settlement webhooks in this initial scope. Confirmation is not a charitable tax receipt.
 
@@ -37,7 +37,7 @@ Once an operator has definitively reconciled the payment, clear `sfu-donation-at
 
 ## Confirmation email
 
-The successful payment request sends one confirmation using the existing SMTP configuration. Email state is tracked independently of payment. `sent` means SMTP acceptance, not verified inbox delivery. An SMTP or email-status write failure does not retry or reverse a charge.
+The successful payment request sends one confirmation using the existing SMTP configuration. When a category is selected, it is included in the confirmation summary and the board Slack notification. Email state is tracked independently of payment. `sent` means SMTP acceptance, not verified inbox delivery. An SMTP or email-status write failure does not retry or reverse a charge.
 
 There is no resend endpoint, delivery lease, queue, or automatic retry. If delivery fails or remains pending after interruption, support should verify the donation in Braintree and respond manually. Never rerun payment to fix email.
 

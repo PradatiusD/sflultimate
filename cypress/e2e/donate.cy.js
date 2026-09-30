@@ -43,6 +43,7 @@ describe('One-time donations (localhost)', () => {
       cy.get('#donation-from').clear()
       cy.get('#donation-from').type(details.from)
     }
+    if (details.category) cy.get('#donation-category').select(details.category)
     cy.get('#donation-email').clear()
     cy.get('#donation-email').type(email)
     cy.get('#donation-street-address').clear()
@@ -292,13 +293,14 @@ describe('One-time donations (localhost)', () => {
     visit()
     const email = fillDetails({
       from: 'Local player',
+      category: 'Beginner Pick Up',
       message: 'Welcome new players!{enter}See you on the field.'
     })
     fillSandboxCard()
     completeCaptcha()
     cy.screenshot('donation-page', { capture: 'fullPage' })
     cy.contains('button', 'Review donation').click()
-    cy.get('[role="dialog"]').should('contain', '$25.00').and('contain', 'Local player').and('contain', email).and('contain', '123 Test Way').and('contain', 'Welcome new players!')
+    cy.get('[role="dialog"]').should('contain', '$25.00').and('contain', 'Local player').and('contain', 'Beginner Pick Up').and('contain', email).and('contain', '123 Test Way').and('contain', 'Welcome new players!')
     cy.screenshot('donation-review', { capture: 'viewport' })
     cy.get('@donate.all').should('have.length', 0)
     cy.contains('button', 'Confirm and donate $25.00').click()
@@ -306,6 +308,7 @@ describe('One-time donations (localhost)', () => {
       expect(request.body).to.include({
         amount: '25.00',
         from: 'Local player',
+        category: 'Beginner Pick Up',
         email,
         streetAddress: '123 Test Way',
         message: 'Welcome new players!\nSee you on the field.'

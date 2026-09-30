@@ -4275,6 +4275,7 @@ type Donation {
   id: ID!
   createdAt: DateTime
   from: String
+  category: String
   message: String
   amount: Int
   email: String
@@ -4318,6 +4319,10 @@ input DonationWhereInput {
   from_not_ends_with_i: String
   from_in: [String]
   from_not_in: [String]
+  category: String
+  category_not: String
+  category_in: [String]
+  category_not_in: [String]
   message: String
   message_not: String
   message_contains: String
@@ -4427,6 +4432,8 @@ enum SortDonationsBy {
   createdAt_DESC
   from_ASC
   from_DESC
+  category_ASC
+  category_DESC
   message_ASC
   message_DESC
   amount_ASC
@@ -4448,6 +4455,7 @@ enum SortDonationsBy {
 input DonationUpdateInput {
   createdAt: DateTime
   from: String
+  category: String
   message: String
   amount: Int
   email: String
@@ -4466,6 +4474,7 @@ input DonationsUpdateInput {
 input DonationCreateInput {
   createdAt: DateTime
   from: String
+  category: String
   message: String
   amount: Int
   email: String

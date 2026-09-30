@@ -544,6 +544,12 @@
 }
 
 @media screen and (max-width: 1199px) {
+  .notification-alert {
+    margin-top: 11rem;
+  }
+}
+
+@media screen and (max-width: 1199px) {
   .navbar {
     min-height: 78px;
     padding-top: 0;

@@ -43,6 +43,7 @@ function payload (overrides = {}) {
     amount: '25.00',
     from: 'Alex & Sam',
     email: 'donor@example.test',
+    category: 'Youth',
     message: 'Thanks!\nSee you on the field.',
     requestId: randomUUID(),
     paymentMethodNonce: 'test-nonce',
@@ -144,6 +145,7 @@ test('uses normal Keystone mutations to persist and confirm a donation', async (
   assert.equal(Object.hasOwn(calls.sales[0], 'merchantAccountId'), false, 'Use the existing default merchant account')
   const saved = await model.findOne({ requestId: body.requestId }).lean()
   assert.equal(saved.from, body.from)
+  assert.equal(saved.category, body.category)
   assert.equal(saved.message, body.message)
   const stored = await client.query({
     query: '{ allDonations { createdAt confirmationEmailSentAt } }'
@@ -160,8 +162,10 @@ test('uses normal Keystone mutations to persist and confirm a donation', async (
   assert.ok(calls.emails[0].html.includes('sflultimate-logo-pink-flamingo.png'))
   assert.ok(calls.emails[0].html.includes('#804399'))
   assert.ok(calls.emails[0].html.includes('$25.00'))
+  assert.ok(calls.emails[0].text.includes('Category: Youth'))
   assert.equal(calls.slack.length, 1)
   assert.ok(calls.slack[0].startsWith('New donation: Alex & Sam (donor@example.test) — $25.00'))
+  assert.ok(calls.slack[0].includes('Category: Youth'))
 })
 
 test('Donation uses ordinary fields without email-resend locks', () => {
@@ -192,6 +196,7 @@ test('enforces the exact cap and rejects malformed amounts before calling Braint
   for (const amount of ['250.01', '999', '4.99', '-5', '5.001', '5e1', 25]) {
     assert.equal((await request(payload({ amount }))).code, 400)
   }
+  assert.equal((await request(payload({ category: 'Not a donation category' }))).code, 400)
   assert.equal(calls.sales.length, 1)
   assert.equal(await model.countDocuments({}), 1)
 })

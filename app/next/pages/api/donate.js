@@ -17,6 +17,8 @@ import {
 
 export const config = { api: { bodyParser: { sizeLimit: '12kb' } } }
 
+const DONATION_CATEGORIES = ['Youth', 'Hatter 4 Hope', 'Beginner Pick Up', 'No Category']
+
 function validateDonation (body = {}) {
   if (typeof body.amount !== 'string' || !/^\d{1,3}(\.\d{1,2})?$/.test(body.amount)) {
     throw new Error('Invalid amount')
@@ -29,9 +31,12 @@ function validateDonation (body = {}) {
     multiline,
     message: 'Invalid donation details'
   })
+  const category = text(body.category, 50)
+  if (category && !DONATION_CATEGORIES.includes(category)) throw new Error('Invalid donation category')
   return {
     amount,
     from: text(body.from, 100) || 'Anonymous',
+    category: category || null,
     email: requireEmail(body.email),
     message: text(body.message, 1000, false, true),
     requestId: requireRequestId(body.requestId),
@@ -46,7 +51,7 @@ async function findDonation (requestId) {
     query: gql`
       query($requestId: String!) {
         allDonations(where: { requestId: $requestId }, first: 1) {
-          id amount from email message status confirmationEmailStatus
+          id amount from category email message status confirmationEmailStatus
         }
       }
     `,
@@ -67,7 +72,7 @@ async function updateDonation (id, data) {
 }
 
 function donationResponse (res, record, input) {
-  if (input && ['amount', 'from', 'email', 'message'].some(key => record[key] !== input[key])) {
+  if (input && ['amount', 'from', 'category', 'email', 'message'].some(key => record[key] !== input[key])) {
     return res.status(409).json({ status: 'invalid', message: 'This request ID belongs to different donation details.' })
   }
   if (record.status === 'submitted') {
@@ -97,6 +102,7 @@ function sendConfirmation (record) {
     highlight: { label: 'Donation total', value: `$${(record.amount / 100).toFixed(2)}` },
     rows: [
       { label: 'Date', value: formatEasternDate(record.createdAt) },
+      ...(record.category ? [{ label: 'Category', value: record.category }] : []),
       { label: 'Reference', value: record.id }
     ],
     paragraphs: [
@@ -175,7 +181,7 @@ export default async function handler (req, res) {
       update: data => updateDonation(record.id, data)
     })
     if (process.env.NODE_ENV !== 'development') {
-      notify(`New donation: ${record.from} (${record.email}) — $${(record.amount / 100).toFixed(2)} [ref ${record.id}]`)
+      notify(`New donation: ${record.from} (${record.email}) — $${(record.amount / 100).toFixed(2)}${record.category ? ` — Category: ${record.category}` : ''} [ref ${record.id}]`)
     }
     return donationResponse(res, { ...record, confirmationEmailStatus: emailStatus })
   } catch (error) {

@@ -28,7 +28,7 @@ export default function Notification (props) {
   }
   return (
     <div className="container">
-      <div className="alert alert-success" role="alert">
+      <div className="alert alert-success notification-alert" role="alert">
         <span className="fa fa-smile" style={{ position: 'relative', top: '2px' }}></span>{' '}
         <strong><a href={destinationUrl} target="_blank">{activeLeague.title} registration</a></strong>
         {

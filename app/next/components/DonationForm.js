@@ -27,6 +27,7 @@ function loadDropin () {
 export default function DonationForm () {
   const [amount, setAmount] = useState('25')
   const [from, setFrom] = useState('')
+  const [category, setCategory] = useState('')
   const [email, setEmail] = useState('')
   const [streetAddress, setStreetAddress] = useState('')
   const [message, setMessage] = useState('')
@@ -104,7 +105,7 @@ export default function DonationForm () {
       return
     }
     setError('')
-    setReview({ amount: Number(amount).toFixed(2), from: from.trim() || 'Anonymous', email: email.trim(), streetAddress: streetAddress.trim(), message })
+    setReview({ amount: Number(amount).toFixed(2), from: from.trim() || 'Anonymous', category, email: email.trim(), streetAddress: streetAddress.trim(), message })
   }
 
   function closeReview () {
@@ -197,6 +198,11 @@ export default function DonationForm () {
         <input id="donation-amount" className="form-control mb-3" type="number" min="5" max="250" step="0.01" required value={amount} onChange={event => setAmount(event.target.value)} aria-describedby="donation-limits" />
         <label htmlFor="donation-from" className="form-label">From (optional)</label>
         <input id="donation-from" className="form-control mb-3" maxLength={100} placeholder="Anonymous" value={from} onChange={event => setFrom(event.target.value)} />
+        <label htmlFor="donation-category" className="form-label">Donation category (optional)</label>
+        <select id="donation-category" className="form-select mb-3" value={category} onChange={event => setCategory(event.target.value)}>
+          <option value="">Select a category (optional)</option>
+          {['Youth', 'Hatter 4 Hope', 'Beginner Pick Up', 'No Category'].map(value => <option key={value} value={value}>{value}</option>)}
+        </select>
         <label htmlFor="donation-email" className="form-label">Email (required)</label>
         <input id="donation-email" className="form-control mb-3" type="email" autoComplete="email" required value={email} onChange={event => setEmail(event.target.value)} />
         <label htmlFor="donation-street-address" className="form-label">Street address (required)</label>
@@ -220,7 +226,7 @@ export default function DonationForm () {
     </>}>
       {review && <>
         <p>One-time donation: <strong>${review.amount} USD</strong></p>
-        <dl><dt>From</dt><dd>{review.from}</dd><dt>Email</dt><dd>{review.email}</dd><dt>Street address</dt><dd>{review.streetAddress}</dd><dt>Private message</dt><dd style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{review.message || 'No message'}</dd></dl>
+        <dl><dt>From</dt><dd>{review.from}</dd><dt>Category</dt><dd>{review.category || 'No category selected'}</dd><dt>Email</dt><dd>{review.email}</dd><dt>Street address</dt><dd>{review.streetAddress}</dd><dt>Private message</dt><dd style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{review.message || 'No message'}</dd></dl>
         <p>Only confirming below submits your payment. Your details and private message are shared only with the board.</p>
         {!token && <p role="alert">Verification expired. Cancel and complete verification again.</p>}
         {processing && <p role="status">Processing your donation. Please keep this page open.</p>}
