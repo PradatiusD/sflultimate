@@ -90,7 +90,9 @@ export const getServerSideProps = async (context) => {
       day: 'numeric',
       timeZone: 'America/New_York'
     })
-    event.registrations = registrations.map(registration => ({
+    event.registrations = registrations.sort(function (a, b) {
+      return b.createdAt.localeCompare(a.createdAt)
+    }).map(registration => ({
       name: attendeeName(registration.name),
       signedUpAgo: relativeTime(registration.createdAt, now)
     }))
@@ -112,6 +114,23 @@ export default function EventItemPage (props) {
 
   const seoDescription = createSummary(event, 140)
   const ogDescription = createEventOpenGraphDescription(event)
+  const scrollingSignupComponent = (
+    event.registrations.length > 0 && <section className="mt-4 mb-4">
+        <p><strong>Latest signups</strong></p>
+        <div className="event-registration-latest" aria-label="Latest signups">
+          <div className="event-registration-latest-track">
+            {event.registrations.slice(0, 5).concat(event.registrations.slice(0, 5)).map((registration, i) => <span className="badge text-bg-light border event-registration-latest-item" aria-hidden={i >= Math.min(event.registrations.length, 5)} key={`${registration.name}-${i}`}>{registration.name} <small className="text-muted">{registration.signedUpAgo}</small></span>)}
+          </div>
+        </div>
+        <style jsx>{`
+                .event-registration-latest { overflow: hidden; }
+                .event-registration-latest-track { animation: event-registration-latest-loop 18s linear infinite; display: flex; gap: 0.75rem; width: max-content; }
+                .event-registration-latest-item { flex: 0 0 auto; font-size: 0.9rem; }
+                @keyframes event-registration-latest-loop { to { transform: translateX(calc(-50% - 0.375rem)); } }
+                @media (prefers-reduced-motion: reduce) { .event-registration-latest-track { animation: none; } }
+              `}</style>
+      </section>
+  )
 
   return (
     <>
@@ -133,35 +152,12 @@ export default function EventItemPage (props) {
             <h1>{event.name}</h1>
             <small className="text-muted">{event.category}</small>
             <p className="lead" style={{ marginBottom: 0 }}>{event.startTimeFormatted}<br/><small>{event.location}</small></p>
-            {
-              event.registrations.length && (
-                <>
-                  <p className="mb-1 mt-2"><strong>Who&#39;s signed up so far</strong></p>
-                  <div className="d-flex flex-wrap gap-2 mb-3" role="list">
-                    {event.registrations.map((registration, i) => <span className="badge text-bg-primary event-registration-attendee" role="listitem" key={`${registration.name}-${i}`}>{registration.name}</span>)}
-                  </div>
-                </>
-              )
-            }
+            {scrollingSignupComponent}
             <div style={{ marginBottom: '1rem' }}>
               <AddToCalendar event={event} />
             </div>
             <ShortcodeContent html={event.descriptionHtml} footerScripts={event.footerScripts} />
-            {event.registrations.length > 0 && <section className="mt-4 mb-4">
-              <p><strong>Latest signups</strong></p>
-              <div className="event-registration-latest" aria-label="Latest signups">
-                <div className="event-registration-latest-track">
-                  {event.registrations.slice(0, 5).concat(event.registrations.slice(0, 5)).map((registration, i) => <span className="badge text-bg-light border event-registration-latest-item" aria-hidden={i >= Math.min(event.registrations.length, 5)} key={`${registration.name}-${i}`}>{registration.name} <small className="text-muted">{registration.signedUpAgo}</small></span>)}
-                </div>
-              </div>
-              <style jsx>{`
-                .event-registration-latest { overflow: hidden; }
-                .event-registration-latest-track { animation: event-registration-latest-loop 18s linear infinite; display: flex; gap: 0.75rem; width: max-content; }
-                .event-registration-latest-item { flex: 0 0 auto; font-size: 0.9rem; }
-                @keyframes event-registration-latest-loop { to { transform: translateX(calc(-50% - 0.375rem)); } }
-                @media (prefers-reduced-motion: reduce) { .event-registration-latest-track { animation: none; } }
-              `}</style>
-            </section>}
+            {scrollingSignupComponent}
             {
               event.allowRegistrations && (
                 <div className="mt-4 mb-4">
