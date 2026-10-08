@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { gql } from '@apollo/client'
 import GraphqlClient from '../../lib/server-graphql-client'
 import { HeaderNavigation } from '../../components/Navigation'
-import Modal from '../../components/Modal'
 import NotFound from 'next/error'
 import { createSummary } from '../../lib/utils'
 import { updateWithGlobalServerSideProps } from '../../lib/global-server-side-props'
 import SeoHead from '../../components/SeoHead'
+
+const GalleryLightbox = dynamic(() => import('../../components/GalleryLightbox'), { ssr: false })
 
 function getGallerySummary (gallery, limit = 160) {
   if (!gallery.summary && !gallery.description) {
@@ -83,7 +85,8 @@ function GalleryAsset ({ asset, galleryTitle, onOpenImage }) {
             : (
               <button
                 type="button"
-                onClick={() => onOpenImage({ src: asset.file.publicUrl, altText, title })}
+                onClick={() => onOpenImage(asset.id)}
+                aria-label={`View ${altText}`}
                 style={{ border: 0, padding: 0, background: 'transparent', width: '100%', display: 'block', cursor: 'zoom-in' }}
               >
                 <img
@@ -119,7 +122,13 @@ function GalleryAsset ({ asset, galleryTitle, onOpenImage }) {
 
 export default function GalleryItemPage (props) {
   const { gallery, leagues } = props
-  const [activeImage, setActiveImage] = useState(null)
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const imageAssets = useMemo(() => (gallery?.assets || []).filter(asset => asset.assetType !== 'video'), [gallery])
+  const slides = useMemo(() => imageAssets.map(asset => ({
+    src: asset.file.publicUrl,
+    alt: asset.altText || asset.title || asset.caption || gallery.title || 'Gallery image',
+    description: [asset.title, asset.caption !== asset.title && asset.caption, asset.credit && `Credit: ${asset.credit}`].filter(Boolean).join(' — ')
+  })), [imageAssets, gallery])
 
   if (!gallery) {
     return <NotFound statusCode={404} />
@@ -175,7 +184,7 @@ export default function GalleryItemPage (props) {
                   asset={asset}
                   galleryTitle={gallery.title}
                   key={asset.id}
-                  onOpenImage={setActiveImage}
+                  onOpenImage={id => setActiveIndex(imageAssets.findIndex(image => image.id === id))}
                 />
               ))
             }
@@ -186,24 +195,13 @@ export default function GalleryItemPage (props) {
           )
         }
       </div>
-      <Modal
-        id={`gallery-image-modal-${gallery.id}`}
-        isOpen={Boolean(activeImage)}
-        onClose={() => setActiveImage(null)}
-        title={activeImage ? (activeImage.title || gallery.title || 'Gallery image') : ''}
-        size="lg"
-      >
-        {
-          activeImage && (
-            <img
-              src={activeImage.src}
-              alt={activeImage.altText}
-              className="img-fluid rounded"
-              style={{ width: '100%', display: 'block' }}
-            />
-          )
-        }
-      </Modal>
+      {activeIndex >= 0 && (
+        <GalleryLightbox
+          slides={slides}
+          index={activeIndex}
+          onClose={() => setActiveIndex(-1)}
+        />
+      )}
       <style jsx>{`
         .gallery-masonry {
           column-count: 1;

@@ -25,5 +25,5 @@ function run (command, args) {
 }
 
 execSync(dumpCommand, { stdio: 'inherit' })
-run('mongo', [dbName, '--eval', 'printjson(db.dropDatabase())'])
+run('mongosh', [`mongodb://127.0.0.1:27017/${dbName}`, '--eval', 'printjson(db.dropDatabase())'])
 run('mongorestore', ['--noIndexRestore', '-d', dbName, `dump/${dbName}/`])
