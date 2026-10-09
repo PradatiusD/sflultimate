@@ -1,9 +1,4 @@
 const { DraftError } = require('./draft-store')
-const {
-  getCaptainTokenFromCookie,
-  verifyCaptainToken,
-  getDraftSessionSecret
-} = require('./draft-auth')
 
 function requireMethod (req, allowedMethods) {
   const methods = Array.isArray(allowedMethods) ? allowedMethods : [allowedMethods]
@@ -23,16 +18,12 @@ function getLeagueSlug (req) {
   return validateLeagueSlug((req.query && req.query.league) || (req.body && req.body.league))
 }
 
-function getCaptainCookiePath (leagueSlug) {
-  validateLeagueSlug(leagueSlug)
-  return '/'
-}
-
-function getViewerFromRequest (req) {
-  if (req.user) return { role: 'admin' }
-  const token = getCaptainTokenFromCookie(req.headers.cookie)
-  const identity = verifyCaptainToken(token, getDraftSessionSecret())
-  if (!identity) throw new DraftError('Not authorized', 401, 'NOT_AUTHORIZED')
+function getViewerFromRequest (req, { captainOnly = req.headers?.['x-draft-viewer'] === 'captain' } = {}) {
+  if (req.user && !captainOnly) return { role: 'admin' }
+  const identity = req.session && req.session.draftCaptain
+  if (!identity || !identity.draftSessionId || !identity.teamId || !Number.isFinite(identity.expiresAt) || identity.expiresAt <= Date.now()) {
+    throw new DraftError('Sign in to your team’s draft room', 401, 'NOT_AUTHORIZED')
+  }
   return {
     role: 'captain',
     draftSessionId: identity.draftSessionId,
@@ -61,7 +52,6 @@ module.exports = {
   requireMethod,
   validateLeagueSlug,
   getLeagueSlug,
-  getCaptainCookiePath,
   getViewerFromRequest,
   getExpectedVersion,
   sendApiError

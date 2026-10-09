@@ -20,11 +20,13 @@ export async function getServerSideProps (context) {
   let initialState = null
   try {
     const { getViewerFromRequest } = require('../../../../../lib/draft-api')
-    const viewer = getViewerFromRequest(context.req)
+    const viewer = getViewerFromRequest(context.req, { captainOnly: true })
     if (viewer.role === 'captain' && viewer.teamId === pageInfo.team.id) {
       initialState = await getDraftState(leagueSlug, viewer)
     }
-  } catch (error) {}
+  } catch (error) {
+    if (error.statusCode !== 401) throw error
+  }
 
   const props = { leagueSlug, teamSlug, pageInfo, initialState }
   await updateWithGlobalServerSideProps(props)

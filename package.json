@@ -55,6 +55,8 @@
         "test:donations": "node scripts/test-donations-route.js",
         "test:donations:e2e": "cypress run --spec cypress/e2e/donate.cy.js",
         "test:stats": "node scripts/test-stat-editor.js",
+        "test:draft": "node scripts/test-draft-engine.js && node scripts/test-draft-store.js && node scripts/test-draft-auth.js && node scripts/test-draft-session.js && node scripts/test-draft-api.js && node scripts/test-draft-login.js",
+        "test:draft:integration": "node scripts/test-draft-integration.js",
         "test:server-graphql": "node scripts/test-access-control.js && node scripts/test-server-graphql-client.js && node scripts/test-save-stat-editor.js",
         "lint": "npx eslint . --ignore-pattern '**/jquery/**' --ignore-pattern '**/bootstrap/**'",
         "build-schema": "get-graphql-schema http://localhost:3000/admin/api/ > app/schema.graphql",

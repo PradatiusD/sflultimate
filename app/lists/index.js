@@ -19,6 +19,10 @@ const TournamentTeam = require('./TournamentTeam')
 const PlayerSubstitution = require('./PlayerSubstitution')
 
 module.exports = {
+  DraftSession: require('./DraftSession'),
+  DraftPick: require('./DraftPick'),
+  DraftCaptainCredential: require('./DraftCaptainCredential'),
+  DraftEvent: require('./DraftEvent'),
   Donation,
   BoardMember,
   BoardPosition,

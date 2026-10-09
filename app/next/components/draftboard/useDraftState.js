@@ -21,6 +21,7 @@ export default function useDraftState (leagueSlug, initialState) {
   const refresh = useCallback(async () => {
     const response = await fetch(`/api/draft/state?league=${encodeURIComponent(leagueSlug)}`, {
       credentials: 'same-origin',
+      headers: { 'x-draft-viewer': stateRef.current.viewer.role },
       cache: 'no-store'
     })
     const body = await response.json()
@@ -42,6 +43,7 @@ export default function useDraftState (leagueSlug, initialState) {
         const version = stateRef.current.session.version
         const response = await fetch(`/api/draft/poll?league=${encodeURIComponent(leagueSlug)}&version=${version}`, {
           credentials: 'same-origin',
+          headers: { 'x-draft-viewer': stateRef.current.viewer.role },
           cache: 'no-store',
           signal: controller.signal
         })

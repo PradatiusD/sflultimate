@@ -1,12 +1,10 @@
-const mongodb = require('mongodb')
-const { ObjectId } = mongodb
+const crypto = require('crypto')
+const graphql = require('./server-graphql-client')
 const { hashPassword, verifyPassword } = require('./draft-auth')
 const { getDraftPosition, getUpcomingTeamIds, advanceDraftPosition } = require('./draft-engine')
 
 const locks = new Map()
 const waiters = new Map()
-let dbPromise
-let indexesPromise
 
 class DraftError extends Error {
   constructor (message, statusCode = 400, code = 'DRAFT_ERROR') {
@@ -22,11 +20,10 @@ function isValidObjectIdString (value) {
 }
 
 function toObjectId (value, label = 'ID') {
-  if (value instanceof ObjectId) return value
   if (!isValidObjectIdString(value)) {
     throw new DraftError(`${label} is invalid`, 400, 'INVALID_ID')
   }
-  return new ObjectId(value)
+  return value
 }
 
 function idString (value) {
@@ -97,49 +94,101 @@ function projectPlayer (player, includeComments) {
   return projected
 }
 
-function getMongoUri () {
-  if (process.env.MONGOLAB_URI) {
-    return process.env.MONGOLAB_URI.replace('/sflultimate', '/sflultimateV5')
-  }
-  const keystone = require('../../keystone')
-  return keystone.adapter.config.mongoUri
+// Use the initialized Keystone instance and its normal list CRUD (hooks,
+// validation and relationship handling), under the same sudo context as the
+// existing server GraphQL client. Callers are authorized by draft-api.
+function keystone () {
+  if (!global.sflKeystone) throw new Error('The Keystone instance is not available in this server process')
+  return global.sflKeystone
 }
 
-async function getDb () {
-  if (!dbPromise) {
-    dbPromise = mongodb.connect(getMongoUri(), { useUnifiedTopology: true })
-      .then(client => client.db('sflultimateV5'))
-  }
-  const db = await dbPromise
-  if (!indexesPromise) indexesPromise = ensureIndexes(db)
-  await indexesPromise
-  return db
+function list (name) {
+  return keystone().lists[name]
 }
 
-async function ensureIndexes (db) {
-  await Promise.all([
-    db.collection('draft_sessions').createIndex({ leagueId: 1 }, { unique: true }),
-    db.collection('draft_captain_credentials').createIndex({ draftSessionId: 1, teamId: 1 }, { unique: true }),
-    db.collection('draft_picks').createIndex({ draftSessionId: 1, playerId: 1 }, { unique: true }),
-    db.collection('draft_picks').createIndex({ draftSessionId: 1, selectionNumber: 1 }, { unique: true }),
-    db.collection('draft_events').createIndex({ draftSessionId: 1, createdAt: 1 })
-  ])
+function context () {
+  return keystone().createContext().sudo()
 }
 
-async function findLeagueBySlug (db, leagueSlug) {
-  if (typeof leagueSlug !== 'string' || !leagueSlug.trim()) {
-    throw new DraftError('League slug is required', 400, 'INVALID_LEAGUE')
+async function find (name, where, orderBy) {
+  const items = await list(name).listQuery({ where, ...(orderBy ? { orderBy } : {}) }, context())
+  return items.map(item => ({ ...item, _id: item.id }))
+}
+
+async function one (name, where) {
+  return (await find(name, where))[0] || null
+}
+
+function relationshipData (name, data) {
+  const result = { ...data }
+  for (const [key, value] of Object.entries(result)) {
+    if (list(name).fieldsByPath[key]?.isRelationship && (value === null || typeof value === 'string' || value?._bsontype === 'ObjectID')) {
+      result[key] = value === null ? { disconnectAll: true } : { connect: { id: String(value) } }
+    }
   }
-  const league = await db.collection('leagues').findOne({ slug: leagueSlug.trim() })
+  return result
+}
+
+async function create (name, data) {
+  const item = await list(name).createMutation(relationshipData(name, data), context())
+  return { ...item, _id: item.id }
+}
+
+async function update (name, id, data) {
+  return list(name).updateMutation(String(id), relationshipData(name, data), context())
+}
+
+async function remove (name, id) {
+  return list(name).deleteMutation(String(id), context())
+}
+
+async function normalizeSession (session) {
+  if (!session) return session
+  if (session.orderJson) session.teamOrder = JSON.parse(session.orderJson)
+  else {
+    // Compatibility read only: Keystone's field projection omits the old array.
+    // Keep historical order and IDs without any migration writes.
+    const legacy = await list('DraftSession').adapter.model.findById(session._id).select('teamOrder').lean()
+    session.teamOrder = (legacy?.teamOrder || []).map(String)
+  }
+  return session
+}
+
+async function sessionById (id) {
+  return normalizeSession(await one('DraftSession', { id: String(id) }))
+}
+
+// A non-expiring database claim, not a process-only mutex. No automatic lease
+// expiry: a crashed worker must not overlap a replacement worker's mutations.
+// These two compare-and-set operations are the only direct model writes.
+async function withSessionLock (sessionId, task) {
+  return withDraftLock(sessionId, async () => {
+    const token = crypto.randomBytes(16).toString('hex')
+    const model = list('DraftSession').adapter.model
+    const claimed = await model.findOneAndUpdate({ _id: sessionId, operationToken: null }, { $set: { operationToken: token } }, { new: true }).lean()
+    if (!claimed) throw new DraftError('Draft is processing another action; reload and retry', 409, 'DRAFT_BUSY')
+    let release = true
+    try {
+      return await task(await sessionById(sessionId))
+    } catch (error) {
+      if (error.keepDraftLocked) release = false
+      throw error
+    } finally {
+      if (release) await model.updateOne({ _id: sessionId, operationToken: token }, { $unset: { operationToken: 1 } })
+    }
+  })
+}
+
+async function findLeagueBySlug (leagueSlug) {
+  if (typeof leagueSlug !== 'string' || !leagueSlug.trim()) throw new DraftError('League slug is required', 400, 'INVALID_LEAGUE')
+  const league = await one('League', { slug: leagueSlug.trim() })
   if (!league) throw new DraftError('Draft league was not found', 404, 'LEAGUE_NOT_FOUND')
   return league
 }
 
-async function getOrderedTeams (db, leagueId) {
-  const teams = await db.collection('teams').find({ league: leagueId }).sort({ draftOrder: 1, name: 1 }).toArray()
-  if (teams.length < 2) {
-    throw new DraftError('At least two teams are required to start a draft', 409, 'DRAFT_SETUP_INVALID')
-  }
+async function getOrderedTeams (leagueId) {
+  const teams = await find('Team', { league: { id: String(leagueId) } }, 'draftOrder_ASC')
+  if (teams.length < 2) throw new DraftError('At least two teams are required to start a draft', 409, 'DRAFT_SETUP_INVALID')
   const orders = teams.map(team => team.draftOrder)
   if (orders.some(order => !Number.isInteger(order)) || new Set(orders).size !== teams.length) {
     throw new DraftError('Every team needs a unique draft order before initializing the draft', 409, 'DRAFT_SETUP_INVALID')
@@ -147,90 +196,76 @@ async function getOrderedTeams (db, leagueId) {
   return teams
 }
 
-async function getDraftSessionForLeague (db, leagueId) {
-  return db.collection('draft_sessions').findOne({ leagueId })
-}
-
-async function createDraftSession (db, league, teams) {
-  const now = new Date()
-  const session = {
-    leagueId: league._id,
-    status: 'setup',
-    teamOrder: teams.map(team => team._id),
-    currentPickNumber: 0,
-    selectionCount: 0,
-    nextTeamOverrideId: null,
-    version: 1,
-    showCommentsToCaptains: false,
-    createdAt: now,
-    updatedAt: now
-  }
-  try {
-    const result = await db.collection('draft_sessions').insertOne(session)
-    session._id = result.insertedId
-    return session
-  } catch (error) {
-    if (error.code === 11000) return getDraftSessionForLeague(db, league._id)
-    throw error
-  }
-}
-
 async function getOrCreateDraft (leagueSlug) {
-  const db = await getDb()
-  const league = await findLeagueBySlug(db, leagueSlug)
-  let session = await getDraftSessionForLeague(db, league._id)
+  const league = await findLeagueBySlug(leagueSlug)
+  const where = { leagueId: { id: String(league._id) } }
+  let session = await one('DraftSession', where)
   if (!session) {
-    const teams = await getOrderedTeams(db, league._id)
-    session = await createDraftSession(db, league, teams)
+    const teams = await getOrderedTeams(league._id)
+    try {
+      session = await create('DraftSession', {
+        leagueId: league._id,
+        status: 'setup',
+        orderJson: JSON.stringify(teams.map(team => String(team._id))),
+        currentPickNumber: 0,
+        selectionCount: 0,
+        version: 1,
+        showCommentsToCaptains: false,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+    } catch (error) {
+      // The unique league index resolves simultaneous initialization.
+      session = await one('DraftSession', where)
+      if (!session) throw error
+    }
   }
-  return { db, league, session }
+  return { league, session: await normalizeSession(session) }
 }
 
 async function getExistingDraft (leagueSlug) {
-  const db = await getDb()
-  const league = await findLeagueBySlug(db, leagueSlug)
-  const session = await getDraftSessionForLeague(db, league._id)
+  const league = await findLeagueBySlug(leagueSlug)
+  const session = await one('DraftSession', { leagueId: { id: String(league._id) } })
   if (!session) throw new DraftError('The commissioner has not initialized this draft', 404, 'DRAFT_NOT_INITIALIZED')
-  return { db, league, session }
+  return { league, session: await normalizeSession(session) }
 }
 
-async function loadDraftData (db, league, session) {
-  const teamIds = session.teamOrder
-  const teamDocs = await db.collection('teams').find({ _id: { $in: teamIds } }).toArray()
-  const teamById = new Map(teamDocs.map(team => [idString(team._id), team]))
-  const orderedTeams = teamIds.map(teamId => teamById.get(idString(teamId))).filter(Boolean)
+const playerFields = 'id firstName lastName gender age shirtSize skillLevel athleticismLevel experienceLevel throwsLevel participation preferredPositions partnerName willAttendFinals comments'
 
-  const [leagueRelations, rosterRelations, captainRelations, picks, credentials] = await Promise.all([
-    db.collection('player_leagues_manies').find({ League_right_id: league._id }).toArray(),
-    db.collection('team_players_manies').find({ Team_left_id: { $in: teamIds } }).sort({ _id: 1 }).toArray(),
-    db.collection('team_captains_manies').find({ Team_left_id: { $in: teamIds } }).sort({ _id: 1 }).toArray(),
-    db.collection('draft_picks').find({ draftSessionId: session._id }).sort({ selectionNumber: 1 }).toArray(),
-    db.collection('draft_captain_credentials').find({ draftSessionId: session._id }).toArray()
+async function loadDraftData (league, session) {
+  const { data } = await graphql.query({
+    query: `query DraftPlayers($teamIds: [ID!], $leagueId: ID!) {
+      allTeams(where: { id_in: $teamIds }) { id name slug color draftOrder players { ${playerFields} } captains { ${playerFields} } }
+      allPlayers(where: { leagues_some: { id: $leagueId } }) { ${playerFields} }
+    }`,
+    variables: { teamIds: session.teamOrder.map(String), leagueId: String(league._id) }
+  })
+  const teamById = new Map(data.allTeams.map(team => [team.id, { ...team, _id: team.id }]))
+  const orderedTeams = session.teamOrder.map(id => teamById.get(String(id))).filter(Boolean)
+  const players = [...data.allPlayers, ...orderedTeams.flatMap(team => [...team.players, ...team.captains])]
+  const where = { draftSessionId: { id: String(session._id) } }
+  const [picks, credentials] = await Promise.all([
+    find('DraftPick', where, 'selectionNumber_ASC'),
+    find('DraftCaptainCredential', where)
   ])
-
-  const playerIds = new Set(leagueRelations.map(relation => idString(relation.Player_left_id)))
-  rosterRelations.forEach(relation => playerIds.add(idString(relation.Player_right_id)))
-  captainRelations.forEach(relation => playerIds.add(idString(relation.Player_right_id)))
-  const players = await db.collection('players').find({
-    _id: { $in: Array.from(playerIds).filter(Boolean).map(id => new ObjectId(id)) }
-  }).toArray()
-
+  // This is an in-memory view of Keystone relationship results, not join-table IO.
+  const relations = field => orderedTeams.flatMap(team => team[field].map(player => ({ teamId: team.id, playerId: player.id })))
   return {
     orderedTeams,
-    playerById: new Map(players.map(player => [idString(player._id), player])),
-    leaguePlayerIds: new Set(leagueRelations.map(relation => idString(relation.Player_left_id))),
-    rosterRelations,
-    captainRelations,
+    playerById: new Map(players.map(player => [player.id, { ...player, _id: player.id }])),
+    leaguePlayerIds: new Set(data.allPlayers.map(player => player.id)),
+    rosterRelations: relations('players'),
+    captainRelations: relations('captains'),
     picks,
-    credentialTeamIds: new Set(credentials.map(credential => idString(credential.teamId)))
+    credentialTeamIds: new Set(credentials.map(credential => String(credential.teamId)))
   }
 }
 
 function buildState (league, session, data, viewer) {
   const includeComments = viewer.role === 'admin' || session.showCommentsToCaptains
   const assignedPlayerIds = new Set()
-  data.rosterRelations.forEach(relation => assignedPlayerIds.add(idString(relation.Player_right_id)))
-  data.captainRelations.forEach(relation => assignedPlayerIds.add(idString(relation.Player_right_id)))
+  data.rosterRelations.forEach(relation => assignedPlayerIds.add(idString(relation.playerId)))
+  data.captainRelations.forEach(relation => assignedPlayerIds.add(idString(relation.playerId)))
 
   const teamOrder = session.teamOrder.map(idString)
   const position = getDraftPosition(teamOrder, session.currentPickNumber, idString(session.nextTeamOverrideId))
@@ -239,11 +274,11 @@ function buildState (league, session, data, viewer) {
   const teams = data.orderedTeams.map(team => {
     const teamId = idString(team._id)
     const captainIds = data.captainRelations
-      .filter(relation => idString(relation.Team_left_id) === teamId)
-      .map(relation => idString(relation.Player_right_id))
+      .filter(relation => idString(relation.teamId) === teamId)
+      .map(relation => idString(relation.playerId))
     const rosterIds = data.rosterRelations
-      .filter(relation => idString(relation.Team_left_id) === teamId)
-      .map(relation => idString(relation.Player_right_id))
+      .filter(relation => idString(relation.teamId) === teamId)
+      .map(relation => idString(relation.playerId))
     const seen = new Set()
     const roster = [...captainIds, ...rosterIds]
       .filter(playerId => {
@@ -329,286 +364,205 @@ function buildState (league, session, data, viewer) {
   }
 }
 
-async function getDraftState (leagueSlug, viewer, options = {}) {
-  const draft = options.createIfMissing
-    ? await getOrCreateDraft(leagueSlug)
-    : await getExistingDraft(leagueSlug)
-  if (viewer.role === 'captain') {
-    if (idString(draft.session._id) !== viewer.draftSessionId || !draft.session.teamOrder.map(idString).includes(viewer.teamId)) {
-      throw new DraftError('Captain session is not authorized for this draft', 401, 'NOT_AUTHORIZED')
-    }
+function authorizeViewer (session, viewer) {
+  if (viewer?.role === 'admin') return
+  if (viewer?.role !== 'captain' || viewer.draftSessionId !== String(session._id) || !session.teamOrder.map(String).includes(viewer.teamId)) {
+    throw new DraftError('Captain session is not authorized for this draft', 401, 'NOT_AUTHORIZED')
   }
-  const data = await loadDraftData(draft.db, draft.league, draft.session)
+}
+
+async function getDraftState (leagueSlug, viewer, options = {}) {
+  if (options.createIfMissing && viewer?.role !== 'admin') throw new DraftError('Not authorized', 403, 'NOT_AUTHORIZED')
+  const draft = options.createIfMissing ? await getOrCreateDraft(leagueSlug) : await getExistingDraft(leagueSlug)
+  authorizeViewer(draft.session, viewer)
+  if (draft.session.operationToken) throw new DraftError('Draft is processing another action; reload and retry', 409, 'DRAFT_BUSY')
+  const data = await loadDraftData(draft.league, draft.session)
+  const latest = await sessionById(draft.session._id)
+  if (latest.operationToken || latest.version !== draft.session.version) throw new DraftError('Draft changed while loading; reload and retry', 409, 'STALE_DRAFT')
   return buildState(draft.league, draft.session, data, viewer)
 }
 
 async function setCaptainPassword (leagueSlug, teamId, password) {
-  const { db, session } = await getOrCreateDraft(leagueSlug)
-  const teamObjectId = toObjectId(teamId, 'Team ID')
-  if (!session.teamOrder.map(idString).includes(idString(teamObjectId))) {
-    throw new DraftError('Team is not part of this draft', 404, 'TEAM_NOT_FOUND')
-  }
+  const { session } = await getOrCreateDraft(leagueSlug)
+  toObjectId(teamId, 'Team ID')
+  if (!session.teamOrder.map(String).includes(teamId)) throw new DraftError('Team is not part of this draft', 404, 'TEAM_NOT_FOUND')
   const passwordData = await hashPassword(password)
-  await db.collection('draft_captain_credentials').updateOne({
-    draftSessionId: session._id,
-    teamId: teamObjectId
-  }, {
-    $set: {
-      ...passwordData,
-      failedAttempts: 0,
-      lockedUntil: null,
-      updatedAt: new Date()
-    },
-    $setOnInsert: { createdAt: new Date() }
-  }, { upsert: true })
-  return { draftSessionId: idString(session._id), teamId: idString(teamObjectId) }
+  await withSessionLock(session._id, async () => {
+    const existing = await one('DraftCaptainCredential', { draftSessionId: { id: String(session._id) }, teamId: { id: teamId } })
+    const now = new Date()
+    const data = { ...passwordData, failedAttempts: 0, lockedUntil: null, updatedAt: now }
+    if (existing) await update('DraftCaptainCredential', existing._id, data)
+    else await create('DraftCaptainCredential', { ...data, draftSessionId: session._id, teamId, createdAt: now })
+  })
+  return { draftSessionId: String(session._id), teamId }
+}
+
+async function findDraftTeam (session, teamSlug) {
+  // Always scope BOTH slug and ID branches to this draft (slugs are not global).
+  if (typeof teamSlug !== 'string') return null
+  return one('Team', {
+    id_in: session.teamOrder.map(String),
+    OR: [{ slug: teamSlug }, ...(isValidObjectIdString(teamSlug) ? [{ id: teamSlug }] : [])]
+  })
 }
 
 async function authenticateCaptain (leagueSlug, teamSlug, password) {
-  const { db, session } = await getExistingDraft(leagueSlug)
-  const teamCriteria = isValidObjectIdString(teamSlug)
-    ? { $or: [{ slug: teamSlug }, { _id: new ObjectId(teamSlug) }] }
-    : { slug: teamSlug }
-  const team = await db.collection('teams').findOne({
-    _id: { $in: session.teamOrder },
-    ...teamCriteria
-  })
+  const { session } = await getExistingDraft(leagueSlug)
+  const team = await findDraftTeam(session, teamSlug)
   if (!team) throw new DraftError('Team or password is incorrect', 401, 'LOGIN_FAILED')
-
-  const credential = await db.collection('draft_captain_credentials').findOne({
-    draftSessionId: session._id,
-    teamId: team._id
-  })
-  const now = new Date()
-  if (!credential || (credential.lockedUntil && credential.lockedUntil > now)) {
-    throw new DraftError('Team or password is incorrect', 401, 'LOGIN_FAILED')
-  }
-
-  const valid = await verifyPassword(password, credential)
-  if (!valid) {
-    const failedAttempts = (credential.failedAttempts || 0) + 1
-    await db.collection('draft_captain_credentials').updateOne({ _id: credential._id }, {
-      $set: {
+  return withSessionLock(session._id, async () => {
+    const credential = await one('DraftCaptainCredential', { draftSessionId: { id: String(session._id) }, teamId: { id: String(team._id) } })
+    const now = new Date()
+    if (!credential || (credential.lockedUntil && credential.lockedUntil > now)) throw new DraftError('Team or password is incorrect', 401, 'LOGIN_FAILED')
+    if (!await verifyPassword(password, credential)) {
+      const failedAttempts = (credential.failedAttempts || 0) + 1
+      await update('DraftCaptainCredential', credential._id, {
         failedAttempts,
         lockedUntil: failedAttempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000) : null,
         updatedAt: now
-      }
-    })
-    throw new DraftError('Team or password is incorrect', 401, 'LOGIN_FAILED')
-  }
-
-  await db.collection('draft_captain_credentials').updateOne({ _id: credential._id }, {
-    $set: { failedAttempts: 0, lockedUntil: null, lastLoginAt: now, updatedAt: now }
+      })
+      throw new DraftError('Team or password is incorrect', 401, 'LOGIN_FAILED')
+    }
+    await update('DraftCaptainCredential', credential._id, { failedAttempts: 0, lockedUntil: null, lastLoginAt: now, updatedAt: now })
+    return {
+      draftSessionId: String(session._id),
+      teamId: String(team._id),
+      teamSlug: team.slug
+    }
   })
-  return {
-    draftSessionId: idString(session._id),
-    teamId: idString(team._id),
-    teamSlug: team.slug
-  }
 }
 
 async function getCaptainPageInfo (leagueSlug, teamSlug) {
-  const { db, league, session } = await getExistingDraft(leagueSlug)
-  const teamCriteria = isValidObjectIdString(teamSlug)
-    ? { $or: [{ slug: teamSlug }, { _id: new ObjectId(teamSlug) }] }
-    : { slug: teamSlug }
-  const team = await db.collection('teams').findOne({
-    _id: { $in: session.teamOrder },
-    ...teamCriteria
-  })
+  const { league, session } = await getExistingDraft(leagueSlug)
+  const team = await findDraftTeam(session, teamSlug)
   if (!team) throw new DraftError('Draft team was not found', 404, 'TEAM_NOT_FOUND')
   return {
-    league: { id: idString(league._id), slug: league.slug, title: league.title },
-    team: { id: idString(team._id), slug: team.slug || idString(team._id), name: team.name, color: team.color }
+    league: { id: String(league._id), slug: league.slug, title: league.title },
+    team: { id: String(team._id), slug: team.slug || String(team._id), name: team.name, color: team.color }
   }
 }
 
-async function updateSession (db, session, updates, eventType, eventData = {}) {
-  const now = new Date()
-  const result = await db.collection('draft_sessions').findOneAndUpdate({
-    _id: session._id,
-    version: session.version
-  }, {
-    $set: { ...updates, updatedAt: now },
-    $inc: { version: 1 }
-  }, { returnDocument: 'after' })
-  if (!result.value) throw new DraftError('Draft changed before the action completed', 409, 'STALE_DRAFT')
-  await db.collection('draft_events').insertOne({
-    draftSessionId: session._id,
-    type: eventType,
-    ...eventData,
-    createdAt: now
-  })
-  notifyDraftChanged(session._id)
-  return result.value
+function checkVersion (session, expectedVersion) {
+  if (expectedVersion !== session.version) throw new DraftError('Draft changed before the action completed', 409, 'STALE_DRAFT')
+}
+
+async function updateSession (session, updates, eventType, eventData = {}) {
+  try {
+    await create('DraftEvent', { draftSessionId: session._id, type: eventType, ...eventData, createdAt: new Date() })
+    await update('DraftSession', session._id, { ...updates, version: session.version + 1, updatedAt: new Date() })
+  } catch (error) {
+    // A failed acknowledgement can mean the write committed. Do not attempt
+    // destructive compensation or release the lock in that uncertain state.
+    error.keepDraftLocked = true
+    throw error
+  }
 }
 
 async function performAdminAction (leagueSlug, action, payload = {}) {
-  const { db, session } = await getOrCreateDraft(leagueSlug)
-  return withDraftLock(session._id, async () => {
-    const current = await db.collection('draft_sessions').findOne({ _id: session._id })
-    if (payload.expectedVersion !== undefined && payload.expectedVersion !== current.version) {
-      throw new DraftError('Draft changed before the action completed', 409, 'STALE_DRAFT')
-    }
-
+  const { session } = await getOrCreateDraft(leagueSlug)
+  await withSessionLock(session._id, async current => {
+    if (payload.expectedVersion !== undefined) checkVersion(current, payload.expectedVersion)
+    let updates
+    let eventData = {}
     if (action === 'start' || action === 'resume') {
-      const teams = await getOrderedTeams(db, current.leagueId)
-      const missingCredentials = await Promise.all(current.teamOrder.map(teamId => db.collection('draft_captain_credentials').findOne({ draftSessionId: current._id, teamId })))
-      if (missingCredentials.some(credential => !credential)) {
+      const teams = await getOrderedTeams(current.leagueId)
+      const credentials = await find('DraftCaptainCredential', { draftSessionId: { id: String(current._id) } })
+      if (current.teamOrder.some(id => !credentials.some(credential => String(credential.teamId) === String(id)))) {
         throw new DraftError('Set a captain password for every team before starting', 409, 'PASSWORDS_REQUIRED')
       }
-      const updates = { status: 'active' }
+      updates = { status: 'active' }
       if (action === 'start' && !current.startedAt) updates.startedAt = new Date()
-      await updateSession(db, current, updates, action, { teamCount: teams.length })
-    } else if (action === 'pause') {
-      await updateSession(db, current, { status: 'paused' }, action)
-    } else if (action === 'complete') {
-      await updateSession(db, current, { status: 'completed', completedAt: new Date() }, action)
-    } else if (action === 'setNextTeam') {
+      eventData = { teamCount: teams.length }
+    } else if (action === 'pause') updates = { status: 'paused' }
+    else if (action === 'complete') updates = { status: 'completed', completedAt: new Date() }
+    else if (action === 'setNextTeam') {
       const teamId = payload.teamId ? toObjectId(payload.teamId, 'Team ID') : null
-      if (teamId && !current.teamOrder.map(idString).includes(idString(teamId))) {
-        throw new DraftError('Team is not part of this draft', 404, 'TEAM_NOT_FOUND')
-      }
-      await updateSession(db, current, { nextTeamOverrideId: teamId }, action, { teamId })
-    } else if (action === 'settings') {
-      await updateSession(db, current, { showCommentsToCaptains: Boolean(payload.showCommentsToCaptains) }, action)
-    } else {
-      throw new DraftError('Admin action is invalid', 400, 'INVALID_ACTION')
-    }
+      if (teamId && !current.teamOrder.map(String).includes(teamId)) throw new DraftError('Team is not part of this draft', 404, 'TEAM_NOT_FOUND')
+      updates = { nextTeamOverrideId: teamId }
+      eventData = { teamId }
+    } else if (action === 'settings') updates = { showCommentsToCaptains: Boolean(payload.showCommentsToCaptains) }
+    else throw new DraftError('Admin action is invalid', 400, 'INVALID_ACTION')
+    await updateSession(current, updates, action, eventData)
   })
-}
-
-async function isPlayerEligible (db, leagueId, teamOrder, playerId) {
-  const leagueRelation = await db.collection('player_leagues_manies').findOne({
-    League_right_id: leagueId,
-    Player_left_id: playerId
-  })
-  if (!leagueRelation) return false
-  const [rosterRelation, captainRelation] = await Promise.all([
-    db.collection('team_players_manies').findOne({ Team_left_id: { $in: teamOrder }, Player_right_id: playerId }),
-    db.collection('team_captains_manies').findOne({ Team_left_id: { $in: teamOrder }, Player_right_id: playerId })
-  ])
-  return !rosterRelation && !captainRelation
+  notifyDraftChanged(session._id)
 }
 
 async function pickPlayer (leagueSlug, payload, actor) {
-  const { db, session } = await getExistingDraft(leagueSlug)
-  return withDraftLock(session._id, async () => {
-    const current = await db.collection('draft_sessions').findOne({ _id: session._id })
+  const { league, session } = await getExistingDraft(leagueSlug)
+  authorizeViewer(session, actor)
+  const state = await withSessionLock(session._id, async current => {
     if (current.status !== 'active') throw new DraftError('The draft is not active', 409, 'DRAFT_NOT_ACTIVE')
-    if (payload.expectedVersion !== current.version) throw new DraftError('Draft changed before the pick completed', 409, 'STALE_DRAFT')
-
-    const teamOrder = current.teamOrder.map(idString)
+    checkVersion(current, payload.expectedVersion)
+    const teamOrder = current.teamOrder.map(String)
     const position = getDraftPosition(teamOrder, current.currentPickNumber, idString(current.nextTeamOverrideId))
-    const requestedTeamId = actor.role === 'captain' ? actor.teamId : payload.teamId || position.currentTeamId
-    if (actor.role === 'captain' && actor.teamId !== position.currentTeamId) {
-      throw new DraftError('It is not your team’s turn', 403, 'OUT_OF_TURN')
-    }
-    if (!teamOrder.includes(requestedTeamId)) throw new DraftError('Team is not part of this draft', 404, 'TEAM_NOT_FOUND')
-
+    const teamId = actor.role === 'captain' ? actor.teamId : payload.teamId || position.currentTeamId
+    if (actor.role === 'captain' && actor.teamId !== position.currentTeamId) throw new DraftError('It is not your team’s turn', 403, 'OUT_OF_TURN')
+    if (!teamOrder.includes(teamId)) throw new DraftError('Team is not part of this draft', 404, 'TEAM_NOT_FOUND')
     const playerId = toObjectId(payload.playerId, 'Player ID')
-    const teamId = toObjectId(requestedTeamId, 'Team ID')
-    if (!await isPlayerEligible(db, current.leagueId, current.teamOrder, playerId)) {
+    const data = await loadDraftData(league, current)
+    if (!data.leaguePlayerIds.has(playerId) || [...data.rosterRelations, ...data.captainRelations].some(relation => relation.playerId === playerId) || data.picks.some(pick => String(pick.playerId) === playerId)) {
       throw new DraftError('Player is no longer available', 409, 'PLAYER_UNAVAILABLE')
     }
-
     const shouldAdvance = actor.role === 'captain' ? true : payload.advanceOrder !== false
     const nextPosition = advanceDraftPosition(current, shouldAdvance)
-    const now = new Date()
-    const pick = {
-      draftSessionId: current._id,
-      leagueId: current.leagueId,
-      selectionNumber: current.selectionCount + 1,
-      snakePosition: current.currentPickNumber,
-      roundNumber: position.roundNumber,
-      scheduledTeamId: toObjectId(position.currentTeamId),
-      teamId,
-      playerId,
-      selectedByRole: actor.role,
-      advancedSequence: shouldAdvance,
-      isCommissionerOverride: actor.role === 'admin' && (requestedTeamId !== position.currentTeamId || !shouldAdvance),
-      overrideNote: actor.role === 'admin' && typeof payload.overrideNote === 'string' ? payload.overrideNote.trim().slice(0, 240) : '',
-      priorNextTeamOverrideId: current.nextTeamOverrideId || null,
-      selectedAt: now
-    }
-
-    let insertedPickId
-    let insertedAssociationId
+    // If any write fails (including an ambiguous network acknowledgement), keep
+    // the claim for explicit reconciliation. Never delete a possibly committed pick.
     try {
-      const pickResult = await db.collection('draft_picks').insertOne(pick)
-      insertedPickId = pickResult.insertedId
-      const associationResult = await db.collection('team_players_manies').insertOne({
-        Team_left_id: teamId,
-        Player_right_id: playerId
-      })
-      insertedAssociationId = associationResult.insertedId
-      const updateResult = await db.collection('draft_sessions').findOneAndUpdate({
-        _id: current._id,
-        version: current.version
-      }, {
-        $set: {
-          currentPickNumber: nextPosition.currentPickNumber,
-          nextTeamOverrideId: nextPosition.nextTeamOverrideId ? toObjectId(nextPosition.nextTeamOverrideId) : null,
-          updatedAt: now
-        },
-        $inc: { selectionCount: 1, version: 1 }
-      }, { returnDocument: 'after' })
-      if (!updateResult.value) throw new DraftError('Draft changed before the pick completed', 409, 'STALE_DRAFT')
-      await db.collection('draft_events').insertOne({
+      const pick = await create('DraftPick', {
         draftSessionId: current._id,
-        type: 'pick',
-        pickId: insertedPickId,
+        leagueId: current.leagueId,
+        selectionNumber: current.selectionCount + 1,
+        snakePosition: current.currentPickNumber,
+        roundNumber: position.roundNumber,
+        scheduledTeamId: position.currentTeamId,
         teamId,
         playerId,
-        createdAt: now
+        selectedByRole: actor.role,
+        advancedSequence: shouldAdvance,
+        isCommissionerOverride: actor.role === 'admin' && (teamId !== position.currentTeamId || !shouldAdvance),
+        overrideNote: actor.role === 'admin' && typeof payload.overrideNote === 'string' ? payload.overrideNote.trim().slice(0, 240) : '',
+        priorNextTeamOverrideId: current.nextTeamOverrideId || null,
+        selectedAt: new Date()
       })
+      await update('Team', teamId, { players: { connect: [{ id: playerId }] } })
+      await updateSession(current, {
+        currentPickNumber: nextPosition.currentPickNumber,
+        nextTeamOverrideId: nextPosition.nextTeamOverrideId || null,
+        selectionCount: current.selectionCount + 1
+      }, 'pick', { pickId: pick._id, teamId, playerId, selectionNumber: pick.selectionNumber })
     } catch (error) {
-      if (insertedAssociationId) await db.collection('team_players_manies').deleteOne({ _id: insertedAssociationId })
-      if (insertedPickId) await db.collection('draft_picks').deleteOne({ _id: insertedPickId })
-      if (error.code === 11000) throw new DraftError('Player is no longer available', 409, 'PLAYER_UNAVAILABLE')
+      error.keepDraftLocked = true
       throw error
     }
-
-    notifyDraftChanged(current._id)
-    return getDraftState(leagueSlug, actor.role === 'admin'
-      ? { role: 'admin' }
-      : { role: 'captain', teamId: actor.teamId, draftSessionId: idString(current._id) })
+    const updated = await sessionById(session._id)
+    return buildState(league, updated, await loadDraftData(league, updated), actor)
   })
+  notifyDraftChanged(session._id)
+  return state
 }
 
 async function undoLastPick (leagueSlug, expectedVersion) {
-  const { db, session } = await getExistingDraft(leagueSlug)
-  return withDraftLock(session._id, async () => {
-    const current = await db.collection('draft_sessions').findOne({ _id: session._id })
-    if (expectedVersion !== current.version) throw new DraftError('Draft changed before undo completed', 409, 'STALE_DRAFT')
-    const pick = await db.collection('draft_picks').find({ draftSessionId: current._id }).sort({ selectionNumber: -1 }).limit(1).next()
+  const { league, session } = await getExistingDraft(leagueSlug)
+  const state = await withSessionLock(session._id, async current => {
+    checkVersion(current, expectedVersion)
+    const pick = (await find('DraftPick', { draftSessionId: { id: String(current._id) } }, 'selectionNumber_DESC'))[0]
     if (!pick) throw new DraftError('There is no pick to undo', 409, 'NOTHING_TO_UNDO')
-
-    await db.collection('team_players_manies').deleteOne({
-      Team_left_id: pick.teamId,
-      Player_right_id: pick.playerId
-    })
-    await db.collection('draft_picks').deleteOne({ _id: pick._id })
-    const updated = await db.collection('draft_sessions').findOneAndUpdate({ _id: current._id, version: current.version }, {
-      $set: {
+    try {
+      await update('Team', pick.teamId, { players: { disconnect: [{ id: String(pick.playerId) }] } })
+      await remove('DraftPick', pick._id)
+      await updateSession(current, {
         currentPickNumber: pick.snakePosition,
-        nextTeamOverrideId: pick.priorNextTeamOverrideId || null,
-        updatedAt: new Date()
-      },
-      $inc: { version: 1 }
-    }, { returnDocument: 'after' })
-    if (!updated.value) throw new DraftError('Draft changed before undo completed', 409, 'STALE_DRAFT')
-    await db.collection('draft_events').insertOne({
-      draftSessionId: current._id,
-      type: 'undo',
-      selectionNumber: pick.selectionNumber,
-      teamId: pick.teamId,
-      playerId: pick.playerId,
-      createdAt: new Date()
-    })
-    notifyDraftChanged(current._id)
-    return getDraftState(leagueSlug, { role: 'admin' })
+        nextTeamOverrideId: pick.priorNextTeamOverrideId || null
+      }, 'undo', { selectionNumber: pick.selectionNumber, teamId: pick.teamId, playerId: pick.playerId })
+    } catch (error) {
+      error.keepDraftLocked = true
+      throw error
+    }
+    const updated = await sessionById(session._id)
+    return buildState(league, updated, await loadDraftData(league, updated), { role: 'admin' })
   })
+  notifyDraftChanged(session._id)
+  return state
 }
 
 module.exports = {

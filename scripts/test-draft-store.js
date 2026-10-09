@@ -6,6 +6,15 @@ const {
 } = require('../app/next/lib/draft-store')
 
 async function run () {
+  require('dotenv').config({ path: '.env' })
+  const lists = require('../app/lists')
+  for (const name of ['DraftSession', 'DraftPick', 'DraftCaptainCredential', 'DraftEvent']) {
+    assert(lists[name], `${name} must be a registered Keystone list`)
+    assert.strictEqual(lists[name].access.read({ authentication: {} }), false)
+    assert.strictEqual(lists[name].access.read({ authentication: { item: { id: 'admin' }, listKey: 'User' } }), true)
+    for (const operation of ['create', 'update', 'delete']) assert.strictEqual(lists[name].access[operation], false)
+  }
+
   const events = []
   await Promise.all([
     withDraftLock('draft-a', async () => {

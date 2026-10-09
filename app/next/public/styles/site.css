@@ -12622,6 +12622,502 @@ textarea.form-control-lg {
   margin-right: 0.5rem;
 }
 
+.draft-room-page {
+  padding: 1.5rem;
+  background: #f6f3f7;
+  min-height: 75vh;
+}
+
+.draft-room {
+  max-width: 1500px;
+  margin: 0 auto;
+  color: #29252c;
+}
+
+.draft-room__card,
+.draft-room__status {
+  min-width: 0;
+  border-color: #9696a5;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.draft-room .form-control,
+.draft-room .form-select,
+.draft-login .form-control,
+.draft-login .form-select {
+  min-width: 0;
+}
+.draft-room .form-check-input,
+.draft-login .form-check-input {
+  flex-shrink: 0;
+}
+.draft-room summary:focus-visible,
+.draft-login summary:focus-visible {
+  outline: 3px solid rgba(128, 67, 153, 0.5);
+  outline-offset: 4px;
+}
+
+.draft-room__admin-buttons,
+.draft-room__captain-toolbar {
+  flex-wrap: wrap;
+}
+
+.draft-room__status-copy,
+.draft-room__roster-list strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.draft-room__status {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1.1rem 1.25rem;
+  border-left: 0.35rem solid #804399;
+}
+
+.draft-room__status--yours {
+  border-color: #8dceb0;
+  border-left-color: #208354;
+  background: #ebf8f1;
+}
+
+.draft-room__status-icon {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  background: #f2eaf5;
+  font-size: 1.35rem;
+}
+
+.draft-room__status-copy h1, .draft-room__status-copy .h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+}
+
+.draft-room__status-copy p,
+.draft-room__card-header p {
+  margin: 0.2rem 0 0;
+  color: #716b75;
+}
+
+.draft-room__eyebrow {
+  margin-bottom: 0.15rem;
+  color: #756d79;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.draft-room__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 21rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+.draft-room__sidebar {
+  display: grid;
+  gap: 1rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.draft-room__card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid #ebe6ed;
+}
+
+.draft-room__card-header h2, .draft-room__card-header .h2,
+.draft-room__card-header h3,
+.draft-room__card-header .h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.draft-room__count {
+  color: #766f7a;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.draft-room__players {
+  overflow: hidden;
+}
+
+.draft-room__filters {
+  display: flex;
+  gap: 0.5rem;
+  width: min(28rem, 50%);
+}
+
+.draft-room__filters input {
+  flex: 1;
+}
+
+.draft-room__filters select {
+  width: 9rem;
+}
+
+.draft-room__player-table {
+  margin: 0;
+}
+
+.draft-room__player-table th {
+  border-top: 0;
+  background: #faf8fb;
+  color: #746e78;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.draft-room__player-table td {
+  vertical-align: middle;
+}
+
+.draft-room__player-table td:first-child small, .draft-room__player-table td:first-child .small {
+  display: block;
+  max-width: 32rem;
+  margin-top: 0.2rem;
+  color: #766f7a;
+}
+
+.draft-room__rating {
+  color: #835616;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.draft-room__team-stripe {
+  height: 0.4rem;
+  border-radius: 0.8rem 0.8rem 0 0;
+  background: var(--draft-team-color);
+}
+
+.draft-room__roster-list {
+  margin: 0;
+  padding: 0 1.1rem 1rem;
+  list-style: none;
+}
+
+.draft-room__roster-list li {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid #eee9ef;
+  font-size: 0.85rem;
+}
+
+.draft-room__roster-list li > span,
+.draft-room__roster-list small,
+.draft-room__roster-list .small {
+  color: #817984;
+  font-size: 0.72rem;
+}
+
+.draft-room__queue-card {
+  padding: 1rem 1.1rem;
+}
+
+.draft-room__queue-card h3, .draft-room__queue-card .h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1rem;
+}
+
+.draft-room__queue {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.draft-room__queue > div {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #ebe6ed;
+  border-radius: 0.45rem;
+  color: #5e5862;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.draft-room__queue > div.is-current {
+  border-color: #b694c4;
+  background: #f4edf7;
+  color: #653478;
+}
+
+.draft-room__queue span,
+.draft-room__team-dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+}
+
+.draft-room__history {
+  padding: 0.35rem 1.1rem 0.8rem;
+}
+
+.draft-room__history > div {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #eee9ef;
+  font-size: 0.75rem;
+}
+
+.draft-room__history p,
+.draft-room__history small,
+.draft-room__history .small {
+  display: block;
+  margin: 0;
+}
+
+.draft-room__history small, .draft-room__history .small,
+.draft-room__history > div > span {
+  color: #817984;
+}
+
+.draft-room__history em {
+  border-radius: 1rem;
+  background: #fff2d8;
+  color: #8b5d11;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.62rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.draft-room__empty {
+  padding: 1rem !important;
+  color: #817984;
+  text-align: center;
+}
+
+.draft-room__admin {
+  margin-bottom: 1rem;
+  padding: 1.1rem;
+}
+
+.draft-room__admin-heading,
+.draft-room__admin-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.draft-room__admin-heading h2, .draft-room__admin-heading .h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.draft-room__admin-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.draft-room__admin-grid {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto minmax(16rem, 1fr);
+  gap: 0.8rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.draft-room__admin-grid label:not(.draft-room__checkbox),
+.draft-room__override-note {
+  color: #6f6873;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.draft-room__admin-grid select,
+.draft-room__admin-grid input {
+  margin-top: 0.3rem;
+}
+
+.draft-room__checkbox {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  min-height: 2.4rem;
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.draft-room__override-note {
+  grid-column: 1/-1;
+}
+
+.draft-room__admin-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9e4eb;
+  font-size: 0.82rem;
+}
+
+.draft-room__passwords {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.draft-room__access-details {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #e5dfe7;
+  border-radius: 0.55rem;
+  background: #faf8fb;
+}
+
+.draft-room__access-details summary {
+  color: #653478;
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.draft-room__access-details > p {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+}
+
+.draft-room__passwords > form {
+  display: grid;
+  grid-template-columns: auto minmax(8rem, 0.8fr) minmax(12rem, 1fr) auto auto auto;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.draft-room__captain-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  align-items: center;
+  max-width: 1500px;
+  margin: 0 auto 0.75rem;
+  color: #6e6772;
+  font-size: 0.8rem;
+}
+
+.draft-login {
+  display: grid;
+  place-items: center;
+  min-height: 58vh;
+}
+
+.draft-login__card {
+  width: min(27rem, 100%);
+  padding: 2rem;
+  text-align: center;
+}
+
+.draft-login__lock {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: #f2eaf5;
+  font-size: 1.6rem;
+}
+
+.draft-login h1, .draft-login .h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.draft-login p {
+  color: #716b75;
+}
+
+.draft-login label {
+  display: block;
+  margin-bottom: 0.35rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.draft-login .btn {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+@media screen and (max-width: 1050px) {
+  .draft-room__layout {
+    grid-template-columns: 1fr;
+  }
+  .draft-room__sidebar {
+    position: static;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .draft-room__admin-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .draft-room__passwords > form {
+    grid-template-columns: auto 1fr 1fr auto;
+  }
+  .draft-room__passwords > form > span:nth-last-child(2),
+  .draft-room__passwords > form > a {
+    grid-column: span 2;
+  }
+}
+@media screen and (max-width: 720px) {
+  .draft-room-page {
+    padding: 0.75rem;
+  }
+  .draft-room__status {
+    grid-template-columns: auto 1fr;
+  }
+  .draft-room__status > button {
+    grid-column: 1/-1;
+  }
+  .draft-room__players-header,
+  .draft-room__admin-heading,
+  .draft-room__admin-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .draft-room__filters {
+    width: 100%;
+  }
+  .draft-room__sidebar,
+  .draft-room__admin-grid {
+    grid-template-columns: 1fr;
+  }
+  .draft-room__passwords > form {
+    grid-template-columns: auto 1fr;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9e4eb;
+  }
+  .draft-room__passwords input,
+  .draft-room__passwords button,
+  .draft-room__passwords > form > span:nth-last-child(2),
+  .draft-room__passwords > form > a {
+    grid-column: 1/-1;
+  }
+  .draft-room__player-table {
+    min-width: 40rem;
+  }
+}
 .pickup-contact-modal-body {
   font-size: 15px;
 }

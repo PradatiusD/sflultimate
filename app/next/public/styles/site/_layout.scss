@@ -825,10 +825,37 @@
 
 .draft-room__card,
 .draft-room__status {
-  border: 1px solid #e5dfe7;
-  border-radius: 0.8rem;
-  background: #fff;
-  box-shadow: 0 0.25rem 1rem rgba(42, 29, 48, 0.05);
+  min-width: 0;
+  border-color: $border-color;
+  box-shadow: $box-shadow-sm;
+}
+
+.draft-room,
+.draft-login {
+  .form-control,
+  .form-select {
+    min-width: 0;
+  }
+
+  .form-check-input {
+    flex-shrink: 0;
+  }
+
+  summary:focus-visible {
+    outline: 3px solid rgba($primary, 0.5);
+    outline-offset: 4px;
+  }
+}
+
+.draft-room__admin-buttons,
+.draft-room__captain-toolbar {
+  flex-wrap: wrap;
+}
+
+.draft-room__status-copy,
+.draft-room__roster-list strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .draft-room__status {
@@ -1093,7 +1120,7 @@
 
 .draft-room__admin-grid {
   display: grid;
-  grid-template-columns: minmax(15rem, 1fr) auto auto;
+  grid-template-columns: minmax(12rem, 1fr) auto minmax(16rem, 1fr);
   gap: 0.8rem;
   align-items: end;
   margin-top: 1rem;
@@ -1158,18 +1185,11 @@
   font-size: 0.8rem;
 }
 
-.draft-room__passwords > div {
+.draft-room__passwords > form {
   display: grid;
   grid-template-columns: auto minmax(8rem, 0.8fr) minmax(12rem, 1fr) auto auto auto;
   gap: 0.65rem;
   align-items: center;
-}
-
-.draft-room__passwords input {
-  min-width: 0;
-  border: 1px solid #d8d1db;
-  border-radius: 0.35rem;
-  padding: 0.45rem 0.6rem;
 }
 
 .draft-room__captain-toolbar {
@@ -1234,16 +1254,16 @@
   }
   .draft-room__sidebar {
     position: static;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .draft-room__admin-grid {
     grid-template-columns: 1fr 1fr;
   }
-  .draft-room__passwords > div {
+  .draft-room__passwords > form {
     grid-template-columns: auto 1fr 1fr auto;
   }
-  .draft-room__passwords > div > span:nth-last-child(2),
-  .draft-room__passwords > div > a {
+  .draft-room__passwords > form > span:nth-last-child(2),
+  .draft-room__passwords > form > a {
     grid-column: span 2;
   }
 }
@@ -1271,22 +1291,19 @@
   .draft-room__admin-grid {
     grid-template-columns: 1fr;
   }
-  .draft-room__passwords > div {
+  .draft-room__passwords > form {
     grid-template-columns: auto 1fr;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid #e9e4eb;
   }
   .draft-room__passwords input,
   .draft-room__passwords button,
-  .draft-room__passwords > div > span:nth-last-child(2),
-  .draft-room__passwords > div > a {
+  .draft-room__passwords > form > span:nth-last-child(2),
+  .draft-room__passwords > form > a {
     grid-column: 1 / -1;
   }
-  .draft-room__player-table th:nth-child(3),
-  .draft-room__player-table td:nth-child(3),
-  .draft-room__player-table th:nth-child(5),
-  .draft-room__player-table td:nth-child(5) {
-    display: none;
+  .draft-room__player-table {
+    min-width: 40rem;
   }
 }
 
