@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import LeagueUtils from './league-utils'
-import GraphqlClient from './graphql-client'
+import GraphqlClient from './server-graphql-client'
 import { buildPlayerUrl } from '../components/PlayerLink'
 import { addLeagueToVariables } from './utils'
 import { updateWithGlobalServerSideProps } from './global-server-side-props'

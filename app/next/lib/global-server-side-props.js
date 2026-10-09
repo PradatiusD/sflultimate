@@ -1,4 +1,4 @@
-import { query } from './graphql-client'
+import { query } from './server-graphql-client'
 import { gql } from '@apollo/client'
 export async function updateWithGlobalServerSideProps (originalProps, context) {
   const results = await query({
@@ -16,11 +16,12 @@ export async function updateWithGlobalServerSideProps (originalProps, context) {
     `
   })
 
-  results.data.allLeagues = results.data.allLeagues.map(function (result) {
-    if (!result.registrationStart) {
-      result.registrationStart = parseInt(result.title.match(/\d+/g))
+  results.data.allLeagues = results.data.allLeagues.map(function (league) {
+    if (!league.registrationStart) {
+      league.registrationStart = new Date(parseInt(league.title.match(/\d+/g)))
     }
-    return result
+    league.registrationStart = league.registrationStart instanceof Date ? league.registrationStart.toISOString() : league.registrationStart.toString()
+    return league
   })
 
   results.data.allLeagues.sort((a, b) => {

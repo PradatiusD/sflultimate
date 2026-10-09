@@ -4,7 +4,7 @@ import Standings from './Standings'
 import { PlayerLink } from './PlayerLink'
 import GameStatTable from './GameStatTable'
 import { buildTeamUrl } from '../lib/team-utils'
-import { buildGameUrl } from '../lib/game-utils'
+import { buildGameUrl } from '../lib/game-url'
 import SeoHead from './SeoHead'
 
 export default function GamePage (props) {

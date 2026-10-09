@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import GraphqlClient from '../lib/graphql-client'
+import GraphqlClient from '../lib/server-graphql-client'
 import { gql } from '@apollo/client'
 import { HeaderNavigation, socialLinks } from '../components/Navigation'
 import LeagueUtils from '../lib/league-utils'

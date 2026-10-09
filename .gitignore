@@ -54,3 +54,4 @@ dist
 # Ignore next
 .next
 app/.keystone
+cypress/screenshots

@@ -2,8 +2,9 @@ import { gql } from '@apollo/client'
 import PaymentUtils from '../../lib/payment-utils'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
-import GraphQlClient from '../../lib/graphql-client'
+import GraphQlClient from '../../lib/server-graphql-client'
 import { notify } from '../../lib/slack'
+import { createSubscriber } from '../../lib/mailerlite'
 
 const CREATE_PLAYER_SUBSTITUTION = gql`
   mutation CreatePlayerSubstitution($data: PlayerSubstitutionCreateInput!) {
@@ -16,8 +17,8 @@ const CREATE_PLAYER_SUBSTITUTION = gql`
 
 function createSubstitutionRecord (payload) {
   const mutationData = {
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     firstName: payload.firstName,
     lastName: payload.lastName,
     name: payload.firstName + ' ' + payload.lastName,
@@ -84,8 +85,8 @@ export default async function handler (req, res) {
 
     const sanitizedPayload = {
       paymentMethodNonce: req.body.paymentMethodNonce,
-      firstName: req.body.firstName.trim(),
-      lastName: req.body.lastName.trim(),
+      firstName: (req.body.firstName || '').trim(),
+      lastName: (req.body.lastName || '').trim(),
       gender: req.body.gender,
       email: req.body.email,
       age: parseInt(req.body.age),
@@ -137,6 +138,12 @@ export default async function handler (req, res) {
 
     const paymentResult = disablePayment ? null : await processPayment(sanitizedPayload, amount)
     const dbCreateResult = await createSubstitutionRecord(sanitizedPayload)
+    createSubscriber({
+      email: sanitizedPayload.email,
+      name: `${sanitizedPayload.firstName} ${sanitizedPayload.lastName}`
+    }).catch(error => {
+      console.error('MailerLite subscriber creation failed:', error.message)
+    })
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
     if (process.env.NODE_ENV === 'development') {
       console.log(paymentResult)
@@ -153,7 +160,7 @@ export default async function handler (req, res) {
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
-    notify(`Error processing player substitution: ${e.message} ${e.stack || ''}`)
+    notify(`Error processing player substitution: ${e.message}\n${e.stack || ''}`)
     res.redirect('/leagues/' + league.slug + '/substitutions?error=' + encodeURIComponent(e.message))
   }
 }

@@ -1,4 +1,4 @@
-const { Text, Url, File } = require('@keystonejs/fields')
+const { Text, Url, File, Checkbox, Integer } = require('@keystonejs/fields')
 const CustomDateTime = require('../custom-fields/CustomDateTime')
 const { Wysiwyg } = require('@keystonejs/fields-wysiwyg-tinymce')
 const storage = require('./file-storage-adapter')
@@ -41,6 +41,15 @@ const fields = {
   },
   moreInformationUrl: {
     type: Url
+  },
+  allowRegistrations: {
+    type: Checkbox,
+    defaultValue: false,
+    label: 'Allow registrations'
+  },
+  registrationPrice: {
+    type: Integer,
+    label: 'Registration price (USD)'
   }
 }
 

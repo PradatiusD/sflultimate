@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import GraphqlClient from '../../../lib/graphql-client'
+import GraphqlClient from '../../../lib/server-graphql-client'
 import { generateGatewayClientToken } from '../../../lib/payment-utils'
 import { addLeagueToVariables } from '../../../lib/utils'
 import LeagueUtils from '../../../lib/league-utils'

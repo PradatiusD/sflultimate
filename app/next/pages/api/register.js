@@ -1,10 +1,16 @@
-import GraphqlClient from '../../lib/graphql-client'
+import GraphqlClient from '../../lib/server-graphql-client'
 import LeagueUtils from '../../lib/league-utils'
 import { processPayment, SendEmail } from './utils'
 import { notify } from '../../lib/slack'
+import { createSubscriber } from '../../lib/mailerlite'
 const { gql } = require('@apollo/client')
-const GraphQlClient = require('./../../lib/graphql-client')
+const GraphQlClient = require('./../../lib/server-graphql-client')
 const PaymentUtils = require('./../../lib/payment-utils')
+
+const FORCED_PAYMENT_AMOUNTS = {
+  processor_declined: 2000,
+  gateway_rejected: 5001
+}
 
 const CREATE_PLAYER_MUTATION = gql`
   mutation CreatePlayer($data: PlayerCreateInput!) {
@@ -17,8 +23,8 @@ const CREATE_PLAYER_MUTATION = gql`
 
 function createPlayerRecord (payload) {
   const mutationData = {
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     name: payload.firstName + ' ' + payload.lastName,
     firstName: payload.firstName,
     lastName: payload.lastName,
@@ -63,7 +69,8 @@ export default async function handler (req, res) {
   }
 
   let league
-
+  let forcePaymentFailure
+  let sanitizedPayload
   try {
     const recaptchaResponse = await PaymentUtils.validateRecaptchaToken(req.body.recaptchaToken)
     if (recaptchaResponse && recaptchaResponse.success && recaptchaResponse.score <= 0.5) {
@@ -71,6 +78,15 @@ export default async function handler (req, res) {
     }
 
     const disablePayment = req.headers.referer.includes('disable_payment=true')
+    const referer = new URL(req.headers.referer)
+    const requestedPaymentFailure = process.env.NODE_ENV !== 'production' ? referer.searchParams.get('force_payment_failure') : null
+    if (requestedPaymentFailure && process.env.BRAINTREE_ENV !== 'Sandbox') {
+      throw new Error('Forced payment failures require the Braintree Sandbox environment.')
+    }
+    if (requestedPaymentFailure && !FORCED_PAYMENT_AMOUNTS[requestedPaymentFailure]) {
+      throw new Error('Unsupported forced payment failure.')
+    }
+    forcePaymentFailure = requestedPaymentFailure
 
     const results = await GraphqlClient.query({
       query: gql`
@@ -109,10 +125,10 @@ export default async function handler (req, res) {
       ? 'Adult'
       : registrationSelection
 
-    const sanitizedPayload = {
+    sanitizedPayload = {
       paymentMethodNonce: req.body.paymentMethodNonce,
-      firstName: req.body.firstName.trim(),
-      lastName: req.body.lastName.trim(),
+      firstName: (req.body.firstName || '').trim(),
+      lastName: (req.body.lastName || '').trim(),
       gender: req.body.gender,
       email: req.body.email,
       age: parseInt(req.body.age),
@@ -124,7 +140,7 @@ export default async function handler (req, res) {
       participation: parseInt(req.body.participation),
       comments: req.body.comments,
       phoneNumber: req.body.phoneNumber,
-      partnerName: req.body.partnerName.trim(),
+      partnerName: (req.body.partnerName || '').trim(),
       shirtSize: req.body.shirtSize,
       wouldSponsor: req.body.wouldSponsor === 'on',
       wouldCaptain: req.body.wouldCaptain === 'Yes',
@@ -211,8 +227,19 @@ export default async function handler (req, res) {
       sanitizedPayload.compedRegistration = true
     }
 
+    // Braintree transaction failures are triggered by amount, not card number, in sandbox.
+    if (forcePaymentFailure) {
+      amount = FORCED_PAYMENT_AMOUNTS[forcePaymentFailure]
+    }
+
     const paymentResult = disablePayment ? null : await processPayment(sanitizedPayload, amount)
     const dbCreateResult = await createPlayerRecord(sanitizedPayload)
+    createSubscriber({
+      email: sanitizedPayload.email,
+      name: `${sanitizedPayload.firstName} ${sanitizedPayload.lastName}`
+    }).catch(error => {
+      console.error('MailerLite subscriber creation failed:', error.message)
+    })
     const emailResult = await SendEmail({ ...sanitizedPayload, amount }, league)
     if (process.env.NODE_ENV === 'development') {
       console.log(paymentResult)
@@ -227,7 +254,18 @@ export default async function handler (req, res) {
   } catch (e) {
     console.error(e)
     console.log(JSON.stringify(e))
-    notify(`Error processing registration: ${e.message}`)
-    res.redirect('/leagues/' + league.slug + '/register?error=' + encodeURIComponent(e.message))
+    const query = new URLSearchParams({ error: e.message })
+    if (forcePaymentFailure) {
+      query.set('force_form', 'true')
+      query.set('force_period', 'regular')
+      query.set('force_payment_failure', forcePaymentFailure)
+    } else {
+      let serializedPayload = null
+      try {
+        serializedPayload = JSON.stringify(sanitizedPayload || {}, null, 2)
+      } catch (e) {}
+      notify(`Error processing registration with submission\n\`\`\`${serializedPayload}\`\`\`\n: ${e.message}\n${e.stack || ''}`)
+    }
+    res.redirect(`/leagues/${league.slug}/register?${query.toString()}`)
   }
 }

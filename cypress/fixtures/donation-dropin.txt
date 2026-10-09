@@ -1,0 +1,15 @@
+// Fake only the hosted payment boundary; no card or gateway traffic.
+window.braintree = {
+  dropin: {
+    create: function (options, callback) {
+      const container = document.querySelector(options.container)
+      container.textContent = 'Test payment method ready'
+      let calls = 0
+      callback(null, {
+        requestPaymentMethod: function (done) { done(null, { nonce: 'test-nonce-' + (++calls) }) },
+        clearSelectedPaymentMethod: function () {},
+        teardown: function () { return Promise.resolve() }
+      })
+    }
+  }
+}

@@ -7,6 +7,8 @@ const PROJECT_NAME = 'SFLUltimate'
 const keystone = require('./keystone')
 const contentListSchemas = require('./lists/index')
 
+global.sflKeystone = keystone
+
 for (const listName in contentListSchemas) {
   const schema = contentListSchemas[listName]
   keystone.createList(listName, schema)
@@ -26,10 +28,7 @@ const authStrategy = keystone.createAuthStrategy({
 
 module.exports = {
   keystone,
-  configureExpress: app => {
-    // to handle being behind heroku
-    app.set('trust proxy', true)
-  },
+  configureExpress: require('./configure-express'),
   apps: [
     new GraphQLApp({
       schemaName: 'public',

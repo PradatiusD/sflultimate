@@ -1,5 +1,6 @@
 import { HeaderNavigation } from '../components/Navigation'
-import LeagueTeams, { getLeagueTeamsData } from '../components/LeagueTeams'
+import LeagueTeams from '../components/LeagueTeams'
+import { getLeagueTeamsData } from '../lib/league-teams-data'
 import SeoHead from '../components/SeoHead'
 export const getServerSideProps = async (context) => {
   return await getLeagueTeamsData(context)

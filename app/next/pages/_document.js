@@ -11,7 +11,9 @@ class SFLUltimateDocument extends NextDocument {
     if (this.props.pathname.includes('/sheets')) {
       return <>
         <Html lang="en">
-          <Head />
+          <Head>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&display=swap"/>
+          </Head>
           <Main/>
           <NextScript/>
         </Html>
@@ -26,7 +28,7 @@ class SFLUltimateDocument extends NextDocument {
           <meta property="og:type" content="website"/>
           <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
           <link rel="stylesheet" href="/styles/font-awesome/css/all.min.css"/>
-          <link rel="stylesheet" crossOrigin="true" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,700i|Roboto:300,400,400i,700"/>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&display=swap"/>
           <link rel="stylesheet" href="/styles/site.css"/>
           <script dangerouslySetInnerHTML={{
             __html: `

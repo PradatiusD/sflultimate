@@ -21,6 +21,9 @@ const fields = {
 
 module.exports = {
   fields,
+  access: {
+    auth: true
+  },
   labelResolver: user => user.firstName + ' ' + user.lastName,
   defaultColumns: 'firstName, lastName, email'
 }
