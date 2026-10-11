@@ -6,7 +6,7 @@ const categories = [
 
 function ratingStyle (rating) {
   if (rating === null) return undefined
-  const hue = (Math.min(5, Math.max(1, rating)) - 1) * 30
+  const hue = Number(((Math.min(5, Math.max(1, rating)) - 1) * 30).toFixed(2))
   return { backgroundColor: `hsl(${hue}, 75%, 85%)`, color: '#212529' }
 }
 

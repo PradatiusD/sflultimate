@@ -147,15 +147,6 @@ export const getServerSideProps = async (context) => {
   const gameResults = await GraphqlClient.query({
     query: gql`
       query($playerIds: [ID!], $leagueIds: [ID!]) {
-        allPlayerGameStats (where:{player: {id_in: $playerIds}}) {
-          assists
-          scores
-          defenses
-          attended
-          game {
-            id
-          }
-        }
         allGames(where: {league: {id_in: $leagueIds}}) {
           id
           scheduledTime
@@ -202,11 +193,18 @@ export const getServerSideProps = async (context) => {
     }
   })
 
-  const playerGameStats = gameResults.data.allPlayerGameStats
+  // Use the existing player index instead of Keystone's relationship $lookup.
+  const playerGameStats = await global.sflKeystone.lists.PlayerGameStat.adapter.model.find({
+    player: { $in: playerIds }
+  }).select('assists scores defenses game').lean()
   const gameToStatsMap = {}
   for (const stat of playerGameStats) {
     if (stat.game) {
-      gameToStatsMap[stat.game.id] = stat
+      gameToStatsMap[stat.game.toString()] = {
+        assists: stat.assists ?? null,
+        scores: stat.scores ?? null,
+        defenses: stat.defenses ?? null
+      }
     }
   }
 

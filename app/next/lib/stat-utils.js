@@ -11,6 +11,7 @@ export async function getLeagueStats (context) {
     query: gql`
       query($leagueCriteria: LeagueWhereInput) {
         allLeagues(where: $leagueCriteria) {
+          id
           title
           earlyRegistrationStart
           earlyRegistrationEnd
@@ -19,15 +20,6 @@ export async function getLeagueStats (context) {
           lateRegistrationStart
           lateRegistrationEnd
         },
-        allPlayerGameStats(where: {game: {league: $leagueCriteria}}) {
-          scores
-          assists
-          defenses
-          player {
-            id
-            gender
-          }
-        }
         allPlayers(where: {leagues_some: $leagueCriteria}) {
           id
           firstName
@@ -51,7 +43,20 @@ export async function getLeagueStats (context) {
   const awards = { Male: {}, Female: {}, Other: {} }
   const statKeysToCompare = ['assists', 'scores', 'defenses', 'overall']
 
-  const playerGameStats = results.data.allPlayerGameStats
+  // Filter the stored foreign keys directly; Keystone relationship filters scan stats via $lookup.
+  const { Game, PlayerGameStat } = global.sflKeystone.lists
+  const games = await Game.adapter.model.find({
+    league: { $in: results.data.allLeagues.map(league => league.id) }
+  }).select('_id').lean()
+  const stats = await PlayerGameStat.adapter.model.find({
+    game: { $in: games.map(game => game._id) }
+  }).select('scores assists defenses player').populate('player', 'gender').lean()
+  const playerGameStats = stats.map(stat => ({
+    scores: stat.scores ?? null,
+    assists: stat.assists ?? null,
+    defenses: stat.defenses ?? null,
+    player: stat.player ? { id: stat.player._id.toString(), gender: stat.player.gender ?? null } : null
+  }))
   for (const stat of playerGameStats) {
     let o
     if (statsGroupedByPlayer[stat.player.id]) {
