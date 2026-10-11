@@ -2,6 +2,7 @@ import { gql } from '@apollo/client'
 import { HeaderNavigation } from '../../../../components/Navigation'
 import Standings from '../../../../components/Standings'
 import GameStatTable from '../../../../components/GameStatTable'
+import TeamRatingSummary from '../../../../components/TeamRatingSummary'
 import { PreferredPositionBadge, buildPreferredPositionMap } from '../../../../components/PreferredPositions'
 import { addLeagueToVariables } from '../../../../lib/utils'
 import GraphqlClient from '../../../../lib/server-graphql-client'
@@ -107,6 +108,7 @@ export const getServerSideProps = async (context) => {
         athleticismLevel
         experienceLevel
         throwsLevel
+        participation
       }
 
       query($leagueCriteria: LeagueWhereInput) {
@@ -278,6 +280,8 @@ export default function TeamPage (props) {
             )
           }
         </div>
+
+        <TeamRatingSummary players={team.players} />
 
         <p className="h3 text-center">Season Standings</p>
         <Standings
