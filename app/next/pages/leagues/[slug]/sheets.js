@@ -239,11 +239,46 @@ function Sheets (props) {
         white-space: nowrap;
       }
 
-      @media all {
-        @page {
-          size: auto;
-          margin: 1em;
+      .stat-sheet-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 220px;
+        gap: 12px;
+        align-items: start;
+      }
+
+      .stat-sheet-rules { font-size: 12px; line-height: 1.35; }
+      .stat-sheet-rules h2 { font-size: 16px; margin: 0 0 8px; }
+      .stat-sheet-rules h3 { font-size: 13px; margin: 0 0 5px; }
+      .stat-sheet-rules p { font-size: inherit; margin-bottom: 10px; }
+      .stat-sheet-rules ul { padding-left: 16px; margin-bottom: 10px; }
+      .stat-sheet-rules li { margin-bottom: 5px; }
+
+      @media screen and (max-width: 767px) {
+        .stat-sheet-body { grid-template-columns: minmax(0, 1fr); }
+      }
+
+      @media print {
+        @page { size: letter portrait; margin: 0.35in; }
+        .container-fluid { padding: 0; }
+        .stat-page-container { margin-top: 0 !important; }
+        .stat-sheet-body { grid-template-columns: minmax(0, 1fr) 195px; gap: 10px; }
+        .stat-page-container .table { margin-bottom: 8px; }
+        .stat-page-container td, .stat-page-container th {
+          font-size: 10px;
+          padding: 4px;
+          line-height: 1.2;
+          min-width: 0 !important;
         }
+        .stat-page-container strong { white-space: normal; letter-spacing: 0; }
+        .stat-page-container th { letter-spacing: 0; }
+        .stat-editor-table tr, .stat-sheet-rules { break-inside: avoid; }
+        .stat-sheet-rules { font-size: 10px; }
+        .stat-sheet-rules h2 { font-size: 13px; }
+        .stat-sheet-rules h3 { font-size: 11px; }
+        .spirit-of-the-game-text { font-size: 9px; line-height: 1.3; margin-bottom: 0; }
+      }
+
+      @media all {
         .game-container:first-child .stat-page-container:first-child {
             page-break-before: initial;
         }
@@ -307,26 +342,51 @@ function Sheets (props) {
                   <small style={{ display: 'block', lineHeight: 1.1 }}>Scan to enter stats</small>
                 </div>
               </div>
-              <StatEditor
-                game={game}
-                team={team.currentTeam}
-                opponent={team.opponent}
-                isHomeTeam={game.homeTeam.id === team.currentTeam.id}
-                initialTeamScore={game.homeTeam.id === team.currentTeam.id ? game.homeTeamScore : game.awayTeamScore}
-                initialOpponentScore={game.homeTeam.id === team.currentTeam.id ? game.awayTeamScore : game.homeTeamScore}
-                initialStats={team.currentTeam.players.map(player => ({
-                  player,
-                  ...initPlayerMap[player.id][game.id]
-                }))}
-                editable={Boolean(editor)}
-              />
+              <div className="stat-sheet-body">
+                <StatEditor
+                  game={game}
+                  team={team.currentTeam}
+                  opponent={team.opponent}
+                  isHomeTeam={game.homeTeam.id === team.currentTeam.id}
+                  initialTeamScore={game.homeTeam.id === team.currentTeam.id ? game.homeTeamScore : game.awayTeamScore}
+                  initialOpponentScore={game.homeTeam.id === team.currentTeam.id ? game.awayTeamScore : game.homeTeamScore}
+                  initialStats={team.currentTeam.players.map(player => ({
+                    player,
+                    ...initPlayerMap[player.id][game.id]
+                  }))}
+                  editable={Boolean(editor)}
+                />
+                <aside className="stat-sheet-rules border rounded p-2" aria-label="League game rules">
+                  <h2>Game rules</h2>
+                  <h3>5 MMP - 2 FMP format</h3>
+                  <ul>
+                    <li>If a team does not have enough FMP’s to field 5/2, always be down a person.</li>
+                    <li>6/1 if both captains agree (Captains Clause)</li>
+                    <li>Gender match at time of pull</li>
+                    <li>If no FMP’s present on both teams, 7v7 MMP’s is okay</li>
+                  </ul>
+                  <h3>Regular season</h3>
+                  <p>Games to 11, half at 6</p>
+                  <h3>Cap Rules</h3>
+                  <ul>
+                    <li>3pm game: 4:15 hard cap</li>
+                    <li>4:30pm game: 5:45 hard cap</li>
+                    <li><strong style={{ letterSpacing: '0px', textTransform: 'initial', whiteSpace: 'wrap' }}>At cap, finish the current point</strong>: When the hard cap (time limit) is reached, you don&apos;t stop immediately. Complete the point currently being played until someone scores.</li>
+                    <li><strong style={{ letterSpacing: '0px', textTransform: 'initial', whiteSpace: 'wrap' }}>If it&apos;s tied after that point</strong>: Play one more &quot;universe point&quot; (next score wins).</li>
+                    <li><strong style={{ letterSpacing: '0px', textTransform: 'initial', whiteSpace: 'wrap' }}>If it&apos;s not tied</strong>: The game is over immediately, and the team with more points wins.</li>
+                    <li><strong style={{ letterSpacing: '0px', textTransform: 'initial', whiteSpace: 'wrap' }}>If the cap happens during halftime</strong>: The game ends on the spot—no second half is played—and whichever team is leading at halftime wins.</li>
+                    <li>1 timeout per half, 1 floater</li>
+                  </ul>
+
+                  <p className="mb-0">Rotate pull FMP vs MMP</p>
+                </aside>
+              </div>
 
               <div>
+                <SpiritOfTheGameText/>
                 <label style={{ fontWeight: 'normal' }}>Please write here any spirit feedback you would like the
-                    organizers to note:</label>
-                <textarea className="form-control" style={{ marginBottom: '10px' }} rows={1}></textarea>
+                  organizers to note:</label>
               </div>
-              <SpiritOfTheGameText/>
             </section>
           )
           )))}

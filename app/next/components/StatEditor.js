@@ -58,26 +58,28 @@ function StatTable ({ stats, editable, onStatChange }) {
           <tr key={stat.player.id}>
             <td>{stat.player.firstName} {stat.player.lastName}</td>
             <td>
-              <input
-                type="checkbox"
-                disabled={!editable}
-                checked={stat.attended}
-                aria-label={`${stat.player.firstName} ${stat.player.lastName} attended`}
-                onChange={event => onStatChange(stat.player.id, 'attended', event.target.checked)}
-              />
+              {editable
+                ? <input
+                    type="checkbox"
+                    checked={stat.attended}
+                    aria-label={`${stat.player.firstName} ${stat.player.lastName} attended`}
+                    onChange={event => onStatChange(stat.player.id, 'attended', event.target.checked)}
+                  />
+                : (stat.attended ? '✓' : '')}
             </td>
             {['assists', 'scores', 'defenses'].map(field => (
               <td key={field}>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  min="0"
-                  step="1"
-                  disabled={!editable}
-                  value={stat[field]}
-                  aria-label={`${stat.player.firstName} ${stat.player.lastName} ${field}`}
-                  onChange={event => onStatChange(stat.player.id, field, normalizeStatValue(event.target.value))}
-                />
+                {editable
+                  ? <input
+                      type="number"
+                      inputMode="numeric"
+                      min="0"
+                      step="1"
+                      value={stat[field]}
+                      aria-label={`${stat.player.firstName} ${stat.player.lastName} ${field}`}
+                      onChange={event => onStatChange(stat.player.id, field, normalizeStatValue(event.target.value))}
+                    />
+                  : (stat[field] || '')}
               </td>
             ))}
           </tr>
@@ -253,11 +255,13 @@ export default function StatEditor (props) {
         </div>
       )}
 
-      <div className="stat-editor-totals" aria-live="polite">
-        <span>Assists <strong>{validation.totals.assists}</strong></span>
-        <span>Scores <strong>{validation.totals.scores}</strong></span>
-        <span>Defenses <strong>{validation.totals.defenses}</strong></span>
-      </div>
+      {editable && (
+        <div className="stat-editor-totals" aria-live="polite">
+          <span>Assists <strong>{validation.totals.assists}</strong></span>
+          <span>Scores <strong>{validation.totals.scores}</strong></span>
+          <span>Defenses <strong>{validation.totals.defenses}</strong></span>
+        </div>
+      )}
 
       {mobile
         ? <MobileStatCards stats={stats} editable={editable} onStatChange={onStatChange} />
