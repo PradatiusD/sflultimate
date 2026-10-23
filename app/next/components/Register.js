@@ -88,6 +88,7 @@ function PlayerAmountAlert (props) {
 export default function RegisterPage (props) {
   const { league: activeLeague, braintreeToken, query, players, leagues } = props
   const [player, setPlayer] = useState({})
+  const [hasPreferredPosition, setHasPreferredPosition] = useState(false)
   const forceForm = query.force_form === 'true'
   const disablePayment = query.disable_payment === 'true'
   const errorMessage = query.error
@@ -153,6 +154,7 @@ export default function RegisterPage (props) {
           window.requestAnimationFrame(() => {
             window.requestAnimationFrame(() => {
               restoreRegistrationForm(document.querySelector('#registration'), cachedRegistration.fields)
+              setHasPreferredPosition(!!document.querySelector('#playerPositions input:checked'))
             })
           })
         }
@@ -381,7 +383,7 @@ export default function RegisterPage (props) {
               })
             }
 
-            <div id="playerPositions">
+            <div id="playerPositions" onChange={(e) => setHasPreferredPosition(!!e.currentTarget.querySelector('input:checked'))}>
               <label htmlFor="skillLevel">Preferred Player Positions</label>
               <p className="help-block">This is to help captains draft, especially in cases where we captains might not
                 know you. Check all that apply. You must pick one.</p>
@@ -413,9 +415,11 @@ export default function RegisterPage (props) {
                   cutters/handlers.
                 </label>
               </div>
-              <div className="alert alert-danger" id="playerPositionError">Note: Please pick <strong>at least
-                one</strong> of the above.
-              </div>
+              {!hasPreferredPosition && (
+                <div className="alert alert-danger" id="playerPositionError">Note: Please pick <strong>at least
+                  one</strong> of the above.
+                </div>
+              )}
             </div>
 
             {
