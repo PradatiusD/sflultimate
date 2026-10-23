@@ -246,8 +246,8 @@ export const getServerSideProps = async (context) => {
         const isAwayTeam = dbGame.awayTeam.id === league.team.id
         const isPlayersTeam = isHomeTeam || isAwayTeam
         const pointsOnEitherGame = dbGame.awayTeamScore !== 0 && dbGame.homeTeamScore !== 0
-        const hasHomeScore = !isNaN(dbGame.homeTeamScore)
-        const hasAwayScore = !isNaN(dbGame.awayTeamScore)
+        const hasHomeScore = Number.isFinite(dbGame.homeTeamScore)
+        const hasAwayScore = Number.isFinite(dbGame.awayTeamScore)
         const isValidGame = (pointsOnEitherGame && hasHomeScore && hasAwayScore)
 
         if (isPlayersTeam && isValidGame) {

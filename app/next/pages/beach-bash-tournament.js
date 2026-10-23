@@ -45,8 +45,8 @@ export default function BeachBashTournament (props) {
 
   const content = {
     seoTitle: 'South Florida Ultimate • Beach Bash 2027',
-    registrationLink: 'https://docs.google.com/forms/d/e/1FAIpQLSeu6GPwqcvLgxDn7vq-cOfApIEeIaiUI3Z1lLj6ppcti2upFQ/viewform?usp=publish-editor',
-    freeAgentLink: 'https://docs.google.com/forms/d/1mU4130RrsMuAooBZDhUW6hyZQIH619XJHy3vcvbU5_c'
+    registrationLink: 'https://docs.google.com/forms/d/e/1FAIpQLScbLTF9Yqftj_k1T-5W01BebVx9jPzvgvq4fjXURdmj6Uw5Cg/viewform?usp=sharing',
+    freeAgentLink: 'https://docs.google.com/forms/d/e/1FAIpQLSddNKkDE4-MoU1b8ovO8MyUdxbLgw1svd67Xa4dLFzNtpYIzg/viewform'
   }
 
   return (
