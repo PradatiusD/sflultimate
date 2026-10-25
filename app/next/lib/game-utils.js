@@ -192,7 +192,8 @@ export async function getGamePageProps (context, options = {}) {
     game,
     games: seasonResults.data.seasonGames,
     teams,
-    isGamePreview
+    isGamePreview,
+    isLoggedIn: Boolean(context.req.user)
   }
 
   await updateWithGlobalServerSideProps(props, context)

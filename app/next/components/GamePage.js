@@ -5,10 +5,11 @@ import { PlayerLink } from './PlayerLink'
 import GameStatTable from './GameStatTable'
 import { buildTeamUrl } from '../lib/team-utils'
 import { buildGameUrl } from '../lib/game-url'
+import { buildStatEditorUrl } from '../lib/stat-editor-utils'
 import SeoHead from './SeoHead'
 
 export default function GamePage (props) {
-  const { game, teams, leagues, isGamePreview, games } = props
+  const { game, teams, leagues, isGamePreview, games, isLoggedIn } = props
   let title, seoDescriptionSuffix
   if (game.homeTeam && game.awayTeam) {
     title = `${game.league.title} Matchup: ${game.homeTeam.name} vs ${game.awayTeam.name}`
@@ -131,6 +132,13 @@ export default function GamePage (props) {
                             ))}
                           </tbody>
                         </table>
+                        {isLoggedIn && (
+                          <p>
+                            <a href={buildStatEditorUrl(game.id, team.id)} className="btn btn-outline-primary">
+                              Fill out {team.name} stats
+                            </a>
+                          </p>
+                        )}
                       </>
                       )
                   }
