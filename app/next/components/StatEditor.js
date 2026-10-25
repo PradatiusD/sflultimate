@@ -10,14 +10,14 @@ function NumberControl ({ label, value, onChange, disabled }) {
   return (
     <div className="stat-number-control">
       <label>{label}</label>
-      <div className="input-group">
+      <div className="stat-number-buttons">
         <button
           type="button"
-          className="btn btn-outline-secondary"
-          disabled={disabled || value <= 0}
-          aria-label={`Decrease ${label}`}
-          onClick={() => onChange(Math.max(0, value - 1))}
-        >−</button>
+          className="btn btn-outline-success btn-sm"
+          disabled={disabled}
+          aria-label={`Increase ${label}`}
+          onClick={() => onChange(value + 1)}
+        >+</button>
         <input
           className="form-control text-center"
           type="number"
@@ -31,11 +31,11 @@ function NumberControl ({ label, value, onChange, disabled }) {
         />
         <button
           type="button"
-          className="btn btn-outline-secondary"
-          disabled={disabled}
-          aria-label={`Increase ${label}`}
-          onClick={() => onChange(value + 1)}
-        >+</button>
+          className="btn btn-outline-danger btn-sm"
+          disabled={disabled || value <= 0}
+          aria-label={`Decrease ${label}`}
+          onClick={() => onChange(Math.max(0, value - 1))}
+        >−</button>
       </div>
     </div>
   )
@@ -317,15 +317,13 @@ export default function StatEditor (props) {
         .stat-editor .mobile-stat-card { border-radius: .75rem; }
         .stat-editor .attended-toggle { display: flex; align-items: center; gap: .5rem; }
         .stat-editor .attended-toggle input { width: 1.3rem; height: 1.3rem; margin: 0; }
-        .stat-editor .stat-number-grid { display: grid; gap: .75rem; }
-        .stat-editor .stat-number-control label { display: block; margin-bottom: .25rem; font-weight: 600; }
-        .stat-editor .stat-number-control .btn,
-        .stat-editor .stat-number-control .form-control { min-height: 3rem; font-size: 1.15rem; }
+        .stat-editor .stat-number-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+        .stat-editor .stat-number-control label { display: block; margin-bottom: .25rem; font-weight: 600; text-align: center; }
+        .stat-editor .stat-number-buttons { display: flex; flex-direction: column; gap: .25rem; }
+        .stat-editor .stat-number-control .btn { min-height: 2rem; padding: .125rem .5rem; font-size: 1rem; }
+        .stat-editor .stat-number-control .form-control { min-height: 2.5rem; padding: .25rem .5rem; font-size: 1.15rem; }
         .stat-editor .stat-editor-save { width: 100%; min-height: 3.5rem; margin-bottom: 2rem; }
         .stat-editor .alert { margin-top: 1rem; }
-        @media (min-width: 576px) {
-          .stat-editor .stat-number-grid { grid-template-columns: repeat(3, 1fr); }
-        }
       `}</style>
     </div>
   )
